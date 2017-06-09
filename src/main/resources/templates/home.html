@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Home</title>
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"/>
+    <link href="../static/css/styles.css" th:href="@{css/styles.css}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+<nav class="purple lighten-1">
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">ZHCET</a>
+        <ul class="right hide-on-med-and-down">
+            <li><a href="/attendance">Attendance</a></li>
+            <li><a href="/courses">Courses</a></li>
+        </ul>
+
+
+        <ul id="nav-mobile" class="side-nav">
+            <li><a href="/attendance">Attendance</a></li>
+            <li><a href="/courses">Courses</a></li>
+        </ul>
+        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+</nav>
+<div class="container">
+    <h1 class="header center cyan-text">Welcome to ZHCET</h1>
+    <div class="row center">
+        <h5 class="header col s12 light">Check attendance or courses</h5>
+    </div>
+    <div class="row center">
+        <a href="/attendance" id="download-button" class="btn-large waves-effect waves-light purple">Get Started</a>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+<script src="../static/js/init.js" th:src="@{js/init.js}"></script>
+</body>
+</html>
