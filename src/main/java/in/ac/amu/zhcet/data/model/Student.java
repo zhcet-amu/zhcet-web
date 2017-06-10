@@ -2,17 +2,12 @@ package in.ac.amu.zhcet.data.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import java.util.List;
 
 @Entity
 public class Student extends User {
 
     @Column(unique = true)
     private String enrolmentNo;
-
-    @OneToMany
-    private List<Attendance> attendances;
 
     public Student() {
         super();
@@ -31,20 +26,11 @@ public class Student extends User {
         this.enrolmentNo = enrolmentNo;
     }
 
-    public List<Attendance> getAttendances() {
-        return attendances;
-    }
-
-    public void setAttendances(List<Attendance> attendances) {
-        this.attendances = attendances;
-    }
-
     @Override
     public String toString() {
         return "Student{" +
                 super.toString() +
                 "enrolmentNo='" + enrolmentNo + '\'' +
-                ", attendances=" + attendances +
                 '}';
     }
 }

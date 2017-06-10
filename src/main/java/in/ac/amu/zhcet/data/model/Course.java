@@ -1,29 +1,25 @@
 package in.ac.amu.zhcet.data.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import java.util.List;
 
 @Entity
 public class Course extends BaseEntity {
 
-    private String name;
+    private String title;
+    @Column(unique = true)
     private String code;
-    private String session;
-
-    @OneToMany
-    private List<Attendance> attendances;
 
     public Course() {
         super();
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getCode() {
@@ -34,28 +30,11 @@ public class Course extends BaseEntity {
         this.code = code;
     }
 
-    public String getSession() {
-        return session;
-    }
-
-    public void setSession(String session) {
-        this.session = session;
-    }
-
     @Override
     public String toString() {
         return "Course{" +
-                "name='" + name + '\'' +
+                "title='" + title + '\'' +
                 ", code='" + code + '\'' +
-                ", session='" + session + '\'' +
                 '}';
-    }
-
-    public List<Attendance> getAttendances() {
-        return attendances;
-    }
-
-    public void setAttendances(List<Attendance> attendances) {
-        this.attendances = attendances;
     }
 }

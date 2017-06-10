@@ -9,6 +9,7 @@ public class Attendance extends BaseEntity {
     private Course course;
     @ManyToOne
     private Student student;
+    private String session;
     private int delivered;
     private int attended;
 
@@ -46,6 +47,14 @@ public class Attendance extends BaseEntity {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public String getSession() {
+        return session;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
     }
 
     @Override
