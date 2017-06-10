@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.data.repository;
 
 import org.junit.Test;
-import utils.Utils;
+import in.ac.amu.zhcet.utils.Utils;
 
 
 public class UserRepositoryTest {
