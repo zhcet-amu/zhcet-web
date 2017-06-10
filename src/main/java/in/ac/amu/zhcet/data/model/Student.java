@@ -1,13 +1,17 @@
 package in.ac.amu.zhcet.data.model;
 
+import javax.persistence.Entity;
 import java.util.List;
 
+@Entity
 public class Student extends User {
 
     private String enrolmentNo;
 
     private List<Attendance> attendances;
 
+
+    public Student(){}
     public String getEnrolmentNo() {
         return enrolmentNo;
     }
