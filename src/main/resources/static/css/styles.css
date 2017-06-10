@@ -2,4 +2,10 @@
 
 body {
     font-family: 'Varela Round', 'Roboto', sans-serif;
+    background-color: #F3E5F5;
+}
+
+.short {
+    background-color: crimson;
+    color: #fff;
 }

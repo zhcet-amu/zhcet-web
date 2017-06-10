@@ -26,27 +26,49 @@
 <div class="container">
     <h1 class="header center teal-text">Check your attendance</h1>
     <div class="row">
-        <div class="col s0 m3"></div>
-        <div class="col s12 m6">
-            <div class="card">
-                <div class="card-content">
-                    <span class="card-title center">Enter your details</span>
+        <div class="col s0 l3"></div>
+        <div class="col s12 l6">
+            <form th:action="@{/attendance}" method="post">
+                <div class="card" style="padding: 10px;">
+                    <div class="card-content">
+                        <span class="card-title center">Enter your details </span>
+                        <div class="input-field">
+                            <input id="fac_no" name="fac_no" type="text" class="validate"/>
+                            <label for="fac_no">Faculty Number</label>
+                        </div>
+                    </div>
                     <div class="row">
-                        <form class="col s12">
-                            <div class="input-field">
-                                <input id="last_name" type="text" class="validate"/>
-                                <label for="last_name">Faculty Number</label>
-                            </div>
-                        </form>
+                        <div class="col s0 m6 l8"></div>
+                        <div class="col s12 m6 l4">
+                            <button class="waves-effect waves-teal btn-flat">Load</button>
+                        </div>
                     </div>
                 </div>
-                <div class="card-action teal">
-                    <a href="#" class="white-text">Load Attendance</a>
+            </form>
+        </div>
+        <div class="col s0 l3"></div>
+    </div>
+    <div class="row">
+        <div class="col l12">
+            <h4 th:text="${student?.name}" class="center">Student Name</h4>
+            <h4 th:text="${student?.userId}" class="center">Faculty Number</h4>
+        </div>
+
+        <div th:each="attendance : ${student?.attendances}" class="card col s12 m6 l4">
+            <div class="card-content">
+                    <span class="card-title center"
+                          th:text="${attendance.course?.name}">Course Name</span>
+                <div th:text="@{|Course Code : ${attendance.course?.code}|}">Course Code</div>
+                <div th:text="@{|Delivered : ${attendance.delivered}|}">Delivered</div>
+                <div th:text="@{|Attended : ${attendance.attended}|}">Attended</div>
+                <div th:with="percent=${attendance.attended*100.0/attendance.delivered}">
+                    <div th:text="@{|Percentage : ${#numbers.formatDecimal(percent, 0, 2)}%|}">Attended</div>
+                    <div class="red-text" th:text="'Attendance is ' + (${percent &lt; 75} ? 'short' : 'above threshold')" th:class="(${percent &lt; 75} ? 'red-text' : 'green-text')">Attendance is short</div>
                 </div>
             </div>
         </div>
-        <div class="col s0 m3"></div>
     </div>
+
 </div>
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
