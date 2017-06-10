@@ -32,7 +32,7 @@ public class StudentRepository {
 
         Student student = new Student();
         student.setUserId("14PEB049");
-        student.setUsername("Areeb Jamal");
+        student.setName("Areeb Jamal");
 
         Attendance attendance = new Attendance();
         attendance.setCourse(course2);

@@ -1,34 +1,52 @@
 package in.ac.amu.zhcet.data.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+public class User extends BaseEntity {
 
-class User extends BaseEntity{
+    public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+
     private String userId;
-    private String username;
 
-    public List<String> getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(List<String> phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    @JsonIgnore
     private String password;
-    private String role;
+    private String[] roles;
+
+    private String name;
+    private String avatarUrl;
     private String addressLine1;
     private String addressLine2;
-    private List<String> phoneNumber = new ArrayList<>();
 
-    public User(){
+    @ElementCollection
+    private List<String> phoneNumbers = new ArrayList<>();
+
+    protected User() {
+        super();
     }
 
+    public User(String userId, String password, String name, String[] roles) {
+        this();
+        setUserId(userId);
+        setPassword(password);
+        setName(name);
+        setRoles(roles);
+    }
+
+    public User(String userId, String password, String name, String[] roles, String avatarUrl, String addressLine1, String addressLine2, List<String> phoneNumbers) {
+        this(userId, password, name, roles);
+        setAvatarUrl(avatarUrl);
+        setAddressLine1(addressLine1);
+        setAddressLine2(addressLine2);
+        setPhoneNumbers(phoneNumbers);
+    }
 
     public String getUserId() {
         return userId;
@@ -38,28 +56,36 @@ class User extends BaseEntity{
         this.userId = userId;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = PASSWORD_ENCODER.encode(password);
     }
 
-    public String getRole() {
-        return role;
+    public String[] getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(String[] roles) {
+        this.roles = roles;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public String getAddressLine1() {
@@ -78,5 +104,11 @@ class User extends BaseEntity{
         this.addressLine2 = addressLine2;
     }
 
+    public List<String> getPhoneNumbers() {
+        return phoneNumbers;
+    }
 
+    public void setPhoneNumbers(List<String> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
+    }
 }

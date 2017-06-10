@@ -1,10 +1,20 @@
 package in.ac.amu.zhcet.data.model;
 
-public class Attendance {
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
+@Entity
+public class Attendance extends BaseEntity {
+    @ManyToOne
     private Course course;
+    @ManyToOne
+    private Student student;
     private int delivered;
     private int attended;
+
+    public Attendance() {
+        super();
+    }
 
     public Course getCourse() {
         return course;
@@ -28,6 +38,14 @@ public class Attendance {
 
     public void setAttended(int attended) {
         this.attended = attended;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     @Override

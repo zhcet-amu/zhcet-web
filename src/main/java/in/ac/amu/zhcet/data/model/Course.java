@@ -1,10 +1,22 @@
 package in.ac.amu.zhcet.data.model;
 
-public class Course {
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import java.util.List;
+
+@Entity
+public class Course extends BaseEntity {
 
     private String name;
     private String code;
     private String session;
+
+    @OneToMany
+    private List<Attendance> attendances;
+
+    public Course() {
+        super();
+    }
 
     public String getName() {
         return name;
@@ -37,5 +49,13 @@ public class Course {
                 ", code='" + code + '\'' +
                 ", session='" + session + '\'' +
                 '}';
+    }
+
+    public List<Attendance> getAttendances() {
+        return attendances;
+    }
+
+    public void setAttendances(List<Attendance> attendances) {
+        this.attendances = attendances;
     }
 }
