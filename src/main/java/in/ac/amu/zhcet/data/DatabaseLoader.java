@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import utils.Utils;
 
 import java.util.List;
 
@@ -61,11 +62,14 @@ public class DatabaseLoader implements ApplicationRunner {
         studentRepository.save(student);
         logger.info("Saved student " + student.toString());
 
+        String session = Utils.getCurrentSession();
+
         Attendance attendance = new Attendance();
         attendance.setCourse(course2);
         attendance.setStudent(student);
         attendance.setAttended(20);
         attendance.setDelivered(30);
+        attendance.setSession(session);
         attendanceRepository.save(attendance);
         logger.info("Saved attendance " + attendance.toString());
 
@@ -74,6 +78,7 @@ public class DatabaseLoader implements ApplicationRunner {
         attendance2.setStudent(student);
         attendance2.setAttended(12);
         attendance2.setDelivered(43);
+        attendance2.setSession(session);
         attendanceRepository.save(attendance2);
         logger.info("Saved attendance " + attendance2.toString());
 
@@ -82,6 +87,7 @@ public class DatabaseLoader implements ApplicationRunner {
         attendance3.setStudent(student);
         attendance3.setAttended(32);
         attendance3.setDelivered(40);
+        attendance3.setSession(session);
         attendanceRepository.save(attendance3);
         logger.info("Saved attendance " + attendance3.toString());
 
@@ -90,10 +96,11 @@ public class DatabaseLoader implements ApplicationRunner {
         attendance4.setStudent(student);
         attendance4.setAttended(21);
         attendance4.setDelivered(29);
+        attendance4.setSession(session);
         attendanceRepository.save(attendance4);
         logger.info("Saved attendance " + attendance4.toString());
 
-        List<Attendance> attendances = attendanceRepository.findByStudent_UserId("14PEB049");
+        List<Attendance> attendances = attendanceRepository.findBySessionAndStudent_UserId("A17","14PEB049");
         logger.info(attendances.toString());
     }
 }

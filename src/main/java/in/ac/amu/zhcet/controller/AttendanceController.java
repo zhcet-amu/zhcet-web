@@ -37,7 +37,7 @@ public class AttendanceController {
     public String postAttendance(Model model, @RequestParam String fac_no) {
 
         Student student = studentRepository.getByUserId(fac_no);
-        List<Attendance> attendances = attendanceRepository.findByStudent(student);
+        List<Attendance> attendances = attendanceRepository.findBySessionAndStudent("A17",student);
 
         model.addAttribute("student", student);
         model.addAttribute("attendances", attendances);

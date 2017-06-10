@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface AttendanceRepository extends CrudRepository<Attendance, Long> {
 
-    List<Attendance> findByStudent(Student student);
+    List<Attendance> findBySessionAndStudent(String session, Student student);
 
-    List<Attendance> findByStudent_UserId(String facultyNumber);
+    List<Attendance> findBySessionAndStudent_UserId(String session, String facultyNumber);
 
-    List<Attendance> findByCourse_Code(String courseCode);
+    List<Attendance> findBySessionAndCourse_Code(String session, String courseCode);
 
 }
