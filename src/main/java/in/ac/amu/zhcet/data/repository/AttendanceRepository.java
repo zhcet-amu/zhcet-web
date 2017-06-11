@@ -10,7 +10,7 @@ public interface AttendanceRepository extends CrudRepository<Attendance, Long> {
 
     List<Attendance> findBySessionAndStudent(String session, Student student);
 
-    List<Attendance> findBySessionAndStudent_UserId(String session, String facultyNumber);
+    List<Attendance> findBySessionAndStudent_User_userId(String session, String facultyNumber);
 
     List<Attendance> findBySessionAndCourse_Code(String session, String courseCode);
 

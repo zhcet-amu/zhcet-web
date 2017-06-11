@@ -50,8 +50,8 @@
     </div>
     <div class="row">
         <div class="col l12">
-            <h4 th:text="${student?.name}" class="center">Student Name</h4>
-            <h4 th:text="${student?.userId}" class="center">Faculty Number</h4>
+            <h4 th:text="${student.user?.name}" class="center">Student Name</h4>
+            <h4 th:text="${student.user?.userId}" class="center">Faculty Number</h4>
         </div>
 
         <div th:each="attendance : ${attendances}" class="card col s12 m6 l4">

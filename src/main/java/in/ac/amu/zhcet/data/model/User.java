@@ -3,9 +3,7 @@ package in.ac.amu.zhcet.data.model;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +22,10 @@ public class User extends BaseEntity {
     private String avatarUrl;
     private String addressLine1;
     private String addressLine2;
+    private boolean isActive;
 
-    @ElementCollection
-    private List<String> phoneNumbers = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> phoneNumbers;
 
     protected User() {
         super();
@@ -110,5 +109,26 @@ public class User extends BaseEntity {
 
     public void setPhoneNumbers(List<String> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId='" + userId + '\'' +
+                ", name='" + name + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", addressLine1='" + addressLine1 + '\'' +
+                ", addressLine2='" + addressLine2 + '\'' +
+                ", isActive=" + isActive +
+                ", phoneNumbers=" + phoneNumbers +
+                '}';
     }
 }
