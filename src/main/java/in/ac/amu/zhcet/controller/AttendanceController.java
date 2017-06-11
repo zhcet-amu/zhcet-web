@@ -28,7 +28,7 @@ public class AttendanceController {
 
     @GetMapping("/attendance")
     public String attendance(Model model) {
-        model.addAttribute("student", new Student());
+        model.addAttribute("student", null);
 
         return "attendance";
     }
@@ -36,7 +36,7 @@ public class AttendanceController {
     @PostMapping(value = "/attendance")
     public String postAttendance(Model model, @RequestParam String fac_no) {
 
-        Student student = studentRepository.getByUserId(fac_no);
+        Student student = studentRepository.getByUser_userId(fac_no);
         List<Attendance> attendances = attendanceRepository.findBySessionAndStudent("A17",student);
 
         model.addAttribute("student", student);

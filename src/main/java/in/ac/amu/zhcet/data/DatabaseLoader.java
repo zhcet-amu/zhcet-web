@@ -3,9 +3,11 @@ package in.ac.amu.zhcet.data;
 import in.ac.amu.zhcet.data.model.Attendance;
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Student;
+import in.ac.amu.zhcet.data.model.User;
 import in.ac.amu.zhcet.data.repository.AttendanceRepository;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
+import in.ac.amu.zhcet.data.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +24,12 @@ public class DatabaseLoader implements ApplicationRunner {
     private final StudentRepository studentRepository;
     private final AttendanceRepository attendanceRepository;
     private final CourseRepository courseRepository;
+    private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(DatabaseLoader.class);
 
     @Autowired
-    public DatabaseLoader(StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository) {
+    public DatabaseLoader(UserRepository userRepository, StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository) {
+        this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.attendanceRepository = attendanceRepository;
         this.courseRepository = courseRepository;
@@ -57,7 +61,10 @@ public class DatabaseLoader implements ApplicationRunner {
         courseRepository.save(course4);
         logger.info("Saved Course " + course4.toString());
 
-        Student student = new Student("14PEB049", "password", "Areeb Jamal", "GF1032");
+        User user = new User("14PEB049", "password", "Areeb Jamal", new String[]{"ROLE_STUDENT"});
+        userRepository.save(user);
+        logger.info("Saved user " + user.toString());
+        Student student = new Student(user, "GF1032");
         studentRepository.save(student);
         logger.info("Saved student " + student.toString());
 
@@ -99,7 +106,9 @@ public class DatabaseLoader implements ApplicationRunner {
         attendanceRepository.save(attendance4);
         logger.info("Saved attendance " + attendance4.toString());
 
-        List<Attendance> attendances = attendanceRepository.findBySessionAndStudent_UserId("A17","14PEB049");
+        List<Attendance> attendances = attendanceRepository.findBySessionAndStudent_User_userId("A17", "14PEB049");
         logger.info(attendances.toString());
+
+        logger.info(studentRepository.getByUser_userId("14PEB049").toString());
     }
 }

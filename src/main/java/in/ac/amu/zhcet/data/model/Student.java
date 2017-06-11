@@ -1,20 +1,27 @@
 package in.ac.amu.zhcet.data.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Entity
-public class Student extends User {
+public class Student {
+
+    @Id
+    private final Long id;
 
     @Column(unique = true)
     private String enrolmentNo;
 
-    public Student() {
-        super();
+    @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private User user;
+
+    protected Student() {
+        id = null;
     }
 
-    public Student(String userId, String password, String name, String enrolmentNo) {
-        super(userId, password, name, new String[]{ "ROLE_STUDENT" });
+    public Student(User user, String enrolmentNo) {
+        this.id = user.getId();
+        this.user = user;
         setEnrolmentNo(enrolmentNo);
     }
 
@@ -26,10 +33,22 @@ public class Student extends User {
         this.enrolmentNo = enrolmentNo;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
-                super.toString() +
+                user.toString() +
                 "enrolmentNo='" + enrolmentNo + '\'' +
                 '}';
     }
