@@ -1,0 +1,19 @@
+machine:
+  timezone:
+    Asia/Kolkata
+  java:
+    version:
+      oraclejdk8
+  environment:
+    TERM: dumb
+
+general:
+  artifacts:
+    - "build/reports/tests" # preserve the generated HTML test reports
+
+test:
+  override:
+    - ./gradlew build
+  post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
