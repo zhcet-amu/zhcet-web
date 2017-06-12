@@ -27,7 +27,7 @@ public class User extends BaseEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> phoneNumbers;
 
-    protected User() {
+    public User() {
         super();
     }
 
