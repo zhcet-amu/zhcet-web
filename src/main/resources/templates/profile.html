@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>Courses</title>
+    <title>Profile</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"/>
     <link href="../static/css/styles.css" th:href="@{css/styles.css}" rel="stylesheet" media="screen"/>
 </head>
 <body>
 <nav class="purple lighten-1">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">ZHCET</a>
+    <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo">ZHCET</a>
         <ul class="right hide-on-med-and-down">
             <li><a th:href="@{/attendance}" href="/attendance">Attendance</a></li>
             <li><a th:href="@{/courses}" href="/courses">Courses</a></li>
@@ -25,28 +25,15 @@
         <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
 </nav>
-
 <div class="container">
-    <h1 class="header center teal-text">Courses</h1>
-
+    <h1 class="header center teal-text" th:text = " 'Hello' + ' ' + ${student.user.name}"></h1>
     <div class="row">
-        <div class="col l12">
-            <div class="container">
-                <div th:each="course : ${courses}" class="card col s12 m6 l4">
-                    <div class="card-content">
-                <span class="card-title center"
-                      th:text="${course?.title}">Course Name</span>
-                        <span class="card-title center"
-                              th:text="${course?.code}">Course Code</span>
-                    </div>
-                </div>
+        <div class="col s0 l3">
+            <div class="col s12 l6">
+
             </div>
         </div>
     </div>
 </div>
-
-<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-<script src="../static/js/init.js" th:src="@{js/init.js}"></script>
 </body>
 </html>
