@@ -29,8 +29,6 @@ public class AttendanceController {
 
     @GetMapping("/attendance")
     public String attendance(Model model) {
-
-
         model.addAttribute("student", new Student(new User(), null));
 
         return "attendance";
