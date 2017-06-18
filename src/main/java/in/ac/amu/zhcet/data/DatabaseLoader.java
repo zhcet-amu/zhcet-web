@@ -1,13 +1,7 @@
 package in.ac.amu.zhcet.data;
 
-import in.ac.amu.zhcet.data.model.Attendance;
-import in.ac.amu.zhcet.data.model.Course;
-import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.User;
-import in.ac.amu.zhcet.data.repository.AttendanceRepository;
-import in.ac.amu.zhcet.data.repository.CourseRepository;
-import in.ac.amu.zhcet.data.repository.StudentRepository;
-import in.ac.amu.zhcet.data.repository.UserRepository;
+import in.ac.amu.zhcet.data.model.*;
+import in.ac.amu.zhcet.data.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,39 +19,49 @@ public class DatabaseLoader implements ApplicationRunner {
     private final AttendanceRepository attendanceRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
+    private final DepartmentRepository departmentRepository;
     private static final Logger logger = LoggerFactory.getLogger(DatabaseLoader.class);
 
     @Autowired
-    public DatabaseLoader(UserRepository userRepository, StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository) {
+    public DatabaseLoader(UserRepository userRepository, StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.attendanceRepository = attendanceRepository;
         this.courseRepository = courseRepository;
+        this.departmentRepository = departmentRepository;
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        Department department = new Department();
+        department.setDepartmentName("Computer");
+        departmentRepository.save(department);
+        logger.info("DepartmentSaved " + department);
         Course course1 = new Course();
         course1.setCode("CO313");
         course1.setTitle("DBMS");
+        course1.setDepartment(department);
         courseRepository.save(course1);
         logger.info("Saved Course " + course1.toString());
 
         Course course2 = new Course();
         course2.setCode("CO324");
         course2.setTitle("Operating Systems");
+        course2.setDepartment(department);
         courseRepository.save(course2);
         logger.info("Saved Course " + course2.toString());
 
         Course course3 = new Course();
         course3.setCode("CO316");
         course3.setTitle("Theory of Computation");
+        course3.setDepartment(department);
         courseRepository.save(course3);
         logger.info("Saved Course " + course3.toString());
 
         Course course4 = new Course();
         course4.setCode("CO356");
         course4.setTitle("Design and Analysis of Algorithms");
+        course4.setDepartment(department);
         courseRepository.save(course4);
         logger.info("Saved Course " + course4.toString());
 

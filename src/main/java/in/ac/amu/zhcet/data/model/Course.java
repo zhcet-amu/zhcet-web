@@ -1,7 +1,6 @@
 package in.ac.amu.zhcet.data.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Entity
 public class Course extends BaseEntity {
@@ -9,6 +8,9 @@ public class Course extends BaseEntity {
     private String title;
     @Column(unique = true)
     private String code;
+
+    @ManyToOne
+    private Department department;
 
     public Course() {
         super();
@@ -30,11 +32,20 @@ public class Course extends BaseEntity {
         this.code = code;
     }
 
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
     @Override
     public String toString() {
         return "Course{" +
                 "title='" + title + '\'' +
                 ", code='" + code + '\'' +
+                "department=" + department + '\'' +
                 '}';
     }
 }
