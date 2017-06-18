@@ -1,0 +1,3 @@
+[cli]
+bears = CheckstyleBear,coalaBear,CPDBear,DuplicateFileBear,FilenameBear,InferBear,InvalidLinkBear,JavaPMDBear,KeywordBear,LicenseCheckBear,LineCountBear,LineLengthBear,SpaceConsistencyBear
+files = **/*.java
