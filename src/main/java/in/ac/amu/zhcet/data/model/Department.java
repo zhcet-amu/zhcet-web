@@ -4,27 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
-public class Department {
-
-    @Column(unique = true)
-    private String departmentId;
+public class Department extends BaseEntity {
 
     private String departmentName;
 
     public Department() {
-    }
-
-    public Department(String departmentId, String departmentName) {
-        this.departmentId = departmentId;
-        this.departmentName = departmentName;
-    }
-
-    public String getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
+        super();
     }
 
     public String getDepartmentName() {
@@ -33,5 +18,10 @@ public class Department {
 
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
+    }
+
+    @Override
+    public String toString() {
+        return "{ " + departmentName + " }";
     }
 }
