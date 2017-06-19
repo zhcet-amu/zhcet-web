@@ -113,6 +113,8 @@ public class DatabaseLoader implements ApplicationRunner {
         List<Attendance> attendances = attendanceRepository.findBySessionAndStudent_User_userId("A17", "14PEB049");
         logger.info(attendances.toString());
 
+        List<Course> courses = courseRepository.findByDepartment_DepartmentName("Computer");
+        logger.info(courses.toString());
         logger.info(studentRepository.getByUser_userId("14PEB049").toString());
     }
 }
