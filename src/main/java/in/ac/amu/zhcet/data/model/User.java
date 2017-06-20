@@ -24,6 +24,9 @@ public class User extends BaseEntity {
     private String addressLine2;
     private boolean isActive;
 
+    @ManyToOne
+    private Department department;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> phoneNumbers;
 
@@ -117,6 +120,14 @@ public class User extends BaseEntity {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     @Override

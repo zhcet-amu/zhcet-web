@@ -66,6 +66,7 @@ public class DatabaseLoader implements ApplicationRunner {
         logger.info("Saved Course " + course4.toString());
 
         User user = new User("14PEB049", "password", "Areeb Jamal", new String[]{"ROLE_STUDENT"});
+        user.setDepartment(department);
         userRepository.save(user);
         logger.info("Saved user " + user.toString());
         Student student = new Student(user, "GF1032");
@@ -115,6 +116,10 @@ public class DatabaseLoader implements ApplicationRunner {
 
         List<Course> courses = courseRepository.findByDepartment_DepartmentName("Computer");
         logger.info(courses.toString());
+      
+        List<Student> students = studentRepository.getByUser_Department_DepartmentName("Computer");
+        logger.info(student.toString());
+      
         logger.info(studentRepository.getByUser_userId("14PEB049").toString());
     }
 }
