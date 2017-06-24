@@ -30,32 +30,38 @@
     <h1 class="header center teal-text">Create User</h1>
     <div class="row">
         <div class="col s0 l3"></div>
-        <form th:action="@{/user}" method="post" th:object="${user}">
+        <form th:action="@{/dean-admin}" method="post" th:object="${user}">
             <div class="card" style="padding: 10px;">
                 <div class="card-content">
                     <div class="input-field">
-                        <input id="faculty" th:field="*{roles}" name="user" type="radio" value="ROLE_FACULTY"/>
+                        <input id="faculty" th:field="*{roles}" name="user" type="radio" class="validate" value="ROLE_FACULTY"/>
                         <label for="faculty">Faculty</label>
 
-                        <input id="student" name="user" type="radio" value="ROLE_STUDENT"/>
+                        <input id="student" name="user" th:field="*{roles}" type="radio" class="validate" value="ROLE_STUDENT"/>
                         <label for="student">Student</label>
                     </div>
                     <div class="input-field">
-                        <input id="id" name="id" type="text"/>
+                        <input id="id" name="id" type="text" class="validate" th:field="*{userId}"/>
                         <label for="id">ID</label>
                     </div>
                     <div class="input-field">
-                        <input id="enrol" name="enrol" type="text"/>
+                        <input id="enrol" name="enrol" class="validate" type="text"/>
                         <label for="enrol">Enrolment Number</label>
                     </div>
 
                     <div class="input-field">
-                        <input id="name" name="name" type="text"/>
+                        <input id="name" name="name"  class="validate" type="text"/>
                         <label for="name">Name</label>
                     </div>
                     <div class="input-field">
-                        <input id="department" name="department" type="text"/>
+                        <input id="department" name="department"  class="validate" type="text" th:field="*{department}"/>
                         <label for="department">Department</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s0 m6 l8"></div>
+                    <div class="col s12 m6 l4">
+                        <button type="submit" class="waves-effect waves-teal btn-flat">Enter</button>
                     </div>
                 </div>
             </div>
