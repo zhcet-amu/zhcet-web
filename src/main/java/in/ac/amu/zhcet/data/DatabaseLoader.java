@@ -20,15 +20,17 @@ public class DatabaseLoader implements ApplicationRunner {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
+    private final FacultyRepositiory facultyRepositiory;
     private static final Logger logger = LoggerFactory.getLogger(DatabaseLoader.class);
 
     @Autowired
-    public DatabaseLoader(UserRepository userRepository, StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository) {
+    public DatabaseLoader(UserRepository userRepository, StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, FacultyRepositiory facultyRepositiory) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.attendanceRepository = attendanceRepository;
         this.courseRepository = courseRepository;
         this.departmentRepository = departmentRepository;
+        this.facultyRepositiory = facultyRepositiory;
     }
 
     @Override
@@ -110,6 +112,16 @@ public class DatabaseLoader implements ApplicationRunner {
         attendance4.setSession(session);
         attendanceRepository.save(attendance4);
         logger.info("Saved attendance " + attendance4.toString());
+
+        User user1 = new User("fac22", "pass", "Dp", new String[]{"ROLE_FACULTY"});
+        user1.setDepartment(department);
+        userRepository.save(user1);
+
+        Faculty faculty = new Faculty(user1);
+        facultyRepositiory.save(faculty);
+
+        List<Faculty> faculties = facultyRepositiory.getByUser_Department_DepartmentName("Computer");
+        logger.info("Faculties : are "+ faculties.toString());
 
         List<Attendance> attendances = attendanceRepository.findBySessionAndStudent_User_userId("A17", "14PEB049");
         logger.info(attendances.toString());
