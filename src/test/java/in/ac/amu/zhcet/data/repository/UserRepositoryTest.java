@@ -9,6 +9,7 @@ public class UserRepositoryTest {
     @Test
     public void test() {
         Utils.getCurrentSession();
+    
     }
 
 }
