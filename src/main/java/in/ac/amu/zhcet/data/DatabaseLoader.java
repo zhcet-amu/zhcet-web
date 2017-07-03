@@ -114,7 +114,7 @@ public class DatabaseLoader implements ApplicationRunner {
         attendanceRepository.save(attendance4);
         logger.info("Saved attendance " + attendance4.toString());
 
-        BaseUser user1 = new BaseUser("fac22", BaseUser.PASSWORD_ENCODER.encode("pass"), "Dp", new String[]{"ROLE_FACULTY"});
+        BaseUser user1 = new BaseUser("fac22", "pass", "Dp", new String[]{Roles.DEAN_ADMIN});
         user1.setDepartment(department);
         userService.saveUser(user1);
 
