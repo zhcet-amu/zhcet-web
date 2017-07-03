@@ -1,8 +1,8 @@
 package in.ac.amu.zhcet.controller;
 
 import in.ac.amu.zhcet.data.model.Attendance;
+import in.ac.amu.zhcet.data.model.BaseUser;
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.User;
 import in.ac.amu.zhcet.data.repository.AttendanceRepository;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class AttendanceController {
 
     @GetMapping("/attendance")
     public String attendance(Model model) {
-        model.addAttribute("student", new Student(new User(), null));
+        model.addAttribute("student", new Student(new BaseUser(), null));
 
         return "attendance";
     }

@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.controller;
 
+import in.ac.amu.zhcet.data.model.BaseUser;
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.User;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +22,14 @@ public class DeanController {
         this.studentRepository = studentRepository;
     }
 
-    @GetMapping("/dean-admin")
+    @GetMapping("/dean")
     public String deanAdmin(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new BaseUser());
         return "user";
     }
 
-    @PostMapping("/dean-admin")
-    public String enterUser(Model model, @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam String enrol) {
+    @PostMapping("/dean")
+    public String enterUser(Model model, @ModelAttribute("user") BaseUser user, BindingResult bindingResult, @RequestParam String enrol) {
         user.setActive(true);
         userRepository.save(user);
         String role = user.getRoles()[0];

@@ -15,18 +15,16 @@
     <div class="row">
         <div class="col s0 l3"></div>
         <div class="col s12 l6">
-            <form th:action="@{/login}" method="post" th:object="${user}">
+            <form th:action="@{/login}" method="post">
                 <div class="card" style="padding: 10px;">
                     <div class="card-content">
                         <span class="card-title center">LoginDetails</span>
                         <div class="input-field">
-                            <input id="faculty_number" name="faculty_number" type="text" class="validate"
-                                   th:field="*{userId}"/>
-                            <label for="faculty_number">Faculty Number</label>
+                            <input id="username" name="username" type="text" class="validate"/>
+                            <label for="username">Faculty Number</label>
                         </div>
                         <div class="input-field">
-                            <input id="password" name="password" type="password" class="validate"
-                                   th:field="*{password}"/>
+                            <input id="password" name="password" type="password" class="validate"/>
                             <label for="password">Password</label>
                         </div>
                         <p th:text="${error}? ${error}: '' "></p>

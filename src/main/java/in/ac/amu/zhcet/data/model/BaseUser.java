@@ -4,11 +4,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class User extends BaseEntity {
+public class BaseUser extends BaseEntity {
 
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
@@ -19,6 +18,7 @@ public class User extends BaseEntity {
     private String[] roles;
 
     private String name;
+    private String email;
     private String avatarUrl;
     private String addressLine1;
     private String addressLine2;
@@ -30,11 +30,11 @@ public class User extends BaseEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> phoneNumbers;
 
-    public User() {
+    public BaseUser() {
         super();
     }
 
-    public User(String userId, String password, String name, String[] roles) {
+    public BaseUser(String userId, String password, String name, String[] roles) {
         this();
         setUserId(userId);
         setPassword(password);
@@ -42,7 +42,7 @@ public class User extends BaseEntity {
         setRoles(roles);
     }
 
-    public User(String userId, String password, String name, String[] roles, String avatarUrl, String addressLine1, String addressLine2, List<String> phoneNumbers) {
+    public BaseUser(String userId, String password, String name, String[] roles, String avatarUrl, String addressLine1, String addressLine2, List<String> phoneNumbers) {
         this(userId, password, name, roles);
         setAvatarUrl(avatarUrl);
         setAddressLine1(addressLine1);
@@ -54,7 +54,7 @@ public class User extends BaseEntity {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    private void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -63,7 +63,7 @@ public class User extends BaseEntity {
     }
 
     public void setPassword(String password) {
-        this.password = PASSWORD_ENCODER.encode(password);
+        this.password = password;
     }
 
     public String[] getRoles() {
@@ -122,6 +122,14 @@ public class User extends BaseEntity {
         isActive = active;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public Department getDepartment() {
         return department;
     }
@@ -132,7 +140,7 @@ public class User extends BaseEntity {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "BaseUser{" +
                 "userId='" + userId + '\'' +
                 ", name='" + name + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +

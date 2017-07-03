@@ -9,11 +9,11 @@ public class Faculty {
 
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-    private User user;
+    private BaseUser user;
 
     protected Faculty(){id = null;}
 
-    public Faculty(User user) {
+    public Faculty(BaseUser user) {
         this.id = user.getId();
         this.user = user;
     }
@@ -22,11 +22,11 @@ public class Faculty {
         return id;
     }
 
-    public User getUser() {
+    public BaseUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(BaseUser user) {
         this.user = user;
     }
 

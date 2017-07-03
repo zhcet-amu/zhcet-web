@@ -13,13 +13,13 @@ public class Student {
 
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-    private User user;
+    private BaseUser user;
 
     protected Student() {
         id = null;
     }
 
-    public Student(User user, String enrolmentNo) {
+    public Student(BaseUser user, String enrolmentNo) {
         this.id = user.getId();
         this.user = user;
         setEnrolmentNo(enrolmentNo);
@@ -37,11 +37,11 @@ public class Student {
         return id;
     }
 
-    public User getUser() {
+    public BaseUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(BaseUser user) {
         this.user = user;
     }
 
