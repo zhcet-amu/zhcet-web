@@ -18,37 +18,55 @@
             <div class="card" style="padding: 10px;">
                 <div class="card-content">
                     <div class="input-field">
-                        <input id="faculty" th:field="*{roles}" name="user" type="radio" class="validate" value="ROLE_FACULTY"/>
-                        <label for="faculty">Faculty</label>
-
-                        <input id="student" name="user" th:field="*{roles}" type="radio" class="validate" value="ROLE_STUDENT"/>
+                        <input id="student" name="user_type" type="radio" value="ROLE_STUDENT" checked="checked"/>
                         <label for="student">Student</label>
+
+                        <input id="faculty" name="user_type" type="radio" value="ROLE_FACULTY"/>
+                        <label for="faculty">Faculty</label>
                     </div>
+                    <br/>
+
                     <div class="input-field">
-                        <input id="id" name="id" type="text" class="validate" th:field="*{userId}"/>
-                        <label for="id">ID</label>
-                    </div>
-                    <div class="input-field">
-                        <input id="enrol" name="enrol" class="validate" type="text"/>
-                        <label for="enrol">Enrolment Number</label>
+                        <input id="id" name="id" type="text" th:field="*{userId}"/>
+                        <label for="id">User ID</label>
                     </div>
 
                     <div class="input-field">
-                        <input id="name" name="name"  class="validate" type="text"/>
+                        <input id="name" name="name" type="text" th:field="*{name}"/>
                         <label for="name">Name</label>
+                    </div>
+
+                    <div class="input-field">
+                        <input id="password" name="password" type="password" th:field="*{password}"/>
+                        <label for="password">Password</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col s0 m6 l8"></div>
-                    <div class="col s12 m6 l4">
+                    <div class="col s12 m6 l4 pull-right">
                         <button type="submit" class="waves-effect waves-teal btn-flat">Enter</button>
                     </div>
                 </div>
+                <div th:if="${message}" class="green-text center" th:text="${message}">Registered</div>
             </div>
         </form>
-        <div class="col s12 l6">
-        </div>
     </div>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>User ID</th>
+            <th>Registration Date</th>
+            <th>Roles</th>
+        </tr>
+        <th:block th:each="user : ${users}">
+            <tr>
+                <td th:text="${user.name}">A Smoke Test'</td>
+                <td th:text="${user.userId}">A Smoke Test'</td>
+                <td th:text="${user.createdAt}">A Smoke Test'</td>
+                <td th:text="${@userService.getType(user)}">A Smoke Test'</td>
+            </tr>
+        </th:block>
+    </table>
 </div>
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>

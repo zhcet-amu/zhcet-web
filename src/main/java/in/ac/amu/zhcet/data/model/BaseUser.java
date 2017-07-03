@@ -22,7 +22,7 @@ public class BaseUser extends BaseEntity {
     private String avatarUrl;
     private String addressLine1;
     private String addressLine2;
-    private boolean isActive;
+    private boolean isActive = true;
 
     @ManyToOne
     private Department department;
@@ -54,7 +54,7 @@ public class BaseUser extends BaseEntity {
         return userId;
     }
 
-    private void setUserId(String userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

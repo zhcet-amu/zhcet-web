@@ -5,6 +5,7 @@ import in.ac.amu.zhcet.data.model.BaseUser;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.repository.AttendanceRepository;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
+import in.ac.amu.zhcet.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +39,7 @@ public class AttendanceController {
     public String postAttendance(Model model, @RequestParam String fac_no) {
 
         Student student = studentRepository.getByUser_userId(fac_no);
-        List<Attendance> attendances = attendanceRepository.findBySessionAndStudent("A17",student);
+        List<Attendance> attendances = attendanceRepository.findBySessionAndStudent(Utils.getCurrentSession(), student);
 
         model.addAttribute("student", student);
         model.addAttribute("attendances", attendances);
