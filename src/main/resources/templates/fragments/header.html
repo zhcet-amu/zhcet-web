@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Attendance</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"/>
+    <link href="../../static/css/styles.css" th:href="@{css/styles.css}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+<nav class="purple lighten-1" th:fragment="header">
+    <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo">ZHCET</a>
+        <ul class="right hide-on-med-and-down">
+            <li><a th:href="@{/attendance}" href="/attendance">Attendance</a></li>
+            <li><a th:href="@{/courses}" href="/courses">Courses</a></li>
+            <li><a th:href="@{/login}" href="/login">Log In</a></li>
+        </ul>
+
+
+        <ul id="nav-mobile" class="side-nav">
+            <li><a th:href="@{/attendance}" href="/attendance">Attendance</a></li>
+            <li><a th:href="@{/courses}" href="/courses">Courses</a></li>
+            <li><a th:href="@{/login}" href="/login">Log In</a></li>
+        </ul>
+        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+</nav>
+</body>
+</html>

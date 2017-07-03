@@ -34,7 +34,7 @@ public class LoginController {
     @PostMapping("/login")
     public String login(Model model, @ModelAttribute User user, @RequestParam String password) {
         Student student = studentRepository.getByUser_userId(user.getUserId());
-        if (user.PASSWORD_ENCODER.matches(password, student.getUser().getPassword())) {
+        if (User.PASSWORD_ENCODER.matches(password, student.getUser().getPassword())) {
             model.addAttribute("student", student);
             System.out.print("hello   " + student.toString());
             return "profile";

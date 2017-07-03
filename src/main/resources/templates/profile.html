@@ -8,23 +8,7 @@
     <link href="../static/css/styles.css" th:href="@{css/styles.css}" rel="stylesheet" media="screen"/>
 </head>
 <body>
-<nav class="purple lighten-1">
-    <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo">ZHCET</a>
-        <ul class="right hide-on-med-and-down">
-            <li><a th:href="@{/attendance}" href="/attendance">Attendance</a></li>
-            <li><a th:href="@{/courses}" href="/courses">Courses</a></li>
-            <li><a th:href="@{/signup}" href="/signup">Sign Up</a></li>
-        </ul>
-
-
-        <ul id="nav-mobile" class="side-nav">
-            <li><a th:href="@{/attendance}" href="/attendance">Attendance</a></li>
-            <li><a th:href="@{/courses}" href="/courses">Courses</a></li>
-            <li><a th:href="@{/signup}" href="/signup">Sign Up</a></li>
-        </ul>
-        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-</nav>
+<nav class="purple lighten-1" th:replace="fragments/header :: header"></nav>
 <div class="container">
     <h1 class="header center teal-text" th:text = " 'Hello' + ' ' + ${student.user.name}"></h1>
     <div class="row">

@@ -48,8 +48,9 @@ public class Student {
     @Override
     public String toString() {
         return "Student{" +
-                user.toString() +
-                "enrolmentNo='" + enrolmentNo + '\'' +
+                "id=" + id +
+                ", enrolmentNo='" + enrolmentNo + '\'' +
+                ", user=" + user +
                 '}';
     }
 }

@@ -8,23 +8,7 @@
     <link href="../static/css/styles.css" th:href="@{css/styles.css}" rel="stylesheet" media="screen"/>
 </head>
 <body>
-<nav class="purple lighten-1">
-    <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo">ZHCET</a>
-        <ul class="right hide-on-med-and-down">
-            <li><a th:href="@{/attendance}" href="/attendance">Attendance</a></li>
-            <li><a th:href="@{/courses}" href="/courses">Courses</a></li>
-            <li><a th:href="@{/signup}" href="/signup">Sign Up</a></li>
-        </ul>
-
-
-        <ul id="nav-mobile" class="side-nav">
-            <li><a th:href="@{/attendance}" href="/attendance">Attendance</a></li>
-            <li><a th:href="@{/courses}" href="/courses">Courses</a></li>
-            <li><a th:href="@{/signup}" href="/signup">Sign Up</a></li>
-        </ul>
-        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-</nav>
+<nav class="purple lighten-1" th:replace="fragments/header :: header"></nav>
 
 <div class="container">
     <h1 class="header center teal-text">Create User</h1>
@@ -73,6 +57,5 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 <script src="../static/js/init.js" th:src="@{js/init.js}"></script>
-
 </body>
 </html>
