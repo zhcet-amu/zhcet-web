@@ -27,7 +27,7 @@ public class StudentService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        Student student = getByUserId(userName);
+        Student student = getByEnrolmentNumber(userName);
         if (student == null) {
             BaseUser user = userRepository.findByUserId(userName);
             student = new Student(user, null);
@@ -36,13 +36,12 @@ public class StudentService {
         return student;
     }
 
-    public Student getByUserId(String userId) {
-        return studentRepository.getByUser_userId(userId);
+    public Student getByEnrolmentNumber(String userId) {
+        return studentRepository.getByEnrolmentNumber(userId);
     }
 
     @Transactional
     public void updateStudent(Student student) {
-        userRepository.save(student.getUser());
         studentRepository.save(student);
     }
 

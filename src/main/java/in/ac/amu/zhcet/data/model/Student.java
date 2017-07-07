@@ -1,30 +1,33 @@
 package in.ac.amu.zhcet.data.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Data
-public class Student {
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+public class Student extends BaseEntity {
 
     @Id
-    private final Long id;
+    private String enrolmentNumber;
 
     @Column(unique = true)
-    private String enrolmentNo;
+    private String facultyNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private BaseUser user;
 
-    protected Student() {
-        id = null;
-    }
+    @Embedded
+    private UserDetails userDetails;
 
-    public Student(BaseUser user, String enrolmentNo) {
-        this.id = user.getId();
+    public Student(BaseUser user, String facultyNumber) {
+        this.enrolmentNumber = user.getUserId();
         this.user = user;
-        setEnrolmentNo(enrolmentNo);
+        setFacultyNumber(facultyNumber);
     }
 }

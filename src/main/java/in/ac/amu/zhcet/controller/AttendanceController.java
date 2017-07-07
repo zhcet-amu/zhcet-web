@@ -5,6 +5,7 @@ import in.ac.amu.zhcet.data.model.BaseUser;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.repository.AttendanceRepository;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
+import in.ac.amu.zhcet.data.service.StudentService;
 import in.ac.amu.zhcet.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,31 +19,22 @@ import java.util.List;
 @Controller
 public class AttendanceController {
 
-    private final StudentRepository studentRepository;
+    private final StudentService studentService;
     private final AttendanceRepository attendanceRepository;
 
     @Autowired
-    public AttendanceController(StudentRepository studentRepository, AttendanceRepository attendanceRepository) {
-        this.studentRepository = studentRepository;
+    public AttendanceController(StudentService studentService, AttendanceRepository attendanceRepository) {
+        this.studentService = studentService;
         this.attendanceRepository = attendanceRepository;
     }
 
 
     @GetMapping("/attendance")
     public String attendance(Model model) {
-        model.addAttribute("student", new Student(new BaseUser(), null));
-
-        return "attendance";
-    }
-
-    @PostMapping(value = "/attendance")
-    public String postAttendance(Model model, @RequestParam String fac_no) {
-
-        Student student = studentRepository.getByUser_userId(fac_no);
-        List<Attendance> attendances = attendanceRepository.findBySessionAndStudent(Utils.getCurrentSession(), student);
+        Student student = studentService.getLoggedInStudent();
 
         model.addAttribute("student", student);
-        model.addAttribute("attendances", attendances);
+        model.addAttribute("attendances", attendanceRepository.findBySessionAndStudent(Utils.getCurrentSession(), student));
 
         return "attendance";
     }

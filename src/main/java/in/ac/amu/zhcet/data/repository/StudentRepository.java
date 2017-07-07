@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface StudentRepository extends CrudRepository<Student, Long> {
 
-    Student getByUser_userId(String userId);
+    Student getByEnrolmentNumber(String enrolmentNumber);
 
-    List<Student> getByUser_Department_DepartmentName(String name);
+    List<Student> getByUserDetails_Department_DepartmentName(String departmentName);
 }

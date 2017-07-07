@@ -68,11 +68,13 @@ public class DatabaseLoader implements ApplicationRunner {
         courseRepository.save(course4);
         logger.info("Saved Course " + course4.toString());
 
-        BaseUser user = new BaseUser("14PEB049", "password", "Areeb Jamal", new String[]{"ROLE_STUDENT"});
-        user.setDepartment(department);
+        BaseUser user = new BaseUser("GF1032", "password", "Areeb Jamal", new String[]{"ROLE_STUDENT"});
         userService.saveUser(user);
         logger.info("Saved user " + user.toString());
-        Student student = new Student(user, "GF1032");
+        Student student = new Student(user, "14PEB049");
+        UserDetails userDetails = new UserDetails();
+        userDetails.setDepartment(department);
+        student.setUserDetails(userDetails);
         studentRepository.save(student);
         logger.info("Saved student " + student.toString());
 
@@ -115,13 +117,13 @@ public class DatabaseLoader implements ApplicationRunner {
         logger.info("Saved attendance " + attendance4.toString());
 
         BaseUser user1 = new BaseUser("fac22", "pass", "Dp", new String[]{Roles.DEAN_ADMIN});
-        user1.setDepartment(department);
         userService.saveUser(user1);
 
-        Faculty faculty = new Faculty(user1);
-        facultyRepositiory.save(faculty);
+        FacultyMember facultyMember = new FacultyMember(user1);
+        facultyMember.setUserDetails(userDetails);
+        facultyRepositiory.save(facultyMember);
 
-        List<Faculty> faculties = facultyRepositiory.getByUser_Department_DepartmentName("Computer");
+        List<FacultyMember> faculties = facultyRepositiory.getByUserDetails_Department_DepartmentName("Computer");
         logger.info("Faculties : are "+ faculties.toString());
 
         List<Attendance> attendances = attendanceRepository.findBySessionAndStudent_User_userId("A17", "14PEB049");
@@ -130,9 +132,9 @@ public class DatabaseLoader implements ApplicationRunner {
         List<Course> courses = courseRepository.findByDepartment_DepartmentName("Computer");
         logger.info(courses.toString());
       
-        List<Student> students = studentRepository.getByUser_Department_DepartmentName("Computer");
-        logger.info(student.toString());
+        List<Student> students = studentRepository.getByUserDetails_Department_DepartmentName("Computer");
+        logger.info(students.toString());
       
-        logger.info(studentRepository.getByUser_userId("14PEB049").toString());
+        logger.info(studentRepository.getByEnrolmentNumber("GF1032").toString());
     }
 }

@@ -8,6 +8,6 @@ import javax.persistence.Entity;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Department extends BaseEntity {
+public class Department extends BaseIdEntity {
     private String departmentName;
 }

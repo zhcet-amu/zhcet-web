@@ -21,11 +21,11 @@
                         <span class="card-title center">Enter your details </span>
                         <div class="input-field">
                             <input id="faculty_number" name="faculty_number" type="text"
-                                   th:field="*{user.userId}"/>
+                                   th:field="*{facultyNumber}"/>
                             <label for="faculty_number">Faculty Number</label>
                         </div>
                         <div class="input-field">
-                            <input id="enrolment" name="enrolment" type="text" th:field="*{enrolmentNo}"/>
+                            <input id="enrolment" name="enrolment" type="text" th:field="*{enrolmentNumber}"/>
                             <label for="enrolment">Enrolment number</label>
                         </div>
                         <div class="input-field">
@@ -33,19 +33,19 @@
                             <label for="name">Username</label>
                         </div>
                         <div class="input-field">
-                            <input id="avatar" name="avatar" type="url" class="validate" th:field="*{user.avatarUrl}"/>
+                            <input id="avatar" name="avatar" type="url" class="validate" th:field="*{userDetails.avatarUrl}"/>
                             <label for="avatar">Avatar</label>
                         </div>
                         <div class="input-field">
-                            <input id="email" name="email" type="email" class="validate" th:field="*{user.email}"/>
+                            <input id="email" name="email" type="email" class="validate" th:field="*{userDetails.email}"/>
                             <label for="avatar">Email</label>
                         </div>
                         <div class="input-field">
-                            <input id="addressLine1" name="addressLine1" type="text" th:field="*{user.addressLine1}"/>
+                            <input id="addressLine1" name="addressLine1" type="text" th:field="*{userDetails.addressLine1}"/>
                             <label for="addressLine1">Address Line 1</label>
                         </div>
                         <div class="input-field">
-                            <input id="addressLine2" name="addressLine2" type="text" th:field="*{user.addressLine2}"/>
+                            <input id="addressLine2" name="addressLine2" type="text" th:field="*{userDetails.addressLine2}"/>
                             <label for="addressLine2">Address Line 2</label>
                         </div>
                     </div>

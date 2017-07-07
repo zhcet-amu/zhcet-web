@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Attendance extends BaseEntity {
+public class Attendance extends BaseIdEntity {
     @ManyToOne
     private Course course;
     @ManyToOne

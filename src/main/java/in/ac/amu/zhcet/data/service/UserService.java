@@ -30,7 +30,7 @@ public class UserService {
         if (roles.contains(Roles.DEAN_ADMIN))
             return "Dean Admin";
         else if (roles.contains(Roles.FACULTY))
-            return "Faculty";
+            return "FacultyMember";
         else
             return "Student";
     }

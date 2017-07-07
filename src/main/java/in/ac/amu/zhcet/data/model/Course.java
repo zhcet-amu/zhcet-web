@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Course extends BaseEntity {
+public class Course extends BaseIdEntity {
 
     private String title;
     @Column(unique = true)

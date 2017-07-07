@@ -14,6 +14,7 @@
     <h1 class="header center teal-text">Create User</h1>
     <div class="row">
         <div class="col s0 l3"></div>
+        <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.BaseUser"*/-->
         <form th:action="@{/dean}" method="post" th:object="${user}">
             <div class="card" style="padding: 10px;">
                 <div class="card-content">
@@ -21,8 +22,8 @@
                         <input id="student" name="user_type" type="radio" value="ROLE_STUDENT" checked="checked"/>
                         <label for="student">Student</label>
 
-                        <input id="faculty" name="user_type" type="radio" value="ROLE_FACULTY"/>
-                        <label for="faculty">Faculty</label>
+                        <input id="facultyMember" name="user_type" type="radio" value="ROLE_FACULTY"/>
+                        <label for="facultyMember">Faculty</label>
                     </div>
                     <br/>
 
@@ -62,7 +63,7 @@
             <tr>
                 <td th:text="${user.name}">A Smoke Test'</td>
                 <td th:text="${user.userId}">A Smoke Test'</td>
-                <td th:text="${user.createdAt}">A Smoke Test'</td>
+                <td th:text="${user.createdAt != null ? user.createdAt : user.updatedAt }">A Smoke Test'</td>
                 <td th:text="${@userService.getType(user)}">A Smoke Test'</td>
             </tr>
         </th:block>
