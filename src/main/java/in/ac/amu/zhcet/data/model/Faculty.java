@@ -1,8 +1,11 @@
 package in.ac.amu.zhcet.data.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
+@Data
 public class Faculty {
     @Id
     private final Long id;
@@ -11,27 +14,12 @@ public class Faculty {
     @PrimaryKeyJoinColumn
     private BaseUser user;
 
-    protected Faculty(){id = null;}
+    protected Faculty() {
+        id = null;
+    }
 
     public Faculty(BaseUser user) {
         this.id = user.getId();
         this.user = user;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public BaseUser getUser() {
-        return user;
-    }
-
-    public void setUser(BaseUser user) {
-        this.user = user;
-    }
-
-    @Override
-    public String toString() {
-        return "ID: {"+this.id;
     }
 }

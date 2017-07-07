@@ -1,8 +1,11 @@
 package in.ac.amu.zhcet.data.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
+@Data
 public class Student {
 
     @Id
@@ -23,34 +26,5 @@ public class Student {
         this.id = user.getId();
         this.user = user;
         setEnrolmentNo(enrolmentNo);
-    }
-
-    public String getEnrolmentNo() {
-        return enrolmentNo;
-    }
-
-    public void setEnrolmentNo(String enrolmentNo) {
-        this.enrolmentNo = enrolmentNo;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public BaseUser getUser() {
-        return user;
-    }
-
-    public void setUser(BaseUser user) {
-        this.user = user;
-    }
-
-    @Override
-    public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", enrolmentNo='" + enrolmentNo + '\'' +
-                ", user=" + user +
-                '}';
     }
 }

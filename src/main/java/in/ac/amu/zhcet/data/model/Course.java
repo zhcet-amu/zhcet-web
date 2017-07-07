@@ -1,8 +1,13 @@
 package in.ac.amu.zhcet.data.model;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 
 @Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class Course extends BaseEntity {
 
     private String title;
@@ -11,41 +16,4 @@ public class Course extends BaseEntity {
 
     @ManyToOne
     private Department department;
-
-    public Course() {
-        super();
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
-
-    @Override
-    public String toString() {
-        return "Course{" +
-                "title='" + title + '\'' +
-                ", code='" + code + '\'' +
-                "department=" + department + '\'' +
-                '}';
-    }
 }

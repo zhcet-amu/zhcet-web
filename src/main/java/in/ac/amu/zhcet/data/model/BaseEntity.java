@@ -1,14 +1,17 @@
 package in.ac.amu.zhcet.data.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Date;
 
+@Data
 @MappedSuperclass
-public abstract class BaseEntity {
+abstract class BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private final Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private final Long id = null;
 
     private Date createdAt;
 
@@ -16,38 +19,6 @@ public abstract class BaseEntity {
 
     @Version
     private int version;
-
-    BaseEntity() {
-        id = null;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
 
     @PrePersist
     void createdAt() {
