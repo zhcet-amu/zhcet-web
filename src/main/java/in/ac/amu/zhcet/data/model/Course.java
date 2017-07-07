@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.data.model;
 
+import in.ac.amu.zhcet.data.model.base.BaseIdEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

@@ -1,5 +1,8 @@
 package in.ac.amu.zhcet.data.model;
 
+import in.ac.amu.zhcet.data.model.base.BaseEntity;
+import in.ac.amu.zhcet.data.model.base.BaseUser;
+import in.ac.amu.zhcet.data.model.base.UserDetails;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

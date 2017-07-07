@@ -1,5 +1,6 @@
-package in.ac.amu.zhcet.data.model;
+package in.ac.amu.zhcet.data.model.base;
 
+import in.ac.amu.zhcet.data.model.Department;
 import lombok.Data;
 
 import javax.persistence.Embeddable;

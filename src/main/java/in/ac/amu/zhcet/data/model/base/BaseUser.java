@@ -1,11 +1,10 @@
-package in.ac.amu.zhcet.data.model;
+package in.ac.amu.zhcet.data.model.base;
 
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Data

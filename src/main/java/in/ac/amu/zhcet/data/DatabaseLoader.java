@@ -1,6 +1,8 @@
 package in.ac.amu.zhcet.data;
 
 import in.ac.amu.zhcet.data.model.*;
+import in.ac.amu.zhcet.data.model.base.BaseUser;
+import in.ac.amu.zhcet.data.model.base.UserDetails;
 import in.ac.amu.zhcet.data.repository.*;
 import in.ac.amu.zhcet.data.service.UserService;
 import org.slf4j.Logger;

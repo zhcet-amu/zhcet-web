@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.data.repository;
 
-import in.ac.amu.zhcet.data.model.BaseUser;
+import in.ac.amu.zhcet.data.model.base.BaseUser;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

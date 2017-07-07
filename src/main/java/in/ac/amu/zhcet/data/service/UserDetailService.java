@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.data.service;
 
-import in.ac.amu.zhcet.data.model.BaseUser;
+import in.ac.amu.zhcet.data.model.base.BaseUser;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

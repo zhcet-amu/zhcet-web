@@ -1,9 +1,8 @@
 package in.ac.amu.zhcet.data.model;
 
+import in.ac.amu.zhcet.data.model.base.BaseIdEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;

@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.data.model;
+package in.ac.amu.zhcet.data.model.base;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-abstract class BaseEntity {
+public abstract class BaseEntity {
     @CreatedDate
     private Date createdAt;
 
