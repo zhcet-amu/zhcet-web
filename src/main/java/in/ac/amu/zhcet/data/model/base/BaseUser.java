@@ -1,12 +1,14 @@
 package in.ac.amu.zhcet.data.model.base;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
 @Entity
+@DynamicUpdate
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)

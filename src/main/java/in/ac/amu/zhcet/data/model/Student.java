@@ -6,10 +6,14 @@ import in.ac.amu.zhcet.data.model.base.UserDetails;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor

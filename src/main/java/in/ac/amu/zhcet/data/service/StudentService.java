@@ -2,6 +2,7 @@ package in.ac.amu.zhcet.data.service;
 
 import in.ac.amu.zhcet.data.model.base.BaseUser;
 import in.ac.amu.zhcet.data.model.Student;
+import in.ac.amu.zhcet.data.model.base.UserDetails;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,9 @@ public class StudentService {
     }
 
     @Transactional
-    public void updateStudent(Student student) {
+    public void updateStudentDetails(String enrolmentNumber, UserDetails userDetails) {
+        Student student = studentRepository.getByEnrolmentNumber(enrolmentNumber);
+        student.setUserDetails(userDetails);
         studentRepository.save(student);
     }
 
