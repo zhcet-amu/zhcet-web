@@ -1,49 +1,57 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Login</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"/>
-    <link href="../static/css/styles.css" th:href="@{css/styles.css}" rel="stylesheet" media="screen"/>
+<html lang="en" data-textdirection="ltr" class="loading" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head(title = 'Home')">
 </head>
-<body>
-<nav class="purple lighten-1" th:replace="fragments/header :: header"></nav>
 
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
+      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<nav th:replace="fragments/header :: header"></nav>
+<div th:replace="fragments/navigation :: navigation"></div>
 <div class="container">
-    <h1 class="header center teal-text">Login</h1>
-    <div class="row">
-        <div class="col s0 l3"></div>
-        <div class="col s12 l6">
-            <form th:action="@{/login}" method="post">
-                <div class="card" style="padding: 10px;">
-                    <div class="card-content">
-                        <span class="card-title center">LoginDetails</span>
-                        <div class="input-field">
-                            <input id="username" name="username" type="text" class="validate"/>
-                            <label for="username">User ID</label>
-                        </div>
-                        <div class="input-field">
-                            <input id="password" name="password" type="password" class="validate"/>
-                            <label for="password">Password</label>
-                        </div>
-                        <p th:text="${error}? ${error}: '' "></p>
-                        <div class="row">
-                            <div class="col s0 m6 l8"></div>
-                            <div class="col s12 m6 l4">
-                                <button type="submit" class="waves-effect waves-teal btn-flat">Login</button>
-                            </div>
-                        </div>
-                    </div>
+    <div class="col-md-15">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title" id="from-actions-top-left">Login</h4>
+                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                    </ul>
                 </div>
+            </div>
+            <div class="card-body collapse in">
+                <div class="card-block">
+                    <form class="form">
+                        <div class="form-body">
+                            <h4 class="form-section"><i class="icon-head"></i> Login Info</h4>
+                            <div class="row">
+                                <div class="form-group col-xs-12 mb-2">
+                                    <label for="username">User Id</label>
+                                    <input type="text" id="username" class="form-control" placeholder="Username"
+                                           name="username"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-xs-12 mb-2">
+                                    <label for="password">Password</label>
+                                    <input type="text" id="password" class="form-control" placeholder="Password"
+                                           name="password"/>
+                                </div>
+                            </div>
 
-            </form>
+                            <p th:text="${error}? ${error}: '' "></p>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="icon-check2"></i> Login
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-<script src="../static/js/init.js" th:src="@{js/init.js}"></script>
+<div th:replace="fragments/layout :: scripts"></div>
 </body>
 </html>
