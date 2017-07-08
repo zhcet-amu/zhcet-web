@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <link href="http://res.cloudinary.com/djbajaxrf/raw/upload/v1499765301/zhcet-web/resources/static/css/bootstrap.css" type="text/css" rel="stylesheet"/>
+    <link href="http://res.cloudinary.com/djbajaxrf/raw/upload/v1499765297/zhcet-web/resources/static/css/bootstrap-extended.min.css" type="text/css" rel="stylesheet"/>
+    <link href="http://res.cloudinary.com/djbajaxrf/raw/upload/v1499765297/zhcet-web/resources/static/css/app.css" type="text/css" rel="stylesheet"/>
+    <link href="http://res.cloudinary.com/djbajaxrf/raw/upload/v1499765300/zhcet-web/resources/static/css/icomoon.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<div data-scroll-to-active="true" class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" th:fragment="navigation">
+    <!-- main menu header-->
+    <div class="main-menu-header">
+        <input type="text" placeholder="Search" class="menu-search form-control round"/>
+    </div>
+    <!-- / main menu header-->
+    <!-- main menu content-->
+    <div class="main-menu-content">
+        <ul id="main-menu-navigation" data-menu="menu-navigation" class="navigation navigation-main">
+            <li class=" nav-item"><a th:href="@{/}" href="home.html"><i class="icon-home3"></i><span data-i18n="nav.dash.main"
+                                                                                                     class="menu-title">Home</span></a>
+            </li>
+            <li class=" nav-item"><a th:href="@{/attendance}" href="attendance.html"><i class="icon-stack-2"></i><span data-i18n="nav.page_layouts.main"
+                                                                                                                       class="menu-title">Attendance</span></a>
+            </li>
+            <li class=" nav-item"><a th:href="@{/courses}" href="courses.html"><i class="icon-stack-2"></i><span data-i18n="nav.page_layouts.main"
+                                                                                                                 class="menu-title">Courses</span></a>
+            </li>
+            <li class=" nav-item"><a th:href="@{/login}" href="login.html"><i class="icon-stack-2"></i><span data-i18n="nav.page_layouts.main"
+                                                                                                             class="menu-title">Login</span></a>
+            </li>
+            <li class=" nav-item"><a href="#"><i class="icon-briefcase4"></i><span data-i18n="nav.project.main"
+                                                                                   class="menu-title">Profile</span></a>
+
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

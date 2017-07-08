@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Dean Admin</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"/>
-    <link href="../static/css/styles.css" th:href="@{css/styles.css}" rel="stylesheet" media="screen"/>
+<html lang="en" data-textdirection="ltr" class="loading" xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="fragments/layout :: head(title = 'Dean Admin')">
 </head>
-<body>
-<nav class="purple lighten-1" th:replace="fragments/header :: header"></nav>
+
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<nav th:replace="fragments/header :: header"></nav>
+<div th:replace="fragments/navigation :: navigation"></div>
 
 <div class="container">
     <h1 class="header center teal-text">Create User</h1>
@@ -69,8 +66,6 @@
         </th:block>
     </table>
 </div>
-<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-<script src="../static/js/init.js" th:src="@{js/init.js}"></script>
+<div th:replace="fragments/layout :: scripts"></div>
 </body>
 </html>
