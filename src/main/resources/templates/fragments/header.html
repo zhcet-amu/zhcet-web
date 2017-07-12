@@ -1,11 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <link href="http://res.cloudinary.com/djbajaxrf/raw/upload/v1499765301/zhcet-web/resources/static/css/bootstrap.css" type="text/css" rel="stylesheet"/>
-    <link href="http://res.cloudinary.com/djbajaxrf/raw/upload/v1499765297/zhcet-web/resources/static/css/bootstrap-extended.min.css" type="text/css" rel="stylesheet"/>
-    <link href="http://res.cloudinary.com/djbajaxrf/raw/upload/v1499765297/zhcet-web/resources/static/css/app.css" type="text/css" rel="stylesheet"/>
-    <link href="http://res.cloudinary.com/djbajaxrf/raw/upload/v1499765300/zhcet-web/resources/static/css/icomoon.css" type="text/css" rel="stylesheet"/>
-</head>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
       class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav class="header-navbar navbar navbar-with-menu navbar-fixed-top navbar-semi-dark navbar-shadow" th:fragment="header">
@@ -20,11 +14,9 @@
                     <a th:href="@{/}" href="../home.html" class="navbar-brand nav-link">
                         <img
                                 alt="branding logo"
-                                src="../../static/images/robust-logo-light.png"
-                                th:src="@{/images/robust-logo-light.png}"
-                                data-expand="../../static/images/robust-logo-light.png"
-                                data-collapse="../../static/images/robust-logo-small.png"
-                                data-th-attr="data-expand=@{/images/robust-logo-light.png}, data-collapse=@{/images/robust-logo-small.png}"
+                                src="https://res.cloudinary.com/zhcet/image/upload/robust-logo-light.png"
+                                data-expand="https://res.cloudinary.com/zhcet/image/upload/robust-logo-light.png"
+                                data-collapse="https://res.cloudinary.com/zhcet/image/upload/robust-logo-small.png"
                                 class="brand-logo"/>
                     </a>
                 </li>
@@ -45,10 +37,10 @@
                     <li class="dropdown dropdown-user nav-item">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link dropdown-user-link">
                             <span class="avatar avatar-online">
-                                <img src="../../static/images/avatar-s-1.png" th:src="@{/images/avatar-s-1.png}" alt="avatar"/>
+                                <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png" alt="avatar"/>
                                 <i></i>
                             </span>
-                            <span class="user-name">Divy Prakash</span>
+                            <span class="user-name">John Smith</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right"><a href="#" class="dropdown-item"><i
                                 class="icon-head"></i> Edit Profile</a><a href="#" class="dropdown-item"><i
