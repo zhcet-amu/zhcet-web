@@ -5,68 +5,105 @@
 <head th:replace="fragments/layout :: head(title = 'Dean Admin')">
 </head>
 
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
+      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation"></div>
 
 <div class="container" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
-    <h1 class="header center teal-text">Create User</h1>
-    <div class="row">
-        <div class="col s0 l3"></div>
-        <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
-        <form th:action="@{/dean}" method="post" th:object="${user}">
-            <div class="card" style="padding: 10px;">
-                <div class="card-content">
-                    <div class="input-field">
-                        <input id="student" name="user_type" type="radio" value="ROLE_STUDENT" checked="checked"/>
-                        <label for="student">Student</label>
-
-                        <input id="facultyMember" name="user_type" type="radio" value="ROLE_FACULTY"/>
-                        <label for="facultyMember">Faculty</label>
-                    </div>
-                    <br/>
-
-                    <div class="input-field">
-                        <input id="id" name="id" type="text" th:field="*{userId}"/>
-                        <label for="id">User ID</label>
-                    </div>
-
-                    <div class="input-field">
-                        <input id="name" name="name" type="text" th:field="*{name}"/>
-                        <label for="name">Name</label>
-                    </div>
-
-                    <div class="input-field">
-                        <input id="password" name="password" type="password" th:field="*{password}"/>
-                        <label for="password">Password</label>
-                    </div>
+    <div class="col-md-15">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title" id="from-actions-top-left">Create User</h4>
+                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                    </ul>
                 </div>
-                <div class="row">
-                    <div class="col s0 m6 l8"></div>
-                    <div class="col s12 m6 l4 pull-right">
-                        <button type="submit" class="waves-effect waves-teal btn-flat">Enter</button>
-                    </div>
-                </div>
-                <div th:if="${message}" class="green-text center" th:text="${message}">Registered</div>
             </div>
-        </form>
+            <div class="card-body collapse in">
+                <div class="card-block">
+                    <form class="form" th:action="@{/dean}" method="post" th:object="${user}">
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                <div class="form-body">
+                                    <h4 class="form-section"><i class="icon-head"></i> User Info</h4>
+                                    <div class="row">
+                                        <div class="form-group col-xs-12 mb-2">
+                                            <div class="input-group">
+                                                <label class="display-inline-block custom-control custom-radio ml-1">
+                                                    <input type="radio" id="student" class="custom-control-input"
+                                                           name="user_type" value="ROLE_STUDENT" checked="checked"/>
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description ml-0">Student</span>
+                                                </label>
+                                                <label class="display-inline-block custom-control custom-radio ml-1">
+                                                    <input type="radio" id="facultyMember" class="custom-control-input"
+                                                           name="user_type" value="ROLE_FACULTY"/>
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description ml-0">Faculty</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-xs-12 mb-2">
+                                            <label for="id">User Id</label>
+                                            <input id="id" name="id" class="form-control" type="text"
+                                                   th:field="*{userId}"/>
+                                        </div>
+                                        <div class="form-group col-xs-12 mb-2">
+                                            <label for="name">Name</label>
+                                            <input id="name" name="name" class="form-control" type="text"
+                                                   th:field="*{name}"/>
+                                        </div>
+                                        <div class="form-group col-xs-12 mb-2">
+                                            <label for="password">Password</label>
+                                            <input id="password" name="password" class="form-control" type="password"
+                                                   th:field="*{password}" placeholder="PassWord"/>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="icon-check2"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="form-group col-xs-12 mb-2">
+                            <div th:if="${message}" class="green-text center" th:text="${message}">
+                                Registered
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead class="thead-inverse">
+                    <tr>
+                        <th>Name</th>
+                        <th>User ID</th>
+                        <th>Registration Date</th>
+                        <th>Roles</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="user : ${users}">
+                        <tr>
+                            <td th:text="${user.name}">A Smoke Test'</td>
+                            <td th:text="${user.userId}">A Smoke Test'</td>
+                            <td th:text="${user.createdAt != null ? user.createdAt : user.updatedAt }">A
+                                Smoke Test'
+                            </td>
+                            <td th:text="${@userService.getType(user)}">A Smoke Test'</td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>User ID</th>
-            <th>Registration Date</th>
-            <th>Roles</th>
-        </tr>
-        <th:block th:each="user : ${users}">
-            <tr>
-                <td th:text="${user.name}">A Smoke Test'</td>
-                <td th:text="${user.userId}">A Smoke Test'</td>
-                <td th:text="${user.createdAt != null ? user.createdAt : user.updatedAt }">A Smoke Test'</td>
-                <td th:text="${@userService.getType(user)}">A Smoke Test'</td>
-            </tr>
-        </th:block>
-    </table>
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
 </body>
