@@ -1,40 +1,27 @@
 package in.ac.amu.zhcet.data.model;
 
-import in.ac.amu.zhcet.data.model.base.BaseEntity;
-import in.ac.amu.zhcet.data.model.base.BaseUser;
-import in.ac.amu.zhcet.data.model.base.UserDetails;
+import in.ac.amu.zhcet.data.model.base.user.UserAuth;
+import in.ac.amu.zhcet.data.model.base.user.CustomPrincipal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 
-@Entity
-@DynamicUpdate
-@SelectBeforeUpdate
 @Data
+@Entity
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class Student extends BaseEntity {
-
+public class Student extends CustomPrincipal {
     @Id
     private String enrolmentNumber;
 
     @Column(unique = true)
     private String facultyNumber;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private BaseUser user;
-
-    @Embedded
-    private UserDetails userDetails;
-
-    public Student(BaseUser user, String facultyNumber) {
+    public Student(UserAuth user, String facultyNumber) {
+        super(user);
         this.enrolmentNumber = user.getUserId();
-        this.user = user;
         setFacultyNumber(facultyNumber);
     }
 }

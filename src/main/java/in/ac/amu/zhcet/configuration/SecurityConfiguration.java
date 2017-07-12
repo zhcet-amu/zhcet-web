@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.configuration;
 
 import in.ac.amu.zhcet.configuration.security.RoleWiseSuccessHandler;
 import in.ac.amu.zhcet.data.Roles;
-import in.ac.amu.zhcet.data.model.base.BaseUser;
+import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder authenticationMgr) throws Exception {
         authenticationMgr
                 .userDetailsService(userDetailsService)
-                .passwordEncoder(BaseUser.PASSWORD_ENCODER);
+                .passwordEncoder(UserAuth.PASSWORD_ENCODER);
     }
 
     @Bean

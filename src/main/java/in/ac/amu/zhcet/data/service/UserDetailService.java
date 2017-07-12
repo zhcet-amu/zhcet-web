@@ -1,11 +1,10 @@
 package in.ac.amu.zhcet.data.service;
 
-import in.ac.amu.zhcet.data.model.base.BaseUser;
-import in.ac.amu.zhcet.data.repository.UserRepository;
+import in.ac.amu.zhcet.data.model.base.user.UserPrincipal;
+import in.ac.amu.zhcet.data.service.user.CustomUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,20 +17,24 @@ import java.util.List;
 @Service
 public class UserDetailService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserPrincipalService userPrincipalService;
 
     @Autowired
-    public UserDetailService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserDetailService(UserPrincipalService userPrincipalService) {
+        this.userPrincipalService = userPrincipalService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        BaseUser user = userRepository.findByUserId(username);
+        UserPrincipal user = userPrincipalService.findById(username);
         if (user == null)
             throw new UsernameNotFoundException(username);
 
-        return new User(user.getUserId(), user.getPassword(), getAuthorities(user.getRoles()));
+        return new CustomUser(user.getUsername(), user.getPassword(), getAuthorities(user.getRoles()))
+                .name(user.getName())
+                .avatar(user.getAvatar())
+                .type(user.getType())
+                .department(user.getDepartment());
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(String... roles) {

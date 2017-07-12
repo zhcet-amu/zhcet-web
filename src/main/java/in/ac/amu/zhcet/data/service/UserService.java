@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.data.service;
 
 import in.ac.amu.zhcet.data.Roles;
-import in.ac.amu.zhcet.data.model.base.BaseUser;
+import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,23 +19,23 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void saveUser(BaseUser user) {
-        user.setPassword(BaseUser.PASSWORD_ENCODER.encode(user.getPassword()));
+    public void saveUser(UserAuth user) {
+        user.setPassword(UserAuth.PASSWORD_ENCODER.encode(user.getPassword()));
         userRepository.save(user);
     }
 
-    public String getType(BaseUser user) {
+    public String getType(UserAuth user) {
         List<String> roles = Arrays.asList(user.getRoles());
 
         if (roles.contains(Roles.DEAN_ADMIN))
             return "Dean Admin";
         else if (roles.contains(Roles.FACULTY))
-            return "FacultyMember";
+            return "Faculty Member";
         else
             return "Student";
     }
 
-    public Iterable<BaseUser> getAll() {
+    public Iterable<UserAuth> getAll() {
         return userRepository.findAllByOrderByCreatedAtDesc();
     }
 

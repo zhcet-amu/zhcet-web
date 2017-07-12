@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface FacultyRepositiory extends CrudRepository<FacultyMember, Long>{
+public interface FacultyRepository extends CrudRepository<FacultyMember, Long>{
     FacultyMember getByFacultyId(String facultyId);
 
     List<FacultyMember> getByUserDetails_Department_DepartmentName(String name);

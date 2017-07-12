@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.data.model.base;
+package in.ac.amu.zhcet.data.model.base.user;
 
 import in.ac.amu.zhcet.data.model.Department;
 import lombok.Data;

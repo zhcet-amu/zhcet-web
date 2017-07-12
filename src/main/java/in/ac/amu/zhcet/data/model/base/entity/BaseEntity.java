@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.data.model.base;
+package in.ac.amu.zhcet.data.model.base.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;

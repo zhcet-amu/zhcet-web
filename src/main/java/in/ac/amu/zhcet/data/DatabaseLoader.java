@@ -1,8 +1,8 @@
 package in.ac.amu.zhcet.data;
 
 import in.ac.amu.zhcet.data.model.*;
-import in.ac.amu.zhcet.data.model.base.BaseUser;
-import in.ac.amu.zhcet.data.model.base.UserDetails;
+import in.ac.amu.zhcet.data.model.base.user.UserAuth;
+import in.ac.amu.zhcet.data.model.base.user.UserDetails;
 import in.ac.amu.zhcet.data.repository.*;
 import in.ac.amu.zhcet.data.service.UserService;
 import org.slf4j.Logger;
@@ -23,17 +23,17 @@ public class DatabaseLoader implements ApplicationRunner {
     private final CourseRepository courseRepository;
     private final UserService userService;
     private final DepartmentRepository departmentRepository;
-    private final FacultyRepositiory facultyRepositiory;
+    private final FacultyRepository facultyRepository;
     private static final Logger logger = LoggerFactory.getLogger(DatabaseLoader.class);
 
     @Autowired
-    public DatabaseLoader(UserService userService, StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, FacultyRepositiory facultyRepositiory) {
+    public DatabaseLoader(UserService userService, StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, FacultyRepository facultyRepository) {
         this.userService = userService;
         this.studentRepository = studentRepository;
         this.attendanceRepository = attendanceRepository;
         this.courseRepository = courseRepository;
         this.departmentRepository = departmentRepository;
-        this.facultyRepositiory = facultyRepositiory;
+        this.facultyRepository = facultyRepository;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class DatabaseLoader implements ApplicationRunner {
         courseRepository.save(course4);
         logger.info("Saved Course " + course4.toString());
 
-        BaseUser user = new BaseUser("GF1032", "password", "Areeb Jamal", new String[]{"ROLE_STUDENT"});
+        UserAuth user = new UserAuth("GF1032", "password", "Areeb Jamal", "STUDENT", new String[]{"ROLE_STUDENT"});
         userService.saveUser(user);
         logger.info("Saved user " + user.toString());
         Student student = new Student(user, "14PEB049");
@@ -118,14 +118,14 @@ public class DatabaseLoader implements ApplicationRunner {
         attendanceRepository.save(attendance4);
         logger.info("Saved attendance " + attendance4.toString());
 
-        BaseUser user1 = new BaseUser("fac22", "pass", "Dp", new String[]{Roles.DEAN_ADMIN});
+        UserAuth user1 = new UserAuth("fac22", "pass", "Dp", "FACULTY", new String[]{Roles.DEAN_ADMIN});
         userService.saveUser(user1);
 
         FacultyMember facultyMember = new FacultyMember(user1);
         facultyMember.setUserDetails(userDetails);
-        facultyRepositiory.save(facultyMember);
+        facultyRepository.save(facultyMember);
 
-        List<FacultyMember> faculties = facultyRepositiory.getByUserDetails_Department_DepartmentName("Computer");
+        List<FacultyMember> faculties = facultyRepository.getByUserDetails_Department_DepartmentName("Computer");
         logger.info("Faculties : are "+ faculties.toString());
 
         List<Attendance> attendances = attendanceRepository.findBySessionAndStudent_User_userId("A17", "14PEB049");

@@ -1,5 +1,6 @@
-package in.ac.amu.zhcet.data.model.base;
+package in.ac.amu.zhcet.data.model.base.user;
 
+import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(exclude = "password")
-public class BaseUser extends BaseEntity {
+public class UserAuth extends BaseEntity {
 
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
@@ -24,11 +25,13 @@ public class BaseUser extends BaseEntity {
     private String[] roles;
 
     private String name;
+    private String type;
 
-    public BaseUser(String userId, String password, String name, String[] roles) {
+    public UserAuth(String userId, String password, String name, String type, String[] roles) {
         setUserId(userId);
         setPassword(password);
         setName(name);
+        setType(type);
         setRoles(roles);
     }
 }

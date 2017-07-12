@@ -1,8 +1,8 @@
 package in.ac.amu.zhcet.data.service;
 
-import in.ac.amu.zhcet.data.model.base.BaseUser;
+import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.base.UserDetails;
+import in.ac.amu.zhcet.data.model.base.user.UserDetails;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class StudentService {
 
         Student student = getByEnrolmentNumber(userName);
         if (student == null) {
-            BaseUser user = userRepository.findByUserId(userName);
+            UserAuth user = userRepository.findByUserId(userName);
             student = new Student(user, null);
         }
 
