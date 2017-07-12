@@ -37,13 +37,16 @@
                     <li class="dropdown dropdown-user nav-item">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link dropdown-user-link">
                             <span class="avatar avatar-online">
-                                <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png" alt="avatar"/>
+                                <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png" th:src="${#strings.defaultString(#authentication.principal.avatar, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}" alt="avatar"/>
                                 <i></i>
                             </span>
                             <span class="user-name" sec:authentication="principal.name">John Smith</span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right"><a href="#" class="dropdown-item"><i
-                                class="icon-head"></i> Edit Profile</a><a href="#" class="dropdown-item"><i
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a href="#" th:href="@{/student}" class="dropdown-item" sec:authorize="hasRole('ROLE_STUDENT')">
+                                <i class="icon-head"></i> Edit Profile
+                            </a>
+                            <a href="#" class="dropdown-item"><i
                                 class="icon-mail6"></i> My Inbox</a><a href="#" class="dropdown-item"><i
                                 class="icon-clipboard2"></i> Task</a><a href="#" class="dropdown-item"><i
                                 class="icon-calendar5"></i> Calender</a>

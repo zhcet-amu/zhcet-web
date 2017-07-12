@@ -17,11 +17,13 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
+    private final UserDetailService userDetailService;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, UserRepository userRepository) {
+    public StudentService(StudentRepository studentRepository, UserRepository userRepository, UserDetailService userDetailService) {
         this.studentRepository = studentRepository;
         this.userRepository = userRepository;
+        this.userDetailService = userDetailService;
     }
 
     public Student getLoggedInStudent() {
@@ -46,6 +48,8 @@ public class StudentService {
         Student student = studentRepository.getByEnrolmentNumber(enrolmentNumber);
         student.setUserDetails(userDetails);
         studentRepository.save(student);
+
+        userDetailService.updatePrincipal(student);
     }
 
 }
