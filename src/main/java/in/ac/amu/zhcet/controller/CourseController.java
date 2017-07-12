@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class CourseController {
 
-    @Autowired
     private final CourseRepository courseRepository;
 
+    @Autowired
     public CourseController(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
