@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
       class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav class="header-navbar navbar navbar-with-menu navbar-fixed-top navbar-semi-dark navbar-shadow" th:fragment="header">
@@ -33,14 +33,14 @@
                     <li class="nav-item hidden-sm-down"><a href="#" class="nav-link nav-link-expand"><i
                             class="ficon icon-expand2"></i></a></li>
                 </ul>
-                <ul class="nav navbar-nav float-xs-right">
+                <ul class="nav navbar-nav float-xs-right" sec:authorize="isAuthenticated()">
                     <li class="dropdown dropdown-user nav-item">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link dropdown-user-link">
                             <span class="avatar avatar-online">
                                 <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png" alt="avatar"/>
                                 <i></i>
                             </span>
-                            <span class="user-name">John Smith</span>
+                            <span class="user-name" sec:authentication="name">John Smith</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right"><a href="#" class="dropdown-item"><i
                                 class="icon-head"></i> Edit Profile</a><a href="#" class="dropdown-item"><i
@@ -48,7 +48,10 @@
                                 class="icon-clipboard2"></i> Task</a><a href="#" class="dropdown-item"><i
                                 class="icon-calendar5"></i> Calender</a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" th:href="@{/logout}" class="dropdown-item"><i class="icon-power3"></i> Logout</a>
+                            <form id="logout-form" th:action="@{/logout}" method="post">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <a onclick="document.getElementById('logout-form').submit(); " class="dropdown-item"><i class="icon-power3"></i> Logout</a>
+                            </form>
                         </div>
                     </li>
                 </ul>

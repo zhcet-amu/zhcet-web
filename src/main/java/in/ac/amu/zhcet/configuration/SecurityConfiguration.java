@@ -46,7 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username").passwordParameter("password")
                 .successHandler(roleWiseSuccessHandler())
                 .and()
-                .logout().logoutSuccessUrl("/home")
+                .logout().logoutSuccessUrl("/")
                 .and()
                 .csrf().ignoringAntMatchers("/console/**")
                 .and()

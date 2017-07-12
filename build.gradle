@@ -29,5 +29,6 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-devtools")
     compile("com.h2database:h2")
+    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4")
     compileOnly "org.projectlombok:lombok:1.16.18"
 }
