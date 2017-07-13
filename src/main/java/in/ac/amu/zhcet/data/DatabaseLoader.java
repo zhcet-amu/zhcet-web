@@ -145,6 +145,5 @@ public class DatabaseLoader implements ApplicationRunner {
         logger.info(studentRepository.getByEnrolmentNumber("GF1032").toString());
 
         floatedCourseService.floatCourse(course2, Collections.singletonList(facultyMember.getFacultyId()));
-        logger.info(floatedCourseService.getCurrentFloatedCourses("computer").toString());
     }
 }
