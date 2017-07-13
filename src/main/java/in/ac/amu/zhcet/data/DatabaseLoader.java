@@ -4,8 +4,9 @@ import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.model.base.user.UserDetails;
 import in.ac.amu.zhcet.data.repository.*;
+import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.FloatedCourseService;
-import in.ac.amu.zhcet.data.service.UserService;
+import in.ac.amu.zhcet.data.service.StudentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +24,20 @@ public class DatabaseLoader implements ApplicationRunner {
     private final StudentRepository studentRepository;
     private final AttendanceRepository attendanceRepository;
     private final CourseRepository courseRepository;
-    private final UserService userService;
+    private final StudentService studentService;
+    private final FacultyService facultyService;
     private final DepartmentRepository departmentRepository;
     private final FacultyRepository facultyRepository;
     private final FloatedCourseService floatedCourseService;
     private static final Logger logger = LoggerFactory.getLogger(DatabaseLoader.class);
 
     @Autowired
-    public DatabaseLoader(UserService userService, StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, FacultyRepository facultyRepository, FloatedCourseService floatedCourseService) {
-        this.userService = userService;
+    public DatabaseLoader(StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, StudentService studentService, FacultyService facultyService, DepartmentRepository departmentRepository, FacultyRepository facultyRepository, FloatedCourseService floatedCourseService) {
+        this.studentService = studentService;
         this.studentRepository = studentRepository;
         this.attendanceRepository = attendanceRepository;
         this.courseRepository = courseRepository;
+        this.facultyService = facultyService;
         this.departmentRepository = departmentRepository;
         this.facultyRepository = facultyRepository;
         this.floatedCourseService = floatedCourseService;
@@ -75,13 +78,12 @@ public class DatabaseLoader implements ApplicationRunner {
         logger.info("Saved Course " + course4.toString());
 
         UserAuth user = new UserAuth("GF1032", "password", "Areeb Jamal", "STUDENT", new String[]{"ROLE_STUDENT"});
-        userService.saveUser(user);
         logger.info("Saved user " + user.toString());
         Student student = new Student(user, "14PEB049");
         UserDetails userDetails = new UserDetails();
         userDetails.setDepartment(department);
         student.setUserDetails(userDetails);
-        studentRepository.save(student);
+        studentService.register(student);
         logger.info("Saved student " + student.toString());
 
         String session = Utils.getCurrentSession();
@@ -123,11 +125,10 @@ public class DatabaseLoader implements ApplicationRunner {
         logger.info("Saved attendance " + attendance4.toString());
 
         UserAuth user1 = new UserAuth("fac22", "pass", "Dp", "FACULTY", new String[]{Roles.DEAN_ADMIN});
-        userService.saveUser(user1);
 
         FacultyMember facultyMember = new FacultyMember(user1);
         facultyMember.setUserDetails(userDetails);
-        facultyRepository.save(facultyMember);
+        facultyService.register(facultyMember);
 
         List<FacultyMember> faculties = facultyRepository.getByUserDetails_Department_Name("Computer");
         logger.info("Faculties : are "+ faculties.toString());

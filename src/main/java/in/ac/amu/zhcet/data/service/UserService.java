@@ -19,10 +19,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserAuth findById(String id) {
-        return userRepository.findByUserId(id);
-    }
-
     public UserAuth saveUser(UserAuth user) {
         user.setPassword(UserAuth.PASSWORD_ENCODER.encode(user.getPassword()));
         return userRepository.save(user);
