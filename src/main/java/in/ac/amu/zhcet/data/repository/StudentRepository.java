@@ -9,5 +9,5 @@ public interface StudentRepository extends CrudRepository<Student, Long> {
 
     Student getByEnrolmentNumber(String enrolmentNumber);
 
-    List<Student> getByUserDetails_Department_DepartmentName(String departmentName);
+    List<Student> getByUserDetails_Department_Name(String departmentName);
 }

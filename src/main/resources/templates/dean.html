@@ -26,6 +26,7 @@
             </div>
             <div class="card-body collapse in">
                 <div class="card-block">
+                    <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
                     <form class="form" th:action="@{/dean}" method="post" th:object="${user}">
                         <div class="row">
                             <div class="col-md-6 offset-md-3">
@@ -36,15 +37,21 @@
                                             <div class="input-group">
                                                 <label class="display-inline-block custom-control custom-radio ml-1">
                                                     <input type="radio" id="student" class="custom-control-input"
-                                                           name="user_type" value="ROLE_STUDENT" checked="checked"/>
+                                                           th:field="*{type}" value="STUDENT" th:checked="checked"/>
                                                     <span class="custom-control-indicator"></span>
                                                     <span class="custom-control-description ml-0">Student</span>
                                                 </label>
                                                 <label class="display-inline-block custom-control custom-radio ml-1">
                                                     <input type="radio" id="facultyMember" class="custom-control-input"
-                                                           name="user_type" value="ROLE_FACULTY"/>
+                                                           th:field="*{type}" value="FACULTY"/>
                                                     <span class="custom-control-indicator"></span>
                                                     <span class="custom-control-description ml-0">Faculty</span>
+                                                </label>
+                                                <label class="display-inline-block custom-control custom-radio ml-1">
+                                                    <input type="radio" id="departmentAdmin" class="custom-control-input"
+                                                           th:field="*{type}" value="DEPARTMENT_ADMIN"/>
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description ml-0">Department Admin</span>
                                                 </label>
                                             </div>
                                         </div>
@@ -61,7 +68,18 @@
                                         <div class="form-group col-xs-12 mb-2">
                                             <label for="password">Password</label>
                                             <input id="password" name="password" class="form-control" type="password"
-                                                   th:field="*{password}" placeholder="PassWord"/>
+                                                   th:field="*{password}" placeholder="Password"/>
+                                        </div>
+                                        <div class="form-group col-xs-12 mb-2">
+                                            <label for="department">Department</label>
+                                            <select class="form-control" id="department" name="department">
+                                                <option value="-1">Select a Department</option>
+                                                <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
+                                                <option th:each="department : ${departments}"
+                                                        th:value="${department.id}"
+                                                        th:text="${department.name}">
+                                                </option>
+                                        </select>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary">

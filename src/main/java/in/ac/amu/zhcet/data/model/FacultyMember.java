@@ -5,12 +5,14 @@ import in.ac.amu.zhcet.data.model.base.user.CustomPrincipal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Entity
 public class FacultyMember extends CustomPrincipal {
     @Id

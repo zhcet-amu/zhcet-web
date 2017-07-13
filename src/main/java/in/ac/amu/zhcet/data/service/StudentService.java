@@ -1,10 +1,9 @@
 package in.ac.amu.zhcet.data.service;
 
-import in.ac.amu.zhcet.data.model.base.user.UserAuth;
+import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.base.user.UserDetails;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
-import in.ac.amu.zhcet.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,13 +15,13 @@ import javax.transaction.Transactional;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final UserDetailService userDetailService;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, UserRepository userRepository, UserDetailService userDetailService) {
+    public StudentService(StudentRepository studentRepository, UserService userService, UserDetailService userDetailService) {
         this.studentRepository = studentRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.userDetailService = userDetailService;
     }
 
@@ -30,13 +29,7 @@ public class StudentService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        Student student = getByEnrolmentNumber(userName);
-        if (student == null) {
-            UserAuth user = userRepository.findByUserId(userName);
-            student = new Student(user, null);
-        }
-
-        return student;
+        return getByEnrolmentNumber(userName);
     }
 
     public Student getByEnrolmentNumber(String userId) {
@@ -44,8 +37,25 @@ public class StudentService {
     }
 
     @Transactional
+    public void register(Student student) {
+        userService.saveUser(student.getUser());
+        studentRepository.save(student);
+    }
+
+    @Transactional
+    public void updateDepartment(String enrolmentNo, Department department) {
+        Student student = getByEnrolmentNumber(enrolmentNo);
+
+        UserDetails userDetails = student.getUserDetails();
+
+        userDetails.setDepartment(department);
+        student.setUserDetails(userDetails);
+        studentRepository.save(student);
+    }
+
+    @Transactional
     public void updateStudentDetails(String enrolmentNumber, UserDetails userDetails) {
-        Student student = studentRepository.getByEnrolmentNumber(enrolmentNumber);
+        Student student = getByEnrolmentNumber(enrolmentNumber);
         student.setUserDetails(userDetails);
         studentRepository.save(student);
 

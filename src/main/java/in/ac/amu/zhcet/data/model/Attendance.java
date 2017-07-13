@@ -4,12 +4,13 @@ import in.ac.amu.zhcet.data.model.base.entity.BaseIdEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Table(uniqueConstraints=
+@UniqueConstraint(columnNames={"course_id", "student_enrolment_number", "session"}))
 public class Attendance extends BaseIdEntity {
     @ManyToOne
     private Course course;

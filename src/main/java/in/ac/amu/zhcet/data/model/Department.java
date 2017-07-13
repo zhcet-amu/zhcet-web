@@ -10,5 +10,5 @@ import javax.persistence.Entity;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Department extends BaseIdEntity {
-    private String departmentName;
+    private String name;
 }

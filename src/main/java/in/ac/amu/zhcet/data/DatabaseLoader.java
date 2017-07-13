@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.model.base.user.UserDetails;
 import in.ac.amu.zhcet.data.repository.*;
+import in.ac.amu.zhcet.data.service.FloatedCourseService;
 import in.ac.amu.zhcet.data.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import in.ac.amu.zhcet.utils.Utils;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -24,22 +26,24 @@ public class DatabaseLoader implements ApplicationRunner {
     private final UserService userService;
     private final DepartmentRepository departmentRepository;
     private final FacultyRepository facultyRepository;
+    private final FloatedCourseService floatedCourseService;
     private static final Logger logger = LoggerFactory.getLogger(DatabaseLoader.class);
 
     @Autowired
-    public DatabaseLoader(UserService userService, StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, FacultyRepository facultyRepository) {
+    public DatabaseLoader(UserService userService, StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, DepartmentRepository departmentRepository, FacultyRepository facultyRepository, FloatedCourseService floatedCourseService) {
         this.userService = userService;
         this.studentRepository = studentRepository;
         this.attendanceRepository = attendanceRepository;
         this.courseRepository = courseRepository;
         this.departmentRepository = departmentRepository;
         this.facultyRepository = facultyRepository;
+        this.floatedCourseService = floatedCourseService;
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         Department department = new Department();
-        department.setDepartmentName("Computer");
+        department.setName("Computer");
         departmentRepository.save(department);
         logger.info("DepartmentSaved " + department);
         Course course1 = new Course();
@@ -125,18 +129,21 @@ public class DatabaseLoader implements ApplicationRunner {
         facultyMember.setUserDetails(userDetails);
         facultyRepository.save(facultyMember);
 
-        List<FacultyMember> faculties = facultyRepository.getByUserDetails_Department_DepartmentName("Computer");
+        List<FacultyMember> faculties = facultyRepository.getByUserDetails_Department_Name("Computer");
         logger.info("Faculties : are "+ faculties.toString());
 
         List<Attendance> attendances = attendanceRepository.findBySessionAndStudent_User_userId("A17", "14PEB049");
         logger.info(attendances.toString());
 
-        List<Course> courses = courseRepository.findByDepartment_DepartmentName("Computer");
+        List<Course> courses = courseRepository.findByDepartment_Name("Computer");
         logger.info(courses.toString());
       
-        List<Student> students = studentRepository.getByUserDetails_Department_DepartmentName("Computer");
+        List<Student> students = studentRepository.getByUserDetails_Department_Name("Computer");
         logger.info(students.toString());
       
         logger.info(studentRepository.getByEnrolmentNumber("GF1032").toString());
+
+        floatedCourseService.floatCourse(course2, Collections.singletonList(facultyMember.getFacultyId()));
+        logger.info(floatedCourseService.getCurrentFloatedCourses("computer").toString());
     }
 }

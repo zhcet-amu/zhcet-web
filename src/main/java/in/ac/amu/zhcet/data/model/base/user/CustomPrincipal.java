@@ -5,12 +5,14 @@ import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @MappedSuperclass
 public class CustomPrincipal extends BaseEntity implements UserPrincipal {
 
@@ -19,7 +21,7 @@ public class CustomPrincipal extends BaseEntity implements UserPrincipal {
     private UserAuth user;
 
     @Embedded
-    private UserDetails userDetails;
+    private UserDetails userDetails = new UserDetails();
 
     public CustomPrincipal(UserAuth userAuth) {
         this.user = userAuth;

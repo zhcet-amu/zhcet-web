@@ -14,6 +14,6 @@ public interface CourseRepository extends CrudRepository<Course, Long> {
 
     List<Course> findByDepartment(Department department);
 
-    List<Course> findByDepartment_DepartmentName(String name);
+    List<Course> findByDepartment_Name(String name);
 
 }

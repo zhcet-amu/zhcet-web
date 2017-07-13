@@ -9,5 +9,7 @@ import java.util.List;
 public interface FacultyRepository extends CrudRepository<FacultyMember, Long>{
     FacultyMember getByFacultyId(String facultyId);
 
-    List<FacultyMember> getByUserDetails_Department_DepartmentName(String name);
+    List<FacultyMember> getByFacultyIdIn(List<String> facultyIds);
+
+    List<FacultyMember> getByUserDetails_Department_Name(String name);
 }
