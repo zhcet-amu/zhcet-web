@@ -40,6 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/courses", "/console/**").permitAll()
                 .antMatchers("/student", "/attendance").hasAuthority(Roles.STUDENT)
                 .antMatchers("/dean").hasAuthority(Roles.DEAN_ADMIN)
+                .antMatchers("/department").hasAuthority(Roles.DEPARTMENT_ADMIN)
                 .and()
                 .formLogin().loginPage("/login").permitAll()
                 .failureUrl("/login?error")

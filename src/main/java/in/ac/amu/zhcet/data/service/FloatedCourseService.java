@@ -26,8 +26,17 @@ public class FloatedCourseService {
         this.courseRepository = courseRepository;
     }
 
-    public List<FloatedCourse> getCurrentFloatedCourses(String departmentName) {
-        return floatedCourseRepository.getBySessionAndCourse_Department_NameIgnoreCase(Utils.getCurrentSession(), departmentName);
+    public List<Course> getAllCourses(Department department) {
+        return courseRepository.findByDepartment(department);
+    }
+
+    public List<FloatedCourse> getCurrentFloatedCourses(Department department) {
+        return floatedCourseRepository.getBySessionAndCourse_Department(Utils.getCurrentSession(), department);
+    }
+
+    @Transactional
+    public Course register(Course course) {
+        return courseRepository.save(course);
     }
 
     @Transactional
