@@ -27,5 +27,5 @@ public abstract class BaseEntity {
     private String modifiedBy;
 
     @Version
-    private int version;
+    private Integer version;
 }
