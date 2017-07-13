@@ -26,60 +26,66 @@
                     </ul>
                 </div>
             </div>
-            <div class="card-body collapse in">
-                <div class="card-block">
-                    <form class="form" th:action="@{/student}" method="post" th:object="${student}">
-                        <div class="row">
-                            <div class="col-md-6 offset-md-3">
-                                <div class="form-body">
-                                    <h4 class="form-section" th:text="${student.name}"><i class="icon-head"></i></h4>
-                                    <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png"
-                                         th:src="${#strings.defaultString(student.avatar, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
-                                         class="rounded-circle img-border height-200" alt="Card image"/>
-                                    <strong><span class="bg-primary text-highlight  white"
-                                                  th:text="|${student.facultyNumber}|">
-                                    FacultyNumber</span></strong>
-                                    <strong>
-                                        <span class="bg-primary text-highlight  white"
-                                              th:text="|${student.enrolmentNumber}|">EnrolmentNumber</span>
-                                    </strong>
-                                    <div class="row">
-                                        <input type="hidden" id="name" name="name" class="form-control"
-                                               th:value="${student.enrolmentNumber}"/>
-                                        <div class="form-group col-xs-12 mb-2">
-                                            <label for="avatar">Avatar</label>
-                                            <input id="avatar" name="avatar" class="form-control" type="text"
-                                                   th:field="*{userDetails.avatarUrl}"/>
-                                        </div>
-                                        <div class="form-group col-xs-12 mb-2">
-                                            <label for="email">Email</label>
-                                            <input id="email" name="email" class="form-control" type="text"
-                                                   th:field="*{userDetails.email}"/>
-                                        </div>
-
-                                        <div class="form-group col-xs-12 mb-2">
-                                            <label for="addressLine1">AddressLine1</label>
-                                            <input id="addressLine1" name="addressLine1" class="form-control"
-                                                   type="text"
-                                                   th:field="*{userDetails.addressLine1}"/>
-                                        </div>
-
-                                        <div class="form-group col-xs-12 mb-2">
-                                            <label for="addressLine2">AddressLine2</label>
-                                            <input id="addressLine2" name="addressLine2" class="form-control"
-                                                   type="text"
-                                                   th:field="*{userDetails.addressLine2}"/>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="icon-check2"></i> Update
-                                    </button>
-                                </div>
-                            </div>
+            <div class="col-xl-12 col-md-6 col-xs-12">
+                <div class="card profile-card-with-stats">
+                    <div class="text-xs-center">
+                        <div class="card-block">
+                            <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png"
+                                 th:src="${#strings.defaultString(student.avatar, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
+                                 class="rounded-circle height-150" alt="Card image"/>
                         </div>
-                    </form>
+                        <div class="card-block">
+                            <h6 class="card-subtitle text-muted" th:text="${student.name}">Name</h6>
+                            <ul class="list-inline list-inline-pipe">
+                                <li th:text="${student.facultyNumber}">FacultyNumber</li>
+                                <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <form class="form" th:action="@{/student}" method="post" th:object="${student}">
+                <div class="row">
+                    <div class="col-md-6 offset-md-3">
+                        <div class="form-body">
+                            <div class="row">
+                                <input type="hidden" id="name" name="name" class="form-control"
+                                       th:value="${student.enrolmentNumber}"/>
+                                <div class="form-group col-xs-12 mb-2">
+                                    <label for="avatar">Avatar</label>
+                                    <input id="avatar" name="avatar" class="form-control"
+                                           type="text"
+                                           th:field="*{userDetails.avatarUrl}"/>
+                                </div>
+                                <div class="form-group col-xs-12 mb-2">
+                                    <label for="email">Email</label>
+                                    <input id="email" name="email" class="form-control" type="text"
+                                           th:field="*{userDetails.email}"/>
+                                </div>
+
+                                <div class="form-group col-xs-12 mb-2">
+                                    <label for="addressLine1">AddressLine1</label>
+                                    <input id="addressLine1" name="addressLine1"
+                                           class="form-control"
+                                           type="text"
+                                           th:field="*{userDetails.addressLine1}"/>
+                                </div>
+
+                                <div class="form-group col-xs-12 mb-2">
+                                    <label for="addressLine2">AddressLine2</label>
+                                    <input id="addressLine2" name="addressLine2"
+                                           class="form-control"
+                                           type="text"
+                                           th:field="*{userDetails.addressLine2}"/>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="icon-check2"></i> Update
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
