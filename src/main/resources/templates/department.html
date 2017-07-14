@@ -12,10 +12,129 @@
 
 <div class="container" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <div th:if="!${error}"></div>
-    <div class="col-md-15">
+
+    <!-- Creation of new Course here-->
+    <div class="row match-height">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title" id="from-actions-top-left">Add Course</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in">
+                    <div class="card-block">
+                        <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
+                        <form class="form" th:action="@{/department/create_course}" method="post"
+                              th:object="${newCourse}">
+                            <div class="form-body">
+                                <h4 class="form-section"><i class="icon-head"></i> Course Info</h4>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 label-control" for="code">Course Code</label>
+                                    <input id="code" name="code" class="form-control" type="text"
+                                           th:field="*{code}"/>
+                                </div>
+                                <div>
+                                    <label class="col-md-3 label-control" for="title">Course Title</label>
+                                    <input id="title" name="title" class="form-control" type="text"
+                                           th:field="*{title}"/>
+                                </div>
+
+                            </div>
+                            <br/>
+                            <div>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                    <i class="icon-check2"></i> Add
+                                </button>
+                            </div>
+                            <br/>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Float Course</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in">
+                    <div class="card-block">
+
+                        <form class="form" th:action="@{/department/float_course}" method="post">
+
+                            <div class="form-body">
+                                <h4 class="form-section"><i class="icon-clipboard4"></i>Float Courses</h4>
+                                <div class="row">
+                                    <div class="table-responsive">
+                                        <br/>
+                                        <table class="table">
+                                            <thead class="thead-inverse">
+                                            <tr>
+                                                <th>Courses Available</th>
+                                                <th>FacultyMember</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <select class="form-control" id="courseCode" name="courseCode">
+                                                        <option value="-1">Select a Course</option>
+                                                        <option th:each="course : ${courses}"
+                                                                th:value="${course.code}"
+                                                                th:text="${course.title}">
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="form-control" id="faculty"
+                                                            name="faculty">
+                                                        <option value="-1">Select Faculty</option>
+                                                        <option th:each="faculty : ${facultyMembers}"
+                                                                th:value="${faculty.facultyId}"
+                                                                th:text="${faculty.name}">
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                        <i class="icon-check2"></i> Float
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title" id="from-actions-top-left">Create User</h4>
+                <h4 class="card-title">Floated Courses</h4>
                 <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
                 <div class="heading-elements">
                     <ul class="list-inline mb-0">
@@ -25,53 +144,21 @@
                     </ul>
                 </div>
             </div>
-            <div class="card-body collapse in">
+            <div class="card-body collapse in collapse in">
                 <div class="card-block">
-                    <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
-                    <form class="form" th:action="@{/department/create_course}" method="post" th:object="${newCourse}">
+                    <div class="bs-example">
                         <div class="row">
-                            <div class="col-md-6 offset-md-3">
-                                <div class="form-body">
-                                    <h4 class="form-section"><i class="icon-head"></i> Course Info</h4>
-                                    <div class="row">
-                                        <div class="form-group col-xs-12 mb-2">
-                                            <label for="code">Course Code</label>
-                                            <input id="code" name="code" class="form-control" type="text"
-                                                   th:field="*{code}"/>
-                                        </div>
-                                        <div class="form-group col-xs-12 mb-2">
-                                            <label for="title">Course Title</label>
-                                            <input id="title" name="title" class="form-control" type="text"
-                                                   th:field="*{title}"/>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="icon-check2"></i> Add
-                                    </button>
-                                </div>
+                            <div class="col-md-3" th:each="floated: ${floatedCourses}">
+                                <span class="text-xs-center"
+                                      th:text="${floated != null} ? ${floated.course.title}"></span>
                             </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-body collapse in">
-            <div class="card-block my-gallery">
-                <div class="row">
-                    <div class="col-lg-3 col-md-6 col-xs-12" th:each="course: ${courses}">
-                        <div class="card">
-                            <h4 th:text="${course.title}"></h4>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
-
-
     <div th:if="${error}" th:text="${error}"></div>
 </div>
 <div th:replace="fragments/layout :: scripts"></div>

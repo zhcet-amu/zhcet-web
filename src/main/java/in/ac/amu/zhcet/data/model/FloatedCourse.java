@@ -21,7 +21,7 @@ public class FloatedCourse extends BaseIdEntity {
     @ManyToOne
     private Course course;
     private String session;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<FacultyMember> inCharge;
 
     public FloatedCourse(String session, Course course, Department department) {

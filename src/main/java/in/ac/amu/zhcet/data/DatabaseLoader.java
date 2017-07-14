@@ -28,11 +28,10 @@ public class DatabaseLoader implements ApplicationRunner {
     private final FacultyService facultyService;
     private final DepartmentRepository departmentRepository;
     private final FacultyRepository facultyRepository;
-    private final FloatedCourseService floatedCourseService;
     private static final Logger logger = LoggerFactory.getLogger(DatabaseLoader.class);
 
     @Autowired
-    public DatabaseLoader(StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, StudentService studentService, FacultyService facultyService, DepartmentRepository departmentRepository, FacultyRepository facultyRepository, FloatedCourseService floatedCourseService) {
+    public DatabaseLoader(StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, StudentService studentService, FacultyService facultyService, DepartmentRepository departmentRepository, FacultyRepository facultyRepository) {
         this.studentService = studentService;
         this.studentRepository = studentRepository;
         this.attendanceRepository = attendanceRepository;
@@ -40,7 +39,6 @@ public class DatabaseLoader implements ApplicationRunner {
         this.facultyService = facultyService;
         this.departmentRepository = departmentRepository;
         this.facultyRepository = facultyRepository;
-        this.floatedCourseService = floatedCourseService;
     }
 
     @Override
@@ -139,19 +137,17 @@ public class DatabaseLoader implements ApplicationRunner {
         facultyService.register(facultyMember1);
 
         List<FacultyMember> faculties = facultyRepository.getByUserDetails_Department_Name("Computer");
-        logger.info("Faculties : are "+ faculties.toString());
+        logger.info("Faculties : are " + faculties.toString());
 
         List<Attendance> attendances = attendanceRepository.findBySessionAndStudent_User_userId("A17", "14PEB049");
         logger.info(attendances.toString());
 
         List<Course> courses = courseRepository.findByDepartment_Name("Computer");
         logger.info(courses.toString());
-      
+
         List<Student> students = studentRepository.getByUserDetails_Department_Name("Computer");
         logger.info(students.toString());
-      
-        logger.info(studentRepository.getByEnrolmentNumber("GF1032").toString());
 
-        floatedCourseService.floatCourse(course2, Collections.singletonList(facultyMember.getFacultyId()));
+        logger.info(studentRepository.getByEnrolmentNumber("GF1032").toString());
     }
 }
