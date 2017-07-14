@@ -20,6 +20,8 @@ public class DepartmentController {
 
     @GetMapping("/department")
     public String department(Model model) {
+        Course course = new Course();
+        model.addAttribute("newCourse", course);
         model.addAttribute("floatedCourses", departmentAdminService.getFloatedCourses());
         model.addAttribute("courses", departmentAdminService.getAllCourses());
         FacultyMember facultyMember = departmentAdminService.getFacultyMember();
@@ -35,7 +37,7 @@ public class DepartmentController {
         // TODO: Add form handling
         departmentAdminService.registerCourse(course);
 
-        return "redirect:department";
+        return "redirect:/department";
     }
 
     @PostMapping("/department/float_course")
@@ -47,7 +49,7 @@ public class DepartmentController {
             // TODO: Add flash message exc.getMessage
         }
 
-        return "redirect:department";
+        return "redirect:/department";
     }
 
 }

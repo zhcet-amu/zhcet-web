@@ -86,6 +86,14 @@ public class DatabaseLoader implements ApplicationRunner {
         studentService.register(student);
         logger.info("Saved student " + student.toString());
 
+        UserAuth user1 = new UserAuth("1234", "1234", "dpppp", "FACULTY", new String[]{"ROLE_DEPARTMENT_ADMIN"});
+        FacultyMember facultyMember = new FacultyMember(user1);
+        UserDetails userDetails1 = new UserDetails();
+        userDetails1.setDepartment(department);
+        facultyMember.setUserDetails(userDetails1);
+        facultyService.register(facultyMember);
+
+
         String session = Utils.getCurrentSession();
 
         Attendance attendance = new Attendance();
@@ -124,11 +132,11 @@ public class DatabaseLoader implements ApplicationRunner {
         attendanceRepository.save(attendance4);
         logger.info("Saved attendance " + attendance4.toString());
 
-        UserAuth user1 = new UserAuth("fac22", "pass", "Dp", "FACULTY", new String[]{Roles.DEAN_ADMIN});
+        UserAuth user2 = new UserAuth("fac22", "pass", "Dp", "FACULTY", new String[]{Roles.DEAN_ADMIN});
 
-        FacultyMember facultyMember = new FacultyMember(user1);
+        FacultyMember facultyMember1 = new FacultyMember(user2);
         facultyMember.setUserDetails(userDetails);
-        facultyService.register(facultyMember);
+        facultyService.register(facultyMember1);
 
         List<FacultyMember> faculties = facultyRepository.getByUserDetails_Department_Name("Computer");
         logger.info("Faculties : are "+ faculties.toString());
