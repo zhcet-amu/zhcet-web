@@ -3,6 +3,7 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="fragments/layout :: head(title = 'Department Admin')">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.0/css/mdb.min.css" type="text/css" rel="stylesheet" />
 </head>
 
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
@@ -28,6 +29,7 @@
                         </ul>
                     </div>
                 </div>
+
                 <div class="card-body collapse in">
                     <div class="card-block">
                         <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
@@ -35,16 +37,14 @@
                               th:object="${newCourse}">
                             <div class="form-body">
                                 <h4 class="form-section"><i class="icon-head"></i> Course Info</h4>
-
-                                <div class="form-group">
-                                    <label class="col-md-3 label-control" for="code">Course Code</label>
-                                    <input id="code" name="code" class="form-control" type="text"
-                                           th:field="*{code}"/>
+                                <br />
+                                <div class="mtrl-group">
+                                    <input id="code" name="code" class="mtrl" type="text" th:field="*{code}" required/>
+                                    <label class="label-control mtrl" for="code">Course Code</label>
                                 </div>
-                                <div>
-                                    <label class="col-md-3 label-control" for="title">Course Title</label>
-                                    <input id="title" name="title" class="form-control" type="text"
-                                           th:field="*{title}"/>
+                                <div class="mtrl-group">
+                                    <input id="title" name="title" class="mtrl" type="text" th:field="*{title}" required/>
+                                    <label class="label-control mtrl" for="title">Course Title</label>
                                 </div>
 
                             </div>
@@ -81,43 +81,29 @@
 
                             <div class="form-body">
                                 <h4 class="form-section"><i class="icon-clipboard4"></i>Float Courses</h4>
-                                <div class="row">
-                                    <div class="table-responsive">
-                                        <br/>
-                                        <table class="table">
-                                            <thead class="thead-inverse">
-                                            <tr>
-                                                <th>Courses Available</th>
-                                                <th>FacultyMember</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td>
-                                                    <select class="form-control" id="courseCode" name="courseCode">
-                                                        <option value="-1">Select a Course</option>
-                                                        <option th:each="course : ${courses}"
-                                                                th:value="${course.code}"
-                                                                th:text="${course.title}">
-                                                        </option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select class="form-control" id="faculty"
-                                                            name="faculty">
-                                                        <option value="-1">Select Faculty</option>
-                                                        <option th:each="faculty : ${facultyMembers}"
-                                                                th:value="${faculty.facultyId}"
-                                                                th:text="${faculty.name}">
-                                                        </option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 label-control" for="courseCode">Course Code</label>
+                                    <select class="form-control dropdown-container" id="courseCode" name="courseCode">
+                                        <option value="-1">Select a Course</option>
+                                        <option th:each="course : ${courses}"
+                                                th:value="${course.code}"
+                                                th:text="${course.title}"
+                                                class="my-dropdown">
+                                        </option>
+                                    </select>
                                 </div>
-                                <br/>
+                                <div>
+                                    <label class="col-md-3 label-control" for="faculty">In-Charge</label>
+                                    <select class="form-control" id="faculty"
+                                            name="faculty">
+                                        <option value="-1">Select Faculty</option>
+                                        <option th:each="faculty : ${facultyMembers}"
+                                                th:value="${faculty.facultyId}"
+                                                th:text="${faculty.name}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <br />
                                 <div>
                                     <button type="submit" class="btn btn-primary btn-lg btn-block">
                                         <i class="icon-check2"></i> Float
