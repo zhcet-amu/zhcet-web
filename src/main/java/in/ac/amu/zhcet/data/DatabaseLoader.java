@@ -28,11 +28,10 @@ public class DatabaseLoader implements ApplicationRunner {
     private final FacultyService facultyService;
     private final DepartmentRepository departmentRepository;
     private final FacultyRepository facultyRepository;
-    private final FloatedCourseService floatedCourseService;
     private static final Logger logger = LoggerFactory.getLogger(DatabaseLoader.class);
 
     @Autowired
-    public DatabaseLoader(StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, StudentService studentService, FacultyService facultyService, DepartmentRepository departmentRepository, FacultyRepository facultyRepository, FloatedCourseService floatedCourseService) {
+    public DatabaseLoader(StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, StudentService studentService, FacultyService facultyService, DepartmentRepository departmentRepository, FacultyRepository facultyRepository) {
         this.studentService = studentService;
         this.studentRepository = studentRepository;
         this.attendanceRepository = attendanceRepository;
@@ -40,7 +39,6 @@ public class DatabaseLoader implements ApplicationRunner {
         this.facultyService = facultyService;
         this.departmentRepository = departmentRepository;
         this.facultyRepository = facultyRepository;
-        this.floatedCourseService = floatedCourseService;
     }
 
     @Override
@@ -86,6 +84,14 @@ public class DatabaseLoader implements ApplicationRunner {
         studentService.register(student);
         logger.info("Saved student " + student.toString());
 
+        UserAuth user1 = new UserAuth("1234", "1234", "dpppp", "FACULTY", new String[]{"ROLE_DEPARTMENT_ADMIN"});
+        FacultyMember facultyMember = new FacultyMember(user1);
+        UserDetails userDetails1 = new UserDetails();
+        userDetails1.setDepartment(department);
+        facultyMember.setUserDetails(userDetails1);
+        facultyService.register(facultyMember);
+
+
         String session = Utils.getCurrentSession();
 
         Attendance attendance = new Attendance();
@@ -124,26 +130,24 @@ public class DatabaseLoader implements ApplicationRunner {
         attendanceRepository.save(attendance4);
         logger.info("Saved attendance " + attendance4.toString());
 
-        UserAuth user1 = new UserAuth("fac22", "pass", "Dp", "FACULTY", new String[]{Roles.DEAN_ADMIN});
+        UserAuth user2 = new UserAuth("fac22", "pass", "Dp", "FACULTY", new String[]{Roles.DEAN_ADMIN});
 
-        FacultyMember facultyMember = new FacultyMember(user1);
+        FacultyMember facultyMember1 = new FacultyMember(user2);
         facultyMember.setUserDetails(userDetails);
-        facultyService.register(facultyMember);
+        facultyService.register(facultyMember1);
 
         List<FacultyMember> faculties = facultyRepository.getByUserDetails_Department_Name("Computer");
-        logger.info("Faculties : are "+ faculties.toString());
+        logger.info("Faculties : are " + faculties.toString());
 
         List<Attendance> attendances = attendanceRepository.findBySessionAndStudent_User_userId("A17", "14PEB049");
         logger.info(attendances.toString());
 
         List<Course> courses = courseRepository.findByDepartment_Name("Computer");
         logger.info(courses.toString());
-      
+
         List<Student> students = studentRepository.getByUserDetails_Department_Name("Computer");
         logger.info(students.toString());
-      
-        logger.info(studentRepository.getByEnrolmentNumber("GF1032").toString());
 
-        floatedCourseService.floatCourse(course2, Collections.singletonList(facultyMember.getFacultyId()));
+        logger.info(studentRepository.getByEnrolmentNumber("GF1032").toString());
     }
 }

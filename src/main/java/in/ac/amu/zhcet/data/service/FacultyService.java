@@ -31,6 +31,9 @@ public class FacultyService {
     public List<FacultyMember> getByIds(List<String> facultyIds) {
         return facultyRepository.getByFacultyIdIn(facultyIds);
     }
+    public List<FacultyMember> getByDepartment(Department department){
+        return facultyRepository.getByUserDetails_Department_Name(department.getName());
+    }
 
     public FacultyMember getLoggedInMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
