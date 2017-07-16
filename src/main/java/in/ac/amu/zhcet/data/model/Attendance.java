@@ -1,27 +1,27 @@
 package in.ac.amu.zhcet.data.model;
 
-import in.ac.amu.zhcet.data.model.base.entity.BaseIdEntity;
+import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"COURSE_CODE", "SESSION", "STUDENT_ID"})
-})
-public class Attendance extends BaseIdEntity {
+public class Attendance extends BaseEntity implements Serializable {
 
+    @Id
+    private String id;
+
+    @NaturalId
+    @NotNull
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumns(value = {
-            @JoinColumn(name = "COURSE_CODE"),
-            @JoinColumn(name = "SESSION"),
-            @JoinColumn(name = "STUDENT_ID")
-    })
     private CourseRegistration courseRegistration;
     private int delivered;
     private int attended;
@@ -30,14 +30,17 @@ public class Attendance extends BaseIdEntity {
         this.courseRegistration = courseRegistration;
     }
 
+    @PrePersist
+    public void setRelation() {
+        id = courseRegistration.getId();
+    }
+
     @Override
     public String toString() {
-        String student = courseRegistration != null ? courseRegistration.getStudent().toString() : "";
-        String course = courseRegistration != null ? courseRegistration.getFloatedCourse().toString() : "";
 
         return "Attendance{" +
-                "student=" + student +
-                ", course=" + course +
+                "student=" + courseRegistration.getStudent() +
+                ", course=" + courseRegistration.getFloatedCourse() +
                 ", delivered=" + delivered +
                 ", attended=" + attended +
                 '}';

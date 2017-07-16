@@ -1,30 +1,32 @@
 package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
-import in.ac.amu.zhcet.data.model.base.key.SessionStudent;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
 @Entity
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@IdClass(SessionStudent.class)
 public class CourseRegistration extends BaseEntity implements Serializable {
     @Id
+    private String id;
+
+    @NaturalId
+    @NonNull
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumns(value = {
-            @JoinColumn(name = "COURSE_CODE", updatable = false, insertable = false),
-            @JoinColumn(name = "SESSION", updatable = false, insertable = false)
-    })
     private FloatedCourse floatedCourse;
-    @Id
+
+    @NaturalId
+    @NotNull
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "STUDENT_ID", updatable = false, insertable = false)
     private Student student;
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "courseRegistration")
@@ -37,6 +39,8 @@ public class CourseRegistration extends BaseEntity implements Serializable {
 
     @PrePersist
     public void setRelation() {
+        id = floatedCourse.getId() + "_" + student.getEnrolmentNumber();
         attendance.setCourseRegistration(this);
     }
+
 }

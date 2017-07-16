@@ -1,11 +1,12 @@
 package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
-import in.ac.amu.zhcet.data.model.base.key.Session;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.*;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,23 +16,20 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(exclude = "courseRegistrations")
 @EqualsAndHashCode(callSuper = true)
-@Table(uniqueConstraints=
-@UniqueConstraint(columnNames={"course_code", "session"}))
-@IdClass(Session.class)
 public class FloatedCourse extends BaseEntity implements Serializable {
     @Id
+    private String id;
+
+    @NaturalId
+    @NotNull
+    @ManyToOne
     private Course course;
-    @Id
+    @NotNull
+    @NaturalId
     private String session;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "COURSE_IN_CHARGE",
-            joinColumns = {
-                    @JoinColumn(name = "course_code"),
-                    @JoinColumn(name = "session")
-            }
-    )
+    @JoinTable(name = "COURSE_IN_CHARGE")
     private List<FacultyMember> inCharge;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "floatedCourse")
@@ -46,5 +44,7 @@ public class FloatedCourse extends BaseEntity implements Serializable {
     public void setDefaults() {
         if (session == null)
             session = Utils.getCurrentSession();
+
+        id = session + "_" + course.getCode();
     }
 }
