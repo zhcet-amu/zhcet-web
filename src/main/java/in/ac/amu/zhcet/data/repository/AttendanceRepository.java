@@ -1,17 +1,12 @@
 package in.ac.amu.zhcet.data.repository;
 
 import in.ac.amu.zhcet.data.model.Attendance;
-import in.ac.amu.zhcet.data.model.Student;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface AttendanceRepository extends CrudRepository<Attendance, Long> {
+public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
-    List<Attendance> findBySessionAndStudent(String session, Student student);
-
-    List<Attendance> findBySessionAndStudent_User_userId(String session, String facultyNumber);
-
-    List<Attendance> findBySessionAndCourse_Code(String session, String courseCode);
+    List<Attendance> getByCourseRegistration_Student_EnrolmentNumberAndCourseRegistration_FloatedCourse_Session(String userId, String session);
 
 }

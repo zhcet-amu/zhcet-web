@@ -1,8 +1,6 @@
 package in.ac.amu.zhcet.data.service;
 
-import in.ac.amu.zhcet.data.model.Course;
-import in.ac.amu.zhcet.data.model.Department;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.utils.Utils;
@@ -41,9 +39,9 @@ public class FloatedCourseService {
 
     @Transactional
     public FloatedCourse floatCourse(Course course) {
-        Course stored = courseRepository.findOne(course.getId());
+        Course stored = courseRepository.findOne(course.getCode());
 
-        return floatedCourseRepository.save(new FloatedCourse(Utils.getCurrentSession(), stored, stored.getDepartment()));
+        return floatedCourseRepository.save(new FloatedCourse(Utils.getCurrentSession(), stored));
     }
 
     @Transactional
@@ -54,9 +52,9 @@ public class FloatedCourseService {
     }
 
     @Transactional
-    public void addFacultyMembers(Course course, List<String> facultyMemberIds) {
-        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Id(Utils.getCurrentSession(), course.getId());
+    public void addInCharge(Course course, List<String> facultyMemberIds) {
+        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), course.getCode());
 
-        stored.setInCharge(facultyService.getByIds(facultyMemberIds));
+        stored.getInCharge().addAll(facultyService.getByIds(facultyMemberIds));
     }
 }

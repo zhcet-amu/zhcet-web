@@ -1,6 +1,5 @@
 package in.ac.amu.zhcet.data.service;
 
-import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.base.user.UserDetails;
 import in.ac.amu.zhcet.data.repository.StudentRepository;

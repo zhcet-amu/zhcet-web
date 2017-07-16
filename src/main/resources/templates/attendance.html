@@ -14,12 +14,13 @@
             <h4 th:text="${student.facultyNumber}" class="center">Faculty Number</h4>
         </div>
 
+        <!--/*@thymesVar id="attendance" type="in.ac.amu.zhcet.data.model.Attendance"*/-->
         <div th:each="attendance : ${attendances}" class="card col s12 m6 l4">
             <div class="card-content">
                 <span class="card-title center"
-                      th:text="${attendance.course?.title}">Course Name</span>
+                      th:text="${attendance.courseRegistration.floatedCourse.course.title}">Course Name</span>
                 <span class="card-title center"
-                      th:text="${attendance.course?.code}">Course Code</span>
+                      th:text="${attendance.courseRegistration.floatedCourse.course.code}">Course Code</span>
                 <div th:text="@{|Delivered : ${attendance.delivered}|}">Delivered</div>
                 <div th:text="@{|Attended : ${attendance.attended}|}">Attended</div>
                 <div th:with="percent=${attendance.attended*100.0/attendance.delivered}">

@@ -1,9 +1,8 @@
 package in.ac.amu.zhcet.controller;
 
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.repository.AttendanceRepository;
+import in.ac.amu.zhcet.data.service.RegisteredCourseService;
 import in.ac.amu.zhcet.data.service.StudentService;
-import in.ac.amu.zhcet.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,12 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AttendanceController {
 
     private final StudentService studentService;
-    private final AttendanceRepository attendanceRepository;
+    private final RegisteredCourseService registeredCourseService;
 
     @Autowired
-    public AttendanceController(StudentService studentService, AttendanceRepository attendanceRepository) {
+    public AttendanceController(StudentService studentService, RegisteredCourseService registeredCourseService) {
         this.studentService = studentService;
-        this.attendanceRepository = attendanceRepository;
+        this.registeredCourseService = registeredCourseService;
     }
 
 
@@ -27,8 +26,7 @@ public class AttendanceController {
         Student student = studentService.getLoggedInStudent();
 
         model.addAttribute("student", student);
-        model.addAttribute("attendances", attendanceRepository.findBySessionAndStudent(Utils.getCurrentSession(), student));
-
+        model.addAttribute("attendances", registeredCourseService.getAttendanceByStudent(student.getEnrolmentNumber()));
         return "attendance";
     }
 

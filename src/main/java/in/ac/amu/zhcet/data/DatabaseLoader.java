@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.model.base.user.UserDetails;
 import in.ac.amu.zhcet.data.repository.*;
+import in.ac.amu.zhcet.data.service.RegisteredCourseService;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.FloatedCourseService;
 import in.ac.amu.zhcet.data.service.StudentService;
@@ -13,16 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-import in.ac.amu.zhcet.utils.Utils;
-
-import java.util.Collections;
 import java.util.List;
 
 @Component
 public class DatabaseLoader implements ApplicationRunner {
 
+    private final FloatedCourseService floatedCourseService;
+    private final RegisteredCourseService registeredCourseService;
     private final StudentRepository studentRepository;
-    private final AttendanceRepository attendanceRepository;
     private final CourseRepository courseRepository;
     private final StudentService studentService;
     private final FacultyService facultyService;
@@ -31,10 +30,11 @@ public class DatabaseLoader implements ApplicationRunner {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseLoader.class);
 
     @Autowired
-    public DatabaseLoader(StudentRepository studentRepository, AttendanceRepository attendanceRepository, CourseRepository courseRepository, StudentService studentService, FacultyService facultyService, DepartmentRepository departmentRepository, FacultyRepository facultyRepository) {
+    public DatabaseLoader(FloatedCourseService floatedCourseService, RegisteredCourseService registeredCourseService, StudentRepository studentRepository, CourseRepository courseRepository, StudentService studentService, FacultyService facultyService, DepartmentRepository departmentRepository, FacultyRepository facultyRepository) {
+        this.floatedCourseService = floatedCourseService;
+        this.registeredCourseService = registeredCourseService;
         this.studentService = studentService;
         this.studentRepository = studentRepository;
-        this.attendanceRepository = attendanceRepository;
         this.courseRepository = courseRepository;
         this.facultyService = facultyService;
         this.departmentRepository = departmentRepository;
@@ -91,43 +91,39 @@ public class DatabaseLoader implements ApplicationRunner {
         facultyMember.setUserDetails(userDetails1);
         facultyService.register(facultyMember);
 
+        FloatedCourse floatedCourse1 = floatedCourseService.floatCourse(course1);
+        FloatedCourse floatedCourse2 = floatedCourseService.floatCourse(course2);
+        FloatedCourse floatedCourse3 = floatedCourseService.floatCourse(course3);
+        FloatedCourse floatedCourse4 = floatedCourseService.floatCourse(course4);
 
-        String session = Utils.getCurrentSession();
+        CourseRegistration courseRegistration = registeredCourseService.registerStudent(floatedCourse1, student.getEnrolmentNumber());
+        CourseRegistration courseRegistration1 = registeredCourseService.registerStudent(floatedCourse2, student.getEnrolmentNumber());
+        CourseRegistration courseRegistration2 = registeredCourseService.registerStudent(floatedCourse3, student.getEnrolmentNumber());
+        CourseRegistration courseRegistration3 = registeredCourseService.registerStudent(floatedCourse4, student.getEnrolmentNumber());
+
 
         Attendance attendance = new Attendance();
-        attendance.setCourse(course2);
-        attendance.setStudent(student);
         attendance.setAttended(20);
         attendance.setDelivered(30);
-        attendance.setSession(session);
-        attendanceRepository.save(attendance);
+        attendance = registeredCourseService.setAttendance(courseRegistration, attendance);
         logger.info("Saved attendance " + attendance.toString());
 
         Attendance attendance2 = new Attendance();
-        attendance2.setCourse(course3);
-        attendance2.setStudent(student);
         attendance2.setAttended(12);
         attendance2.setDelivered(43);
-        attendance2.setSession(session);
-        attendanceRepository.save(attendance2);
+        attendance2 = registeredCourseService.setAttendance(courseRegistration1, attendance2);
         logger.info("Saved attendance " + attendance2.toString());
 
         Attendance attendance3 = new Attendance();
-        attendance3.setCourse(course1);
-        attendance3.setStudent(student);
         attendance3.setAttended(32);
         attendance3.setDelivered(40);
-        attendance3.setSession(session);
-        attendanceRepository.save(attendance3);
+        attendance3 = registeredCourseService.setAttendance(courseRegistration2, attendance3);
         logger.info("Saved attendance " + attendance3.toString());
 
         Attendance attendance4 = new Attendance();
-        attendance4.setCourse(course4);
-        attendance4.setStudent(student);
         attendance4.setAttended(21);
         attendance4.setDelivered(29);
-        attendance4.setSession(session);
-        attendanceRepository.save(attendance4);
+        attendance4 = registeredCourseService.setAttendance(courseRegistration3, attendance4);
         logger.info("Saved attendance " + attendance4.toString());
 
         UserAuth user2 = new UserAuth("fac22", "pass", "Dp", "FACULTY", new String[]{Roles.DEAN_ADMIN});
@@ -139,7 +135,7 @@ public class DatabaseLoader implements ApplicationRunner {
         List<FacultyMember> faculties = facultyRepository.getByUserDetails_Department_Name("Computer");
         logger.info("Faculties : are " + faculties.toString());
 
-        List<Attendance> attendances = attendanceRepository.findBySessionAndStudent_User_userId("A17", "14PEB049");
+        List<Attendance> attendances = registeredCourseService.getAttendanceByStudent("GF1032");
         logger.info(attendances.toString());
 
         List<Course> courses = courseRepository.findByDepartment_Name("Computer");

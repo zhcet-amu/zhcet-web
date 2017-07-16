@@ -28,6 +28,7 @@ public class StudentController {
 
     @PostMapping("/student")
     public String saveStudent(@ModelAttribute Student student) {
+        System.out.println(student);
         studentService.updateStudentDetails(student.getEnrolmentNumber(), student.getUserDetails());
 
         return "redirect:student";

@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @MappedSuperclass
 public class CustomPrincipal extends BaseEntity implements UserPrincipal {
 
