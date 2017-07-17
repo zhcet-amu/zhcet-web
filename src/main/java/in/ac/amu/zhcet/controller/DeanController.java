@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.controller;
 
 import in.ac.amu.zhcet.data.Roles;
+import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
@@ -65,5 +66,14 @@ public class DeanController {
         }
 
         return "redirect:dean";
+    }
+
+    @PostMapping("/dean/add_department")
+    public String addDepartment(@RequestParam String departmentName) {
+        Department department = new Department();
+        department.setName(departmentName);
+
+        departmentRepository.save(department);
+        return "redirect:/dean";
     }
 }

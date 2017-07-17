@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @DynamicUpdate
@@ -21,10 +22,14 @@ public class UserAuth extends BaseEntity {
     @Id
     private String userId;
 
+    @NotNull
     private String password;
+    @NotNull
     private String[] roles;
 
+    @NotNull
     private String name;
+    @NotNull
     private String type;
 
     public UserAuth(String userId, String password, String name, String type, String[] roles) {

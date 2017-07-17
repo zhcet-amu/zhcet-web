@@ -11,7 +11,7 @@
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation"></div>
 
-<div class="container" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <div th:if="!${error}"></div>
 
     <!-- Creation of new Course here-->
@@ -33,16 +33,16 @@
                 <div class="card-body collapse in">
                     <div class="card-block">
                         <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
-                        <form class="form" th:action="@{/department/create_course}" method="post"
+                        <form class="mui-form" th:action="@{/department/create_course}" method="post"
                               th:object="${newCourse}">
                             <div class="form-body">
                                 <h4 class="form-section"><i class="icon-head"></i> Course Info</h4>
                                 <br />
-                                <div class="mtrl-group">
+                                <div class="mui-textfield mui-textfield--float-label">
                                     <input id="code" name="code" class="mtrl" type="text" th:field="*{code}" required/>
                                     <label class="label-control mtrl" for="code">Course Code</label>
                                 </div>
-                                <div class="mtrl-group">
+                                <div class="mui-textfield mui-textfield--float-label">
                                     <input id="title" name="title" class="mtrl" type="text" th:field="*{title}" required/>
                                     <label class="label-control mtrl" for="title">Course Title</label>
                                 </div>
@@ -77,13 +77,11 @@
                 <div class="card-body collapse in">
                     <div class="card-block">
 
-                        <form class="form" th:action="@{/department/float_course}" method="post">
-
-                            <div class="form-body">
+                        <form class="mui-form" th:action="@{/department/float_course}" method="post">
                                 <h4 class="form-section"><i class="icon-clipboard4"></i>Float Courses</h4>
-                                <div class="form-group">
-                                    <label class="col-md-3 label-control" for="courseCode">Course Code</label>
-                                    <select class="form-control dropdown-container" id="courseCode" name="courseCode">
+                                <div class="mui-select">
+                                    <label for="courseCode">Course Code</label>
+                                    <select id="courseCode" name="courseCode">
                                         <option value="-1">Select a Course</option>
                                         <option th:each="course : ${courses}"
                                                 th:value="${course.code}"
@@ -92,10 +90,9 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div>
-                                    <label class="col-md-3 label-control" for="faculty">In-Charge</label>
-                                    <select class="form-control" id="faculty"
-                                            name="faculty">
+                                <div class="mui-select">
+                                    <label for="faculty">In-Charge</label>
+                                    <select id="faculty" name="faculty">
                                         <option value="-1">Select Faculty</option>
                                         <option th:each="faculty : ${facultyMembers}"
                                                 th:value="${faculty.facultyId}"
@@ -109,7 +106,6 @@
                                         <i class="icon-check2"></i> Float
                                     </button>
                                 </div>
-                            </div>
                         </form>
                     </div>
                 </div>

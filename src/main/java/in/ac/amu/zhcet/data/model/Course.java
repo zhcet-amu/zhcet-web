@@ -15,7 +15,7 @@ public class Course extends BaseEntity {
     @Id
     private String code;
     private String title;
-    private boolean active;
+    private boolean active = true;
 
     @ManyToOne
     private Department department;

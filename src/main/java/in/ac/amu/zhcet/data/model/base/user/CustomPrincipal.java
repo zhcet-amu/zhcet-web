@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -17,9 +18,11 @@ public class CustomPrincipal extends BaseEntity implements UserPrincipal {
 
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
+    @NotNull
     private UserAuth user;
 
     @Embedded
+    @NotNull
     private UserDetails userDetails = new UserDetails();
 
     public CustomPrincipal(UserAuth userAuth) {

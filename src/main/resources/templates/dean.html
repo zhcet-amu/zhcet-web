@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" data-textdirection="ltr" class="loading"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
 <head th:replace="fragments/layout :: head(title = 'Dean Admin')">
 </head>
 
@@ -10,27 +11,28 @@
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation"></div>
 
-<div class="container" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
-    <div class="col-md-15">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title" id="from-actions-top-left">Create User</h4>
-                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                <div class="heading-elements">
-                    <ul class="list-inline mb-0">
-                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                    </ul>
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
+    <div class="row">
+        <div class="col-xl-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title" id="from-actions-top-left">Create User</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body collapse in">
-                <div class="card-block">
-                    <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
-                    <form class="form" th:action="@{/dean}" method="post" th:object="${user}">
-                        <div class="row">
-                            <div class="col-md-6 offset-md-3">
-                                <div class="form-body">
+
+                <div class="card-body collapse in">
+                    <div class="card-block">
+                        <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
+                        <form class="mui-form" th:action="@{/dean}" method="post" th:object="${user}">
+                            <div class="row">
+                                <div class="col-md-6 offset-md-3">
                                     <h4 class="form-section"><i class="icon-head"></i> User Info</h4>
                                     <div class="row">
                                         <div class="form-group col-xs-12 mb-2">
@@ -42,44 +44,47 @@
                                                     <span class="custom-control-description ml-0">Student</span>
                                                 </label>
                                                 <label class="display-inline-block custom-control custom-radio ml-1">
-                                                    <input type="radio" id="facultyMember" class="custom-control-input"
+                                                    <input type="radio" id="facultyMember"
+                                                           class="custom-control-input"
                                                            th:field="*{type}" value="FACULTY"/>
                                                     <span class="custom-control-indicator"></span>
                                                     <span class="custom-control-description ml-0">Faculty</span>
                                                 </label>
                                                 <label class="display-inline-block custom-control custom-radio ml-1">
-                                                    <input type="radio" id="departmentAdmin" class="custom-control-input"
+                                                    <input type="radio" id="departmentAdmin"
+                                                           class="custom-control-input"
                                                            th:field="*{type}" value="DEPARTMENT_ADMIN"/>
                                                     <span class="custom-control-indicator"></span>
                                                     <span class="custom-control-description ml-0">Department Admin</span>
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="form-group col-xs-12 mb-2">
-                                            <label for="id">User Id</label>
-                                            <input id="id" name="id" class="form-control" type="text"
-                                                   th:field="*{userId}"/>
-                                        </div>
-                                        <div class="form-group col-xs-12 mb-2">
-                                            <label for="name">Name</label>
-                                            <input id="name" name="name" class="form-control" type="text"
-                                                   th:field="*{name}"/>
-                                        </div>
-                                        <div class="form-group col-xs-12 mb-2">
-                                            <label for="password">Password</label>
-                                            <input id="password" name="password" class="form-control" type="password"
-                                                   th:field="*{password}" placeholder="Password"/>
-                                        </div>
-                                        <div class="form-group col-xs-12 mb-2">
+                                        <div class="mui-select form-group col-xs-12 mb-2">
                                             <label for="department">Department</label>
-                                            <select class="form-control" id="department" name="department">
+                                            <select id="department" name="department">
                                                 <option value="-1">Select a Department</option>
                                                 <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
                                                 <option th:each="department : ${departments}"
                                                         th:value="${department.id}"
                                                         th:text="${department.name}">
                                                 </option>
-                                        </select>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-xs-12 mb-2 mui-textfield mui-textfield--float-label">
+                                            <input id="id" name="id" type="text"
+                                                   th:field="*{userId}"/>
+                                            <label for="id">User ID</label>
+                                        </div>
+                                        <div class="form-group col-xs-12 mb-2 mui-textfield mui-textfield--float-label">
+                                            <input id="name" name="name" type="text"
+                                                   th:field="*{name}"/>
+                                            <label for="name">Name</label>
+                                        </div>
+                                        <div class="form-group col-xs-12 mb-2 mui-textfield mui-textfield--float-label">
+                                            <input id="password" name="password"
+                                                   type="password"
+                                                   th:field="*{password}"/>
+                                            <label for="password">Password</label>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary">
@@ -87,38 +92,71 @@
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                    <div class="row">
-                        <div class="form-group col-xs-12 mb-2">
-                            <div th:if="${message}" class="green-text center" th:text="${message}">
-                                Registered
+                        </form>
+                        <div class="row">
+                            <div class="form-group col-xs-12 mb-2">
+                                <div th:if="${message}" class="green-text center" th:text="${message}">
+                                    Registered
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <table class="table">
-                    <thead class="thead-inverse">
-                    <tr>
-                        <th>Name</th>
-                        <th>User ID</th>
-                        <th>Registration Date</th>
-                        <th>Roles</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <th:block th:each="user : ${users}">
+                    <table class="table">
+                        <thead class="thead-inverse">
                         <tr>
-                            <td th:text="${user.name}">A Smoke Test'</td>
-                            <td th:text="${user.userId}">A Smoke Test'</td>
-                            <td th:text="${user.createdAt != null ? user.createdAt : user.updatedAt }">A
-                                Smoke Test'
-                            </td>
-                            <td th:text="${@userService.getType(user)}">A Smoke Test'</td>
+                            <th>Name</th>
+                            <th>User ID</th>
+                            <th>Registration Date</th>
+                            <th>Roles</th>
                         </tr>
-                    </th:block>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="user : ${users}">
+                            <tr>
+                                <td th:text="${user.name}">A Smoke Test'</td>
+                                <td th:text="${user.userId}">A Smoke Test'</td>
+                                <td th:text="${user.createdAt != null ? user.createdAt : user.updatedAt }">A
+                                    Smoke Test'
+                                </td>
+                                <td th:text="${@userService.getType(user)}">A Smoke Test'</td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Add Department</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in">
+                    <div class="card-block">
+                        <form class="mui-form" th:action="@{/dean/add_department}" method="post">
+                            <div class="form-body">
+                                <h4 class="form-section"><i class="icon-clipboard4"></i>Department Info</h4>
+                                <div class="form-group col-xs-12 mb-2">
+                                    <div class="mui-textfield mui-textfield--float-label">
+                                        <input id="department_name" name="departmentName" type="text"/>
+                                        <label for="department_name">Department Name</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="icon-check2"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

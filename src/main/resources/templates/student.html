@@ -10,8 +10,7 @@
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation"></div>
 
-
-<div class="container" sec:authorize="hasRole('ROLE_STUDENT')">
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_STUDENT')">
     <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
     <div class="col-md-15">
         <div class="card">

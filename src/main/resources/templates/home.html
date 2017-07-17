@@ -1,30 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" data-textdirection="ltr" class="loading" xmlns:th="http://www.thymeleaf.org" >
+<html xmlns:th="http://www.thymeleaf.org" lang="en" data-textdirection="ltr" class="loading">
 <head th:replace="fragments/layout :: head(title = 'Home')">
 </head>
 
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
+      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation"></div>
 
-<div class="app-content content container-fluid">
-    <div class="content-wrapper">
-        <div class="content-header row"></div>
-        <div class="content-body">
-            <div class="row">
-                <div class="col-xl-3 col-lg-6 col-xs-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <p>Hi WelCome to the CTENGG</p>
-                        </div>
-                    </div>
+<div th:fragment="content" th:include="fragments/layout :: wrapper">
+    <div class="row">
+        <div class="col-xl-3 col-lg-6 col-xs-12">
+            <div class="card">
+                <div class="card-body">
+                    <p>Hi WelCome to the CTENGG</p>
                 </div>
-
             </div>
         </div>
     </div>
-</div>
-
-<div th:replace="fragments/layout :: scripts"></div>
+    <div th:replace="fragments/layout :: scripts"></div>
 </body>
 </html>
