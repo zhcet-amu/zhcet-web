@@ -58,6 +58,12 @@
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Login</span>
                 </a>
             </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_FACULTY')">
+                <a th:href="@{/faculty/courses}" href="floatedCourse.html">
+                    <i class="icon-stack-2"></i>
+                    <span data-i18n="nav.page_layouts.main" class="menu-title">Floated</span>
+                </a>
+            </li>
         </ul>
     </div>
 </div>

@@ -45,10 +45,11 @@ public class FloatedCourseService {
     }
 
     @Transactional
-    public void floatCourse(Course course, List<String> facultyMembersId) throws IllegalAccessException {
+    public FloatedCourse floatCourse(Course course, List<String> facultyMembersId) throws IllegalAccessException {
         FloatedCourse stored = floatCourse(course);
 
         stored.setInCharge(facultyService.getByIds(facultyMembersId));
+        return stored;
     }
 
     @Transactional

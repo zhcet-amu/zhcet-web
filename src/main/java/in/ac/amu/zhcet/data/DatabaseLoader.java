@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -84,17 +86,21 @@ public class DatabaseLoader implements ApplicationRunner {
         studentService.register(student);
         logger.info("Saved student " + student.toString());
 
-        UserAuth user1 = new UserAuth("1234", "1234", "dpppp", "FACULTY", new String[]{"ROLE_DEPARTMENT_ADMIN"});
+        UserAuth user1 = new UserAuth("1234", "1234", "dpppp", "FACULTY", new String[]{"ROLE_DEPARTMENT_ADMIN", Roles.FACULTY});
         FacultyMember facultyMember = new FacultyMember(user1);
         UserDetails userDetails1 = new UserDetails();
         userDetails1.setDepartment(department);
         facultyMember.setUserDetails(userDetails1);
         facultyService.register(facultyMember);
+        List<String> facultyMembers = new ArrayList<>();
+        facultyMembers.add(facultyMember.getFacultyId());
 
-        FloatedCourse floatedCourse1 = floatedCourseService.floatCourse(course1);
+        FloatedCourse floatedCourse1 = floatedCourseService.floatCourse(course1, facultyMembers);
         FloatedCourse floatedCourse2 = floatedCourseService.floatCourse(course2);
-        FloatedCourse floatedCourse3 = floatedCourseService.floatCourse(course3);
-        FloatedCourse floatedCourse4 = floatedCourseService.floatCourse(course4);
+        FloatedCourse floatedCourse3 = floatedCourseService.floatCourse(course3, facultyMembers);
+        FloatedCourse floatedCourse4 = floatedCourseService.floatCourse(course4, facultyMembers);
+
+
 
         CourseRegistration courseRegistration = registeredCourseService.registerStudent(floatedCourse1, student.getEnrolmentNumber());
         CourseRegistration courseRegistration1 = registeredCourseService.registerStudent(floatedCourse2, student.getEnrolmentNumber());
