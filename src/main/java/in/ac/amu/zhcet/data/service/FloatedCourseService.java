@@ -45,10 +45,11 @@ public class FloatedCourseService {
     }
 
     @Transactional
-    public void floatCourse(Course course, List<String> facultyMembersId) throws IllegalAccessException {
+    public FloatedCourse floatCourse(Course course, List<String> facultyMembersId) throws IllegalAccessException {
         FloatedCourse stored = floatCourse(course);
 
         stored.setInCharge(facultyService.getByIds(facultyMembersId));
+        return stored;
     }
 
     @Transactional
@@ -56,5 +57,9 @@ public class FloatedCourseService {
         FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), course.getCode());
 
         stored.getInCharge().addAll(facultyService.getByIds(facultyMemberIds));
+    }
+
+    public List<FloatedCourse> getByFaculty(FacultyMember facultyMember) {
+        return floatedCourseRepository.getBySessionAndInCharge(Utils.getCurrentSession(), facultyMember);
     }
 }

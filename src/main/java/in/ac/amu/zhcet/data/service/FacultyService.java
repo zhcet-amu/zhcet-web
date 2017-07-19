@@ -1,9 +1,13 @@
 package in.ac.amu.zhcet.data.service;
 
+import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
+import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.model.base.user.UserDetails;
 import in.ac.amu.zhcet.data.repository.FacultyRepository;
+import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
+import in.ac.amu.zhcet.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,11 +21,13 @@ public class FacultyService {
 
     private final FacultyRepository facultyRepository;
     private final UserService userService;
+    private final FloatedCourseRepository floatedCourseRepository;
 
     @Autowired
-    public FacultyService(FacultyRepository facultyRepository, UserService userService) {
+    public FacultyService(FacultyRepository facultyRepository, UserService userService, FloatedCourseRepository floatedCourseRepository) {
         this.facultyRepository = facultyRepository;
         this.userService = userService;
+        this.floatedCourseRepository = floatedCourseRepository;
     }
 
     public FacultyMember getById(String facultyId) {
@@ -31,7 +37,8 @@ public class FacultyService {
     public List<FacultyMember> getByIds(List<String> facultyIds) {
         return facultyRepository.getByFacultyIdIn(facultyIds);
     }
-    public List<FacultyMember> getByDepartment(Department department){
+
+    public List<FacultyMember> getByDepartment(Department department) {
         return facultyRepository.getByUserDetails_Department_Name(department.getName());
     }
 
