@@ -66,8 +66,4 @@ public class FacultyService {
         facultyRepository.save(facultyMember);
     }
 
-    public List<FloatedCourse> getByFaculty(FacultyMember facultyMember) {
-        return floatedCourseRepository.getBySessionAndInCharge(Utils.getCurrentSession(), facultyMember);
-    }
-
 }

@@ -58,4 +58,8 @@ public class FloatedCourseService {
 
         stored.getInCharge().addAll(facultyService.getByIds(facultyMemberIds));
     }
+
+    public List<FloatedCourse> getByFaculty(FacultyMember facultyMember) {
+        return floatedCourseRepository.getBySessionAndInCharge(Utils.getCurrentSession(), facultyMember);
+    }
 }
