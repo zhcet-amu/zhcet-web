@@ -3,7 +3,8 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="fragments/layout :: head(title = 'Faculty')">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.0/css/mdb.min.css" type="text/css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.0/css/mdb.min.css" type="text/css"
+          rel="stylesheet"/>
 </head>
 
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
@@ -13,39 +14,40 @@
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_FACULTY')">
     <div th:if="!${error}"></div>
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-header">
-            <h4 class="card-title">Floated Courses</h4>
-            <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-            <div class="heading-elements">
-                <ul class="list-inline mb-0">
-                    <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                    <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                    <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                </ul>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Floated Courses</h4>
+                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div class="card-body collapse in collapse in">
-            <div class="card-block">
-                <div class="bs-example">
-                    <div class="row">
-                        <div class="col-md-3" th:each="floated: ${floatedCourses}">
-                                <span class="text-xs-center"
-                                      th:text="${floated != null} ? ${floated.course.title}"></span>
+            <div class="card-body collapse in collapse in">
+                <div class="card-block">
+                    <div class="bs-example">
+                        <div class="row">
+                            <div class="col-md-3" th:each="floated: ${floatedCourses}">
+                                <form action="/faculty/courses" th:with="selectedCourse=${floated.course.code}"
+                                      th:action="'/faculty/courses/' + ${selectedCourse}" method="get">
+                                    <button class="text-xs-center" type="submit"
+                                            th:text="${floated != null} ? ${floated.course.title}"></button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
-<div th:if="${error}" th:text="${error}"></div>
+    <div th:if="${error}" th:text="${error}"></div>
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
-
-
 
 
 </body>

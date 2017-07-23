@@ -62,4 +62,8 @@ public class FloatedCourseService {
     public List<FloatedCourse> getByFaculty(FacultyMember facultyMember) {
         return floatedCourseRepository.getBySessionAndInCharge(Utils.getCurrentSession(), facultyMember);
     }
+
+    public FloatedCourse getCourseById(String courseId){
+        return floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), courseId);
+    }
 }

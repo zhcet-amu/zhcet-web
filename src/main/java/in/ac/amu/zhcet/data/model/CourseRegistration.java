@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude="attendance")
 public class CourseRegistration extends BaseEntity implements Serializable {
     @Id
     private String id;

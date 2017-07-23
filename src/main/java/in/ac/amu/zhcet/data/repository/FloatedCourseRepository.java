@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.data.repository;
 
+import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
