@@ -1,12 +1,13 @@
 package in.ac.amu.zhcet.controller;
-import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
+
+import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.FloatedCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -22,10 +23,20 @@ public class FacultyController {
     }
 
     @GetMapping("/faculty/courses")
-    public String getCourse(Model model){
+    public String getCourse(Model model) {
+        String selected = "";
         FacultyMember facultyMember = facultyService.getLoggedInMember();
         List<FloatedCourse> floatedCourses = floatedCourseService.getByFaculty(facultyMember);
         model.addAttribute("floatedCourses", floatedCourses);
+        model.addAttribute("selectedCourse", selected);
         return "floatedCourse";
+    }
+
+    @GetMapping("faculty/courses/{id}")
+    public String getStudents(Model model, @PathVariable String id) {
+        FloatedCourse floatedCourse = floatedCourseService.getCourseById(id);
+        List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
+        model.addAttribute("courseRegistrations", courseRegistrations);
+        return "courseDetail";
     }
 }
