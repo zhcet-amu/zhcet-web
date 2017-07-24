@@ -34,7 +34,7 @@
                             <div class="col-md-3" th:each="floated: ${floatedCourses}">
                                 <form action="/faculty/courses" th:with="selectedCourse=${floated.course.code}"
                                       th:action="'/faculty/courses/' + ${selectedCourse}" method="get">
-                                    <button class="text-xs-center" type="submit"
+                                    <button class="btn btn-outline-primary block btn-lg" type="submit"
                                             th:text="${floated != null} ? ${floated.course.title}"></button>
                                 </form>
                             </div>
