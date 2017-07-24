@@ -37,6 +37,6 @@ public class FacultyController {
         FloatedCourse floatedCourse = floatedCourseService.getCourseById(id);
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
         model.addAttribute("courseRegistrations", courseRegistrations);
-        return "course_detail";
+        return "course_attendance";
     }
 }
