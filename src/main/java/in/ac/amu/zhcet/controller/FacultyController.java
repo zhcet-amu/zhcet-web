@@ -29,7 +29,7 @@ public class FacultyController {
         List<FloatedCourse> floatedCourses = floatedCourseService.getByFaculty(facultyMember);
         model.addAttribute("floatedCourses", floatedCourses);
         model.addAttribute("selectedCourse", selected);
-        return "floatedCourse";
+        return "floated_course";
     }
 
     @GetMapping("faculty/courses/{id}")
@@ -37,6 +37,6 @@ public class FacultyController {
         FloatedCourse floatedCourse = floatedCourseService.getCourseById(id);
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
         model.addAttribute("courseRegistrations", courseRegistrations);
-        return "courseDetail";
+        return "course_detail";
     }
 }
