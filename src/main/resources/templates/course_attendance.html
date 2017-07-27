@@ -44,12 +44,15 @@
                                         th:class="(${percent &lt; 75} ? 'bg-danger white':'')">
                                         <td class="text-xs-center" th:text="${registration.student.user.userId}"></td>
                                         <td class="text-xs-center" th:text="${registration.student.user.name}"></td>
-                                        <td class="text-xs-center" th:with="attended = ${registration.attendance.attended}"
+                                        <td class="text-xs-center"
+                                            th:with="attended = ${registration.attendance.attended}"
                                             th:text="${attended}"></td>
 
-                                        <td class="text-xs-center" th:with="delivered = ${registration.attendance.delivered}"
+                                        <td class="text-xs-center"
+                                            th:with="delivered = ${registration.attendance.delivered}"
                                             th:text="${delivered}"></td>
-                                        <td class="text-xs-center" th:text="${#numbers.formatDecimal(percent,0,2)}+'%'"></td>
+                                        <td class="text-xs-center"
+                                            th:text="${#numbers.formatDecimal(percent,0,2)}+'%'"></td>
                                     </tr>
                                 </th:block>
                                 </tbody>
@@ -59,9 +62,44 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Upload Attendance</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in collapse in">
+                    <div class="card-block">
+                        <div class="row">
+                            <form class="form" enctype="multipart/form-data"
+                                  th:action="'/upload/attendance/' + ${courseRegistrations[0].floatedCourse.course.code}"
+                                  method="post">
+                                <div class="form-body">
+                                    <input type="file" id="file" name="file" class="form-control-file"/>
+                                </div>
+                                <div class="form-actions center">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="icon-check2"></i> Upload
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div th:if="${error}" th:text="${error}"></div>
     <div th:replace="fragments/layout :: scripts"></div>
+    <div th:if="${uploadedFile}" th:text="'Currently uploaded file ' +${uploadedFile}">
+    </div>
 </div>
 </body>
 </html>
