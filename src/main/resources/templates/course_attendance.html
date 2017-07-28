@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" data-textdirection="ltr" class="loading"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
 <head th:replace="fragments/layout :: head(title = 'Faculty')"></head>
 
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
@@ -11,58 +12,61 @@
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_FACULTY')">
     <div th:if="!${error}"></div>
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Course Attendance</h4>
-                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                <div class="heading-elements">
-                    <ul class="list-inline mb-0">
-                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                    </ul>
+    <div class="row">
+        <div class="col-xs-12 col-xl-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Course Attendance</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body collapse in collapse in">
-                <div class="card-block">
-                    <div class="row">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead class="thead-inverse">
-                                <tr>
-                                    <th class="text-xs-center">ID</th>
-                                    <th class="text-xs-center">NAME</th>
-                                    <th class="text-xs-center">ATTENDED</th>
-                                    <th class="text-xs-center">DELIVERED</th>
-                                    <th class="text-xs-center">PERCENTAGE</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <th:block th:each="registration: ${courseRegistrations}">
-                                    <tr th:with="percent=${registration.attendance.attended*100.0/registration.attendance.delivered}"
-                                        th:class="(${percent &lt; 75} ? 'bg-danger white':'')">
-                                        <td class="text-xs-center" th:text="${registration.student.user.userId}"></td>
-                                        <td class="text-xs-center" th:text="${registration.student.user.name}"></td>
-                                        <td class="text-xs-center"
-                                            th:with="attended = ${registration.attendance.attended}"
-                                            th:text="${attended}"></td>
-
-                                        <td class="text-xs-center"
-                                            th:with="delivered = ${registration.attendance.delivered}"
-                                            th:text="${delivered}"></td>
-                                        <td class="text-xs-center"
-                                            th:text="${#numbers.formatDecimal(percent,0,2)}+'%'"></td>
+                <div class="card-body collapse in collapse in">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead-inverse">
+                                    <tr>
+                                        <th class="text-xs-center">ID</th>
+                                        <th class="text-xs-center">NAME</th>
+                                        <th class="text-xs-center">ATTENDED</th>
+                                        <th class="text-xs-center">DELIVERED</th>
+                                        <th class="text-xs-center">PERCENTAGE</th>
                                     </tr>
-                                </th:block>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="registration: ${courseRegistrations}">
+                                        <tr th:with="percent=${registration.attendance.attended*100.0/registration.attendance.delivered}"
+                                            th:class="(${percent &lt; 75} ? 'bg-danger white':'')">
+                                            <td class="text-xs-center"
+                                                th:text="${registration.student.user.userId}"></td>
+                                            <td class="text-xs-center" th:text="${registration.student.user.name}"></td>
+                                            <td class="text-xs-center"
+                                                th:with="attended = ${registration.attendance.attended}"
+                                                th:text="${attended}"></td>
+
+                                            <td class="text-xs-center"
+                                                th:with="delivered = ${registration.attendance.delivered}"
+                                                th:text="${delivered}"></td>
+                                            <td class="text-xs-center"
+                                                th:text="${#numbers.formatDecimal(percent,0,2)}+'%'"></td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-12">
+        <div class="col-sm-12 col-md-6 col-xl-4">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Upload Attendance</h4>
@@ -81,13 +85,33 @@
                             <form class="form" enctype="multipart/form-data"
                                   th:action="|${#httpServletRequest.requestURL}/attendance|"
                                   method="post">
-                                <div class="form-body">
-                                    <input type="file" id="file" name="file" class="form-control-file"/>
+                                <div>
+                                    Download the <a th:href="@{/attendance_format.csv}">attendance format</a>
                                 </div>
-                                <div class="form-actions center">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="icon-check2"></i> Upload
-                                    </button>
+                                <br/>
+                                <label class="btn btn-primary" for="my-file-selector">
+                                    <input id="my-file-selector" type="file" name="file" style="display:none"
+                                           onchange="$('#upload-file-info').html(this.files[0].name)"
+                                           accept="text/csv, .csv">
+                                    Choose File
+                                </label>
+                                <div th:if="${success}" class="alert alert-dismissible alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Uploaded!</strong> Your file was correctly uploaded. Now, confirm the prompt
+                                    below to update the attendance
+                                </div>
+                                <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Something went wrong!</strong>
+                                    <div th:utext="${error}">Fix this and try and try again</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8"></div>
+                                    <div class="col-sm-4">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="icon-check2"></i> Upload
+                                        </button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
