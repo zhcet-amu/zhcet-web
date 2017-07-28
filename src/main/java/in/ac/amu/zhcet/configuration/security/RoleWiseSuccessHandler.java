@@ -26,6 +26,8 @@ public class RoleWiseSuccessHandler implements AuthenticationSuccessHandler {
             return "/dean";
         else if (authorities.contains(Roles.DEPARTMENT_ADMIN))
             return "/department";
+        else if (authorities.contains(Roles.FACULTY))
+            return "/faculty/courses";
         else
             return "/student";
     }
