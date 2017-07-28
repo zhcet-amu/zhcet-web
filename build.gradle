@@ -35,5 +35,6 @@ dependencies {
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.2.RELEASE")
     compile("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.2.2")
     compile "net.sf.supercsv:super-csv:2.4.0"
+    compile "org.flywaydb:flyway-core:4.2.0"
     compileOnly "org.projectlombok:lombok:1.16.18"
 }
