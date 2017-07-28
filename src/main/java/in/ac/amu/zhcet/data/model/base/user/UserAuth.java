@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 
 @Entity
 @DynamicUpdate
@@ -25,8 +26,7 @@ public class UserAuth extends BaseEntity {
     @NotNull
     private String password;
     @NotNull
-    private String[] roles;
-
+    private String roles;
     @NotNull
     private String name;
     @NotNull
@@ -38,5 +38,13 @@ public class UserAuth extends BaseEntity {
         setName(name);
         setType(type);
         setRoles(roles);
+    }
+
+    public void setRoles(String[] roles) {
+        this.roles = String.join(",", roles);
+    }
+
+    public String[] getRoles() {
+        return roles.split(",");
     }
 }
