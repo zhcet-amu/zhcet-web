@@ -79,7 +79,7 @@
                     <div class="card-block">
                         <div class="row">
                             <form class="form" enctype="multipart/form-data"
-                                  th:action="'/upload/attendance/' + ${courseRegistrations[0].floatedCourse.course.code}"
+                                  th:action="|${#httpServletRequest.requestURL}/attendance|"
                                   method="post">
                                 <div class="form-body">
                                     <input type="file" id="file" name="file" class="form-control-file"/>
