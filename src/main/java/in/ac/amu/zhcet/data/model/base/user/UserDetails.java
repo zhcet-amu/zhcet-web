@@ -20,5 +20,16 @@ public class UserDetails {
     @NotNull
     private Department department;
 
-    private String[] phoneNumbers;
+    private String phoneNumbers;
+
+    public void setPhoneNumbers(String[] phoneNumbers) {
+        this.phoneNumbers = String.join(",", phoneNumbers);
+    }
+
+    public String[] getPhoneNumbers() {
+        if (phoneNumbers != null)
+            return phoneNumbers.split(",");
+
+        return null;
+    }
 }
