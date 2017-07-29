@@ -79,6 +79,15 @@
                                            th:field="*{userDetails.addressLine2}"/>
                                 </div>
                             </div>
+                            <div th:if="${success}" class="alert alert-dismissible alert-success">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong>Uploaded!</strong> Your profile was updated successfully!
+                            </div>
+                            <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong>Something went wrong!</strong>
+                                <div th:utext="${error}">Fix this and try and try again</div>
+                            </div>
                             <button type="submit" class="btn btn-primary">
                                 <i class="icon-check2"></i> Update
                             </button>

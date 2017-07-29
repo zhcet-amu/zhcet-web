@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,13 +19,14 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class FloatedCourse extends BaseEntity implements Serializable {
     @Id
+    @NotBlank
     private String id;
 
     @NaturalId
     @NotNull
     @ManyToOne
     private Course course;
-    @NotNull
+    @NotBlank
     @NaturalId
     private String session;
 

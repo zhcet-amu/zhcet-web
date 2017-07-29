@@ -44,6 +44,7 @@ public class StudentService {
     @Transactional
     public void updateStudentDetails(String enrolmentNumber, UserDetails userDetails) {
         Student student = getByEnrolmentNumber(enrolmentNumber);
+        userDetails.setDepartment(student.getDepartment());
         student.setUserDetails(userDetails);
         studentRepository.save(student);
 

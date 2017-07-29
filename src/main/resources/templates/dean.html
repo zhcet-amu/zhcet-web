@@ -42,6 +42,7 @@
                                                            th:field="*{type}" value="STUDENT" th:checked="checked"/>
                                                     <span class="custom-control-indicator"></span>
                                                     <span class="custom-control-description ml-0">Student</span>
+                                                    <input name="roles" value="ROLE_STUDENT" hidden>
                                                 </label>
                                                 <label class="display-inline-block custom-control custom-radio ml-1">
                                                     <input type="radio" id="facultyMember"
@@ -49,13 +50,15 @@
                                                            th:field="*{type}" value="FACULTY"/>
                                                     <span class="custom-control-indicator"></span>
                                                     <span class="custom-control-description ml-0">Faculty</span>
+                                                    <input name="roles" value="ROLE_FACULTY" hidden>
                                                 </label>
                                                 <label class="display-inline-block custom-control custom-radio ml-1">
                                                     <input type="radio" id="departmentAdmin"
                                                            class="custom-control-input"
-                                                           th:field="*{type}" value="DEPARTMENT_ADMIN"/>
+                                                           th:field="*{type}" value="FACULTY"/>
                                                     <span class="custom-control-indicator"></span>
                                                     <span class="custom-control-description ml-0">Department Admin</span>
+                                                    <input name="roles" value="ROLE_FACULTY,ROLE_DEPARTMENT_ADMIN" hidden>
                                                 </label>
                                             </div>
                                         </div>
@@ -74,18 +77,39 @@
                                             <input id="id" name="id" type="text"
                                                    th:field="*{userId}"/>
                                             <label for="id">User ID</label>
+                                            <div th:each="error : ${#fields.detailedErrors('userId')}" class="alert alert-dismissible alert-danger mt-1">
+                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                <div th:text="${error}">Fix this and try and try again</div>
+                                            </div>
                                         </div>
                                         <div class="form-group col-xs-12 mb-2 mui-textfield mui-textfield--float-label">
                                             <input id="name" name="name" type="text"
                                                    th:field="*{name}"/>
                                             <label for="name">Name</label>
+                                            <div th:each="error : ${#fields.detailedErrors('name')}" class="alert alert-dismissible alert-danger mt-1">
+                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                <div th:text="${error}">Fix this and try and try again</div>
+                                            </div>
                                         </div>
                                         <div class="form-group col-xs-12 mb-2 mui-textfield mui-textfield--float-label">
                                             <input id="password" name="password"
                                                    type="password"
                                                    th:field="*{password}"/>
                                             <label for="password">Password</label>
+                                            <div th:each="error : ${#fields.detailedErrors('password')}" class="alert alert-dismissible alert-danger mt-1">
+                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                <div th:text="${error}">Fix this and try and try again</div>
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div th:if="${user_success}" class="alert alert-dismissible alert-success">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <strong>Uploaded!</strong> User profile was added successfully!
+                                    </div>
+                                    <div th:each="error : ${user_errors}" class="alert alert-dismissible alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <strong>Something went wrong!</strong>
+                                        <div th:utext="${error}">Fix this and try and try again</div>
                                     </div>
                                     <button type="submit" class="btn btn-primary">
                                         <i class="icon-check2"></i> Add
@@ -141,13 +165,25 @@
                 </div>
                 <div class="card-body collapse in">
                     <div class="card-block">
-                        <form class="mui-form" th:action="@{/dean/add_department}" method="post">
+                        <form class="mui-form" th:action="@{/dean/add_department}" method="post" th:object="${department}">
                             <div class="form-body">
                                 <h4 class="form-section"><i class="icon-clipboard4"></i>Department Info</h4>
                                 <div class="form-group col-xs-12 mb-2">
                                     <div class="mui-textfield mui-textfield--float-label">
-                                        <input id="department_name" name="departmentName" type="text"/>
+                                        <input id="department_name" type="text" th:field="*{name}" />
                                         <label for="department_name">Department Name</label>
+                                    </div>
+                                    <div th:each="error : ${#fields.detailedErrors('name')}" class="alert alert-dismissible alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <div th:text="${error}">Fix this and try and try again</div>
+                                    </div>
+                                    <div th:if="${dept_success}" class="alert alert-dismissible alert-success">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <strong>Uploaded!</strong> Department was added successfully!
+                                    </div>
+                                    <div th:each="error : ${dept_errors}" class="alert alert-dismissible alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <div th:utext="${error}">Fix this and try and try again</div>
                                     </div>
                                     <button type="submit" class="btn btn-primary">
                                         <i class="icon-check2"></i> Add

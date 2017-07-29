@@ -3,11 +3,13 @@ package in.ac.amu.zhcet.data.model.base.user;
 import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Arrays;
 
 @Entity
@@ -21,15 +23,17 @@ public class UserAuth extends BaseEntity {
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
     @Id
+    @NotBlank
     private String userId;
 
     @NotNull
+    @Size(min = 4, max = 100)
     private String password;
-    @NotNull
+    @NotBlank
     private String roles;
-    @NotNull
+    @NotBlank
     private String name;
-    @NotNull
+    @NotBlank
     private String type;
 
     public UserAuth(String userId, String password, String name, String type, String[] roles) {
@@ -45,6 +49,9 @@ public class UserAuth extends BaseEntity {
     }
 
     public String[] getRoles() {
-        return roles.split(",");
+        if (roles != null)
+            return roles.split(",");
+
+        return null;
     }
 }

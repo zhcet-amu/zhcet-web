@@ -21,7 +21,7 @@ CREATE TABLE `department` (
   `version` int(11) DEFAULT 0,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_1t68827l97cwyxo9r1u6t4p7d` (`name`)
+  UNIQUE KEY `UK_dept_name` (`name`)
 );
 
 CREATE TABLE `student` (
@@ -38,10 +38,11 @@ CREATE TABLE `student` (
   `email` varchar(255) DEFAULT NULL,
   `phone_numbers` varchar(255) DEFAULT NULL,
   `faculty_number` varchar(255) DEFAULT NULL,
-  `department_id` bigint(20) DEFAULT NULL,
+  `department_id` bigint(20) NOT NULL,
   PRIMARY KEY (`enrolment_number`),
-  UNIQUE KEY `UK_75qw8ona0wve1mbx7g26y2nws` (`faculty_number`),
-  CONSTRAINT `FKkh3m8c2tq2tgrgma1iyn7tvmx` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`)
+  UNIQUE KEY `UK_student_fac` (`faculty_number`),
+  UNIQUE KEY `UK_student_email` (`email`),
+  CONSTRAINT `FK_student_dept` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`)
 );
 
 CREATE TABLE `faculty_member` (
@@ -57,9 +58,10 @@ CREATE TABLE `faculty_member` (
   `avatar_url` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `phone_numbers` varchar(255) DEFAULT NULL,
-  `department_id` bigint(20) DEFAULT NULL,
+  `department_id` bigint(20) NOT NULL,
   PRIMARY KEY (`faculty_id`),
-  CONSTRAINT `FKrybeq1djkgpifqtycvtcw95up` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`)
+  UNIQUE KEY `UK_faculty_email` (`email`),
+  CONSTRAINT `FK_faculty_dept` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`)
 );
 
 CREATE TABLE `course` (
@@ -70,10 +72,10 @@ CREATE TABLE `course` (
   `updated_at` datetime DEFAULT NULL,
   `version` int(11) DEFAULT 0,
   `active` bit(1) NOT NULL DEFAULT 1,
-  `title` varchar(255) DEFAULT NULL,
-  `department_id` bigint(20) DEFAULT NULL,
+  `title` varchar(255) NOT NULL,
+  `department_id` bigint(20) NOT NULL,
   PRIMARY KEY (`code`),
-  CONSTRAINT `FKi1btm7ma8n3gaj6afdno300wm` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`)
+  CONSTRAINT `FK_course_dept` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`)
 );
 
 CREATE TABLE `floated_course` (
@@ -86,15 +88,15 @@ CREATE TABLE `floated_course` (
   `session` varchar(255) NOT NULL,
   `course_code` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_2ele6b58s8w6mwvn7jwf495ww` (`course_code`,`session`),
-  CONSTRAINT `FKro2dikb5sq3tonnt9sqi6nvro` FOREIGN KEY (`course_code`) REFERENCES `course` (`code`)
+  UNIQUE KEY `UK_floated_course_session` (`course_code`,`session`),
+  CONSTRAINT `FK_floated_course_code` FOREIGN KEY (`course_code`) REFERENCES `course` (`code`)
 );
 
 CREATE TABLE `course_in_charge` (
   `floated_course_id` varchar(255) NOT NULL,
   `in_charge_faculty_id` varchar(255) NOT NULL,
-  CONSTRAINT `FKdl294l9od8xvxrhdyxelhf5y0` FOREIGN KEY (`floated_course_id`) REFERENCES `floated_course` (`id`),
-  CONSTRAINT `FKoe9p7ukv2jhxxwitlibhsciop` FOREIGN KEY (`in_charge_faculty_id`) REFERENCES `faculty_member` (`faculty_id`)
+  CONSTRAINT `FK_floated_course` FOREIGN KEY (`floated_course_id`) REFERENCES `floated_course` (`id`),
+  CONSTRAINT `FK_floated_in_charge` FOREIGN KEY (`in_charge_faculty_id`) REFERENCES `faculty_member` (`faculty_id`)
 );
 
 CREATE TABLE `course_registration` (
@@ -107,9 +109,9 @@ CREATE TABLE `course_registration` (
   `floated_course_id` varchar(255) DEFAULT NULL,
   `student_enrolment_number` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_qiu58rbam4mj8k6a90vw3e2l1` (`floated_course_id`,`student_enrolment_number`),
-  CONSTRAINT `FK6j58k5gde8tys6g6teqjfnocs` FOREIGN KEY (`student_enrolment_number`) REFERENCES `student` (`enrolment_number`),
-  CONSTRAINT `FKt3loqjyrec7l6qrd9o0quu2e` FOREIGN KEY (`floated_course_id`) REFERENCES `floated_course` (`id`)
+  UNIQUE KEY `UK_floated_student` (`floated_course_id`,`student_enrolment_number`),
+  CONSTRAINT `FK_course_reg_student` FOREIGN KEY (`student_enrolment_number`) REFERENCES `student` (`enrolment_number`),
+  CONSTRAINT `FK_course_reg_floated` FOREIGN KEY (`floated_course_id`) REFERENCES `floated_course` (`id`)
 );
 
 CREATE TABLE `attendance` (
@@ -123,6 +125,6 @@ CREATE TABLE `attendance` (
   `delivered` int(11) NOT NULL,
   `course_registration_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_i31k8u9qjvv3k5fcvuxbikqpu` (`course_registration_id`),
-  CONSTRAINT `FK12t73ddays2ylvr2x74ii79d2` FOREIGN KEY (`course_registration_id`) REFERENCES `course_registration` (`id`)
+  UNIQUE KEY `UK_course_reg` (`course_registration_id`),
+  CONSTRAINT `FK_attendance_course_reg` FOREIGN KEY (`course_registration_id`) REFERENCES `course_registration` (`id`)
 );
