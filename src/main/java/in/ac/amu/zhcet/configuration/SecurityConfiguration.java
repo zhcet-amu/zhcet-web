@@ -3,6 +3,7 @@ package in.ac.amu.zhcet.configuration;
 import in.ac.amu.zhcet.configuration.security.RoleWiseSuccessHandler;
 import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
+import in.ac.amu.zhcet.data.service.PersistentTokenService;
 import in.ac.amu.zhcet.data.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,10 +16,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailService userDetailsService;
+    private final PersistentTokenService persistentTokenService;
 
     @Autowired
-    public SecurityConfiguration(UserDetailService userDetailsService) {
+    public SecurityConfiguration(UserDetailService userDetailsService, PersistentTokenService persistentTokenService) {
         this.userDetailsService = userDetailsService;
+        this.persistentTokenService = persistentTokenService;
     }
 
     @Autowired
@@ -49,6 +52,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .successHandler(roleWiseSuccessHandler())
                 .and()
                 .logout().logoutSuccessUrl("/")
+                .and()
+                .rememberMe()
+                    .rememberMeCookieName("zhcet-remember-me")
+                    .tokenValiditySeconds(24*60*60)
+                    .tokenRepository(persistentTokenService)
                 .and()
                 .csrf().ignoringAntMatchers("/console/**")
                 .and()
