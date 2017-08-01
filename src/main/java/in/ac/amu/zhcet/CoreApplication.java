@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 @AutoConfigurationPackage
 @ComponentScan
-@EnableJpaAuditing
 public class CoreApplication {
 
     public static void main(String[] args) {

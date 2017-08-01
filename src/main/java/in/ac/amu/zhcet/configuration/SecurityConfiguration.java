@@ -5,14 +5,18 @@ import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.service.PersistentTokenService;
 import in.ac.amu.zhcet.data.service.UserDetailService;
+import in.ac.amu.zhcet.data.service.user.Auditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
+@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailService userDetailsService;
@@ -34,6 +38,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     RoleWiseSuccessHandler roleWiseSuccessHandler() {
         return new RoleWiseSuccessHandler();
+    }
+
+    @Bean
+    AuditorAware<String> auditorAware() {
+        return new Auditor();
     }
 
     @Override
