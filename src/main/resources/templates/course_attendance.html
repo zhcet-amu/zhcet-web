@@ -11,7 +11,6 @@
 <div th:replace="fragments/navigation :: navigation"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_FACULTY')">
-    <div th:if="!${error}"></div>
     <div class="row">
         <div class="col-xs-12 col-xl-8">
             <div class="card">
@@ -95,6 +94,10 @@
                                            accept="text/csv, .csv">
                                     Choose File
                                 </label>
+                                <div th:if="${updated}" class="alert alert-dismissible alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Updated!</strong> Student attendance was successfully updated<br />
+                                </div>
                                 <div th:if="${success}" class="alert alert-dismissible alert-success">
                                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                                     <strong>Uploaded!</strong> Your file was correctly uploaded. Now, confirm the prompt
@@ -117,6 +120,68 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div th:with="confirmAttendance=${#session.getAttribute('confirmAttendance'+course_id)}">
+                <div th:if="${confirmAttendance}" class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Course Attendance</h4>
+                        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                        <div class="heading-elements">
+                            <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body collapse in collapse in">
+                        <div class="card-block">
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-inverse">
+                                        <tr>
+                                            <th class="text-xs-center">ID</th>
+                                            <th class="text-xs-center">ATTENDED</th>
+                                            <th class="text-xs-center">DELIVERED</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <th:block th:each="confirm: ${confirmAttendance.studentMap}">
+                                            <tr th:class="(${confirm.value} ? '':'bg-danger white')">
+                                                <td class="text-xs-center" th:text="${confirm.key.student}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.key.attended}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.key.delivered}"></td>
+                                            </tr>
+                                        </th:block>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div th:each="error : ${confirmAttendance.errors}" class="alert alert-dismissible alert-danger">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong>Something went wrong!</strong>
+                                <div th:utext="${error}">Fix this and try and try again</div>
+                            </div>
+                            <div th:if="${confirmAttendance.errors.isEmpty()}">
+                                <div class="alert alert-dismissible alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Verified!</strong> Attendance of all students are ready to be uploaded. Press
+                                    the confirm button to proceed.<br />
+                                </div>
+                                <form class="form" th:action="|${#httpServletRequest.requestURL}/attendance_confirmed|" method="post">
+                                    <div class="row">
+                                        <div class="col-sm-8"></div>
+                                        <div class="col-sm-4">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="icon-check2"></i> Confirm
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>

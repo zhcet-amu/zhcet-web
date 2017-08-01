@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.data.service;
 
 import in.ac.amu.zhcet.data.model.*;
+import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
 import in.ac.amu.zhcet.data.repository.AttendanceRepository;
 import in.ac.amu.zhcet.data.repository.CourseRegistrationRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
@@ -35,6 +36,21 @@ public class RegisteredCourseService {
     }
 
     @Transactional
+    public boolean exists(String enrolment, String courseCode) {
+        FloatedCourse course = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), courseCode);
+
+        return courseRegistrationRepository.existsByFloatedCourseAndStudent_EnrolmentNumber(course, enrolment);
+    }
+
+    @Transactional
+    public CourseRegistration getByStudentAndCourse(String enrolment, String courseCode) {
+        Student student = studentService.getByEnrolmentNumber(enrolment);
+        FloatedCourse course = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), courseCode);
+
+        return courseRegistrationRepository.findByStudentAndFloatedCourse(student, course);
+    }
+
+    @Transactional
     public Attendance setAttendance(CourseRegistration courseRegistration, Attendance attendance) {
         CourseRegistration stored = courseRegistrationRepository
                 .findByStudentAndFloatedCourse(
@@ -52,6 +68,25 @@ public class RegisteredCourseService {
 
         storedAttendance.setDelivered(attendance.getDelivered());
         storedAttendance.setAttended(attendance.getAttended());
+
+        return storedAttendance;
+    }
+
+    @Transactional
+    public Attendance setAttendance(CourseRegistration courseRegistration, int delivered, int attended) {
+        CourseRegistration registration = courseRegistrationRepository.findOne(courseRegistration.getId());
+
+        Attendance storedAttendance = registration.getAttendance();
+        if (storedAttendance == null) {
+            storedAttendance = new Attendance(registration, delivered, attended);
+
+            registration.setAttendance(storedAttendance);
+            storedAttendance.setCourseRegistration(registration);
+            courseRegistrationRepository.save(courseRegistration);
+        }
+
+        storedAttendance.setDelivered(delivered);
+        storedAttendance.setAttended(attended);
 
         return storedAttendance;
     }

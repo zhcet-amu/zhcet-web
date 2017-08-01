@@ -1,6 +1,8 @@
 package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
+import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -28,6 +30,12 @@ public class Attendance extends BaseEntity implements Serializable {
 
     public Attendance(CourseRegistration courseRegistration) {
         this.courseRegistration = courseRegistration;
+    }
+
+    public Attendance(CourseRegistration courseRegistration, int delivered, int attended) {
+        this.courseRegistration = courseRegistration;
+        this.delivered = delivered;
+        this.attended = attended;
     }
 
     @PrePersist

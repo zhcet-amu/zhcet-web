@@ -9,4 +9,6 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
 
     CourseRegistration findByStudentAndFloatedCourse(Student student, FloatedCourse floatedCourse);
 
+    Boolean existsByFloatedCourseAndStudent_EnrolmentNumber(FloatedCourse course, String enrolment);
+
 }
