@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.service.DepartmentAdminService;
 import in.ac.amu.zhcet.data.service.FacultyService;
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ public class DepartmentController {
 
     @GetMapping("/department")
     public String department(Model model) {
+        model.addAttribute("currentSession", Utils.getCurrentSession());
         model.addAttribute("floatedCourses", departmentAdminService.getFloatedCourses());
         model.addAttribute("courses", departmentAdminService.getAllCourses());
         FacultyMember facultyMember = departmentAdminService.getFacultyMember();
