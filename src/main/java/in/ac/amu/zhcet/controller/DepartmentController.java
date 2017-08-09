@@ -73,7 +73,7 @@ public class DepartmentController {
     }
 
     @PostMapping("/department/float_course")
-    public String floatCourse(@RequestParam String courseCode, @RequestParam List<String> faculty, RedirectAttributes redirectAttributes) {
+    public String floatCourse(@RequestParam String courseCode, @RequestParam List<String> faculty, RedirectAttributes redirectAttributes, @RequestParam String session) {
         Course course = departmentAdminService.findCourseByCode(courseCode);
 
         List<String> errors = new ArrayList<>();
@@ -81,7 +81,7 @@ public class DepartmentController {
             errors.add("No valid course selected");
         } else {
             try {
-                departmentAdminService.floatCourse(course, faculty);
+                departmentAdminService.floatCourse(course, faculty).setSession(session);
                 redirectAttributes.addFlashAttribute("float_success", true);
             } catch (Exception exc) {
                 if (exc instanceof DataIntegrityViolationException && exc.getMessage().contains("PRIMARY_KEY")) {
