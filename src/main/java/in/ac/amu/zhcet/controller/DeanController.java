@@ -8,17 +8,25 @@ import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.StudentService;
 import in.ac.amu.zhcet.data.service.UserService;
+import in.ac.amu.zhcet.data.service.upload.StudentUploadService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.*;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -31,13 +39,15 @@ public class DeanController {
     private final DepartmentRepository departmentRepository;
     private final StudentService studentService;
     private final FacultyService facultyService;
+    private final StudentUploadService studentUploadService;
 
     @Autowired
-    public DeanController(UserService userService, StudentService studentService, FacultyService facultyService, DepartmentRepository departmentRepository) {
+    public DeanController(UserService userService, StudentService studentService, FacultyService facultyService, DepartmentRepository departmentRepository, StudentUploadService studentUploadService) {
         this.userService = userService;
         this.studentService = studentService;
         this.facultyService = facultyService;
         this.departmentRepository = departmentRepository;
+        this.studentUploadService = studentUploadService;
     }
 
     @GetMapping("/dean")
@@ -60,7 +70,7 @@ public class DeanController {
         return "dean";
     }
 
-    @PostMapping("/dean")
+    @PostMapping("/dean/register")
     public String enterUser(@Valid UserAuth user, BindingResult bindingResult, @RequestParam long department, @RequestParam String roles, RedirectAttributes redirectAttributes) {
         user.setRoles(roles.split(","));
 
@@ -104,6 +114,7 @@ public class DeanController {
             redirectAttributes.addFlashAttribute("department", department);
         } else {
             try {
+                department.setName(WordUtils.capitalizeFully(department.getName().trim()));
                 departmentRepository.save(department);
                 redirectAttributes.addFlashAttribute("dept_success", true);
             } catch (Exception e) {
@@ -115,6 +126,49 @@ public class DeanController {
                 redirectAttributes.addFlashAttribute("dept_errors", errors);
             }
         }
+
+        return "redirect:/dean";
+    }
+
+    @PostMapping("/dean/register_students")
+    public String uploadFile(RedirectAttributes attributes, @RequestParam("file") MultipartFile file, HttpSession session, WebRequest webRequest) {
+        try {
+            StudentUploadService.UploadResult result = studentUploadService.handleUpload(file);
+
+            if (!result.getErrors().isEmpty()) {
+                webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
+                attributes.addFlashAttribute("students_errors", result.getErrors());
+            } else {
+                attributes.addFlashAttribute("students_success", true);
+                StudentUploadService.StudentConfirmation confirmation = studentUploadService.confirmUpload(result);
+
+                session.setAttribute("confirmStudentRegistration", confirmation);
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        return "redirect:/dean";
+    }
+
+    @PostMapping("/dean/register_students_confirmed")
+    public String uploadAttendance(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
+        StudentUploadService.StudentConfirmation confirmation = (StudentUploadService.StudentConfirmation) session.getAttribute("confirmStudentRegistration");
+
+        if (confirmation == null || !confirmation.getErrors().isEmpty()) {
+            attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));
+        } else {
+            studentUploadService.registerStudents(confirmation);
+            webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
+            attributes.addFlashAttribute("students_registered", true);
+        }
+
+        return "redirect:/dean";
+    }
+
+    @PostMapping("/dean/clear_session_students")
+    public String clearStudentsRegistrationSession(WebRequest webRequest) {
+        webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
 
         return "redirect:/dean";
     }

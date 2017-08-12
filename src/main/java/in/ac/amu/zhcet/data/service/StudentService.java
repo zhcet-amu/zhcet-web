@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.data.service;
 
+import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.base.user.UserDetails;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
@@ -35,8 +36,25 @@ public class StudentService {
         return studentRepository.getByEnrolmentNumber(userId);
     }
 
+    public Student getByFacultyNumber(String userId) {
+        return studentRepository.getByFacultyNumber(userId);
+    }
+
+    private static void initializeStudent(Student student) {
+        if (student.getUser().getUserId() == null)
+            student.getUser().setUserId(student.getEnrolmentNumber());
+        if (student.getUser().getType() == null)
+            student.getUser().setType("STUDENT");
+        if (student.getUser().getRoles() == null)
+            student.getUser().setRoles(new String[] { Roles.STUDENT });
+        if (student.getUser().getPassword() == null)
+            student.getUser().setPassword(student.getFacultyNumber());
+    }
+
     @Transactional
     public void register(Student student) {
+        initializeStudent(student);
+
         userService.saveUser(student.getUser());
         studentRepository.save(student);
     }

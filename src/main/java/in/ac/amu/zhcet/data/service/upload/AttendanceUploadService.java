@@ -1,39 +1,37 @@
-package in.ac.amu.zhcet.data.service;
+package in.ac.amu.zhcet.data.service.upload;
 
-import in.ac.amu.zhcet.data.model.Course;
+import com.j256.simplecsv.processor.CsvProcessor;
+import com.j256.simplecsv.processor.ParseError;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
+import in.ac.amu.zhcet.data.service.RegisteredCourseService;
+import in.ac.amu.zhcet.data.service.file.FileSystemStorageService;
+import in.ac.amu.zhcet.data.service.file.StorageException;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.supercsv.cellprocessor.ParseInt;
-import org.supercsv.cellprocessor.constraint.NotNull;
-import org.supercsv.cellprocessor.constraint.StrRegEx;
-import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCsvConstraintViolationException;
-import org.supercsv.exception.SuperCsvReflectionException;
-import org.supercsv.io.CsvBeanReader;
-import org.supercsv.io.ICsvBeanReader;
-import org.supercsv.prefs.CsvPreference;
-import org.supercsv.util.CsvContext;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class AttendanceUploadService {
 
     private final RegisteredCourseService registeredCourseService;
+    private final FileSystemStorageService systemStorageService;
 
     @Autowired
-    public AttendanceUploadService(RegisteredCourseService registeredCourseService) {
+    public AttendanceUploadService(RegisteredCourseService registeredCourseService, FileSystemStorageService systemStorageService) {
         this.registeredCourseService = registeredCourseService;
+        this.systemStorageService = systemStorageService;
     }
 
     @Data
@@ -52,20 +50,14 @@ public class AttendanceUploadService {
         private Map<AttendanceUpload, Boolean> studentMap = new HashMap<>();
     }
 
-    private static CellProcessor[] getProcessors() {
-
-        final String enrolment = "[A-Z]{2}[0-9]{4}";
-        StrRegEx.registerMessage(enrolment, "must be a valid enrolment number");
-
-        return new CellProcessor[]{
-                new NotNull(new StrRegEx(enrolment)),
-                new NotNull(new ParseInt()),
-                new NotNull(new ParseInt())
-        };
-    }
-
     public UploadResult handleUpload(MultipartFile file) throws IOException {
         UploadResult uploadResult = new UploadResult();
+
+        try {
+            systemStorageService.store(file);
+        } catch (StorageException storageException) {
+            log.error(storageException.getMessage());
+        }
 
         if (!file.getContentType().equals("text/csv")) {
             logAndError(uploadResult, "Uploaded file is not of CSV format");
@@ -73,36 +65,20 @@ public class AttendanceUploadService {
             return uploadResult;
         }
 
-        ICsvBeanReader beanReader = null;
+        CsvProcessor<AttendanceUpload> csvProcessor = new CsvProcessor<>(AttendanceUpload.class);
         try {
+            List<ParseError> parseErrors = new ArrayList<>();
+            List<AttendanceUpload> attendanceUploads = csvProcessor.readAll(new InputStreamReader(file.getInputStream()), parseErrors);
 
-            beanReader = new CsvBeanReader(new InputStreamReader(file.getInputStream()), CsvPreference.STANDARD_PREFERENCE);
-            final String[] header = beanReader.getHeader(true);
-
-            AttendanceUpload attendance = null;
-            do {
-                try {
-                    attendance = beanReader.read(AttendanceUpload.class, header, getProcessors());
-                    if (attendance == null)
-                        return uploadResult;
-
-                    uploadResult.attendanceUploads.add(attendance);
-                } catch (SuperCsvConstraintViolationException cve) {
-                    cve.printStackTrace();
-                    CsvContext csvContext = cve.getCsvContext();
-                    logAndError(uploadResult, cve.getLocalizedMessage() + "\n" + "In line " + csvContext.getLineNumber() + ", row " + csvContext.getRowSource());
-                }
-            } while (attendance != null);
-
-        } catch (SuperCsvReflectionException header) {
-            header.printStackTrace();
-            logAndError(uploadResult,
-                    "Headers not mapped correctly.\n" +
-                            "Please check that CSV headers are present and are in this format and order:\n" +
-                            "<strong>student,attended,delivered</strong>\n");
-        } finally {
-            if (beanReader != null)
-                beanReader.close();
+            if (attendanceUploads != null)
+                uploadResult.getAttendanceUploads().addAll(attendanceUploads);
+            uploadResult.getErrors().addAll(
+                    parseErrors.stream().map(parseError -> parseError.getMessage() +
+                            "<br>Line Number: " + parseError.getLineNumber() + " Position: " + parseError.getLinePos() +
+                            "<br>Line: " + parseError.getLine()).collect(Collectors.toList()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            uploadResult.getErrors().add(e.getMessage());
         }
 
         return uploadResult;

@@ -13,7 +13,110 @@
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="row">
-        <div class="col-xl-8">
+        <div class="col-lg-4 col-lg-push-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Add Department</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in">
+                    <div class="card-block">
+                        <form class="mui-form" th:action="@{/dean/add_department}" method="post"
+                              th:object="${department}">
+                            <div class="form-body">
+                                <h4 class="form-section"><i class="icon-clipboard4"></i>Department Information</h4>
+                                <div class="form-group col-xs-12 mb-2">
+                                    <div class="mui-textfield mui-textfield--float-label">
+                                        <input id="department_name" type="text" th:field="*{name}"/>
+                                        <label for="department_name">Department Name</label>
+                                    </div>
+                                    <div th:each="error : ${#fields.detailedErrors('name')}"
+                                         class="alert alert-dismissible alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <div th:text="${error}">Fix this and try and try again</div>
+                                    </div>
+                                    <div th:if="${dept_success}" class="alert alert-dismissible alert-success">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <strong>Uploaded!</strong> Department was added successfully!
+                                    </div>
+                                    <div th:each="error : ${dept_errors}" class="alert alert-dismissible alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <div th:utext="${error}">Fix this and try and try again</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="icon-check2"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Register Students</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in">
+                    <div class="card-block">
+                        <form class="mui-form" enctype="multipart/form-data" th:action="@{/dean/register_students}"
+                              method="post">
+                            <div class="form-body">
+                                <h4 class="form-section"><i class="icon-clipboard4"></i>Student Info File</h4>
+                                <div>
+                                    Download the <a th:href="@{/csv/student_format.csv}">student format</a>
+                                </div>
+                                <br/>
+                                <label class="btn btn-primary" for="my-file-selector">
+                                    <input id="my-file-selector" type="file" name="file" style="display: none"
+                                           onchange="$('#upload-file-info').html(this.files[0].name)"
+                                           accept="text/csv, .csv">
+                                    Choose File
+                                </label>
+                                <span class='label label-info' id="upload-file-info"></span>
+                                <div th:if="${students_registered}" class="alert alert-dismissible alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Registered!</strong> Students were successfully registered<br/>
+                                </div>
+                                <div th:if="${students_success}" class="alert alert-dismissible alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Uploaded!</strong> Your file was correctly uploaded. Now, confirm the prompt
+                                    to register the students
+                                </div>
+                                <div th:each="error : ${students_errors}" class="alert alert-dismissible alert-danger">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Something went wrong!</strong>
+                                    <div th:utext="${error}">Fix this and try and try again</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8"></div>
+                                    <div class="col-sm-4">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="icon-check2"></i> Upload
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-lg-pull-4">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title" id="from-actions-top-left">Create User</h4>
@@ -30,7 +133,7 @@
                 <div class="card-body collapse in">
                     <div class="card-block">
                         <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
-                        <form class="mui-form" th:action="@{/dean}" method="post" th:object="${user}">
+                        <form class="mui-form" th:action="@{/dean/register}" method="post" th:object="${user}">
                             <div class="row">
                                 <div class="col-md-6 offset-md-3">
                                     <h4 class="form-section"><i class="icon-head"></i> User Info</h4>
@@ -58,7 +161,8 @@
                                                            th:field="*{type}" value="FACULTY"/>
                                                     <span class="custom-control-indicator"></span>
                                                     <span class="custom-control-description ml-0">Department Admin</span>
-                                                    <input name="roles" value="ROLE_FACULTY,ROLE_DEPARTMENT_ADMIN" hidden>
+                                                    <input name="roles" value="ROLE_FACULTY,ROLE_DEPARTMENT_ADMIN"
+                                                           hidden>
                                                 </label>
                                             </div>
                                         </div>
@@ -77,8 +181,10 @@
                                             <input id="id" name="id" type="text"
                                                    th:field="*{userId}"/>
                                             <label for="id">User ID</label>
-                                            <div th:each="error : ${#fields.detailedErrors('userId')}" class="alert alert-dismissible alert-danger mt-1">
-                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                            <div th:each="error : ${#fields.detailedErrors('userId')}"
+                                                 class="alert alert-dismissible alert-danger mt-1">
+                                                <button type="button" class="close" data-dismiss="alert">&times;
+                                                </button>
                                                 <div th:text="${error}">Fix this and try and try again</div>
                                             </div>
                                         </div>
@@ -86,8 +192,10 @@
                                             <input id="name" name="name" type="text"
                                                    th:field="*{name}"/>
                                             <label for="name">Name</label>
-                                            <div th:each="error : ${#fields.detailedErrors('name')}" class="alert alert-dismissible alert-danger mt-1">
-                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                            <div th:each="error : ${#fields.detailedErrors('name')}"
+                                                 class="alert alert-dismissible alert-danger mt-1">
+                                                <button type="button" class="close" data-dismiss="alert">&times;
+                                                </button>
                                                 <div th:text="${error}">Fix this and try and try again</div>
                                             </div>
                                         </div>
@@ -96,8 +204,10 @@
                                                    type="password"
                                                    th:field="*{password}"/>
                                             <label for="password">Password</label>
-                                            <div th:each="error : ${#fields.detailedErrors('password')}" class="alert alert-dismissible alert-danger mt-1">
-                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                            <div th:each="error : ${#fields.detailedErrors('password')}"
+                                                 class="alert alert-dismissible alert-danger mt-1">
+                                                <button type="button" class="close" data-dismiss="alert">&times;
+                                                </button>
                                                 <div th:text="${error}">Fix this and try and try again</div>
                                             </div>
                                         </div>
@@ -150,46 +260,58 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Add Department</h4>
-                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                    <div class="heading-elements">
-                        <ul class="list-inline mb-0">
-                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                        </ul>
+    </div>
+    <div th:with="confirmRegistration=${#session.getAttribute('confirmStudentRegistration')}">
+        <div th:if="${confirmRegistration}" id="registration-modal" class="modal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Confirm Student Registration</h4>
                     </div>
-                </div>
-                <div class="card-body collapse in">
-                    <div class="card-block">
-                        <form class="mui-form" th:action="@{/dean/add_department}" method="post" th:object="${department}">
-                            <div class="form-body">
-                                <h4 class="form-section"><i class="icon-clipboard4"></i>Department Info</h4>
-                                <div class="form-group col-xs-12 mb-2">
-                                    <div class="mui-textfield mui-textfield--float-label">
-                                        <input id="department_name" type="text" th:field="*{name}" />
-                                        <label for="department_name">Department Name</label>
-                                    </div>
-                                    <div th:each="error : ${#fields.detailedErrors('name')}" class="alert alert-dismissible alert-danger">
-                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                        <div th:text="${error}">Fix this and try and try again</div>
-                                    </div>
-                                    <div th:if="${dept_success}" class="alert alert-dismissible alert-success">
-                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                        <strong>Uploaded!</strong> Department was added successfully!
-                                    </div>
-                                    <div th:each="error : ${dept_errors}" class="alert alert-dismissible alert-danger">
-                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                        <div th:utext="${error}">Fix this and try and try again</div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="icon-check2"></i> Add
-                                    </button>
-                                </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead-inverse">
+                                    <tr>
+                                        <th class="text-xs-center">Enrolment</th>
+                                        <th class="text-xs-center">Faculty</th>
+                                        <th class="text-xs-center">Name</th>
+                                        <th class="text-xs-center">Department</th>
+                                        <th class="text-xs-center">Error</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="confirm: ${confirmRegistration.studentMap}">
+                                        <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
+                                            <td class="text-xs-center" th:text="${confirm.key.enrolmentNumber}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.key.facultyNumber}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.key.name}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.key.department?.name}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.value}"></td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
                             </div>
+                        </div>
+                        <div th:each="error : ${confirmRegistration.errors}"
+                             class="alert alert-dismissible alert-danger">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>Something went wrong!</strong>
+                            <div th:utext="${error}">Fix this and try and try again</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <form class="form" th:action="@{/dean/clear_session_students}" method="post" style="display: inline">
+                            <button type="submit" class="btn btn-default">Clear</button>
+                        </form>
+                        <form class="form" th:action="@{/dean/register_students_confirmed}" method="post" style="display: inline">
+                            <button th:if="${confirmRegistration.errors.isEmpty()}" type="submit"
+                                    class="btn btn-primary">Register
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -198,5 +320,10 @@
     </div>
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
+<script>
+    $(window).load(function () {
+        $('#registration-modal').modal('show');
+    });
+</script>
 </body>
 </html>

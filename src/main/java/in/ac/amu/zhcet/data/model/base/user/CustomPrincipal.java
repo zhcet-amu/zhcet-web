@@ -21,7 +21,7 @@ public class CustomPrincipal extends BaseEntity implements UserPrincipal {
     @PrimaryKeyJoinColumn
     @NotNull
     @Valid
-    private UserAuth user;
+    private UserAuth user = new UserAuth();
 
     @Embedded
     @NotNull
