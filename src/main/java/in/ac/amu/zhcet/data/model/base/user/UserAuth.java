@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 @DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude="details")
 @ToString(exclude = "password")
 public class UserAuth extends BaseEntity {
 

@@ -9,7 +9,7 @@ public class Auditor implements AuditorAware<String> {
     @Override
     public String getCurrentAuditor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null)
+        if (authentication == null || !(authentication.getPrincipal() instanceof User))
             return "UNAUTHENTICATED";
 
         String username = ((User) authentication.getPrincipal()).getUsername();

@@ -38,12 +38,20 @@
                                             <label for="remember-me"> Remember Me</label>
                                         </fieldset>
                                     </div>
-                                    <div class="col-md-6 col-xs-12 text-xs-center text-md-right"><a href="#" class="card-link">Forgot Password?</a></div>
+                                    <div class="col-md-6 col-xs-12 text-xs-center text-md-right"><a href="forget_password.html" th:href="@{/login/forget_password}" class="card-link">Forgot Password?</a></div>
                                 </fieldset>
                                 <div th:if="${param.error}" class="alert alert-dismissible alert-danger">
                                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                                     <strong>Authentication Error!</strong>
                                     <div>Username and Password does not match any user</div>
+                                </div>
+                                <div th:if="${reset_success}" class="alert alert-dismissible alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Reset!</strong> Password successfully reset!<br/>
+                                </div>
+                                <div th:if="${reset_link_sent}" class="alert alert-dismissible alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Sent!</strong> Password reset link has been sent successfully to your email!
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="icon-unlock2"></i> Login</button>
                             </form>
