@@ -1,9 +1,10 @@
 package in.ac.amu.zhcet.controller;
 
 import in.ac.amu.zhcet.data.model.Student;
+import in.ac.amu.zhcet.data.model.base.user.UserDetail;
 import in.ac.amu.zhcet.data.service.StudentService;
+import in.ac.amu.zhcet.data.service.UserDetailService;
 import lombok.extern.slf4j.Slf4j;
-import org.h2.jdbc.JdbcSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,25 +22,29 @@ import java.util.List;
 public class StudentController {
 
     private final StudentService studentService;
+    private final UserDetailService userDetailService;
 
     @Autowired
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, UserDetailService userDetailService) {
         this.studentService = studentService;
+        this.userDetailService = userDetailService;
     }
 
     @GetMapping("/student")
     public String student(Model model) {
-        model.addAttribute("student", studentService.getLoggedInStudent());
+        Student student = studentService.getLoggedInStudent();
+        model.addAttribute("student", student);
+        model.addAttribute("user_details", student.getUser().getDetails());
 
         return "student";
     }
 
-    @PostMapping("/student")
-    public String saveStudent(@ModelAttribute Student student, final RedirectAttributes redirectAttributes) {
+    @PostMapping("/student/details")
+    public String saveStudent(@ModelAttribute UserDetail userDetail, final RedirectAttributes redirectAttributes) {
+        log.info(userDetail.toString());
 
-        log.info(student.getUserDetails().toString());
         try {
-            studentService.updateStudentDetails(student.getEnrolmentNumber(), student.getUserDetails());
+            userDetailService.updateDetails(studentService.getLoggedInStudent().getUser(), userDetail);
             redirectAttributes.addFlashAttribute("success", true);
         } catch (Exception exc) {
             exc.printStackTrace();
@@ -50,7 +56,7 @@ public class StudentController {
             redirectAttributes.addFlashAttribute("errors", errors);
         }
 
-        return "redirect:student";
+        return "redirect:/student";
     }
 
 }

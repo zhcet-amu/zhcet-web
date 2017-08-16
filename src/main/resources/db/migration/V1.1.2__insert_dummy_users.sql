@@ -6,14 +6,22 @@ VALUES
   ('dean','Dean Admin','$2a$10$GJa6yBssoq/y7lr99ivcdu872rzqSgSeqi6Ec0UU5oUYuz5y5UpEa','ROLE_DEAN_ADMIN','FACULTY'),
   ('GF1032','Areeb Jamal','$2a$10$/vzG3U5DRv6InwKAqQ/tdOUKMjJjBqG906fTxmQoKaAs4/k0KAltW','ROLE_STUDENT','STUDENT');
 
-INSERT INTO `student`
-  (enrolment_number, faculty_number, department_id)
+INSERT INTO `user_detail`
+  (user_id, department_id)
 VALUES
-  ('GF1032','14PEB049',1);
-
-INSERT INTO `faculty_member`
-  (faculty_id, department_id)
-VALUES
+  ('GF1032',1),
   ('dep1234',1),
   ('fac1234',1),
   ('dean',1);
+
+INSERT INTO `student`
+  (enrolment_number, faculty_number)
+VALUES
+  ('GF1032','14PEB049');
+
+INSERT INTO `faculty_member`
+  (faculty_id)
+VALUES
+  ('dep1234'),
+  ('fac1234'),
+  ('dean');

@@ -30,11 +30,11 @@
                     <div class="text-xs-center">
                         <div class="card-block">
                             <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png"
-                                 th:src="${#strings.defaultString(student.avatar, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
+                                 th:src="${#strings.defaultString(student.user.details.avatarUrl, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
                                  class="rounded-circle height-150" alt="Card image"/>
                         </div>
                         <div class="card-block">
-                            <h6 class="card-subtitle text-muted" th:text="${student.name}">Name</h6>
+                            <h6 class="card-subtitle text-muted" th:text="${student.user.name}">Name</h6>
                             <ul class="list-inline list-inline-pipe">
                                 <li th:text="${student.facultyNumber}">FacultyNumber</li>
                                 <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
@@ -43,40 +43,58 @@
                     </div>
                 </div>
             </div>
-            <form class="form" th:action="@{/student}" method="post" th:object="${student}">
+            <!--/*@thymesVar id="user_details" type="in.ac.amu.zhcet.data.model.base.user.UserDetail"*/-->
+            <form class="form" th:action="@{/student/details}" method="post" th:object="${user_details}">
                 <div class="row">
                     <div class="col-md-6 offset-md-3">
                         <div class="form-body">
                             <div class="row">
-                                <input type="hidden" id="name" name="name" class="form-control"
-                                       th:field="*{enrolmentNumber}"
-                                       th:value="${student.enrolmentNumber}"/>
+
                                 <div class="form-group col-xs-12 mb-2">
                                     <label for="avatar">Avatar</label>
                                     <input id="avatar" name="avatar" class="form-control"
                                            type="text"
-                                           th:field="*{userDetails.avatarUrl}"/>
-                                </div>
-                                <div class="form-group col-xs-12 mb-2">
-                                    <label for="email">Email</label>
-                                    <input id="email" name="email" class="form-control" type="text"
-                                           th:field="*{userDetails.email}"/>
+                                           th:field="*{avatarUrl}"/>
                                 </div>
 
                                 <div class="form-group col-xs-12 mb-2">
-                                    <label for="addressLine1">AddressLine1</label>
+                                    <label for="description">Bio</label>
+                                    <input id="description" name="description"
+                                           class="form-control"
+                                           type="text"
+                                           th:field="*{description}"/>
+                                </div>
+
+                                <div class="form-group col-xs-12 mb-2">
+                                    <label for="addressLine1">Address Line 1</label>
                                     <input id="addressLine1" name="addressLine1"
                                            class="form-control"
                                            type="text"
-                                           th:field="*{userDetails.addressLine1}"/>
+                                           th:field="*{addressLine1}"/>
                                 </div>
 
                                 <div class="form-group col-xs-12 mb-2">
-                                    <label for="addressLine2">AddressLine2</label>
+                                    <label for="addressLine2">Address Line 2</label>
                                     <input id="addressLine2" name="addressLine2"
                                            class="form-control"
                                            type="text"
-                                           th:field="*{userDetails.addressLine2}"/>
+                                           th:field="*{addressLine2}"/>
+                                </div>
+
+                                <div class="form-group col-xs-12 mb-2">
+                                    <label for="city">City</label>
+                                    <input id="city" name="city"
+                                           class="form-control"
+                                           type="text"
+                                           th:field="*{city}"/>
+                                </div>
+
+                                <div class="form-group col-xs-12 mb-2">
+                                    <label for="state">State</label>
+                                    <input id="state" name="state"
+                                           class="form-control"
+                                           type="text"
+                                           th:field="*{state}"/>
                                 </div>
                             </div>
                             <div th:if="${success}" class="alert alert-dismissible alert-success">

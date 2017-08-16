@@ -1,11 +1,13 @@
 package in.ac.amu.zhcet.data.service;
 
 import in.ac.amu.zhcet.data.Roles;
+import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,9 +21,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserAuth saveUser(UserAuth user) {
-        user.setPassword(UserAuth.PASSWORD_ENCODER.encode(user.getPassword()));
-        return userRepository.save(user);
+    public void save(UserAuth userAuth) {
+        userRepository.save(userAuth);
+    }
+
+    public UserAuth findById(String id) {
+        return userRepository.findByUserId(id);
     }
 
     public String getType(UserAuth user) {
@@ -39,6 +44,13 @@ public class UserService {
 
     public Iterable<UserAuth> getAll() {
         return userRepository.findAllByOrderByCreatedAtDesc();
+    }
+
+    @Transactional
+    public void updateDepartment(String id, Department department) {
+        UserAuth user = findById(id);
+        user.getDetails().setDepartment(department);
+        userRepository.save(user);
     }
 
 }

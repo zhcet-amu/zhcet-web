@@ -2,7 +2,8 @@ package in.ac.amu.zhcet.data.service;
 
 import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.base.user.UserDetails;
+import in.ac.amu.zhcet.data.model.base.user.Type;
+import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,14 +16,10 @@ import javax.transaction.Transactional;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final UserService userService;
-    private final UserDetailService userDetailService;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, UserService userService, UserDetailService userDetailService) {
+    public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        this.userService = userService;
-        this.userDetailService = userDetailService;
     }
 
     public Student getLoggedInStudent() {
@@ -41,32 +38,21 @@ public class StudentService {
     }
 
     private static void initializeStudent(Student student) {
-        if (student.getUser().getUserId() == null)
-            student.getUser().setUserId(student.getEnrolmentNumber());
-        if (student.getUser().getType() == null)
-            student.getUser().setType("STUDENT");
-        if (student.getUser().getRoles() == null)
+        student.getUser().setType(Type.STUDENT);
+
+        if (student.getUser().getRoles() == null || student.getUser().getRoles().length == 0)
             student.getUser().setRoles(new String[] { Roles.STUDENT });
         if (student.getUser().getPassword() == null)
             student.getUser().setPassword(student.getFacultyNumber());
+
+        student.getUser().setPassword(UserAuth.PASSWORD_ENCODER.encode(student.getUser().getPassword()));
     }
 
     @Transactional
     public void register(Student student) {
         initializeStudent(student);
 
-        userService.saveUser(student.getUser());
         studentRepository.save(student);
-    }
-
-    @Transactional
-    public void updateStudentDetails(String enrolmentNumber, UserDetails userDetails) {
-        Student student = getByEnrolmentNumber(enrolmentNumber);
-        userDetails.setDepartment(student.getDepartment());
-        student.setUserDetails(userDetails);
-        studentRepository.save(student);
-
-        userDetailService.updatePrincipal(student);
     }
 
 }

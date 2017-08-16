@@ -16,14 +16,13 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Attendance extends BaseEntity implements Serializable {
+public class Attendance extends BaseEntity {
 
     @Id
     private String id;
 
-    @NaturalId
-    @NotNull
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
+    @PrimaryKeyJoinColumn
     private CourseRegistration courseRegistration;
     private int delivered;
     private int attended;

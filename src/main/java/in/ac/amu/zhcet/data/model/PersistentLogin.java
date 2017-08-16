@@ -1,7 +1,9 @@
 package in.ac.amu.zhcet.data.model;
 
+import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
@@ -12,7 +14,8 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersistentLogin {
+@EqualsAndHashCode(callSuper = true)
+public class PersistentLogin extends BaseEntity {
     @Id
     private String series;
     private String username;

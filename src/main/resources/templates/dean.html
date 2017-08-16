@@ -28,6 +28,7 @@
                 </div>
                 <div class="card-body collapse in">
                     <div class="card-block">
+                        <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
                         <form class="mui-form" th:action="@{/dean/add_department}" method="post"
                               th:object="${department}">
                             <div class="form-body">
@@ -42,10 +43,12 @@
                                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                                         <div th:text="${error}">Fix this and try and try again</div>
                                     </div>
+                                    <!--/*@thymesVar id="dept_success" type="boolean"*/-->
                                     <div th:if="${dept_success}" class="alert alert-dismissible alert-success">
                                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                                         <strong>Uploaded!</strong> Department was added successfully!
                                     </div>
+                                    <!--/*@thymesVar id="dept_errors" type="List<String>"*/-->
                                     <div th:each="error : ${dept_errors}" class="alert alert-dismissible alert-danger">
                                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                                         <div th:utext="${error}">Fix this and try and try again</div>
@@ -88,15 +91,18 @@
                                     Choose File
                                 </label>
                                 <span class='label label-info' id="upload-file-info"></span>
+                                <!--/*@thymesVar id="students_registered" type="boolean"*/-->
                                 <div th:if="${students_registered}" class="alert alert-dismissible alert-success">
                                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                                     <strong>Registered!</strong> Students were successfully registered<br/>
                                 </div>
+                                <!--/*@thymesVar id="students_success" type="boolean"*/-->
                                 <div th:if="${students_success}" class="alert alert-dismissible alert-success">
                                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                                     <strong>Uploaded!</strong> Your file was correctly uploaded. Now, confirm the prompt
                                     to register the students
                                 </div>
+                                <!--/*@thymesVar id="students_errors" type="List<String>"*/-->
                                 <div th:each="error : ${students_errors}" class="alert alert-dismissible alert-danger">
                                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                                     <strong>Something went wrong!</strong>
@@ -212,10 +218,12 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!--/*@thymesVar id="user_success" type="boolean"*/-->
                                     <div th:if="${user_success}" class="alert alert-dismissible alert-success">
                                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                                         <strong>Uploaded!</strong> User profile was added successfully!
                                     </div>
+                                    <!--/*@thymesVar id="user_errors" type="List<String>"*/-->
                                     <div th:each="error : ${user_errors}" class="alert alert-dismissible alert-danger">
                                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                                         <strong>Something went wrong!</strong>
@@ -229,6 +237,7 @@
                         </form>
                         <div class="row">
                             <div class="form-group col-xs-12 mb-2">
+                                <!--/*@thymesVar id="message" type="String"*/-->
                                 <div th:if="${message}" class="green-text center" th:text="${message}">
                                     Registered
                                 </div>
@@ -245,6 +254,8 @@
                         </tr>
                         </thead>
                         <tbody>
+                        <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
+                        <!--/*@thymesVar id="users" type="List<UserAuth>"*/-->
                         <th:block th:each="user : ${users}">
                             <tr>
                                 <td th:text="${user.name}">A Smoke Test'</td>
@@ -283,12 +294,14 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
                                     <th:block th:each="confirm: ${confirmRegistration.studentMap}">
                                         <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
+                                            <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
                                             <td class="text-xs-center" th:text="${confirm.key.enrolmentNumber}"></td>
                                             <td class="text-xs-center" th:text="${confirm.key.facultyNumber}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.key.name}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.key.department?.name}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.key.user.name}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.key.user.details.department?.name}"></td>
                                             <td class="text-xs-center" th:text="${confirm.value}"></td>
                                         </tr>
                                     </th:block>
@@ -298,6 +311,7 @@
                         </div>
                         <div th:each="error : ${confirmRegistration.errors}"
                              class="alert alert-dismissible alert-danger">
+                            <!--/*@thymesVar id="error" type="String"*/-->
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <strong>Something went wrong!</strong>
                             <div th:utext="${error}">Fix this and try and try again</div>

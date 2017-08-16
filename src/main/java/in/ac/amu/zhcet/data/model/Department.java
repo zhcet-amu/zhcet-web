@@ -1,8 +1,7 @@
 package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.entity.BaseIdEntity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Column;
@@ -11,8 +10,11 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
 @Data
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Department extends BaseIdEntity {
     @NotBlank
