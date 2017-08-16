@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.data.service;
 
 import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.Department;
-import in.ac.amu.zhcet.data.model.FacultyMember;;
+import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.base.user.Type;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.FacultyRepository;

@@ -1,6 +1,5 @@
 package in.ac.amu.zhcet.data.model;
 
-import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import lombok.*;

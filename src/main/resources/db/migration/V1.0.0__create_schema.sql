@@ -35,7 +35,7 @@ CREATE TABLE `user_detail` (
   `modified_by` varchar(255) DEFAULT NULL,
   `version` int(11) DEFAULT 0,
   `avatar_url` varchar(255) DEFAULT NULL,
-  `description` varchar DEFAULT  NULL ,
+  `description` text DEFAULT  NULL ,
   `address_line1` varchar(255) DEFAULT NULL,
   `address_line2` varchar(255) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,

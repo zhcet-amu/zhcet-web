@@ -24,6 +24,7 @@ public class UserDetail extends BaseEntity {
     UserAuth userAuth;
 
     private String avatarUrl;
+    @org.hibernate.annotations.Type(type = "text")
     private String description;
     private String addressLine1;
     private String addressLine2;
