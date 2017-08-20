@@ -3,6 +3,7 @@ package in.ac.amu.zhcet.controller;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.Student;
+import in.ac.amu.zhcet.data.model.base.user.Type;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.service.FacultyService;
@@ -54,7 +55,7 @@ public class DeanController {
     public String deanAdmin(Model model) {
         if (!model.containsAttribute("user")) {
             UserAuth user = new UserAuth();
-            user.setType("STUDENT");
+            user.setType(Type.STUDENT);
 
             model.addAttribute("user", user);
         }
@@ -75,7 +76,7 @@ public class DeanController {
         user.setRoles(roles.split(","));
 
         redirectAttributes.addFlashAttribute("user", user);
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() && !bindingResult.hasFieldErrors("details.department")) {
             log.error(bindingResult.toString());
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
         } else {
@@ -88,13 +89,13 @@ public class DeanController {
 
             if (user.getType().equals("STUDENT")) {
                 Student student = new Student(user, null);
-                student.getUserDetails().setDepartment(departmentRepository.findOne(department));
+                student.getUser().getDetails().setDepartment(departmentRepository.findOne(department));
 
                 errors.addAll(validate(student));
                 saveAction(errors, redirectAttributes, () -> studentService.register(student), errorHandler);
             } else {
                 FacultyMember facultyMember = new FacultyMember(user);
-                facultyMember.getUserDetails().setDepartment(departmentRepository.findOne(department));
+                facultyMember.getUser().getDetails().setDepartment(departmentRepository.findOne(department));
 
                 errors.addAll(validate(facultyMember));
                 saveAction(errors, redirectAttributes, () -> facultyService.register(facultyMember), errorHandler);
@@ -103,7 +104,7 @@ public class DeanController {
             redirectAttributes.addFlashAttribute("user_errors", errors);
         }
 
-        return "redirect:dean";
+        return "redirect:/dean";
     }
 
     @PostMapping("/dean/add_department")

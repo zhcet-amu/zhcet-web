@@ -28,7 +28,6 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-devtools")
-    compile("com.h2database:h2")
     // Force Thymeleaf 3 for full HTML support
     compile("org.thymeleaf:thymeleaf:3.0.6.RELEASE")
     compile("org.thymeleaf:thymeleaf-spring4:3.0.6.RELEASE")
@@ -38,5 +37,6 @@ dependencies {
     compile "com.j256.simplecsv:simplecsv:2.1"
     compile "org.flywaydb:flyway-core:4.2.0"
     compile "org.apache.commons:commons-text:1.1"
+    compile 'mysql:mysql-connector-java'
     compileOnly "org.projectlombok:lombok:1.16.18"
 }

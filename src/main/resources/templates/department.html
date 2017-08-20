@@ -57,7 +57,6 @@
                                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                                     <div th:text="${error}">Fix this and try and try again</div>
                                 </div>
-                                <input th:field="*{department}" hidden/>
                             </div>
                             <br/>
                             <div th:if="${course_success}" class="alert alert-dismissible alert-success">
@@ -114,9 +113,10 @@
                                     <label for="faculty">In-Charge</label>
                                     <select id="faculty" name="faculty">
                                         <option value="-1">Select Faculty</option>
+                                        <!--/*@thymesVar id="faculty" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
                                         <option th:each="faculty : ${facultyMembers}"
                                                 th:value="${faculty.facultyId}"
-                                                th:text="${faculty.name}">
+                                                th:text="${faculty.user.name}">
                                         </option>
                                     </select>
                                 </div>

@@ -1,29 +1,23 @@
 package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
-import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 @Entity
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Attendance extends BaseEntity implements Serializable {
+public class Attendance extends BaseEntity {
 
     @Id
     private String id;
 
-    @NaturalId
-    @NotNull
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
+    @PrimaryKeyJoinColumn
     private CourseRegistration courseRegistration;
     private int delivered;
     private int attended;

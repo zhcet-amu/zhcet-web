@@ -1,26 +1,38 @@
 package in.ac.amu.zhcet.data.model.base.user;
 
 import in.ac.amu.zhcet.data.model.Department;
-import lombok.Data;
+import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
-@Embeddable
 @Data
-public class UserDetails {
-    @Column(unique = true)
-    private String email;
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@ToString(exclude = "userAuth")
+public class UserDetail extends BaseEntity {
+    @Id
+    private String userId;
+
+    @OneToOne
+    @PrimaryKeyJoinColumn
+    UserAuth userAuth;
+
     private String avatarUrl;
+    @org.hibernate.annotations.Type(type = "text")
+    private String description;
     private String addressLine1;
     private String addressLine2;
-    private boolean active = true;
+    private String city;
+    private String state;
 
-    @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
     private Department department;
 
     private String phoneNumbers;

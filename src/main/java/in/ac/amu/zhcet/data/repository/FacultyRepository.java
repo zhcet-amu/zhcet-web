@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.data.repository;
 
 
+import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import org.springframework.data.repository.CrudRepository;
 
@@ -11,5 +12,5 @@ public interface FacultyRepository extends CrudRepository<FacultyMember, Long>{
 
     List<FacultyMember> getByFacultyIdIn(List<String> facultyIds);
 
-    List<FacultyMember> getByUserDetails_Department_Name(String name);
+    List<FacultyMember> getByUser_Details_Department(Department department);
 }

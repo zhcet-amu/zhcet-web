@@ -2,8 +2,8 @@ package in.ac.amu.zhcet.controller;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.service.DepartmentAdminService;
+import in.ac.amu.zhcet.data.service.FacultyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +23,9 @@ import java.util.List;
 public class DepartmentController {
 
     private final DepartmentAdminService departmentAdminService;
-    private final CourseRepository courseRepository;
 
-    public DepartmentController(DepartmentAdminService departmentAdminService, CourseRepository courseRepository) {
+    public DepartmentController(DepartmentAdminService departmentAdminService) {
         this.departmentAdminService = departmentAdminService;
-        this.courseRepository = courseRepository;
     }
 
     @GetMapping("/department")
@@ -36,10 +33,10 @@ public class DepartmentController {
         model.addAttribute("floatedCourses", departmentAdminService.getFloatedCourses());
         model.addAttribute("courses", departmentAdminService.getAllCourses());
         FacultyMember facultyMember = departmentAdminService.getFacultyMember();
-        model.addAttribute("department", facultyMember.getDepartment());
+        model.addAttribute("department", FacultyService.getDepartment(facultyMember));
         if (!model.containsAttribute("course")) {
             Course course = new Course();
-            course.setDepartment(facultyMember.getDepartment());
+            course.setDepartment(FacultyService.getDepartment(facultyMember));
             model.addAttribute("course", course);
         }
         model.addAttribute("facultyMembers", departmentAdminService.getAllFacultyMembers());
@@ -52,7 +49,7 @@ public class DepartmentController {
     @PostMapping("/department/create_course")
     public String createCourse(@Valid Course course, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() && !bindingResult.hasFieldErrors("department")) {
             redirectAttributes.addFlashAttribute("course", course);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.course", bindingResult);
         } else {

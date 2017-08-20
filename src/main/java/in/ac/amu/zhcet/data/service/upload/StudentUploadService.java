@@ -128,7 +128,7 @@ public class StudentUploadService {
                 studentConfirmation.studentMap.put(student, "Duplicate faculty number");
                 studentConfirmation.errors.add("Students with duplicate faculty number found");
             } else {
-                student.getUserDetails().setDepartment(optional.get());
+                student.getUser().getDetails().setDepartment(optional.get());
                 studentConfirmation.studentMap.put(student, null);
             }
 

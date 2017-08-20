@@ -5,31 +5,31 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 @Data
 @Entity
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true, exclude="attendance")
-public class CourseRegistration extends BaseEntity implements Serializable {
+public class CourseRegistration extends BaseEntity {
     @Id
     private String id;
 
-    @NaturalId
     @NonNull
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private FloatedCourse floatedCourse;
 
-    @NaturalId
     @NotNull
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Student student;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "courseRegistration")
+    @Valid
+    @NotNull
+    @PrimaryKeyJoinColumn
+    @OneToOne(cascade = CascadeType.ALL)
     private Attendance attendance = new Attendance();
 
     public CourseRegistration(Student student, FloatedCourse floatedCourse) {

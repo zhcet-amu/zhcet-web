@@ -7,6 +7,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentReme
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.Date;
 
@@ -37,7 +38,12 @@ public class PersistentTokenService implements PersistentTokenRepository {
     @Override
     @Transactional
     public PersistentRememberMeToken getTokenForSeries(String seriesId) {
-        return getTokenFromLogin(persistentLoginRepository.getOne(seriesId));
+        try {
+            return getTokenFromLogin(persistentLoginRepository.getOne(seriesId));
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

@@ -8,14 +8,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
 
-@Entity
-@DynamicUpdate
 @Data
+@Entity
+@Builder
+@DynamicUpdate
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(exclude = "password")
 public class UserAuth extends BaseEntity {
@@ -26,23 +28,28 @@ public class UserAuth extends BaseEntity {
     @NotBlank
     private String userId;
 
+    @Column(unique = true)
+    private String email;
+
+    @NotBlank
+    private String name;
+
+    private boolean active;
+
     @NotNull
     @Size(min = 4, max = 100)
     private String password;
     @NotBlank
     private String roles;
-    @NotBlank
-    private String name;
-    @NotBlank
-    private String type;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
-    public UserAuth(String userId, String password, String name, String type, String[] roles) {
-        setUserId(userId);
-        setPassword(password);
-        setName(name);
-        setType(type);
-        setRoles(roles);
-    }
+    @Valid
+    @NotNull
+    @PrimaryKeyJoinColumn
+    @OneToOne(cascade = CascadeType.ALL)
+    private UserDetail details = new UserDetail();
 
     public void setRoles(String[] roles) {
         this.roles = String.join(",", roles);
@@ -53,5 +60,11 @@ public class UserAuth extends BaseEntity {
             return roles.split(",");
 
         return null;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (details.getUserId() == null)
+            details.setUserId(userId);
     }
 }
