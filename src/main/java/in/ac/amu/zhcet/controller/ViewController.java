@@ -1,5 +1,7 @@
 package in.ac.amu.zhcet.controller;
 
+import in.ac.amu.zhcet.configuration.security.RoleWiseSuccessHandler;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -11,9 +13,9 @@ public class ViewController {
         return "login";
     }
 
-    @RequestMapping("/")
+    @RequestMapping(value = {"/", ""})
     public String homePage() {
-        return "home";
+        return RoleWiseSuccessHandler.determineTargetUrl(SecurityContextHolder.getContext().getAuthentication());
     }
 
 }

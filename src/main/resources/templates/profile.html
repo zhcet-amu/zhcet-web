@@ -10,8 +10,9 @@
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation"></div>
 
-<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_STUDENT')">
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="isAuthenticated()">
     <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
+    <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
     <div class="col-md-15">
         <div class="card">
             <div class="card-header">
@@ -30,21 +31,24 @@
                     <div class="text-xs-center">
                         <div class="card-block">
                             <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png"
-                                 th:src="${#strings.defaultString(student.user.details.avatarUrl, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
+                                 th:src="${#strings.defaultString(user.details.avatarUrl, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
                                  class="rounded-circle height-150" alt="Card image"/>
                         </div>
                         <div class="card-block">
-                            <h6 class="card-subtitle text-muted" th:text="${student.user.name}">Name</h6>
-                            <ul class="list-inline list-inline-pipe">
+                            <h6 class="card-subtitle text-muted" th:text="${user.name}">Name</h6>
+                            <ul class="list-inline list-inline-pipe" sec:authorize="hasRole('STUDENT')">
                                 <li th:text="${student.facultyNumber}">FacultyNumber</li>
                                 <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
+                            </ul>
+                            <ul class="list-inline list-inline-pipe" sec:authorize="hasRole('FACULTY')">
+                                <li th:text="${faculty.facultyId}">FacultyNumber</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
             <!--/*@thymesVar id="user_details" type="in.ac.amu.zhcet.data.model.base.user.UserDetail"*/-->
-            <form class="form" th:action="@{/student/details}" method="post" th:object="${user_details}">
+            <form class="form" th:action="@{/profile/details}" method="post" th:object="${user_details}">
                 <div class="row">
                     <div class="col-md-6 offset-md-3">
                         <div class="form-body">

@@ -19,7 +19,7 @@ public class RoleWiseSuccessHandler implements AuthenticationSuccessHandler {
         new DefaultRedirectStrategy().sendRedirect(request, response, determineTargetUrl(authentication));
     }
 
-    private String determineTargetUrl(Authentication authentication) {
+    public static String determineTargetUrl(Authentication authentication) {
         Set<String> authorities = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
         if (authorities.contains(Roles.DEAN_ADMIN))
@@ -28,8 +28,10 @@ public class RoleWiseSuccessHandler implements AuthenticationSuccessHandler {
             return "/department";
         else if (authorities.contains(Roles.FACULTY))
             return "/faculty/courses";
+        else if (authorities.contains(Roles.STUDENT))
+            return "/attendance";
         else
-            return "/student";
+            return "/login";
     }
 
 }

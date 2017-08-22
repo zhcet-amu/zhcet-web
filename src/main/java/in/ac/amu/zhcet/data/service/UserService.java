@@ -5,6 +5,8 @@ import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,6 +29,13 @@ public class UserService {
 
     public UserAuth findById(String id) {
         return userRepository.findByUserId(id);
+    }
+
+    public UserAuth getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        return findById(userName);
     }
 
     public String getType(UserAuth user) {

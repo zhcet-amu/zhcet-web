@@ -9,15 +9,14 @@
 <div th:replace="fragments/navigation :: navigation"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper">
-    <div class="row">
-        <div class="col-xl-3 col-lg-6 col-xs-12">
-            <div class="card">
-                <div class="card-body">
-                    <p>Hi WelCome to the CTENGG</p>
-                </div>
-            </div>
-        </div>
+    <h2 class="text-xs-center">Welcome</h2>
+
+    <div class="text-xs-center">
+        <h3>Please log in to continue</h3>
+        <br>
+        <a th:href="@{/login}" class="mui-btn mui-btn--primary">Log In</a>
     </div>
+
     <div th:replace="fragments/layout :: scripts"></div>
 </div>
 </body>
