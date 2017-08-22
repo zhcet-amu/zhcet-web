@@ -98,6 +98,10 @@
 
                         <form class="mui-form" th:action="@{/department/float_course}" method="post">
                                 <h4 class="form-section"><i class="icon-clipboard4"></i>Float Courses</h4>
+                                    <div class="mui-select">
+                                        <label>Session</label>
+                                        <div value="-1" th:text="${currentSession}" class="text-muted"></div>
+                                    </div>
                                 <div class="mui-select">
                                     <label for="courseCode">Course Code</label>
                                     <select id="courseCode" name="courseCode">
@@ -109,12 +113,6 @@
                                         </option>
                                     </select>
                                 </div>
-                            <div class="mui-select">
-                                <label for="session">Session</label>
-                                <select id="session" name="session">
-                                    <option value="-1" th:text="${currentSession}"></option>
-                                </select>
-                            </div>
                                 <div class="mui-select">
                                     <label for="faculty">In-Charge</label>
                                     <select id="faculty" name="faculty">

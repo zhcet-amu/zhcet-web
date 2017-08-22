@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.service.upload.AttendanceUploadService;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.FloatedCourseService;
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,6 +50,7 @@ public class FacultyController {
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("course_id", id);
+        model.addAttribute("currentSession", Utils.getCurrentSession());
         return "course_attendance";
     }
 
