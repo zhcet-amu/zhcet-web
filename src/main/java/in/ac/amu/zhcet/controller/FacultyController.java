@@ -50,7 +50,6 @@ public class FacultyController {
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("course_id", id);
-        model.addAttribute("currentSession", Utils.getCurrentSession());
         return "course_attendance";
     }
 

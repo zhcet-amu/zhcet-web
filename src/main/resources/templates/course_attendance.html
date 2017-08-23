@@ -86,7 +86,7 @@
                                   method="post">
                                 <div class="mui-select">
                                     <label>Session</label>
-                                    <div th:text="${currentSession}" class="text-muted"></div>
+                                    <div th:text="${T(in.ac.amu.zhcet.utils.Utils).getCurrentSession()}" class="text-muted"></div>
                                 </div>
                                 <div>
                                     Download the <a th:href="@{/attendance_format.csv}">attendance format</a>

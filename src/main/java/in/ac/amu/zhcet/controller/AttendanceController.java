@@ -28,7 +28,6 @@ public class AttendanceController {
 
         model.addAttribute("student", student);
         model.addAttribute("attendances", registeredCourseService.getAttendanceByStudent(student.getEnrolmentNumber()));
-        model.addAttribute("currentSession", Utils.getCurrentSession());
         return "attendance";
     }
 

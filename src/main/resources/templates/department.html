@@ -100,7 +100,7 @@
                                 <h4 class="form-section"><i class="icon-clipboard4"></i>Float Courses</h4>
                                     <div class="mui-select">
                                         <label>Session</label>
-                                        <div value="-1" th:text="${currentSession}" class="text-muted"></div>
+                                        <div value="-1" th:text="${T(in.ac.amu.zhcet.utils.Utils).getCurrentSession()}" class="text-muted"></div>
                                     </div>
                                 <div class="mui-select">
                                     <label for="courseCode">Course Code</label>

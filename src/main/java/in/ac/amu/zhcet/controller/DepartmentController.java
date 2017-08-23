@@ -31,7 +31,6 @@ public class DepartmentController {
 
     @GetMapping("/department")
     public String department(Model model) {
-        model.addAttribute("currentSession", Utils.getCurrentSession());
         model.addAttribute("floatedCourses", departmentAdminService.getFloatedCourses());
         model.addAttribute("courses", departmentAdminService.getAllCourses());
         FacultyMember facultyMember = departmentAdminService.getFacultyMember();
@@ -73,7 +72,7 @@ public class DepartmentController {
     }
 
     @PostMapping("/department/float_course")
-    public String floatCourse(@RequestParam String courseCode, @RequestParam List<String> faculty, RedirectAttributes redirectAttributes, @RequestParam String session) {
+    public String floatCourse(@RequestParam String courseCode, @RequestParam List<String> faculty, RedirectAttributes redirectAttributes) {
         Course course = departmentAdminService.findCourseByCode(courseCode);
 
         List<String> errors = new ArrayList<>();
@@ -81,7 +80,7 @@ public class DepartmentController {
             errors.add("No valid course selected");
         } else {
             try {
-                departmentAdminService.floatCourse(course, faculty).setSession(session);
+                departmentAdminService.floatCourse(course, faculty);
                 redirectAttributes.addFlashAttribute("float_success", true);
             } catch (Exception exc) {
                 if (exc instanceof DataIntegrityViolationException && exc.getMessage().contains("PRIMARY_KEY")) {
