@@ -1,36 +1,33 @@
 package in.ac.amu.zhcet.controller;
 
+import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.base.user.Type;
-import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.service.FacultyService;
-import in.ac.amu.zhcet.data.service.StudentService;
 import in.ac.amu.zhcet.data.service.UserService;
 import in.ac.amu.zhcet.data.service.upload.StudentUploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.*;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
 
 @Slf4j
 @Controller
@@ -38,28 +35,19 @@ public class DeanController {
 
     private final UserService userService;
     private final DepartmentRepository departmentRepository;
-    private final StudentService studentService;
-    private final FacultyService facultyService;
     private final StudentUploadService studentUploadService;
+    private final FacultyService facultyService;
 
     @Autowired
-    public DeanController(UserService userService, StudentService studentService, FacultyService facultyService, DepartmentRepository departmentRepository, StudentUploadService studentUploadService) {
+    public DeanController(UserService userService, DepartmentRepository departmentRepository, StudentUploadService studentUploadService, FacultyService facultyService) {
         this.userService = userService;
-        this.studentService = studentService;
-        this.facultyService = facultyService;
         this.departmentRepository = departmentRepository;
         this.studentUploadService = studentUploadService;
+        this.facultyService = facultyService;
     }
 
     @GetMapping("/dean")
     public String deanAdmin(Model model) {
-        if (!model.containsAttribute("user")) {
-            UserAuth user = new UserAuth();
-            user.setType(Type.STUDENT);
-
-            model.addAttribute("user", user);
-        }
-
         model.addAttribute("users", userService.getAll());
 
         if (!model.containsAttribute("department")) {
@@ -71,40 +59,44 @@ public class DeanController {
         return "dean";
     }
 
-    @PostMapping("/dean/register")
-    public String enterUser(@Valid UserAuth user, BindingResult bindingResult, @RequestParam long department, @RequestParam String roles, RedirectAttributes redirectAttributes) {
-        user.setRoles(roles.split(","));
+    @GetMapping("/dean/roles/{id}")
+    public String roleManagement(Model model, @PathVariable long id) {
+        Department department = departmentRepository.findOne(id);
 
-        redirectAttributes.addFlashAttribute("user", user);
-        if (bindingResult.hasErrors() && !bindingResult.hasFieldErrors("details.department")) {
-            log.error(bindingResult.toString());
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
-        } else {
-            final List<String> errors = new ArrayList<>();
+        model.addAttribute("department", department);
+        model.addAttribute("facultyMembers", facultyService.getByDepartment(department));
 
-            Consumer<Throwable> errorHandler = throwable -> {
-                if (throwable instanceof DataIntegrityViolationException && throwable.getMessage().contains("PRIMARY_KEY"))
-                    errors.add("User with this ID already exists");
-            };
+        return "role_management";
+    }
 
-            if (user.getType().equals("STUDENT")) {
-                Student student = new Student(user, null);
-                student.getUser().getDetails().setDepartment(departmentRepository.findOne(department));
+    @PostMapping("/dean/roles/{id}/save")
+    public String saveRoles(Model model, @PathVariable long id, RedirectAttributes redirectAttributes, @RequestParam String facultyId, @RequestParam List<String> roles) {
+        FacultyMember facultyMember = facultyService.getById(facultyId);
 
-                errors.addAll(validate(student));
-                saveAction(errors, redirectAttributes, () -> studentService.register(student), errorHandler);
-            } else {
-                FacultyMember facultyMember = new FacultyMember(user);
-                facultyMember.getUser().getDetails().setDepartment(departmentRepository.findOne(department));
+        List<String> newRoles = new ArrayList<>();
 
-                errors.addAll(validate(facultyMember));
-                saveAction(errors, redirectAttributes, () -> facultyService.register(facultyMember), errorHandler);
+        for (String role : roles) {
+            switch (role) {
+                case "dean":
+                    newRoles.add(Roles.DEAN_ADMIN);
+                    break;
+                case "department":
+                    newRoles.add(Roles.DEPARTMENT_ADMIN);
+                    break;
+                case "faculty":
+                    newRoles.add(Roles.FACULTY);
+                    break;
+                default:
+                    // Skip
             }
-
-            redirectAttributes.addFlashAttribute("user_errors", errors);
         }
 
-        return "redirect:/dean";
+        facultyMember.getUser().setRoles(newRoles.toArray(new String[newRoles.size()]));
+        facultyService.save(facultyMember);
+
+        redirectAttributes.addFlashAttribute("saved", true);
+
+        return "redirect:/dean/roles/{id}";
     }
 
     @PostMapping("/dean/add_department")
@@ -153,7 +145,7 @@ public class DeanController {
     }
 
     @PostMapping("/dean/register_students_confirmed")
-    public String uploadAttendance(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
+    public String uploadStudents(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
         StudentUploadService.StudentConfirmation confirmation = (StudentUploadService.StudentConfirmation) session.getAttribute("confirmStudentRegistration");
 
         if (confirmation == null || !confirmation.getErrors().isEmpty()) {
@@ -172,32 +164,5 @@ public class DeanController {
         webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
 
         return "redirect:/dean";
-    }
-
-    private static void saveAction(List<String> errors, RedirectAttributes redirectAttributes, Runnable action, Consumer<Throwable> throwableConsumer) {
-        if (errors.isEmpty()) {
-            try {
-                action.run();
-                redirectAttributes.addFlashAttribute("user_success", true);
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                if (throwableConsumer != null)
-                    throwableConsumer.accept(e);
-            }
-        }
-    }
-
-    private static <T> List<String> validate(T object) {
-        List<String> errors = new ArrayList<>();
-
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<T>> constraints = validator.validate(object);
-        for (ConstraintViolation<T> constraint : constraints) {
-            errors.add(constraint.getPropertyPath() + "  " + constraint.getMessage());
-        }
-
-        return errors;
     }
 }

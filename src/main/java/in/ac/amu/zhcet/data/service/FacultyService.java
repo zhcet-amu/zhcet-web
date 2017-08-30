@@ -68,4 +68,9 @@ public class FacultyService {
         facultyRepository.save(facultyMember);
     }
 
+    @Transactional
+    public void save(FacultyMember facultyMember) {
+        facultyRepository.save(facultyMember);
+    }
+
 }

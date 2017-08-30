@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head(title = 'Role Management')"></head>
+
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
+      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<nav th:replace="fragments/header :: header"></nav>
+<div th:replace="fragments/navigation :: navigation"></div>
+
+<div th:fragment="content" th:include="fragments/layout :: wrapper">
+    <h3 th:text="|${department.name} Department Role Management|"></h3>
+
+    <br>
+
+    <div th:if="${saved}" class="alert alert-dismissible alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Saved!</strong> Roles have been saved
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title" id="from-actions-top-left">Manage Roles</h4>
+            <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+            <div class="heading-elements">
+                <ul class="list-inline mb-0">
+                    <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                    <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                    <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card-body collapse in">
+            <div class="card-block">
+                <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                    <!--/*@thymesVar id="member" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+                    <form th:action="|${#httpServletRequest.requestURL}/save|" method="post" th:each="member : ${facultyMembers}">
+                        <tr>
+                            <td>
+                                <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png"
+                                     th:src="${#strings.defaultString(member.user.details.avatarUrl, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
+                                     class="rounded-circle height-100" alt="Card image"/></td>
+                            <td th:text="${member.facultyId}"></td>
+                            <td th:text="${member.user.name}"></td>
+                            <td>
+                                <div class="mui-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="roles" value="dean" th:checked="${#lists.contains(member.user.roles, 'ROLE_DEAN_ADMIN')}">
+                                        Dean Admin
+                                    </label>
+                                </div>
+                                <div class="mui-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="roles" value="department" th:checked="${#lists.contains(member.user.roles, 'ROLE_DEPARTMENT_ADMIN')}">
+                                        Department Admin
+                                    </label>
+                                </div>
+                                <div class="mui-checkbox">
+                                    <label>
+                                        <input type="checkbox" name="roles" value="faculty" th:checked="${#lists.contains(member.user.roles, 'ROLE_FACULTY')}">
+                                        Faculty Member
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="hidden" name="facultyId" th:value="${member.facultyId}">
+                                <button class="mui-btn mui-btn--primary mui-btn--raised">Save</button>
+                            </td>
+                        </tr>
+                    </form>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div th:replace="fragments/layout :: scripts"></div>
+</body>
+</html>

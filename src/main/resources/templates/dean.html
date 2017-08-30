@@ -13,7 +13,7 @@
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="row">
-        <div class="col-lg-4 col-lg-push-8">
+        <div class="col-lg-6 col-xl-3">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Add Department</h4>
@@ -122,10 +122,28 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-8 col-lg-pull-4">
+        <div class="col-lg-6 col-xl-3">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title" id="from-actions-top-left">Create User</h4>
+                    <h4 class="card-title">Role Management</h4>
+                </div>
+
+                <div class="card-body collapse in">
+                    <div class="card-block">
+                        <th:block th:each="department : ${departments}">
+                            <a th:href="|${#httpServletRequest.requestURL}/roles/${department.id}|">
+                                <button class="mui-btn mui-btn--flat" th:text="${department.name}"></button>
+                                <div class="mui-divider"></div>
+                            </a>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-xl-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title" id="from-actions-top-left">Created Users</h4>
                     <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -138,112 +156,6 @@
 
                 <div class="card-body collapse in">
                     <div class="card-block">
-                        <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
-                        <form class="mui-form" th:action="@{/dean/register}" method="post" th:object="${user}">
-                            <div class="row">
-                                <div class="col-md-6 offset-md-3">
-                                    <h4 class="form-section"><i class="icon-head"></i> User Info</h4>
-                                    <div class="row">
-                                        <div class="form-group col-xs-12 mb-2">
-                                            <div class="input-group">
-                                                <label class="display-inline-block custom-control custom-radio ml-1">
-                                                    <input type="radio" id="student" class="custom-control-input"
-                                                           th:field="*{type}" value="STUDENT" th:checked="checked"/>
-                                                    <span class="custom-control-indicator"></span>
-                                                    <span class="custom-control-description ml-0">Student</span>
-                                                    <input name="roles" value="ROLE_STUDENT" hidden>
-                                                </label>
-                                                <label class="display-inline-block custom-control custom-radio ml-1">
-                                                    <input type="radio" id="facultyMember"
-                                                           class="custom-control-input"
-                                                           th:field="*{type}" value="FACULTY"/>
-                                                    <span class="custom-control-indicator"></span>
-                                                    <span class="custom-control-description ml-0">Faculty</span>
-                                                    <input name="roles" value="ROLE_FACULTY" hidden>
-                                                </label>
-                                                <label class="display-inline-block custom-control custom-radio ml-1">
-                                                    <input type="radio" id="departmentAdmin"
-                                                           class="custom-control-input"
-                                                           th:field="*{type}" value="FACULTY"/>
-                                                    <span class="custom-control-indicator"></span>
-                                                    <span class="custom-control-description ml-0">Department Admin</span>
-                                                    <input name="roles" value="ROLE_FACULTY,ROLE_DEPARTMENT_ADMIN"
-                                                           hidden>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="mui-select form-group col-xs-12 mb-2">
-                                            <label for="department">Department</label>
-                                            <select id="department" name="department">
-                                                <option value="-1">Select a Department</option>
-                                                <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
-                                                <option th:each="department : ${departments}"
-                                                        th:value="${department.id}"
-                                                        th:text="${department.name}">
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-xs-12 mb-2 mui-textfield mui-textfield--float-label">
-                                            <input id="id" name="id" type="text"
-                                                   th:field="*{userId}"/>
-                                            <label for="id">User ID</label>
-                                            <div th:each="error : ${#fields.detailedErrors('userId')}"
-                                                 class="alert alert-dismissible alert-danger mt-1">
-                                                <button type="button" class="close" data-dismiss="alert">&times;
-                                                </button>
-                                                <div th:text="${error}">Fix this and try and try again</div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-xs-12 mb-2 mui-textfield mui-textfield--float-label">
-                                            <input id="name" name="name" type="text"
-                                                   th:field="*{name}"/>
-                                            <label for="name">Name</label>
-                                            <div th:each="error : ${#fields.detailedErrors('name')}"
-                                                 class="alert alert-dismissible alert-danger mt-1">
-                                                <button type="button" class="close" data-dismiss="alert">&times;
-                                                </button>
-                                                <div th:text="${error}">Fix this and try and try again</div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-xs-12 mb-2 mui-textfield mui-textfield--float-label">
-                                            <input id="password" name="password"
-                                                   type="password"
-                                                   th:field="*{password}"/>
-                                            <label for="password">Password</label>
-                                            <div th:each="error : ${#fields.detailedErrors('password')}"
-                                                 class="alert alert-dismissible alert-danger mt-1">
-                                                <button type="button" class="close" data-dismiss="alert">&times;
-                                                </button>
-                                                <div th:text="${error}">Fix this and try and try again</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--/*@thymesVar id="user_success" type="boolean"*/-->
-                                    <div th:if="${user_success}" class="alert alert-dismissible alert-success">
-                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                        <strong>Uploaded!</strong> User profile was added successfully!
-                                    </div>
-                                    <!--/*@thymesVar id="user_errors" type="List<String>"*/-->
-                                    <div th:each="error : ${user_errors}" class="alert alert-dismissible alert-danger">
-                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                        <strong>Something went wrong!</strong>
-                                        <div th:utext="${error}">Fix this and try and try again</div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="icon-check2"></i> Add
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                        <div class="row">
-                            <div class="form-group col-xs-12 mb-2">
-                                <!--/*@thymesVar id="message" type="String"*/-->
-                                <div th:if="${message}" class="green-text center" th:text="${message}">
-                                    Registered
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <table class="table">
                         <thead class="thead-inverse">
                         <tr>
@@ -258,16 +170,15 @@
                         <!--/*@thymesVar id="users" type="List<UserAuth>"*/-->
                         <th:block th:each="user : ${users}">
                             <tr>
-                                <td th:text="${user.name}">A Smoke Test'</td>
-                                <td th:text="${user.userId}">A Smoke Test'</td>
-                                <td th:text="${user.createdAt != null ? user.createdAt : user.updatedAt }">A
-                                    Smoke Test'
-                                </td>
+                                <td th:text="${user.name}"></td>
+                                <td th:text="${user.userId}"></td>
+                                <td th:text="${user.createdAt != null ? user.createdAt : user.updatedAt }"></td>
                                 <td th:text="${@userService.getType(user)}">A Smoke Test'</td>
                             </tr>
                         </th:block>
                         </tbody>
                     </table>
+                </div>
                 </div>
             </div>
         </div>
