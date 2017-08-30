@@ -18,10 +18,12 @@ import java.util.List;
 public class FacultyService {
 
     private final FacultyRepository facultyRepository;
+    private final UserService userService;
 
     @Autowired
-    public FacultyService(FacultyRepository facultyRepository) {
+    public FacultyService(FacultyRepository facultyRepository, UserService userService) {
         this.facultyRepository = facultyRepository;
+        this.userService = userService;
     }
 
     public static Department getDepartment(FacultyMember facultyMember) {
@@ -50,6 +52,8 @@ public class FacultyService {
     private static void initializeFaculty(FacultyMember facultyMember) {
         facultyMember.getUser().setType(Type.FACULTY);
 
+        if (facultyMember.getUser().getUserId() == null)
+            facultyMember.getUser().setUserId(facultyMember.getFacultyId());
         if (facultyMember.getUser().getRoles() == null || facultyMember.getUser().getRoles().length == 0)
             facultyMember.getUser().setRoles(new String[]{ Roles.FACULTY });
 
@@ -59,6 +63,8 @@ public class FacultyService {
     @Transactional
     public void register(FacultyMember facultyMember) {
         initializeFaculty(facultyMember);
+
+        userService.save(facultyMember.getUser());
         facultyRepository.save(facultyMember);
     }
 

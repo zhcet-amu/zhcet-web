@@ -15,10 +15,12 @@ import javax.transaction.Transactional;
 @Service
 public class StudentService {
 
+    private final UserService userService;
     private final StudentRepository studentRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(UserService userService, StudentRepository studentRepository) {
+        this.userService = userService;
         this.studentRepository = studentRepository;
     }
 
@@ -40,6 +42,8 @@ public class StudentService {
     private static void initializeStudent(Student student) {
         student.getUser().setType(Type.STUDENT);
 
+        if (student.getUser().getUserId() == null)
+            student.getUser().setUserId(student.getEnrolmentNumber());
         if (student.getUser().getRoles() == null || student.getUser().getRoles().length == 0)
             student.getUser().setRoles(new String[] { Roles.STUDENT });
         if (student.getUser().getPassword() == null)
@@ -52,6 +56,7 @@ public class StudentService {
     public void register(Student student) {
         initializeStudent(student);
 
+        userService.save(student.getUser());
         studentRepository.save(student);
     }
 

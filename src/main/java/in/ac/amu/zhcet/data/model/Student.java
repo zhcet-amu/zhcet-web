@@ -41,7 +41,5 @@ public class Student extends BaseEntity {
     public void prePersist() {
         if (enrolmentNumber == null)
             enrolmentNumber = user.getUserId();
-        else if (user.getUserId() == null)
-            user.setUserId(enrolmentNumber);
     }
 }

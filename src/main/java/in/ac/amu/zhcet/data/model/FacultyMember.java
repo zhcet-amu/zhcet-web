@@ -36,7 +36,5 @@ public class FacultyMember extends BaseEntity {
     public void prePersist() {
         if (facultyId == null)
             facultyId = user.getUserId();
-        else if (user.getUserId() == null)
-            user.setUserId(facultyId);
     }
 }

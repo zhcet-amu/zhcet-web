@@ -2,10 +2,8 @@ package in.ac.amu.zhcet.data.service.upload;
 
 import com.j256.simplecsv.processor.CsvProcessor;
 import com.j256.simplecsv.processor.ParseError;
-import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
 import in.ac.amu.zhcet.data.model.dto.StudentUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.service.StudentService;

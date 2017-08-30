@@ -5,6 +5,8 @@ import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -52,7 +54,7 @@ public class UserService {
     }
 
     public Iterable<UserAuth> getAll() {
-        return userRepository.findAllByOrderByCreatedAtDesc();
+        return userRepository.findAll(new PageRequest(0, 10, Sort.Direction.DESC, "createdAt"));
     }
 
     @Transactional
