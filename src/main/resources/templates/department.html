@@ -157,12 +157,14 @@
             </div>
             <div class="card-body collapse in collapse in">
                 <div class="card-block">
-                    <div class="bs-example">
-                        <div class="row">
-                            <div class="col-md-3" th:each="floated: ${floatedCourses}">
-                                <span class="text-xs-center"
-                                      th:text="${floated != null} ? ${floated.course.title}"></span>
-                            </div>
+                    <div class="row">
+                        <div th:each="floated: ${floatedCourses}" style="display: inline;">
+                            <form th:with="selectedCourse=${floated.course.code}"
+                                  th:action="'/department/courses/' + ${selectedCourse}" method="get" style="display: inline">
+                                <button class="btn btn-outline-primary btn-lg" type="submit"
+                                        th:text='${floated.course.title}' style="margin: 5px"
+                                        data-toggle="tooltip" th:title="${floated.course.code}"></button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -170,7 +172,6 @@
 
         </div>
     </div>
-    <div th:if="${error}" th:text="${error}"></div>
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
 </body>

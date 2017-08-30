@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" data-textdirection="ltr" class="loading"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/layout :: head(title = 'Faculty')">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.0/css/mdb.min.css" type="text/css"
+          rel="stylesheet"/>
+</head>
+
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
+      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<nav th:replace="fragments/header :: header"></nav>
+<div th:replace="fragments/navigation :: navigation"></div>
+
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_FACULTY')">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title" th:text="|Floated Courses : ${T(in.ac.amu.zhcet.utils.Utils).getCurrentSessionName()}|">Floated Courses</h4>
+                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                These are the courses managed by you this session
+                <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body collapse in collapse in">
+                <div class="card-block">
+                    <div class="row">
+                        <div th:each="floated: ${floatedCourses}" style="display: inline;">
+                            <form th:with="selectedCourse=${floated.course.code}"
+                                  th:action="'/faculty/courses/' + ${selectedCourse}" method="get" style="display: inline">
+                                <button class="btn btn-outline-primary btn-lg" type="submit"
+                                        th:text='${floated.course.title}' style="margin: 5px"
+                                        data-toggle="tooltip" th:title="${floated.course.code}"></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/layout :: scripts"></div>
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+</body>
+</html>

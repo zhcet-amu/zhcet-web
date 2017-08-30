@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
 import static in.ac.amu.zhcet.data.service.FacultyService.getDepartment;
@@ -38,6 +39,10 @@ public class DepartmentAdminService {
         return floatedCourseService.getAllCourses(getDepartment(getFacultyMember()));
     }
 
+    public FloatedCourse getCourseById(String id) {
+        return floatedCourseService.getCourseById(id);
+    }
+
     @Transactional
     public void registerCourse(Course course) {
         course.setDepartment(getDepartment(getFacultyMember()));
@@ -51,6 +56,10 @@ public class DepartmentAdminService {
             throw new IllegalAccessException("You don't have authority to float course in this department");
 
         floatedCourseService.floatCourse(course, facultyMembers);
+    }
+
+    public void addInCharge(String courseCode, String facultyId) {
+        floatedCourseService.addInCharge(courseCode, Collections.singletonList(facultyId));
     }
 
     public List<FacultyMember> getAllFacultyMembers(){

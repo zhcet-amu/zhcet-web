@@ -80,12 +80,11 @@
                 </div>
                 <div class="card-body collapse in collapse in">
                     <div class="card-block">
-                        <div class="row">
                             <form class="form" enctype="multipart/form-data"
                                   th:action="|${#httpServletRequest.requestURL}/attendance|"
                                   method="post">
                                 <div>
-                                    Download the <a th:href="@{/attendance_format.csv}">attendance format</a>
+                                    Download the <a th:href="@{/csv/attendance_format.csv}">attendance format</a>
                                 </div>
                                 <br/>
                                 <label class="btn btn-primary" for="my-file-selector">
@@ -118,7 +117,6 @@
                                     </div>
                                 </div>
                             </form>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -189,10 +187,7 @@
                 </div>
             </div>
         </div>
-        <div th:if="${error}" th:text="${error}"></div>
         <div th:replace="fragments/layout :: scripts"></div>
-        <div th:if="${uploadedFile}" th:text="'Currently uploaded file ' +${uploadedFile}">
-        </div>
     </div>
 </div>
 </body>

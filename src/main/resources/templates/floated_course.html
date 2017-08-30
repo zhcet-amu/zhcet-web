@@ -1,59 +1,215 @@
 <!DOCTYPE html>
-<html lang="en" data-textdirection="ltr" class="loading"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:replace="fragments/layout :: head(title = 'Faculty')">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.0/css/mdb.min.css" type="text/css"
-          rel="stylesheet"/>
-</head>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head(title = 'Faculty')"></head>
 
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
       class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation"></div>
 
-<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_FACULTY')">
-    <div th:if="!${error}"></div>
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title" th:text="|Floated Courses : ${T(in.ac.amu.zhcet.utils.Utils).getCurrentSessionName()}|">Floated Courses</h4>
-                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                These are the courses managed by you this session
-                <div class="heading-elements">
-                    <ul class="list-inline mb-0">
-                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                    </ul>
+<div th:fragment="content" th:include="fragments/layout :: wrapper">
+    <div class="row">
+        <div class="col-xs-12 col-lg-6 col-xl-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Teacher In Charge</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in collapse in">
+                    <div class="card-block">
+                        <div class="table-responsive">
+                            <form>
+                                <table class="table vertical-align">
+                                    <tbody>
+                                    <tr th:each="inCharge : ${floatedCourse.inCharge}">
+                                        <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+                                        <td>
+                                            <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png"
+                                                 th:src="${#strings.defaultString(inCharge.user.details.avatarUrl, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
+                                                 class="rounded-circle height-50" alt="Card image"/></td>
+                                        <td th:text="${inCharge.facultyId}"></td>
+                                        <td th:text="${inCharge.user.name}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                        <div th:if="${incharge_success}" class="alert alert-dismissible alert-success">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>Added!</strong> Course In-Charge was successfully added<br/>
+                        </div>
+                        <a th:href="|${#httpServletRequest.requestURL}/add_in_charge|">
+                            <div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="icon-add"></i> Add
+                                </button>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="card-body collapse in collapse in">
-                <div class="card-block">
-                    <div class="bs-example">
-                        <br>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Register New Students</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in collapse in">
+                    <div class="card-block">
+                        <form class="form" enctype="multipart/form-data"
+                              th:action="|${#httpServletRequest.requestURL}/register|"
+                              method="post">
+                            <div>
+                                Download the <a th:href="@{/csv/registration_format.csv}">registration format</a>
+                            </div>
+                            <br/>
+                            <label class="btn btn-primary" for="my-file-selector">
+                                <input id="my-file-selector" type="file" name="file" style="display: none"
+                                       onchange="$('#upload-file-info').html(this.files[0].name)"
+                                       accept="text/csv, .csv">
+                                Choose File
+                            </label>
+                            <span class='label label-info' id="upload-file-info"></span>
+                            <div th:if="${registered}" class="alert alert-dismissible alert-success">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong>Updated!</strong> Students were successfully registered<br/>
+                            </div>
+                            <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong>Something went wrong!</strong>
+                                <div th:utext="${error}">Fix this and try and try again</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-8"></div>
+                                <div class="col-sm-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="icon-check2"></i> Upload
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-xl-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Registered Students</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in collapse in">
+                    <div class="card-block">
                         <div class="row">
-                            <div class="col-sm-12 col-md-6 col-xl-3" th:each="floated: ${floatedCourses}">
-                                <form action="/faculty/courses" th:with="selectedCourse=${floated.course.code}"
-                                      th:action="'/faculty/courses/' + ${selectedCourse}" method="get" style="display: inline">
-                                    <button class="btn btn-outline-primary btn-lg" type="submit"
-                                            style="width: 100%" th:text='${floated.course.code}'
-                                            data-toggle="tooltip" th:title="${floated.course.title}"></button>
-                                </form>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead-inverse">
+                                    <tr>
+                                        <th class="text-xs-center">ID</th>
+                                        <th class="text-xs-center">FACULTY NO</th>
+                                        <th class="text-xs-center">ENROLMENT NO</th>
+                                        <th class="text-xs-center">NAME</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="registration: ${courseRegistrations}">
+                                        <tr>
+                                            <!--/*@thymesVar id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
+                                            <td class="text-xs-center"
+                                                th:text="${registration.student.user.userId}"></td>
+                                            <td class="text-xs-center"
+                                                th:text="${registration.student.facultyNumber}"></td>
+                                            <td class="text-xs-center"
+                                                th:text="${registration.student.enrolmentNumber}"></td>
+                                            <td class="text-xs-center" th:text="${registration.student.user.name}"></td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
+        <div th:if="${facultyMembers}" id="faculty-modal" class="modal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form class="form" th:action="|${#httpServletRequest.requestURL}/confirm_in_charge|"
+                          method="post">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Add Course In-Charge</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                            <tr th:each="inCharge : ${facultyMembers}">
+                                                <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+                                                <td><input type="radio" name="facultyId"
+                                                           th:value="${inCharge.facultyId}"
+                                                           th:disabled="${#lists.contains(floatedCourse.inCharge, inCharge)}">
+                                                </td>
+                                                <td>
+                                                    <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png"
+                                                         th:src="${#strings.defaultString(inCharge.user.details.avatarUrl, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
+                                                         class="rounded-circle height-50" alt="Card image"/></td>
+                                                <td th:text="${inCharge.facultyId}"></td>
+                                                <td th:text="${inCharge.user.name}"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                            </div>
+                            <div th:each="error : ${incharge_errors}"
+                                 class="alert alert-dismissible alert-danger">
+                                <!--/*@thymesVar id="error" type="String"*/-->
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong>Something went wrong!</strong>
+                                <div th:utext="${error}">Fix this and try and try again</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit"
+                                    class="btn btn-primary">Add
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div th:replace="fragments/layout :: scripts"></div>
     </div>
-    <div th:if="${error}" th:text="${error}"></div>
 </div>
-<div th:replace="fragments/layout :: scripts"></div>
 <script>
-    $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
+    $(window).load(function () {
+        $('#faculty-modal').modal('show');
     });
 </script>
 </body>

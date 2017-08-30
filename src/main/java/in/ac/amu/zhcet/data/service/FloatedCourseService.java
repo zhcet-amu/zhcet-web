@@ -53,8 +53,8 @@ public class FloatedCourseService {
     }
 
     @Transactional
-    public void addInCharge(Course course, List<String> facultyMemberIds) {
-        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), course.getCode());
+    public void addInCharge(String courseId, List<String> facultyMemberIds) {
+        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), courseId);
 
         stored.getInCharge().addAll(facultyService.getByIds(facultyMemberIds));
     }

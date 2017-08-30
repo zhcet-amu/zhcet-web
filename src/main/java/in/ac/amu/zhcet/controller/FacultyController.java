@@ -40,7 +40,7 @@ public class FacultyController {
         List<FloatedCourse> floatedCourses = floatedCourseService.getByFaculty(facultyMember);
         model.addAttribute("floatedCourses", floatedCourses);
         model.addAttribute("selectedCourse", selected);
-        return "floated_course";
+        return "faculty_courses";
     }
 
     @GetMapping("faculty/courses/{id}")

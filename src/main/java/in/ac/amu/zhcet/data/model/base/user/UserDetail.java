@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "userAuth")
 @ToString(exclude = "userAuth")
 public class UserDetail extends BaseEntity {
     @Id

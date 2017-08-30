@@ -1,7 +1,9 @@
 package in.ac.amu.zhcet.controller;
 
 import in.ac.amu.zhcet.data.model.Course;
+import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FacultyMember;
+import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.service.DepartmentAdminService;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,12 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -40,8 +44,6 @@ public class DepartmentController {
             model.addAttribute("course", course);
         }
         model.addAttribute("facultyMembers", departmentAdminService.getAllFacultyMembers());
-
-        // TODO: Show floated courses and option to float course by selecting existing course
 
         return "department";
     }
@@ -93,6 +95,43 @@ public class DepartmentController {
         redirectAttributes.addFlashAttribute("float_errors", errors);
 
         return "redirect:/department";
+    }
+
+    private FloatedCourse verifyAndGetCourse(String courseId) {
+        FloatedCourse floatedCourse = departmentAdminService.getCourseById(courseId);
+        if (!floatedCourse.getCourse().getDepartment().equals(departmentAdminService.getFacultyMember().getUser().getDetails().getDepartment()))
+            throw new IllegalArgumentException("Unauthorized access");
+
+        return floatedCourse;
+    }
+
+    @GetMapping("department/courses/{id}")
+    public String courseDetail(Model model, @PathVariable String id) {
+        FloatedCourse floatedCourse = verifyAndGetCourse(id);
+
+        List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
+        model.addAttribute("courseRegistrations", courseRegistrations);
+        model.addAttribute("floatedCourse", floatedCourse);
+        return "floated_course";
+    }
+
+    @GetMapping("department/courses/{id}/add_in_charge")
+    public String addInCharge(Model model, RedirectAttributes redirectAttributes, @PathVariable String id) {
+        redirectAttributes.addFlashAttribute("facultyMembers", departmentAdminService.getAllFacultyMembers());
+        return "redirect:/department/courses/{id}";
+    }
+
+    @PostMapping("department/courses/{id}/confirm_in_charge")
+    public String confirmInCharge(Model model, RedirectAttributes redirectAttributes, @PathVariable String id, @RequestParam String facultyId) {
+        verifyAndGetCourse(id);
+        try {
+            departmentAdminService.addInCharge(id, facultyId);
+            redirectAttributes.addFlashAttribute("incharge_success", true);
+            return "redirect:/department/courses/{id}";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("incharge_errors", Collections.singletonList(e.getLocalizedMessage()));
+            return "redirect:/department/courses/{id}/add_in_charge";
+        }
     }
 
 }
