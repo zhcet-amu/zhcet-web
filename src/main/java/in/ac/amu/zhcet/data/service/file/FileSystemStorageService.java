@@ -9,7 +9,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,14 +28,13 @@ public class FileSystemStorageService implements StorageService {
         this.rootLocation = Paths.get(properties.getLocation());
     }
 
-    @Override
-    public void store(MultipartFile file) {
+    private void storeAbstract(String name, boolean empty, InputStream inputStream) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         LocalDateTime localDateTime = LocalDateTime.now();
 
-        String filename = StringUtils.cleanPath(localDateTime.toString() + "_" + username + "_" + file.getOriginalFilename());
+        String filename = StringUtils.cleanPath(localDateTime.toString() + "_" + username + "_" + name);
         try {
-            if (file.isEmpty()) {
+            if (empty) {
                 throw new StorageException("Failed to store empty file " + filename);
             }
             if (filename.contains("..")) {
@@ -44,11 +43,27 @@ public class FileSystemStorageService implements StorageService {
                         "Cannot store file with relative path outside current directory "
                                 + filename);
             }
-            Files.copy(file.getInputStream(), this.rootLocation.resolve(filename),
-                    StandardCopyOption.REPLACE_EXISTING);
-        }
-        catch (IOException e) {
+            Files.copy(inputStream, this.rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
             throw new StorageException("Failed to store file " + filename, e);
+        }
+    }
+
+    @Override
+    public void store(File file) {
+        try {
+            storeAbstract(file.getName(), file.length() == 0, new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new StorageException("Failed to store file " + file.getName(), e);
+        }
+    }
+
+    @Override
+    public void store(MultipartFile file) {
+        try {
+            storeAbstract(file.getOriginalFilename(), file.isEmpty(), file.getInputStream());
+        } catch (IOException e) {
+            throw new StorageException("Failed to store file " + file.getName(), e);
         }
     }
 
