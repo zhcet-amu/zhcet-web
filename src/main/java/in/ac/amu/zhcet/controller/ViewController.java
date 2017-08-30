@@ -15,7 +15,7 @@ public class ViewController {
 
     @RequestMapping(value = {"/", ""})
     public String homePage() {
-        return RoleWiseSuccessHandler.determineTargetUrl(SecurityContextHolder.getContext().getAuthentication());
+        return "redirect:" + RoleWiseSuccessHandler.determineTargetUrl(SecurityContextHolder.getContext().getAuthentication());
     }
 
 }

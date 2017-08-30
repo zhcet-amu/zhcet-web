@@ -14,7 +14,7 @@
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
     <div class="row">
-        <h2 class="col-xs-10 col-xs-offset-1 mb-2" th:text="|${department.name} Department|"></h2>
+        <h2 class="col-xs-10 col-xs-offset-1 mb-2" th:text="|${department.name} Department : ${T(in.ac.amu.zhcet.utils.Utils).getCurrentSessionName()}|"></h2>
     </div>
 
     <!-- Creation of new Course here-->

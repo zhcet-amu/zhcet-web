@@ -17,8 +17,9 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">Floated Courses</h4>
+                <h4 class="card-title" th:text="|Floated Courses : ${T(in.ac.amu.zhcet.utils.Utils).getCurrentSessionName()}|">Floated Courses</h4>
                 <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                These are the courses managed by you this session
                 <div class="heading-elements">
                     <ul class="list-inline mb-0">
                         <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
@@ -30,12 +31,14 @@
             <div class="card-body collapse in collapse in">
                 <div class="card-block">
                     <div class="bs-example">
+                        <br>
                         <div class="row">
-                            <div class="col-md-3" th:each="floated: ${floatedCourses}">
+                            <div class="col-sm-12 col-md-6 col-xl-3" th:each="floated: ${floatedCourses}">
                                 <form action="/faculty/courses" th:with="selectedCourse=${floated.course.code}"
-                                      th:action="'/faculty/courses/' + ${selectedCourse}" method="get">
-                                    <button class="btn btn-outline-primary block btn-lg" type="submit"
-                                            th:text="${floated != null} ? ${floated.course.title}"></button>
+                                      th:action="'/faculty/courses/' + ${selectedCourse}" method="get" style="display: inline">
+                                    <button class="btn btn-outline-primary btn-lg" type="submit"
+                                            style="width: 100%" th:text='${floated.course.code}'
+                                            data-toggle="tooltip" th:title="${floated.course.title}"></button>
                                 </form>
                             </div>
                         </div>
@@ -48,7 +51,10 @@
     <div th:if="${error}" th:text="${error}"></div>
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
-
-
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 </body>
 </html>
