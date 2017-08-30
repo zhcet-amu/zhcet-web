@@ -32,11 +32,6 @@ public class Attendance extends BaseEntity {
         this.attended = attended;
     }
 
-    @PrePersist
-    public void setRelation() {
-        id = courseRegistration.getId();
-    }
-
     @Override
     public String toString() {
 

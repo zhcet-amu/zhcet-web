@@ -11,6 +11,13 @@
 <div th:replace="fragments/navigation :: navigation"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper">
+    <h3 th:text="|${floatedCourse.course.code} - ${floatedCourse.course.title} : ${T(in.ac.amu.zhcet.utils.Utils).getCurrentSessionName()}|"></h3>
+    <br>
+    <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Unknown Error!</strong>
+        <div>This can only happen if you tried to POST invalid data by force!</div>
+    </div>
     <div class="row">
         <div class="col-xs-12 col-lg-6 col-xl-4">
             <div class="card">
@@ -204,12 +211,71 @@
                 </div>
             </div>
         </div>
+        <div th:if="${confirmRegistration}" id="registration-modal" class="modal">
+            <div class="modal-dialog modal-lg">
+                <form th:action="|${#httpServletRequest.requestURL}/confirm_registration|" method="post">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Confirm Student Registration</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-inverse">
+                                        <tr>
+                                            <th class="text-xs-center">Enrolment</th>
+                                            <th class="text-xs-center">Faculty</th>
+                                            <th class="text-xs-center">Name</th>
+                                            <th class="text-xs-center">Department</th>
+                                            <th class="text-xs-center">Error</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
+                                        <th:block th:each="confirm: ${confirmRegistration.studentMap}">
+                                            <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
+                                                <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
+                                                <input type="hidden" name="studentId" th:value="${confirm.key.enrolmentNumber}">
+                                                <td class="text-xs-center"
+                                                    th:text="${confirm.key.enrolmentNumber}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.key.facultyNumber}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.key.user?.name}"></td>
+                                                <td class="text-xs-center"
+                                                    th:text="${confirm.key.user?.details?.department?.name}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.value}"></td>
+                                            </tr>
+                                        </th:block>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div th:each="error : ${confirmRegistration.errors}"
+                                 class="alert alert-dismissible alert-danger">
+                                <!--/*@thymesVar id="error" type="String"*/-->
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong>Something went wrong!</strong>
+                                <div th:utext="${error}">Fix this and try and try again</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button th:if="${confirmRegistration.errors.isEmpty()}" type="submit"
+                                    class="btn btn-primary">Register
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div th:replace="fragments/layout :: scripts"></div>
     </div>
 </div>
 <script>
     $(window).load(function () {
         $('#faculty-modal').modal('show');
+        $('#registration-modal').modal('show');
     });
 </script>
 </body>

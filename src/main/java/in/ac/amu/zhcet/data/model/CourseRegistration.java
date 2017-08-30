@@ -37,6 +37,10 @@ public class CourseRegistration extends BaseEntity {
         this.floatedCourse = floatedCourse;
     }
 
+    public String generateId() {
+        return floatedCourse.getId() + "_" + student.getEnrolmentNumber();
+    }
+
     @PrePersist
     public void setRelation() {
         id = floatedCourse.getId() + "_" + student.getEnrolmentNumber();

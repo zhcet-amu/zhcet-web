@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -33,6 +34,10 @@ public class StudentService {
 
     public Student getByEnrolmentNumber(String userId) {
         return studentRepository.getByEnrolmentNumber(userId);
+    }
+
+    public List<Student> getByIds(List<String> studentIds) {
+        return studentRepository.getByEnrolmentNumberIn(studentIds);
     }
 
     public Student getByFacultyNumber(String userId) {

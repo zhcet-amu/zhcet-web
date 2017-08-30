@@ -6,6 +6,7 @@ import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.service.DepartmentAdminService;
 import in.ac.amu.zhcet.data.service.FacultyService;
+import in.ac.amu.zhcet.data.service.upload.RegistrationUploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,9 +30,11 @@ import java.util.List;
 public class DepartmentController {
 
     private final DepartmentAdminService departmentAdminService;
+    private final RegistrationUploadService registrationUploadService;
 
-    public DepartmentController(DepartmentAdminService departmentAdminService) {
+    public DepartmentController(DepartmentAdminService departmentAdminService, RegistrationUploadService registrationUploadService) {
         this.departmentAdminService = departmentAdminService;
+        this.registrationUploadService = registrationUploadService;
     }
 
     @GetMapping("/department")
@@ -113,6 +118,41 @@ public class DepartmentController {
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("floatedCourse", floatedCourse);
         return "floated_course";
+    }
+
+    @PostMapping("department/courses/{id}/register")
+    public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("file") MultipartFile file) {
+        try {
+            RegistrationUploadService.UploadResult result = registrationUploadService.handleUpload(file);
+
+            if (!result.getErrors().isEmpty()) {
+                attributes.addFlashAttribute("errors", result.getErrors());
+            } else {
+                attributes.addFlashAttribute("success", true);
+                RegistrationUploadService.RegistrationConfirmation confirmation = registrationUploadService.confirmUpload(id, result);
+
+                log.info(confirmation.toString());
+                attributes.addFlashAttribute("confirmRegistration", confirmation);
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        return "redirect:/department/courses/{id}";
+    }
+
+    @PostMapping("department/courses/{id}/confirm_registration")
+    public String confirmRegistration(RedirectAttributes attributes, @PathVariable String id, @RequestParam List<String> studentId) {
+
+        try {
+            registrationUploadService.registerStudents(id, studentId);
+            attributes.addFlashAttribute("registered", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            attributes.addFlashAttribute("unknown_error", true);
+        }
+
+        return "redirect:/department/courses/{id}";
     }
 
     @GetMapping("department/courses/{id}/add_in_charge")

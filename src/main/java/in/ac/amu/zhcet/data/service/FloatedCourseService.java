@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,12 +16,14 @@ public class FloatedCourseService {
 
     private final FloatedCourseRepository floatedCourseRepository;
     private final FacultyService facultyService;
+    private final StudentService studentService;
     private final CourseRepository courseRepository;
 
     @Autowired
-    public FloatedCourseService(FloatedCourseRepository floatedCourseRepository, FacultyService facultyService, CourseRepository courseRepository) {
+    public FloatedCourseService(FloatedCourseRepository floatedCourseRepository, FacultyService facultyService, StudentService studentService, CourseRepository courseRepository) {
         this.floatedCourseRepository = floatedCourseRepository;
         this.facultyService = facultyService;
+        this.studentService = studentService;
         this.courseRepository = courseRepository;
     }
 
@@ -57,6 +60,28 @@ public class FloatedCourseService {
         FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), courseId);
 
         stored.getInCharge().addAll(facultyService.getByIds(facultyMemberIds));
+    }
+
+    @Transactional
+    public void registerStudents(String courseId, List<String> studentIds) {
+        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), courseId);
+
+        List<Student> students = studentService.getByIds(studentIds);
+        List<CourseRegistration> registrations = new ArrayList<>();
+
+        for (Student student : students) {
+            CourseRegistration registration = new CourseRegistration();
+
+            registration.setStudent(student);
+            registration.setFloatedCourse(stored);
+            registration.getAttendance().setId(registration.generateId());
+            registrations.add(registration);
+
+        }
+
+        stored.getCourseRegistrations().addAll(registrations);
+
+        floatedCourseRepository.save(stored);
     }
 
     public List<FloatedCourse> getByFaculty(FacultyMember facultyMember) {
