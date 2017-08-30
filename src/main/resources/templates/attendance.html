@@ -27,6 +27,13 @@
             <div class="card-body collapse in collapse in">
                 <div class="card-block">
                     <div class="row">
+                        <div class="center">
+                        <div class="bs-example">
+                            <div class="col-md-2 offset-md-5">
+                                <span th:text="'Session ' + ${T(in.ac.amu.zhcet.utils.Utils).getCurrentSession()}" class="text-xs-center text-muted"></span>
+                            </div>
+                        </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead class="thead-inverse">

@@ -84,6 +84,10 @@
                             <form class="form" enctype="multipart/form-data"
                                   th:action="|${#httpServletRequest.requestURL}/attendance|"
                                   method="post">
+                                <div class="mui-select">
+                                    <label>Session</label>
+                                    <div th:text="${T(in.ac.amu.zhcet.utils.Utils).getCurrentSession()}" class="text-muted"></div>
+                                </div>
                                 <div>
                                     Download the <a th:href="@{/attendance_format.csv}">attendance format</a>
                                 </div>

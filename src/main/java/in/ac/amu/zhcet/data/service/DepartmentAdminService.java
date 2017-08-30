@@ -44,13 +44,13 @@ public class DepartmentAdminService {
         floatedCourseService.register(course);
     }
 
-    public void floatCourse(Course course, List<String> facultyMembers) throws IllegalAccessException {
+    public FloatedCourse floatCourse(Course course, List<String> facultyMembers) throws IllegalAccessException {
         FacultyMember facultyMember = getFacultyMember();
 
         if (!course.getDepartment().equals(getDepartment(facultyMember)))
             throw new IllegalAccessException("You don't have authority to float course in this department");
 
-        floatedCourseService.floatCourse(course, facultyMembers);
+        return floatedCourseService.floatCourse(course, facultyMembers);
     }
 
     public List<FacultyMember> getAllFacultyMembers(){
