@@ -3,7 +3,7 @@
       lang="en"
       data-textdirection="ltr"
       class="loading">
-<head th:replace="fragments/layout :: head(title = 'Faculty')"></head>
+<head th:replace="fragments/layout :: head(title = 'Course Management')"></head>
 
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
       class="vertical-layout vertical-menu 2-columns  fixed-navbar">
@@ -167,23 +167,23 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="table-responsive">
-                                        <table class="table">
-                                            <tbody>
-                                            <tr th:each="inCharge : ${facultyMembers}">
-                                                <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
-                                                <td><input type="radio" name="facultyId"
-                                                           th:value="${inCharge.facultyId}"
-                                                           th:disabled="${#lists.contains(floatedCourse.inCharge, inCharge)}">
-                                                </td>
-                                                <td>
-                                                    <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png"
-                                                         th:src="${#strings.defaultString(inCharge.user.details.avatarUrl, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
-                                                         class="rounded-circle height-50" alt="Card image"/></td>
-                                                <td th:text="${inCharge.facultyId}"></td>
-                                                <td th:text="${inCharge.user.name}"></td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                                    <table class="table">
+                                        <tbody>
+                                        <tr th:each="inCharge : ${facultyMembers}">
+                                            <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+                                            <td><input type="radio" name="facultyId"
+                                                       th:value="${inCharge.facultyId}"
+                                                       th:disabled="${#lists.contains(floatedCourse.inCharge, inCharge)}">
+                                            </td>
+                                            <td>
+                                                <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png"
+                                                     th:src="${#strings.defaultString(inCharge.user.details.avatarUrl, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
+                                                     class="rounded-circle height-50" alt="Card image"/></td>
+                                            <td th:text="${inCharge.facultyId}"></td>
+                                            <td th:text="${inCharge.user.name}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                             <div th:each="error : ${incharge_errors}"
