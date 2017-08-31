@@ -12,7 +12,7 @@
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_FACULTY')">
     <div class="row">
-        <div class="col-xs-12 col-xl-8">
+        <div class="col-xs-12 col-xl-7">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Course Attendance</h4>
@@ -54,7 +54,7 @@
                                                 th:with="delivered = ${registration.attendance.delivered}"
                                                 th:text="${delivered}"></td>
                                             <td class="text-xs-center"
-                                                th:text="${#numbers.formatDecimal(percent,0,2)}+'%'"></td>
+                                                th:text="${registration.attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent,0,2)}+'%'"></td>
                                         </tr>
                                     </th:block>
                                     </tbody>
@@ -65,7 +65,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-md-6 col-xl-4">
+        <div class="col-xs-12 col-md-6 col-xl-5">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Upload Attendance</h4>
@@ -189,10 +189,13 @@
                                         <th class="text-xs-center">ID</th>
                                         <th class="text-xs-center">ATTENDED</th>
                                         <th class="text-xs-center">DELIVERED</th>
+                                        <th class="text-xs-center">%</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="attendance, rowStat: *{uploadList}">
+                                    <tr th:each="attendance, rowStat: *{uploadList}"
+                                        th:with="percent=${attendance.attended*100.0/attendance.delivered}"
+                                        th:class="(${percent &lt; 75} ? 'bg-danger':'')">
                                         <input type="hidden" th:field="*{uploadList[__${rowStat.index}__].student}"/>
                                         <td class="text-xs-center" th:text="${attendance.student}"></td>
                                         <td class="text-xs-center"><input type="number"
@@ -203,6 +206,8 @@
                                                                           style="width: 70px; padding: 5px"
                                                                           th:field="*{uploadList[__${rowStat.index}__].delivered}"/>
                                         </td>
+                                        <td class="text-xs-center"
+                                            th:text="${attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent,0,2)}+'%'"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -219,8 +224,8 @@
                             </li>
                         </ul>
                         <div class="row">
-                            <div class="col-sm-8"></div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-9"></div>
+                            <div class="col-sm-3">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="icon-check2"></i> Confirm
                                 </button>
