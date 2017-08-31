@@ -5,6 +5,7 @@ import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.base.user.Type;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
+import in.ac.amu.zhcet.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

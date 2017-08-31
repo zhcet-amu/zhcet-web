@@ -64,4 +64,13 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public UserAuth getUserByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    public void changeUserPassword(UserAuth userAuth, String password) {
+        //UserAuth userAuth = userRepository.findByUserId(user.getUsername());
+        userAuth.setPassword(UserAuth.PASSWORD_ENCODER.encode(password));
+        userRepository.save(userAuth);
+    }
 }

@@ -13,4 +13,6 @@ public interface StudentRepository extends CrudRepository<Student, Long> {
 
     List<Student> getByEnrolmentNumberIn(List<String> ids);
 
+    Student getByUserDetails_Email(String email);
+
 }
