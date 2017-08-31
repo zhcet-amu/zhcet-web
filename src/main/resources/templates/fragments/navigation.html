@@ -22,16 +22,16 @@
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Attendance</span>
                 </a>
             </li>
-            <li class="nav-item" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
-                <a th:href="@{/department}" href="department.html">
-                    <i class="icon-cog"></i>
-                    <span data-i18n="nav.project.main" class="menu-title">Admin Panel</span>
-                </a>
-            </li>
             <li class="nav-item" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
                 <a th:href="@{/dean}" href="dean.html">
                     <i class="icon-cog"></i>
-                    <span data-i18n="nav.project.main" class="menu-title">Admin Panel</span>
+                    <span data-i18n="nav.project.main" class="menu-title">Dean Panel</span>
+                </a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
+                <a th:href="@{/department}" href="department.html">
+                    <i class="icon-cog"></i>
+                    <span data-i18n="nav.project.main" class="menu-title">Department Panel</span>
                 </a>
             </li>
             <li class="nav-item" sec:authorize="!isAuthenticated()">

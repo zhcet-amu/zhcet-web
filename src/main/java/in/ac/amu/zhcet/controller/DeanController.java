@@ -121,7 +121,7 @@ public class DeanController {
                 redirectAttributes.addFlashAttribute("dept_success", true);
             } catch (Exception e) {
                 List<String> errors = new ArrayList<>();
-                if (e.getMessage().contains("UK_DEPT_NAME"))
+                if (e.getMessage().toLowerCase().contains("UK_DEPT_NAME".toLowerCase()))
                     errors.add("This department already exists");
 
                 redirectAttributes.addFlashAttribute("department", department);

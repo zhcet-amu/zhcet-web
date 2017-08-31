@@ -8,7 +8,6 @@ import in.ac.amu.zhcet.data.service.DepartmentAdminService;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.upload.RegistrationUploadService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -65,7 +64,7 @@ public class DepartmentController {
                 redirectAttributes.addFlashAttribute("course_success", true);
             } catch (Exception e) {
                 List<String> errors = new ArrayList<>();
-                if (e instanceof DataIntegrityViolationException && e.getMessage().contains("PRIMARY_KEY")) {
+                if (e.getMessage().contains("PRIMARY")) {
                     errors.add("Course with this code already exists");
                 }
 
@@ -89,10 +88,8 @@ public class DepartmentController {
                 departmentAdminService.floatCourse(course, faculty);
                 redirectAttributes.addFlashAttribute("float_success", true);
             } catch (Exception exc) {
-                if (exc instanceof DataIntegrityViolationException && exc.getMessage().contains("PRIMARY_KEY")) {
+                if (exc.getMessage().contains("PRIMARY")) {
                     errors.add("This course is already floated!");
-                } else {
-                    errors.add(exc.getMessage());
                 }
             }
         }
