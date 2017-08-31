@@ -1,22 +1,25 @@
 package in.ac.amu.zhcet.controller;
 
-import in.ac.amu.zhcet.data.model.*;
-import in.ac.amu.zhcet.data.service.upload.AttendanceUploadService;
+import in.ac.amu.zhcet.data.model.CourseRegistration;
+import in.ac.amu.zhcet.data.model.FacultyMember;
+import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.FloatedCourseService;
+import in.ac.amu.zhcet.data.service.upload.AttendanceUploadService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -52,18 +55,31 @@ public class FacultyController {
         return "course_attendance";
     }
 
+    @Data
+    private static class AttendanceModel {
+        private List<AttendanceUpload> uploadList;
+    }
+
     @PostMapping("faculty/courses/{id}/attendance")
-    public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("file") MultipartFile file, HttpSession session, WebRequest webRequest) {
+    public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("file") MultipartFile file) {
         try {
             AttendanceUploadService.UploadResult result = attendanceUploadService.handleUpload(file);
 
             if (!result.getErrors().isEmpty()) {
                 attributes.addFlashAttribute("errors", result.getErrors());
-                webRequest.removeAttribute("confirmAttendance" + id, RequestAttributes.SCOPE_SESSION);
             } else {
                 attributes.addFlashAttribute("success", true);
                 AttendanceUploadService.AttendanceConfirmation confirmation = attendanceUploadService.confirmUpload(id, result);
-                session.setAttribute("confirmAttendance" + id, confirmation);
+
+                if (confirmation.getErrors().isEmpty()) {
+                    AttendanceModel attendanceModel = new AttendanceModel();
+                    List<AttendanceUpload> attendanceUploads = new ArrayList<>();
+                    attendanceUploads.addAll(confirmation.getStudentMap().keySet());
+                    attendanceModel.setUploadList(attendanceUploads);
+                    attributes.addFlashAttribute("attendanceModel", attendanceModel);
+                } else {
+                    attributes.addFlashAttribute("confirmAttendanceErrors", confirmation);
+                }
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -73,16 +89,19 @@ public class FacultyController {
     }
 
     @PostMapping("faculty/courses/{id}/attendance_confirmed")
-    public String uploadAttendance(RedirectAttributes attributes, @PathVariable String id, HttpSession session, WebRequest webRequest) {
-        AttendanceUploadService.AttendanceConfirmation confirmation =
-                (AttendanceUploadService.AttendanceConfirmation) session.getAttribute("confirmAttendance" + id);
+    public String uploadAttendance(RedirectAttributes attributes, @PathVariable String id, @Valid @ModelAttribute AttendanceModel attendanceModel, BindingResult bindingResult) {
 
-        if (confirmation == null || !confirmation.getErrors().isEmpty()) {
-            attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));
+        if (bindingResult.hasErrors()) {
+            attributes.addFlashAttribute("attendanceModel", attendanceModel);
+            attributes.addFlashAttribute("org.springframework.validation.BindingResult.attendanceModel", bindingResult);
         } else {
-            attendanceUploadService.updateAttendance(id, confirmation);
-            webRequest.removeAttribute("confirmAttendance" + id, RequestAttributes.SCOPE_SESSION);
-            attributes.addFlashAttribute("updated", true);
+            try {
+                attendanceUploadService.updateAttendance(id, attendanceModel.getUploadList());
+                attributes.addFlashAttribute("updated", true);
+            } catch (Exception e) {
+                attributes.addFlashAttribute("attendanceModel", attendanceModel);
+                attributes.addFlashAttribute("unknown_error", true);
+            }
         }
 
         return "redirect:/faculty/courses/{id}";

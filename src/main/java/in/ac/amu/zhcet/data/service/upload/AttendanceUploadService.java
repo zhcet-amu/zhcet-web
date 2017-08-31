@@ -96,8 +96,8 @@ public class AttendanceUploadService {
     }
 
     @Transactional
-    public void updateAttendance(String course, AttendanceConfirmation attendanceConfirmation) {
-        for (AttendanceUpload attendance : attendanceConfirmation.getStudentMap().keySet()) {
+    public void updateAttendance(String course, List<AttendanceUpload> uploadList) {
+        for (AttendanceUpload attendance : uploadList) {
             CourseRegistration courseRegistration = registeredCourseService.getByStudentAndCourse(attendance.getStudent(), course);
             registeredCourseService.setAttendance(courseRegistration, attendance.getDelivered(), attendance.getAttended());
         }

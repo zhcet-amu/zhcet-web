@@ -65,7 +65,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-6 col-xl-4">
+        <div class="col-xs-12 col-md-6 col-xl-4">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Upload Attendance</h4>
@@ -80,110 +80,153 @@
                 </div>
                 <div class="card-body collapse in collapse in">
                     <div class="card-block">
-                            <form class="form" enctype="multipart/form-data"
-                                  th:action="|${#httpServletRequest.requestURL}/attendance|"
-                                  method="post">
-                                <div>
-                                    Download the <a th:href="@{/csv/attendance_format.csv}">attendance format</a>
-                                </div>
-                                <br/>
-                                <label class="btn btn-primary" for="my-file-selector">
-                                    <input id="my-file-selector" type="file" name="file" style="display: none"
-                                           onchange="$('#upload-file-info').html(this.files[0].name)"
-                                           accept="text/csv, .csv">
-                                    Choose File
-                                </label>
-                                <span class='label label-info' id="upload-file-info"></span>
-                                <div th:if="${updated}" class="alert alert-dismissible alert-success">
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>Updated!</strong> Student attendance was successfully updated<br/>
-                                </div>
-                                <div th:if="${success}" class="alert alert-dismissible alert-success">
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>Uploaded!</strong> Your file was correctly uploaded. Now, confirm the prompt
-                                    below to update the attendance
-                                </div>
-                                <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>Something went wrong!</strong>
-                                    <div th:utext="${error}">Fix this and try and try again</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-8"></div>
-                                    <div class="col-sm-4">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="icon-check2"></i> Upload
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                    </div>
-                </div>
-            </div>
-            <div th:with="confirmAttendance=${#session.getAttribute('confirmAttendance'+course_id)}">
-                <div th:if="${confirmAttendance}" class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Course Attendance</h4>
-                        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                        <div class="heading-elements">
-                            <ul class="list-inline mb-0">
-                                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card-body collapse in collapse in">
-                        <div class="card-block">
-                            <div class="row">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead class="thead-inverse">
-                                        <tr>
-                                            <th class="text-xs-center">ID</th>
-                                            <th class="text-xs-center">ATTENDED</th>
-                                            <th class="text-xs-center">DELIVERED</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <th:block th:each="confirm: ${confirmAttendance.studentMap}">
-                                            <tr th:class="(${confirm.value} ? '':'bg-danger white')">
-                                                <td class="text-xs-center" th:text="${confirm.key.student}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.attended}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.delivered}"></td>
-                                            </tr>
-                                        </th:block>
-                                        </tbody>
-                                    </table>
-                                </div>
+                        <form class="form" enctype="multipart/form-data"
+                              th:action="|${#httpServletRequest.requestURL}/attendance|"
+                              method="post">
+                            <div>
+                                Download the <a th:href="@{/csv/attendance_format.csv}">attendance format</a>
                             </div>
-                            <div th:each="error : ${confirmAttendance.errors}"
-                                 class="alert alert-dismissible alert-danger">
+                            <br/>
+                            <label class="btn btn-primary" for="my-file-selector">
+                                <input id="my-file-selector" type="file" name="file" style="display: none"
+                                       onchange="$('#upload-file-info').html(this.files[0].name)"
+                                       accept="text/csv, .csv">
+                                Choose File
+                            </label>
+                            <span class='label label-info' id="upload-file-info"></span>
+                            <div th:if="${updated}" class="alert alert-dismissible alert-success">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong>Updated!</strong> Student attendance was successfully updated<br/>
+                            </div>
+                            <div th:if="${success}" class="alert alert-dismissible alert-success">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong>Uploaded!</strong> Your file was correctly uploaded. Now, confirm the prompt
+                                below to update the attendance
+                            </div>
+                            <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                                 <strong>Something went wrong!</strong>
                                 <div th:utext="${error}">Fix this and try and try again</div>
                             </div>
-                            <div th:if="${confirmAttendance.errors.isEmpty()}">
-                                <div class="alert alert-dismissible alert-success">
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>Verified!</strong> Attendance of all students are ready to be uploaded.
-                                    Press
-                                    the confirm button to proceed.<br/>
+                            <div class="row">
+                                <div class="col-sm-8"></div>
+                                <div class="col-sm-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="icon-check2"></i> Upload
+                                    </button>
                                 </div>
-                                <form class="form" th:action="|${#httpServletRequest.requestURL}/attendance_confirmed|"
-                                      method="post">
-                                    <div class="row">
-                                        <div class="col-sm-8"></div>
-                                        <div class="col-sm-4">
-                                            <button type="submit" class="btn btn-primary">
-                                                <i class="icon-check2"></i> Confirm
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${confirmAttendanceErrors}" class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Course Attendance</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in collapse in">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead-inverse">
+                                    <tr>
+                                        <th class="text-xs-center">ID</th>
+                                        <th class="text-xs-center">ATTENDED</th>
+                                        <th class="text-xs-center">DELIVERED</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="confirm: ${confirmAttendanceErrors.studentMap}">
+                                        <tr th:class="(${confirm.value} ? '':'bg-danger white')">
+                                            <td class="text-xs-center" th:text="${confirm.key.student}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.key.attended}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.key.delivered}"></td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+                        <div th:each="error : ${confirmAttendanceErrors.errors}"
+                             class="alert alert-dismissible alert-danger">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>Something went wrong!</strong>
+                            <div th:utext="${error}">Fix this and try and try again</div>
+                        </div>
                     </div>
+                </div>
+            </div>
+            <div th:if="${attendanceModel}" class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Course Attendance</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in collapse in">
+                    <form th:object="${attendanceModel}"
+                          th:action="|${#httpServletRequest.requestURL}/attendance_confirmed|" method="post"
+                          class="card-block">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead-inverse">
+                                    <tr>
+                                        <th class="text-xs-center">ID</th>
+                                        <th class="text-xs-center">ATTENDED</th>
+                                        <th class="text-xs-center">DELIVERED</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="attendance, rowStat: *{uploadList}">
+                                        <input type="hidden" th:field="*{uploadList[__${rowStat.index}__].student}"/>
+                                        <td class="text-xs-center" th:text="${attendance.student}"></td>
+                                        <td class="text-xs-center"><input type="number"
+                                                                          style="width: 70px; padding: 5px"
+                                                                          th:field="*{uploadList[__${rowStat.index}__].attended}"/>
+                                        </td>
+                                        <td class="text-xs-center"><input type="number"
+                                                                          style="width: 70px; padding: 5px"
+                                                                          th:field="*{uploadList[__${rowStat.index}__].delivered}"/>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>Unknown Error!</strong>
+                            <div>This can only happen if you forcibly POST items!</div>
+                        </div>
+                        <ul id="validation-messages" th:if="${#fields.hasErrors('*')}">
+                            <li class="text-danger" th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is
+                                incorrect
+                            </li>
+                        </ul>
+                        <div class="row">
+                            <div class="col-sm-8"></div>
+                            <div class="col-sm-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="icon-check2"></i> Confirm
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
