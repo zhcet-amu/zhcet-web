@@ -183,7 +183,7 @@
                           class="card-block">
                         <div class="row">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table" id="confirmation">
                                     <thead class="thead-inverse">
                                     <tr>
                                         <th class="text-xs-center">ID</th>
@@ -198,15 +198,19 @@
                                         th:class="(${percent &lt; 75} ? 'bg-danger':'')">
                                         <input type="hidden" th:field="*{uploadList[__${rowStat.index}__].student}"/>
                                         <td class="text-xs-center" th:text="${attendance.student}"></td>
-                                        <td class="text-xs-center"><input type="number"
+                                        <td class="text-xs-center"><input type="number" class="attended"
+                                                                          onkeyup="update(this.parentNode.parentNode)"
+                                                                          onclick="update(this.parentNode.parentNode)"
                                                                           style="width: 70px; padding: 5px"
                                                                           th:field="*{uploadList[__${rowStat.index}__].attended}"/>
                                         </td>
-                                        <td class="text-xs-center"><input type="number"
+                                        <td class="text-xs-center"><input type="number" class="delivered"
+                                                                          onkeyup="update(this.parentNode.parentNode)"
+                                                                          onclick="update(this.parentNode.parentNode)"
                                                                           style="width: 70px; padding: 5px"
                                                                           th:field="*{uploadList[__${rowStat.index}__].delivered}"/>
                                         </td>
-                                        <td class="text-xs-center"
+                                        <td class="text-xs-center percent"
                                             th:text="${attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent,0,2)}+'%'"></td>
                                     </tr>
                                     </tbody>
@@ -238,5 +242,29 @@
         <div th:replace="fragments/layout :: scripts"></div>
     </div>
 </div>
+<script>
+    truncateDecimals = function (number, digits) {
+        var multiplier = Math.pow(10, digits),
+            adjustedNum = number * multiplier,
+            truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
+
+        return truncatedNum / multiplier;
+    };
+
+    function update(node) {
+        var cell = $(node);
+
+        var attended = cell.find('.attended').val();
+        var delivered = cell.find('.delivered').val();
+        var percent = attended/delivered*100;
+
+        if (percent < 75)
+            cell.addClass('bg-danger');
+        else
+            cell.removeClass('bg-danger');
+
+        cell.find('.percent').text(truncateDecimals(percent, 2) + '%')
+    }
+</script>
 </body>
 </html>
