@@ -57,7 +57,6 @@ public class StudentUploadService {
 
     public UploadResult handleUpload(MultipartFile file) throws IOException {
         UploadResult uploadResult = new UploadResult();
-
         try {
             systemStorageService.store(file);
         } catch (StorageException storageException) {
@@ -66,10 +65,8 @@ public class StudentUploadService {
 
         if (!file.getContentType().equals("text/csv")) {
             logAndError(uploadResult, "Uploaded file is not of CSV format");
-
             return uploadResult;
         }
-
         CsvProcessor<StudentUpload> csvProcessor = new CsvProcessor<>(StudentUpload.class);
         try {
             List<ParseError> parseErrors = new ArrayList<>();
@@ -77,7 +74,6 @@ public class StudentUploadService {
 
             if (studentUploads != null) {
                 uploadResult.getStudentUploads().addAll(studentUploads);
-
                 log.info(studentUploads.toString());
             }
             uploadResult.getErrors().addAll(

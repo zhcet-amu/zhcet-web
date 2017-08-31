@@ -109,8 +109,89 @@
                                     <div th:utext="${error}">Fix this and try and try again</div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-8"></div>
-                                    <div class="col-sm-4">
+                                    <div class="col-md-7"></div>
+                                    <div class="col-md-5">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="icon-check2"></i> Upload
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Register Faculty</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in">
+                    <div class="card-block">
+                        <form class="mui-form" enctype="multipart/form-data" th:action="@{/dean/register_faculty}"
+                              method="post">
+                            <div class="form-body">
+                                <h4 class="form-section"><i class="icon-clipboard4"></i>Faculty Info File</h4>
+                                <div>
+                                    Download the <a th:href="@{/csv/faculty_format.csv}">faculty format</a>
+                                </div>
+                                <br/>
+                                <label class="btn btn-primary" for="my-file-selector2">
+                                    <input id="my-file-selector2" type="file" name="file" style="display: none"
+                                           onchange=" $('#upload-faculty-file-info').html(this.files[0].name)"
+                                           accept="text/csv, .csv">
+                                    Choose File
+                                </label>
+                                <span class='label label-info' id="upload-faculty-file-info"></span>
+                                <!--/*@thymesVar id="students_registered" type="boolean"*/-->
+                                <div th:if="${faculty_registered}" class="alert alert-dismissible alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Registered!</strong> Faculty were successfully registered<br/>
+                                </div>
+                                <!--/*@thymesVar id="students_success" type="boolean"*/-->
+                                <div th:if="${faculty_success}" class="alert alert-dismissible alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Uploaded!</strong> Your file was correctly uploaded. Now, confirm the prompt
+                                    to register the Faculty
+                                </div>
+                                <!--/*@thymesVar id="students_errors" type="List<String>"*/-->
+                                <div th:each="error : ${faculty_errors}" class="alert alert-dismissible alert-danger">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Something went wrong!</strong>
+                                    <div th:utext="${error}">Fix this and try and try again</div>
+                                </div>
+                                <div th:if="${file_error}" class="alert alert-dismissible alert-danger">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Error saving password file!</strong>
+                                    <div>Registration wasn't successful! Please contact site admin</div>
+                                </div>
+                                <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Unknown Error!</strong>
+                                    <div>We don't know what happened. Please contact site admin</div>
+                                </div>
+                                <div th:if="${file_saved}" class="alert alert-dismissible alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Saved!</strong> Password file was successfully saved! Click button below to download the file<br/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-3" style="margin-right: 20px; margin-bottom: 5px;">
+                                        <a th:if="${file_saved}" th:href="|@{/dean/download_password(filename=${file_saved})}|" target="_blank">
+                                            <button type="button" class="btn btn-primary">Download</button>
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3" style="margin-right: 20px; margin-bottom: 5px;">
+                                        <button th:if="${file_saved}" type="button" class="btn" th:attr="data-clipboard-text=|${#httpServletRequest.getRequestURL()}@{/download_password(filename=${file_saved})}">Copy Link</button>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3">
                                         <button type="submit" class="btn btn-primary">
                                             <i class="icon-check2"></i> Upload
                                         </button>
@@ -243,11 +324,77 @@
             </div>
         </div>
     </div>
+
+    <div th:with="confirmRegistration=${#session.getAttribute('confirmFacultyRegistration')}">
+        <div th:if="${confirmRegistration}" id="registration-modal2" class="modal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Confirm Faculty Registration</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead-inverse">
+                                    <tr>
+                                        <th class="text-xs-center">Faculty ID</th>
+                                        <th class="text-xs-center">Name</th>
+                                        <th class="text-xs-center">Department</th>
+                                        <th class="text-xs-center">Password</th>
+                                        <th class="text-xs-center">Error</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
+                                    <th:block th:each="confirm: ${confirmRegistration.facultyMap}">
+                                        <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
+                                            <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
+                                            <td class="text-xs-center" th:text="${confirm.key.facultyId}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.key.user.name}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.key.user.details.department?.name}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.key.user.password}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.value}"></td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div th:each="error : ${confirmRegistration.errors}"
+                             class="alert alert-dismissible alert-danger">
+                            <!--/*@thymesVar id="error" type="String"*/-->
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>Something went wrong!</strong>
+                            <div th:utext="${error}">Fix this and try and try again</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <form class="form" th:action="@{/dean/clear_session_faculty}" method="post" style="display: inline">
+                            <button type="submit" class="btn btn-default">Clear</button>
+                        </form>
+                        <form class="form" th:action="@{/dean/register_faculty_confirmed}" method="post" style="display: inline">
+                            <button th:if="${confirmRegistration.errors.isEmpty()}" type="submit"
+                                    class="btn btn-primary">Register
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
 <script>
+    var clipboard = new Clipboard('.btn');
+    clipboard.on('success', function(e) {
+        toastr.success('Link copied!', null, {timeOut: 2000})
+    });
     $(window).load(function () {
         $('#registration-modal').modal('show');
+        $('#registration-modal2').modal('show');
     });
 </script>
 </body>

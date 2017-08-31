@@ -6,6 +6,8 @@ import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.UserService;
+import in.ac.amu.zhcet.data.service.file.FileSystemStorageService;
+import in.ac.amu.zhcet.data.service.upload.FacultyUploadService;
 import in.ac.amu.zhcet.data.service.upload.StudentUploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.WordUtils;
@@ -22,12 +24,15 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 @Slf4j
 @Controller
@@ -37,13 +42,17 @@ public class DeanController {
     private final DepartmentRepository departmentRepository;
     private final StudentUploadService studentUploadService;
     private final FacultyService facultyService;
+    private final FacultyUploadService facultyUploadService;
+    private final FileSystemStorageService systemStorageService;
 
     @Autowired
-    public DeanController(UserService userService, DepartmentRepository departmentRepository, StudentUploadService studentUploadService, FacultyService facultyService) {
+    public DeanController(UserService userService, FacultyService facultyService, DepartmentRepository departmentRepository, StudentUploadService studentUploadService, FacultyUploadService facultyUploadService, FileSystemStorageService systemStorageService) {
         this.userService = userService;
         this.departmentRepository = departmentRepository;
         this.studentUploadService = studentUploadService;
         this.facultyService = facultyService;
+        this.facultyUploadService = facultyUploadService;
+        this.systemStorageService = systemStorageService;
     }
 
     @GetMapping("/dean")
@@ -159,10 +168,77 @@ public class DeanController {
         return "redirect:/dean";
     }
 
+    @PostMapping("/dean/register_faculty")
+    public String uploadFacultyFile(RedirectAttributes attributes, @RequestParam("file") MultipartFile file, HttpSession session, WebRequest webRequest) throws IOException {
+        try {
+            FacultyUploadService.UploadResult result = facultyUploadService.handleUpload(file);
+
+            if (!result.getErrors().isEmpty()) {
+                webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);
+                attributes.addFlashAttribute("faculty_errors", result.getErrors());
+            } else {
+                attributes.addFlashAttribute("faculty_success", true);
+                FacultyUploadService.FacultyConfirmation confirmation = facultyUploadService.confirmUpload(result);
+                session.setAttribute("confirmFacultyRegistration", confirmation);
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        return "redirect:/dean";
+    }
+
+    @PostMapping("/dean/register_faculty_confirmed")
+    public String uploadFaculty(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
+        FacultyUploadService.FacultyConfirmation confirmation = (FacultyUploadService. FacultyConfirmation) session.getAttribute("confirmFacultyRegistration");
+
+        if (confirmation == null || !confirmation.getErrors().isEmpty()) {
+            attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));
+        } else {
+            try {
+                String filename = facultyUploadService.registerFaculty(confirmation);
+                attributes.addFlashAttribute("file_saved", filename);
+            } catch (IOException e) {
+                e.printStackTrace();
+                attributes.addFlashAttribute("file_error", true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                attributes.addFlashAttribute("unknown_error", true);
+            }
+
+            webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);
+            attributes.addFlashAttribute("faculty_registered", true);
+        }
+
+        return "redirect:/dean";
+    }
+
     @PostMapping("/dean/clear_session_students")
     public String clearStudentsRegistrationSession(WebRequest webRequest) {
         webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
 
         return "redirect:/dean";
     }
+
+    @PostMapping("/dean/clear_session_faculty")
+    public String clearFacultyRegistrationSession(WebRequest webRequest) {
+        webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);
+
+        return "redirect:/dean";
+    }
+
+    @GetMapping("/dean/download_password")
+    public void downloadCsv(HttpServletResponse response, @RequestParam String filename) throws IOException {
+        response.setContentType("text/csv");
+
+        response.setHeader("Content-disposition", "attachment;filename=passwords.csv");
+
+        List<String> lines = Files.readAllLines(systemStorageService.load(filename));
+        for (String line : lines) {
+            response.getOutputStream().println(line);
+        }
+
+        response.getOutputStream().flush();
+    }
+
 }

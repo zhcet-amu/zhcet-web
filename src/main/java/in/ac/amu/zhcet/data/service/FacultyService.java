@@ -63,7 +63,6 @@ public class FacultyService {
     @Transactional
     public void register(FacultyMember facultyMember) {
         initializeFaculty(facultyMember);
-
         userService.save(facultyMember.getUser());
         facultyRepository.save(facultyMember);
     }
