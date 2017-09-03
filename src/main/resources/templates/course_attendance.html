@@ -87,13 +87,7 @@
                                 Download the <a th:href="@{/csv/attendance_format.csv}">attendance format</a>
                             </div>
                             <br/>
-                            <label class="btn btn-primary" for="my-file-selector">
-                                <input id="my-file-selector" type="file" name="file" style="display: none"
-                                       onchange="$('#upload-file-info').html(this.files[0].name)"
-                                       accept="text/csv, .csv">
-                                Choose File
-                            </label>
-                            <span class='label label-info' id="upload-file-info"></span>
+                            <div th:replace="fragments/layout :: uploader(id = 'attendance_upload')"></div>
                             <div th:if="${updated}" class="alert alert-dismissible alert-success">
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                                 <strong>Updated!</strong> Student attendance was successfully updated<br/>
@@ -107,14 +101,6 @@
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                                 <strong>Something went wrong!</strong>
                                 <div th:utext="${error}">Fix this and try and try again</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-8"></div>
-                                <div class="col-sm-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="icon-check2"></i> Upload
-                                    </button>
-                                </div>
                             </div>
                         </form>
                     </div>
@@ -242,6 +228,7 @@
         <div th:replace="fragments/layout :: scripts"></div>
     </div>
 </div>
+<script th:src="@{/js/file-uploader.js}" type="text/javascript"></script>
 <script>
     truncateDecimals = function (number, digits) {
         var multiplier = Math.pow(10, digits),
