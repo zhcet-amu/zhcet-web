@@ -6,6 +6,10 @@ table td {
     color: #eee
 }
 
+.bg-success {
+    color: #eee;
+}
+
 .capsule {
     margin-left: 5px;
     padding: 7px;

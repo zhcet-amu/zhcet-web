@@ -6,7 +6,6 @@ function setText(element, text) {
 }
 
 function fileUploaded(event) {
-    console.log(event);
     var types = event.accept.split(',').map(function(item) {
         return item.trim();
     });
@@ -21,14 +20,30 @@ function fileUploaded(event) {
     var file = files[0];
 
     var uploader = $(event).parentsUntil('.file-uploader').parent();
-    setText(uploader.find('.file-name'), file.name);
-    setText(uploader.find('.file-size'), formatBytes(file.size));
+    var uploadBtn = uploader.find('.upload-btn');
+    var fileName = uploader.find('.file-name');
+    var fileSize = uploader.find('.file-size');
+    setText(fileName, file.name);
+    setText(fileSize, formatBytes(file.size));
+
+    uploadBtn.addClass('hidden');
 
     if (types.indexOf(file.type) === -1) {
         toastr.error('The type of file must be CSV');
-        uploader.find('.upload-btn').addClass('hidden');
+        fileName.addClass('bg-danger');
         return;
+    } else {
+        fileName.removeClass('bg-danger');
     }
 
-    uploader.find('.upload-btn').removeClass('hidden')
+    if (file.size > 5 * 1024 * 1024) {
+        toastr.error('The file size must be under 5 MB');
+        fileSize.addClass('bg-danger');
+        return;
+    } else {
+        fileSize.removeClass('bg-danger');
+        fileSize.addClass('bg-success');
+    }
+
+    uploadBtn.removeClass('hidden');
 }
