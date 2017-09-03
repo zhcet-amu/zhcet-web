@@ -1,0 +1,40 @@
+<div class="card" th:fragment="add_department" xmlns:th="http://www.thymeleaf.org" lang="en">
+    <div class="card-header">
+        <h4 class="card-title">Add Department</h4>
+        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+        <div class="heading-elements">
+            <ul class="list-inline mb-0">
+                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="card-body collapse in">
+        <div class="card-block">
+            <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
+            <form class="mui-form" th:action="@{/dean/add_department}" method="post"
+                  th:object="${department}">
+                <div class="form-body">
+                    <h4 class="form-section"><i class="material-icons md-24 md-dark">business</i>Department Information</h4>
+                    <div class="form-group col-xs-12 mb-2">
+                        <div class="mui-textfield mui-textfield--float-label">
+                            <input id="department_name" type="text" th:field="*{name}"/>
+                            <label for="department_name">Department Name</label>
+                        </div>
+                        <div th:each="error : ${#fields.detailedErrors('name')}">
+                            <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                        </div>
+                        <div th:each="error : ${dept_errors}">
+                            <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                        </div>
+                        <div th:replace="fragments/layout :: success(condition = ${dept_success}, title = 'Uploaded!', message = 'Department was added successfully!')"></div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="icon-check2"></i> Add
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

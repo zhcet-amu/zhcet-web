@@ -1,0 +1,23 @@
+<div class="card" th:fragment="role_management" xmlns:th="http://www.thymeleaf.org" lang="en">
+    <div class="card-header">
+        <h4 class="card-title">Role Management</h4>
+        <div class="heading-elements">
+            <ul class="list-inline mb-0">
+                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card-body collapse in">
+        <div class="card-block">
+            <th:block th:each="department : ${departments}">
+                <a th:href="|${#httpServletRequest.requestURL}/roles/${department.id}|">
+                    <button class="mui-btn mui-btn--flat" th:text="${department.name}"></button>
+                    <div class="mui-divider"></div>
+                </a>
+            </th:block>
+        </div>
+    </div>
+</div>

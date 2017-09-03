@@ -1,0 +1,100 @@
+<div xmlns:th="http://www.thymeleaf.org" lang="en">
+    <div class="card" th:fragment="register_student">
+        <div class="card-header">
+            <h4 class="card-title">Register Students</h4>
+            <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+            <div class="heading-elements">
+                <ul class="list-inline mb-0">
+                    <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                    <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                    <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-body collapse in">
+            <div class="card-block">
+                <form class="mui-form" enctype="multipart/form-data" th:action="@{/dean/register_students}"
+                      method="post">
+                    <div class="form-body">
+                        <h4 class="form-section"><i class="material-icons md-24 md-dark">book</i>Student CSV</h4>
+                        <div>Download the <a th:href="@{/csv/student_format.csv}">student format</a></div>
+                        <br/>
+                        <div th:replace="fragments/layout :: uploader(id = 'student_upload')"></div>
+                        <div th:replace="fragments/layout :: success(condition = ${students_registered}, title = 'Registered!', message = 'Students were successfully registered')"></div>
+                        <div th:replace="fragments/layout :: success(condition = ${students_success}, title = 'Uploaded!', message = 'Your file was correctly uploaded. Now, confirm the prompt to register the students')"></div>
+                        <div th:each="error : ${students_errors}">
+                            <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Student Registration Modal -->
+        <div th:with="confirmRegistration=${#session.getAttribute('confirmStudentRegistration')}">
+            <div th:if="${confirmRegistration}" id="registration-modal" class="modal">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Confirm Student Registration</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-inverse">
+                                        <tr>
+                                            <th class="text-xs-center">Enrolment</th>
+                                            <th class="text-xs-center">Faculty</th>
+                                            <th class="text-xs-center">Name</th>
+                                            <th class="text-xs-center">Department</th>
+                                            <th class="text-xs-center">Error</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
+                                        <th:block th:each="confirm: ${confirmRegistration.studentMap}">
+                                            <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
+                                                <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
+                                                <td class="text-xs-center"
+                                                    th:text="${confirm.key.enrolmentNumber}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.key.facultyNumber}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.key.user.name}"></td>
+                                                <td class="text-xs-center"
+                                                    th:text="${confirm.key.user.details.department?.name}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.value}"></td>
+                                            </tr>
+                                        </th:block>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div th:each="error : ${confirmRegistration.errors}">
+                                <div th:replace="fragments/layout :: error(error = ${error})"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <form class="form" th:action="@{/dean/clear_session_students}" method="post"
+                                  style="display: inline">
+                                <button type="submit" class="btn btn-default">Clear</button>
+                            </form>
+                            <form class="form" th:action="@{/dean/register_students_confirmed}" method="post"
+                                  style="display: inline">
+                                <button th:if="${confirmRegistration.errors.isEmpty()}" type="submit"
+                                        class="btn btn-primary">Register
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:fragment="script">
+        $(window).load(function () {
+            $('#registration-modal').modal('show');
+        });
+    </script>
+</div>

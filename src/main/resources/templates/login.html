@@ -5,30 +5,28 @@
 <body data-open="click" data-menu="vertical-menu" data-col="1-column" class="vertical-layout vertical-menu 1-column  blank-page blank-page">
 <div class="app-content content container-fluid">
     <div class="content-wrapper">
-        <div class="content-header row">
-        </div>
         <div class="content-body"><section class="flexbox-container">
             <div class="col-md-4 offset-md-4 col-xs-10 offset-xs-1  box-shadow-2 p-0">
-                <div class="card border-grey border-lighten-3 m-0">
-                    <div class="card-header no-border">
+                <div class="translucent card border-grey border-lighten-3 m-0">
+                    <div class="transparent card-header no-border">
                         <div class="card-title text-xs-center">
                             <div class="p-1"><img src="https://res.cloudinary.com/zhcet/image/upload/robust-logo-light.png" alt="branding logo" /></div>
                         </div>
-                        <h6 class="card-subtitle line-on-side text-muted text-xs-center font-small-3 pt-2"><span>Login with ZHCET</span></h6>
+                        <h6 class="line-on-side transparent text-muted text-xs-center font-small-3 pt-2"><span>Login with ZHCET</span></h6>
                     </div>
                     <div class="card-body collapse in">
                         <div class="card-block">
                             <form class="form-horizontal form-simple" action="#" th:action="@{/login}" method="post">
                                 <fieldset class="form-group position-relative has-icon-left mb-0">
-                                    <input type="text" class="form-control form-control-lg input-lg" id="username" name="username" placeholder="Your User ID" th:required="required" />
+                                    <input type="text" class="transparent form-control form-control-lg input-lg" id="username" name="username" placeholder="Your User ID" th:required="required" />
                                     <div class="form-control-position">
-                                        <i class="icon-head"></i>
+                                        <i class="material-icons md-24 md-dark">account_circle</i>
                                     </div>
                                 </fieldset>
                                 <fieldset class="form-group position-relative has-icon-left">
-                                    <input type="password" class="form-control form-control-lg input-lg" id="password" name="password" placeholder="Enter Password" th:required="required" />
+                                    <input type="password" class="transparent form-control form-control-lg input-lg" id="password" name="password" placeholder="Enter Password" th:required="required" />
                                     <div class="form-control-position">
-                                        <i class="icon-key3"></i>
+                                        <i class="material-icons md-24 md-dark">vpn_key</i>
                                     </div>
                                 </fieldset>
                                 <fieldset class="form-group row">
@@ -66,4 +64,38 @@
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
 </body>
+<style>
+    .transparent {
+        background-color: transparent;
+    }
+
+    .translucent {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js" type="text/javascript"></script>
+<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+<script th:src="@{/js/firebase.js}" type="text/javascript"></script>
+<script>
+    // Default Slide Images
+    var slides = [
+        'https://images.unsplash.com/photo-1483347756197-71ef80e95f73?dpr=1&auto=format&fit=crop&w=2000&h=1000&q=80&cs=tinysrgb&crop=',
+        'https://scontent-sit4-1.xx.fbcdn.net/v/t1.0-9/12871499_764731370296513_2651072566326610603_n.png?oh=3b6a469060318c74a05f81feea1aae7f&oe=5A5F7855'
+    ];
+
+    function updateSlides(slides) {
+        $.backstretch(slides, { duration: 2000, fade: 750 });
+    }
+
+    $(document).ready(function() {
+        updateSlides(slides);
+
+        var database = firebase.database();
+        database.ref('login/slides').on('value', function (snapshot) {
+            updateSlides(snapshot.val())
+        })
+
+    });
+</script>
 </html>

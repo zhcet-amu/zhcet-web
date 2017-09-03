@@ -1,0 +1,42 @@
+<div class="card" th:fragment="user_table" xmlns:th="http://www.thymeleaf.org" lang="en">
+    <div class="card-header">
+        <h4 class="card-title" id="from-actions-top-left">Created Users</h4>
+        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+        <div class="heading-elements">
+            <ul class="list-inline mb-0">
+                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card-body collapse in">
+        <div class="card-block">
+            <div class="table-responsive">
+            <table class="mui-table mui-table--bordered">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>User ID</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
+                <!--/*@thymesVar id="users" type="List<UserAuth>"*/-->
+                <th:block th:each="user : ${users}">
+                    <tr>
+                        <td th:text="${user.name}"></td>
+                        <td th:text="${user.userId}"></td>
+                        <td th:text="${user.createdAt != null ? user.createdAt : user.updatedAt }"></td>
+                        <td th:text="${@userService.getType(user)}"></td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</div>
