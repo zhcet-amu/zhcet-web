@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.data.service.file;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -18,6 +19,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
+@Slf4j
 @Service
 public class FileSystemStorageService implements StorageService {
 
@@ -28,15 +30,21 @@ public class FileSystemStorageService implements StorageService {
         this.rootLocation = Paths.get(properties.getLocation());
     }
 
-    private void storeAbstract(String name, boolean empty, InputStream inputStream) {
+    @Override
+    public String generateFileName(String name) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         LocalDateTime localDateTime = LocalDateTime.now();
 
-        String filename = StringUtils.cleanPath(localDateTime.toString() + "_" + username + "_" + name);
+        return StringUtils.cleanPath(localDateTime.toString() + "_" + username + "_" + name);
+    }
+
+    private void storeAbstract(String name, boolean empty, InputStream inputStream) {
+        String filename = generateFileName(name);
         try {
             if (empty) {
                 throw new StorageException("Failed to store empty file " + filename);
             }
+
             if (filename.contains("..")) {
                 // This is a security check
                 throw new StorageException(
@@ -44,6 +52,7 @@ public class FileSystemStorageService implements StorageService {
                                 + filename);
             }
             Files.copy(inputStream, this.rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            log.info("Saved file " + filename);
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + filename, e);
         }

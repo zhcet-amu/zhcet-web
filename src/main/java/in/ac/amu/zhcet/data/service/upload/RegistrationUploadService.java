@@ -1,16 +1,13 @@
 package in.ac.amu.zhcet.data.service.upload;
 
-import com.j256.simplecsv.processor.CsvProcessor;
-import com.j256.simplecsv.processor.ParseError;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.RegistrationUpload;
 import in.ac.amu.zhcet.data.service.FloatedCourseService;
 import in.ac.amu.zhcet.data.service.StudentService;
-import in.ac.amu.zhcet.data.service.file.FileSystemStorageService;
-import in.ac.amu.zhcet.data.service.file.StorageException;
-import lombok.Data;
-import lombok.NonNull;
+import in.ac.amu.zhcet.data.service.upload.base.AbstractUploadService;
+import in.ac.amu.zhcet.data.service.upload.base.Confirmation;
+import in.ac.amu.zhcet.data.service.upload.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,102 +15,71 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+
+import static in.ac.amu.zhcet.utils.Utils.capitalizeAll;
 
 @Slf4j
 @Service
 public class RegistrationUploadService {
 
+    private boolean invalidEnrolment;
+    private boolean alreadyEnrolled;
+
     private final StudentService studentService;
     private final FloatedCourseService floatedCourseService;
-    private final FileSystemStorageService systemStorageService;
+    private final AbstractUploadService<RegistrationUpload, Student, String> uploadService;
 
     @Autowired
-    public RegistrationUploadService(StudentService studentService, FloatedCourseService floatedCourseService, FileSystemStorageService systemStorageService) {
+    public RegistrationUploadService(StudentService studentService, FloatedCourseService floatedCourseService, AbstractUploadService<RegistrationUpload, Student, String> uploadService) {
         this.studentService = studentService;
         this.floatedCourseService = floatedCourseService;
-        this.systemStorageService = systemStorageService;
+        this.uploadService = uploadService;
     }
 
-    @Data
-    public static class UploadResult {
-        @NonNull
-        private List<String> errors = new ArrayList<>();
-        @NonNull
-        private List<RegistrationUpload> registrationUploads = new ArrayList<>();
+    public UploadResult<RegistrationUpload> handleUpload(MultipartFile file) throws IOException {
+        return uploadService.handleUpload(RegistrationUpload.class, file);
     }
 
-    @Data
-    public static class RegistrationConfirmation {
-        @NonNull
-        private Set<String> errors = new HashSet<>();
-        @NonNull
-        private Map<Student, String> studentMap = new HashMap<>();
+    private Student fromRegistrationUpload(RegistrationUpload upload) {
+        Student student = studentService.getByEnrolmentNumber(capitalizeAll(upload.getEnrolmentNo()));
+
+        if (student == null)
+            student = Student.builder().enrolmentNumber(upload.getEnrolmentNo()).build();
+
+        return student;
     }
 
-    public UploadResult handleUpload(MultipartFile file) throws IOException {
-        UploadResult uploadResult = new UploadResult();
-
-        try {
-            systemStorageService.store(file);
-        } catch (StorageException storageException) {
-            log.error(storageException.getMessage());
+    private String getMappedValue(Student student, String courseId, List<CourseRegistration> registrations) {
+        if (student.getFacultyNumber() == null) {
+            invalidEnrolment = true;
+            return  "No such student found";
+        } else if(registrations.stream()
+                .map(CourseRegistration::getStudent)
+                .anyMatch(oldStudent -> oldStudent.equals(student))) {
+            alreadyEnrolled = true;
+            return "Already enrolled in " + courseId;
+        } else {
+            return null;
         }
-
-        if (!file.getContentType().equals("text/csv")) {
-            logAndError(uploadResult, "Uploaded file is not of CSV format");
-
-            return uploadResult;
-        }
-
-        CsvProcessor<RegistrationUpload> csvProcessor = new CsvProcessor<>(RegistrationUpload.class);
-        try {
-            List<ParseError> parseErrors = new ArrayList<>();
-            List<RegistrationUpload> registrationUploads = csvProcessor.readAll(new InputStreamReader(file.getInputStream()), parseErrors);
-
-            if (registrationUploads != null) {
-                uploadResult.getRegistrationUploads().addAll(registrationUploads);
-
-                log.info(registrationUploads.toString());
-            }
-            uploadResult.getErrors().addAll(
-                    parseErrors.stream().map(parseError -> parseError.getMessage() +
-                            "<br>Line Number: " + parseError.getLineNumber() + " Position: " + parseError.getLinePos() +
-                            "<br>Line: " + parseError.getLine()).collect(Collectors.toList()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            uploadResult.getErrors().add(e.getMessage());
-        }
-
-        return uploadResult;
     }
 
-    private static String capitalizeAll(String string) {
-        return string.trim().toUpperCase(Locale.getDefault());
-    }
+    public Confirmation<Student, String> confirmUpload(String courseId, UploadResult<RegistrationUpload> uploadResult) {
+        invalidEnrolment = false;
+        alreadyEnrolled = false;
 
-    public RegistrationConfirmation confirmUpload(String courseId, UploadResult uploadResult) {
-        RegistrationConfirmation registrationConfirmation = new RegistrationConfirmation();
         List<CourseRegistration> registrations = floatedCourseService.getCourseById(courseId).getCourseRegistrations();
 
-        for (RegistrationUpload registrationUpload : uploadResult.getRegistrationUploads()) {
-            Student student = studentService.getByEnrolmentNumber(capitalizeAll(registrationUpload.getEnrolmentNo()));
+        Confirmation<Student, String> registrationConfirmation = uploadService.confirmUpload(
+                uploadResult,
+                this::fromRegistrationUpload,
+                student -> getMappedValue(student, courseId, registrations)
+        );
 
-            if (student == null) {
-                registrationConfirmation.studentMap.put(Student.builder().enrolmentNumber(registrationUpload.getEnrolmentNo()).build(), "No such student found");
-                registrationConfirmation.errors.add("Invalid student enrolment number found");
-            } else if(registrations.stream()
-                    .map(CourseRegistration::getStudent)
-                    .anyMatch(oldStudent -> oldStudent.equals(student))) {
-                registrationConfirmation.studentMap.put(student, "Already enrolled in " + courseId);
-                registrationConfirmation.errors.add("Students already enrolled in course found");
-            } else {
-                registrationConfirmation.studentMap.put(student, null);
-            }
-        }
+        if (invalidEnrolment)
+            registrationConfirmation.getErrors().add("Invalid student enrolment number found");
+        if (alreadyEnrolled)
+            registrationConfirmation.getErrors().add("Students already enrolled in course found");
 
         return registrationConfirmation;
     }
@@ -123,8 +89,4 @@ public class RegistrationUploadService {
         floatedCourseService.registerStudents(courseId, studentIds);
     }
 
-    private static void logAndError(UploadResult uploadResult, String error) {
-        log.error(error);
-        uploadResult.errors.add(error);
-    }
 }

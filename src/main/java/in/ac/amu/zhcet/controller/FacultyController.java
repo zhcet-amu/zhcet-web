@@ -7,6 +7,8 @@ import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.FloatedCourseService;
 import in.ac.amu.zhcet.data.service.upload.AttendanceUploadService;
+import in.ac.amu.zhcet.data.service.upload.base.Confirmation;
+import in.ac.amu.zhcet.data.service.upload.base.UploadResult;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,18 +65,18 @@ public class FacultyController {
     @PostMapping("faculty/courses/{id}/attendance")
     public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("file") MultipartFile file) {
         try {
-            AttendanceUploadService.UploadResult result = attendanceUploadService.handleUpload(file);
+            UploadResult<AttendanceUpload> result = attendanceUploadService.handleUpload(file);
 
             if (!result.getErrors().isEmpty()) {
                 attributes.addFlashAttribute("errors", result.getErrors());
             } else {
                 attributes.addFlashAttribute("success", true);
-                AttendanceUploadService.AttendanceConfirmation confirmation = attendanceUploadService.confirmUpload(id, result);
+                Confirmation<AttendanceUpload, Boolean> confirmation = attendanceUploadService.confirmUpload(id, result);
 
                 if (confirmation.getErrors().isEmpty()) {
                     AttendanceModel attendanceModel = new AttendanceModel();
                     List<AttendanceUpload> attendanceUploads = new ArrayList<>();
-                    attendanceUploads.addAll(confirmation.getStudentMap().keySet());
+                    attendanceUploads.addAll(confirmation.getData().keySet());
                     attendanceModel.setUploadList(attendanceUploads);
                     attributes.addFlashAttribute("attendanceModel", attendanceModel);
                 } else {

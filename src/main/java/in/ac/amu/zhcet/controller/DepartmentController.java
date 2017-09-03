@@ -1,12 +1,12 @@
 package in.ac.amu.zhcet.controller;
 
-import in.ac.amu.zhcet.data.model.Course;
-import in.ac.amu.zhcet.data.model.CourseRegistration;
-import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.model.*;
+import in.ac.amu.zhcet.data.model.dto.RegistrationUpload;
 import in.ac.amu.zhcet.data.service.DepartmentAdminService;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.upload.RegistrationUploadService;
+import in.ac.amu.zhcet.data.service.upload.base.Confirmation;
+import in.ac.amu.zhcet.data.service.upload.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -120,13 +120,13 @@ public class DepartmentController {
     @PostMapping("department/courses/{id}/register")
     public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("file") MultipartFile file) {
         try {
-            RegistrationUploadService.UploadResult result = registrationUploadService.handleUpload(file);
+            UploadResult<RegistrationUpload> result = registrationUploadService.handleUpload(file);
 
             if (!result.getErrors().isEmpty()) {
                 attributes.addFlashAttribute("errors", result.getErrors());
             } else {
                 attributes.addFlashAttribute("success", true);
-                RegistrationUploadService.RegistrationConfirmation confirmation = registrationUploadService.confirmUpload(id, result);
+                Confirmation<Student, String> confirmation = registrationUploadService.confirmUpload(id, result);
 
                 log.info(confirmation.toString());
                 attributes.addFlashAttribute("confirmRegistration", confirmation);

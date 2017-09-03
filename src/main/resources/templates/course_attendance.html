@@ -145,7 +145,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <th:block th:each="confirm: ${confirmAttendanceErrors.studentMap}">
+                                    <th:block th:each="confirm: ${confirmAttendanceErrors.data}">
                                         <tr th:class="(${confirm.value} ? '':'bg-danger white')">
                                             <td class="text-xs-center" th:text="${confirm.key.student}"></td>
                                             <td class="text-xs-center" th:text="${confirm.key.attended}"></td>

@@ -3,12 +3,17 @@ package in.ac.amu.zhcet.controller;
 import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
+import in.ac.amu.zhcet.data.model.Student;
+import in.ac.amu.zhcet.data.model.dto.FacultyUpload;
+import in.ac.amu.zhcet.data.model.dto.StudentUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.UserService;
 import in.ac.amu.zhcet.data.service.file.FileSystemStorageService;
 import in.ac.amu.zhcet.data.service.upload.FacultyUploadService;
 import in.ac.amu.zhcet.data.service.upload.StudentUploadService;
+import in.ac.amu.zhcet.data.service.upload.base.Confirmation;
+import in.ac.amu.zhcet.data.service.upload.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,14 +140,14 @@ public class DeanController {
     @PostMapping("/dean/register_students")
     public String uploadFile(RedirectAttributes attributes, @RequestParam("file") MultipartFile file, HttpSession session, WebRequest webRequest) {
         try {
-            StudentUploadService.UploadResult result = studentUploadService.handleUpload(file);
+            UploadResult<StudentUpload> result = studentUploadService.handleUpload(file);
 
             if (!result.getErrors().isEmpty()) {
                 webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
                 attributes.addFlashAttribute("students_errors", result.getErrors());
             } else {
                 attributes.addFlashAttribute("students_success", true);
-                StudentUploadService.StudentConfirmation confirmation = studentUploadService.confirmUpload(result);
+                Confirmation<Student, String> confirmation = studentUploadService.confirmUpload(result);
 
                 session.setAttribute("confirmStudentRegistration", confirmation);
             }
@@ -155,7 +160,7 @@ public class DeanController {
 
     @PostMapping("/dean/register_students_confirmed")
     public String uploadStudents(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
-        StudentUploadService.StudentConfirmation confirmation = (StudentUploadService.StudentConfirmation) session.getAttribute("confirmStudentRegistration");
+        Confirmation<Student, String> confirmation = (Confirmation<Student, String>) session.getAttribute("confirmStudentRegistration");
 
         if (confirmation == null || !confirmation.getErrors().isEmpty()) {
             attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));
@@ -171,14 +176,14 @@ public class DeanController {
     @PostMapping("/dean/register_faculty")
     public String uploadFacultyFile(RedirectAttributes attributes, @RequestParam("file") MultipartFile file, HttpSession session, WebRequest webRequest) throws IOException {
         try {
-            FacultyUploadService.UploadResult result = facultyUploadService.handleUpload(file);
+            UploadResult<FacultyUpload> result = facultyUploadService.handleUpload(file);
 
             if (!result.getErrors().isEmpty()) {
                 webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);
                 attributes.addFlashAttribute("faculty_errors", result.getErrors());
             } else {
                 attributes.addFlashAttribute("faculty_success", true);
-                FacultyUploadService.FacultyConfirmation confirmation = facultyUploadService.confirmUpload(result);
+                Confirmation<FacultyMember, String> confirmation = facultyUploadService.confirmUpload(result);
                 session.setAttribute("confirmFacultyRegistration", confirmation);
             }
         } catch (IOException ioe) {
@@ -190,7 +195,7 @@ public class DeanController {
 
     @PostMapping("/dean/register_faculty_confirmed")
     public String uploadFaculty(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
-        FacultyUploadService.FacultyConfirmation confirmation = (FacultyUploadService. FacultyConfirmation) session.getAttribute("confirmFacultyRegistration");
+        Confirmation<FacultyMember, String> confirmation = (Confirmation<FacultyMember, String>) session.getAttribute("confirmFacultyRegistration");
 
         if (confirmation == null || !confirmation.getErrors().isEmpty()) {
             attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));

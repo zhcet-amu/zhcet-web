@@ -1,6 +1,9 @@
 package in.ac.amu.zhcet.utils;
 
+import org.apache.commons.text.WordUtils;
+
 import java.time.LocalDate;
+import java.util.Locale;
 
 public class Utils {
 
@@ -26,5 +29,13 @@ public class Utils {
         } else {
             return "Winter '" + session.substring(1);
         }
+    }
+
+    public static String capitalizeFirst(String string) {
+        return WordUtils.capitalizeFully(string.trim());
+    }
+
+    public static String capitalizeAll(String string) {
+        return string.trim().toUpperCase(Locale.getDefault());
     }
 }

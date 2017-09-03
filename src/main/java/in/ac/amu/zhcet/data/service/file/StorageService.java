@@ -11,6 +11,8 @@ public interface StorageService {
 
     void init();
 
+    String generateFileName(String name);
+
     void store(File file);
 
     void store(MultipartFile file);

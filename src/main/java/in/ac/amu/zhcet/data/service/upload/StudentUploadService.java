@@ -1,145 +1,107 @@
 package in.ac.amu.zhcet.data.service.upload;
 
-import com.j256.simplecsv.processor.CsvProcessor;
-import com.j256.simplecsv.processor.ParseError;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.StudentUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.service.StudentService;
-import in.ac.amu.zhcet.data.service.file.FileSystemStorageService;
-import in.ac.amu.zhcet.data.service.file.StorageException;
-import lombok.Data;
-import lombok.NonNull;
+import in.ac.amu.zhcet.data.service.upload.base.AbstractUploadService;
+import in.ac.amu.zhcet.data.service.upload.base.Confirmation;
+import in.ac.amu.zhcet.data.service.upload.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
+
+import static in.ac.amu.zhcet.utils.Utils.capitalizeAll;
+import static in.ac.amu.zhcet.utils.Utils.capitalizeFirst;
 
 @Slf4j
 @Service
 public class StudentUploadService {
+    private boolean invalidDepartment;
+    private boolean duplicateFacultyNo;
+    private boolean duplicateEnrolmentNo;
 
     private final DepartmentRepository departmentRepository;
     private final StudentService studentService;
-    private final FileSystemStorageService systemStorageService;
+    private final AbstractUploadService<StudentUpload, Student, String> uploadService;
 
     @Autowired
-    public StudentUploadService(DepartmentRepository departmentRepository, StudentService studentService, FileSystemStorageService systemStorageService) {
+    public StudentUploadService(DepartmentRepository departmentRepository, StudentService studentService, AbstractUploadService<StudentUpload, Student, String> uploadService) {
         this.departmentRepository = departmentRepository;
         this.studentService = studentService;
-        this.systemStorageService = systemStorageService;
+        this.uploadService = uploadService;
     }
 
-    @Data
-    public static class UploadResult {
-        @NonNull
-        private List<String> errors = new ArrayList<>();
-        @NonNull
-        private List<StudentUpload> studentUploads = new ArrayList<>();
+    public UploadResult<StudentUpload> handleUpload(MultipartFile file) throws IOException {
+        return uploadService.handleUpload(StudentUpload.class, file);
     }
 
-    @Data
-    public static class StudentConfirmation {
-        @NonNull
-        private Set<String> errors = new HashSet<>();
-        @NonNull
-        private Map<Student, String> studentMap = new HashMap<>();
+    private static Student fromStudentUpload(StudentUpload studentUpload) {
+        Student student = new Student();
+        student.setEnrolmentNumber(capitalizeAll(studentUpload.getEnrolmentNo()));
+        student.setFacultyNumber(capitalizeAll(studentUpload.getFacultyNo()));
+        student.getUser().setName(capitalizeFirst(studentUpload.getName()));
+        student.getUser().getDetails().setDepartment(new Department(studentUpload.getDepartment()));
+
+        return student;
     }
 
-    public UploadResult handleUpload(MultipartFile file) throws IOException {
-        UploadResult uploadResult = new UploadResult();
-        try {
-            systemStorageService.store(file);
-        } catch (StorageException storageException) {
-            log.error(storageException.getMessage());
+    private String getMappedValue(Student student, List<Department> departments) {
+        String departmentName = capitalizeFirst(student.getUser().getDetails().getDepartment().getName());
+
+        Optional<Department> optional = departments.stream()
+                .filter(department -> department.getName().equals(departmentName))
+                .findFirst();
+
+        if (!optional.isPresent()) {
+            invalidDepartment = true;
+            return  "No such department: " + departmentName;
+        } else if (studentService.getByEnrolmentNumber(student.getEnrolmentNumber()) != null) {
+            duplicateEnrolmentNo = true;
+            return  "Duplicate enrolment number";
+        } else if (studentService.getByFacultyNumber(student.getFacultyNumber()) != null) {
+            duplicateFacultyNo = true;
+            return "Duplicate faculty number";
+        } else {
+            student.getUser().getDetails().setDepartment(optional.get());
+            return null;
         }
-
-        if (!file.getContentType().equals("text/csv")) {
-            logAndError(uploadResult, "Uploaded file is not of CSV format");
-            return uploadResult;
-        }
-        CsvProcessor<StudentUpload> csvProcessor = new CsvProcessor<>(StudentUpload.class);
-        try {
-            List<ParseError> parseErrors = new ArrayList<>();
-            List<StudentUpload> studentUploads = csvProcessor.readAll(new InputStreamReader(file.getInputStream()), parseErrors);
-
-            if (studentUploads != null) {
-                uploadResult.getStudentUploads().addAll(studentUploads);
-                log.info(studentUploads.toString());
-            }
-            uploadResult.getErrors().addAll(
-                    parseErrors.stream().map(parseError -> parseError.getMessage() +
-                            "<br>Line Number: " + parseError.getLineNumber() + " Position: " + parseError.getLinePos() +
-                            "<br>Line: " + parseError.getLine()).collect(Collectors.toList()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            uploadResult.getErrors().add(e.getMessage());
-        }
-
-        return uploadResult;
     }
 
-    private static String capitalizeFirst(String string) {
-        return WordUtils.capitalizeFully(string.trim());
-    }
+    public Confirmation<Student, String> confirmUpload(UploadResult<StudentUpload> uploadResult) {
+        invalidDepartment = false;
+        duplicateFacultyNo = false;
+        duplicateEnrolmentNo = false;
 
-    private static String capitalizeAll(String string) {
-        return string.trim().toUpperCase(Locale.getDefault());
-    }
-
-    public StudentConfirmation confirmUpload(UploadResult uploadResult) {
-        StudentConfirmation studentConfirmation = new StudentConfirmation();
         List<Department> departments = departmentRepository.findAll();
 
-        for (StudentUpload studentUpload : uploadResult.getStudentUploads()) {
-            Student student = new Student();
-            student.setEnrolmentNumber(capitalizeAll(studentUpload.getEnrolmentNo()));
-            student.setFacultyNumber(capitalizeAll(studentUpload.getFacultyNo()));
-            student.getUser().setName(capitalizeFirst(studentUpload.getName()));
+        Confirmation<Student, String> studentConfirmation = uploadService.confirmUpload(
+                uploadResult,
+                StudentUploadService::fromStudentUpload,
+                student -> getMappedValue(student, departments)
+        );
 
-            String departmentName = capitalizeFirst(studentUpload.getDepartment());
-
-            Optional<Department> optional = departments.stream()
-                    .filter(department -> department.getName().equals(departmentName))
-                    .findFirst();
-
-            if (!optional.isPresent()) {
-                studentConfirmation.studentMap.put(student, "No such department: " + departmentName);
-                studentConfirmation.errors.add("Students with invalid department found");
-            } else if (studentService.getByEnrolmentNumber(student.getEnrolmentNumber()) != null) {
-                studentConfirmation.studentMap.put(student, "Duplicate enrolment number");
-                studentConfirmation.errors.add("Students with duplicate enrolment found");
-            } else if (studentService.getByFacultyNumber(student.getFacultyNumber()) != null) {
-                studentConfirmation.studentMap.put(student, "Duplicate faculty number");
-                studentConfirmation.errors.add("Students with duplicate faculty number found");
-            } else {
-                student.getUser().getDetails().setDepartment(optional.get());
-                studentConfirmation.studentMap.put(student, null);
-            }
-
-        }
+        if (invalidDepartment)
+            studentConfirmation.getErrors().add("Students with invalid department found");
+        if (duplicateEnrolmentNo)
+            studentConfirmation.getErrors().add("Students with duplicate enrolment found");
+        if (duplicateFacultyNo)
+            studentConfirmation.getErrors().add("Students with duplicate faculty number found");
 
         return studentConfirmation;
     }
 
     @Transactional
-    public void registerStudents(StudentConfirmation confirmation) {
-        for (Student student : confirmation.getStudentMap().keySet()) {
+    public void registerStudents(Confirmation<Student, String> confirmation) {
+        for (Student student : confirmation.getData().keySet()) {
             studentService.register(student);
         }
-    }
-
-    private static void logAndError(UploadResult uploadResult, String error) {
-        log.error(error);
-        uploadResult.errors.add(error);
     }
 }

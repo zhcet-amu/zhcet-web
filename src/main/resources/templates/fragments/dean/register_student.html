@@ -54,7 +54,7 @@
                                         </thead>
                                         <tbody>
                                         <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
-                                        <th:block th:each="confirm: ${confirmRegistration.studentMap}">
+                                        <th:block th:each="confirm: ${confirmRegistration.data}">
                                             <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
                                                 <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
                                                 <td class="text-xs-center"
@@ -71,7 +71,7 @@
                                 </div>
                             </div>
                             <div th:each="error : ${confirmRegistration.errors}">
-                                <div th:replace="fragments/layout :: error(error = ${error})"></div>
+                                <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
                             </div>
                         </div>
                         <div class="modal-footer">

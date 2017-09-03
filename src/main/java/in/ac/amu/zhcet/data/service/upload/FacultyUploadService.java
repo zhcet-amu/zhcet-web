@@ -1,153 +1,112 @@
 package in.ac.amu.zhcet.data.service.upload;
 
 import com.j256.simplecsv.processor.CsvProcessor;
-import com.j256.simplecsv.processor.ParseError;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.dto.FacultyUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.file.FileSystemStorageService;
-import in.ac.amu.zhcet.data.service.file.StorageException;
-import lombok.Data;
-import lombok.NonNull;
+import in.ac.amu.zhcet.data.service.upload.base.AbstractUploadService;
+import in.ac.amu.zhcet.data.service.upload.base.Confirmation;
+import in.ac.amu.zhcet.data.service.upload.base.UploadResult;
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Path;
-import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class FacultyUploadService {
+    private boolean invalidDepartment;
+    private boolean duplicateFacultyId;
+
     private final DepartmentRepository departmentRepository;
     private final FacultyService facultyService;
+    private final AbstractUploadService<FacultyUpload, FacultyMember, String> uploadService;
     private final FileSystemStorageService systemStorageService;
     private final static int PASS_LENGTH = 6;
 
     @Autowired
-    public FacultyUploadService(DepartmentRepository departmentRepository, FacultyService facultyService, FileSystemStorageService fileSystemStorageService) {
+    public FacultyUploadService(DepartmentRepository departmentRepository, FacultyService facultyService, AbstractUploadService<FacultyUpload, FacultyMember, String> uploadService, FileSystemStorageService fileSystemStorageService) {
         this.departmentRepository = departmentRepository;
         this.facultyService = facultyService;
+        this.uploadService = uploadService;
         this.systemStorageService = fileSystemStorageService;
     }
 
-    @Data
-    public static class UploadResult {
-        @NonNull
-        private List<String> errors = new ArrayList<>();
-        @NonNull
-        private List<FacultyUpload> facultyUploads = new ArrayList<>();
+    public UploadResult<FacultyUpload> handleUpload(MultipartFile file) throws IOException {
+        return uploadService.handleUpload(FacultyUpload.class, file);
     }
 
-    @Data
-    public static class FacultyConfirmation {
-        @NonNull
-        private Set<String> errors = new HashSet<>();
-        @NonNull
-        private Map<FacultyMember, String> facultyMap = new HashMap<>();
+    private String getMappedValue(FacultyMember facultyMember, List<Department> departments) {
+        String departmentName = facultyMember.getUser().getDetails().getDepartment().getName();
+
+        Optional<Department> optional = departments.stream()
+                .filter(department -> department.getName().equals(departmentName))
+                .findFirst();
+
+        if (!optional.isPresent()) {
+            invalidDepartment = true;
+            return "No such department: " + departmentName;
+        } else if (facultyService.getById(facultyMember.getFacultyId()) != null) {
+            duplicateFacultyId = true;
+            return "Duplicate Faculty ID";
+        } else {
+            facultyMember.getUser().getDetails().setDepartment(optional.get());
+            return null;
+        }
     }
 
-    public FacultyUploadService.UploadResult handleUpload(MultipartFile file) throws IOException {
-        FacultyUploadService.UploadResult uploadResult = new FacultyUploadService.UploadResult();
+    public Confirmation<FacultyMember, String> confirmUpload(UploadResult<FacultyUpload> uploadResult) {
+        invalidDepartment = false;
+        duplicateFacultyId = false;
 
-        try {
-            systemStorageService.store(file);
-        } catch (StorageException storageException) {
-
-            log.error(storageException.getMessage());
-        }
-        if (!file.getContentType().equals("text/csv")) {
-            logAndError(uploadResult, "Uploaded file is not of CSV format");
-            log.info(file.getContentType());
-            return uploadResult;
-        }
-
-        CsvProcessor<FacultyUpload> csvProcessor = new CsvProcessor<>(FacultyUpload.class);
-        try {
-            List<ParseError> parseErrors = new ArrayList<>();
-            List<FacultyUpload> facultyUploads = csvProcessor.readAll(new InputStreamReader(file.getInputStream()), parseErrors);
-            if (facultyUploads != null) {
-                uploadResult.getFacultyUploads().addAll(facultyUploads);
-
-                log.info(facultyUploads.toString());
-            }
-            uploadResult.getErrors().addAll(
-                    parseErrors.stream().map(parseError -> parseError.getMessage() +
-                            "<br>Line Number: " + parseError.getLineNumber() + " Position: " + parseError.getLinePos() +
-                            "<br>Line: " + parseError.getLine()).collect(Collectors.toList()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            uploadResult.getErrors().add(e.getMessage());
-        }
-        return uploadResult;
-    }
-
-
-    public FacultyConfirmation confirmUpload(UploadResult uploadResult) {
-        FacultyUploadService.FacultyConfirmation facultyConfirmation = new FacultyUploadService.FacultyConfirmation();
         List<Department> departments = departmentRepository.findAll();
 
-        for (FacultyUpload facultyUpload : uploadResult.getFacultyUploads()) {
-            String password = generatePassword(PASS_LENGTH);
-            facultyUpload.setPassword(password);
-            FacultyMember facultyMember = new FacultyMember();
-            facultyMember.setFacultyId(capitalizeAll(facultyUpload.getFacultyId()));
-            facultyMember.getUser().setName(capitalizeFirst(facultyUpload.getName()));
-            String departmentName = capitalizeFirst(facultyUpload.getDepartment());
-            Optional<Department> optional = departments.stream()
-                    .filter(department -> department.getName().equals(departmentName))
-                    .findFirst();
+        Confirmation<FacultyMember, String> facultyConfirmation = uploadService.confirmUpload(
+                uploadResult,
+                FacultyUploadService::fromFacultyUpload,
+                facultyMember -> getMappedValue(facultyMember, departments)
+        );
 
-            if (!optional.isPresent()) {
-                facultyConfirmation.facultyMap.put(facultyMember, "No such department: " + departmentName);
-                facultyConfirmation.errors.add("Faculty Member with invalid department found");
-            } else if (facultyService.getById(facultyMember.getFacultyId()) != null) {
-                facultyConfirmation.facultyMap.put(facultyMember, "Duplicate Faculty ID");
-                facultyConfirmation.errors.add("Faculty Member with duplicate Faculty ID found");
-            } else {
-                facultyMember.getUser().getDetails().setDepartment(optional.get());
-                facultyMember.getUser().setPassword(password);
-                facultyConfirmation.facultyMap.put(facultyMember, null);
-            }
+        if (invalidDepartment)
+            facultyConfirmation.getErrors().add("Faculty Member with invalid department found");
+        if (duplicateFacultyId)
+            facultyConfirmation.getErrors().add("Faculty Member with duplicate Faculty ID found");
 
-        }
         return facultyConfirmation;
     }
 
     @Transactional
-    public String registerFaculty(FacultyUploadService.FacultyConfirmation confirmation) throws IOException {
+    public String registerFaculty(Confirmation<FacultyMember, String> confirmation) throws IOException {
         String filename = saveFile(confirmation);
 
-        for (FacultyMember facultyMember : confirmation.getFacultyMap().keySet()) {
+        for (FacultyMember facultyMember : confirmation.getData().keySet()) {
             facultyService.register(facultyMember);
         }
 
         return filename;
     }
 
-    private String saveFile(FacultyUploadService.FacultyConfirmation confirmation) throws IOException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        LocalDateTime localDateTime = LocalDateTime.now();
-        String filename = StringUtils.cleanPath(localDateTime.toString() + "_" + username + "_" + "_faculty_password.csv");
+    private String saveFile(Confirmation<FacultyMember, String> confirmation) throws IOException {
+        String filename = systemStorageService.generateFileName("faculty_password.csv");
 
         Path filePath = systemStorageService.load(filename);
         File newFile = filePath.toFile();
 
-        List<FacultyUpload> facultyUploads = confirmation.facultyMap.keySet().stream()
-                .map(FacultyUploadService::fromFaculty)
+        List<FacultyUpload> facultyUploads = confirmation.getData().keySet().stream()
+                .map(FacultyUploadService::fromFacultyMember)
                 .collect(Collectors.toList());
 
         CsvProcessor<FacultyUpload> csvProcessor = new CsvProcessor<>(FacultyUpload.class);
@@ -156,7 +115,19 @@ public class FacultyUploadService {
         return filename;
     }
 
-    private static FacultyUpload fromFaculty(FacultyMember facultyMember) {
+    private static FacultyMember fromFacultyUpload(FacultyUpload facultyUpload) {
+        String password = generatePassword(PASS_LENGTH);
+        facultyUpload.setPassword(password);
+        FacultyMember facultyMember = new FacultyMember();
+        facultyMember.setFacultyId(Utils.capitalizeAll(facultyUpload.getFacultyId()));
+        facultyMember.getUser().setName(Utils.capitalizeFirst(facultyUpload.getName()));
+        facultyMember.getUser().setPassword(password);
+        facultyMember.getUser().getDetails().setDepartment(new Department(Utils.capitalizeFirst(facultyUpload.getDepartment())));
+
+        return facultyMember;
+    }
+
+    private static FacultyUpload fromFacultyMember(FacultyMember facultyMember) {
         FacultyUpload facultyUpload = new FacultyUpload();
         facultyUpload.setFacultyId(facultyMember.getFacultyId());
         facultyUpload.setName(facultyMember.getUser().getName());
@@ -166,21 +137,7 @@ public class FacultyUploadService {
         return facultyUpload;
     }
 
-    private static String capitalizeFirst(String string) {
-        return WordUtils.capitalizeFully(string.trim());
-    }
-
-    private static String capitalizeAll(String string) {
-        return string.trim().toUpperCase(Locale.getDefault());
-    }
-
-
-    private static void logAndError(FacultyUploadService.UploadResult uploadResult, String error) {
-        log.error(error);
-        uploadResult.errors.add(error);
-    }
-
-    private String generatePassword(int length){
+    private static String generatePassword(int length){
         String uuid = UUID.randomUUID().toString();
         return uuid.replaceAll("-", "").substring(0,length);
     }

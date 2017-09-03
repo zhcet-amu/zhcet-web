@@ -234,7 +234,7 @@
                                         </thead>
                                         <tbody>
                                         <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
-                                        <th:block th:each="confirm: ${confirmRegistration.studentMap}">
+                                        <th:block th:each="confirm: ${confirmRegistration.data}">
                                             <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
                                                 <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
                                                 <input type="hidden" name="studentId" th:value="${confirm.key.enrolmentNumber}">
