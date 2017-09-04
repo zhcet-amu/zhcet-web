@@ -1,7 +1,9 @@
 package in.ac.amu.zhcet.utils;
 
 import org.apache.commons.text.WordUtils;
+import org.apache.commons.validator.routines.EmailValidator;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.Locale;
 
@@ -37,5 +39,13 @@ public class Utils {
 
     public static String capitalizeAll(String string) {
         return string.trim().toUpperCase(Locale.getDefault());
+    }
+
+    public static boolean isValidEmail(String email) {
+        return EmailValidator.getInstance().isValid(email);
+    }
+
+    public static String getAppUrl(HttpServletRequest request) {
+        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 }

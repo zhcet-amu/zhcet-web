@@ -1,8 +1,10 @@
-package in.ac.amu.zhcet.data.service;
+package in.ac.amu.zhcet.data.service.token;
 
-import in.ac.amu.zhcet.data.model.PasswordResetToken;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
+import in.ac.amu.zhcet.data.model.token.PasswordResetToken;
 import in.ac.amu.zhcet.data.repository.PasswordResetTokenRepository;
+import in.ac.amu.zhcet.data.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,21 +13,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.UUID;
 
+@Slf4j
 @Service
 public class PasswordResetService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final EmailService emailService;
     private final UserService userService;
 
     @Autowired
-    public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository, UserService userService) {
+    public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository, EmailService emailService, UserService userService) {
         this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.emailService = emailService;
         this.userService = userService;
-    }
-
-    public PasswordResetToken getByUserId(String username) {
-        return passwordResetTokenRepository.findByUserAuth_UserId(username);
     }
 
     public String validate(String id, String token) {
@@ -56,10 +59,22 @@ public class PasswordResetService {
         UserAuth userAuth = userService.getUserByEmail(email);
         if (userAuth == null)
             throw new UsernameNotFoundException("User with the email " + email + " not found");
+        if (!userAuth.isActive())
+            throw new UsernameNotFoundException("User with the email " + email + " has not verified its account!");
         passwordResetToken.setUserAuth(userAuth);
         passwordResetToken.setToken(generateToken());
         passwordResetTokenRepository.save(passwordResetToken);
         return passwordResetToken;
+    }
+
+    public void sendMail(String appUrl, PasswordResetToken token) {
+        String url = appUrl + "/login/reset_password?id=" + token.getUserAuth().getUserId() + "&token=" + token.getToken();
+        log.info("Password reset link generated : " + url);
+        String message = "You requested password reset on zhcet for user ID: " + token.getUserAuth().getUserId() + "\r\n" +
+                "Please click this link to reset password. \r\n" + url +
+                "\r\nIf you did not request the password reset, please contact admin";
+
+        emailService.sendMail(token.getUserAuth().getEmail(), "ZHCET Reset Password Link", message);
     }
 
     public void resetPassword(String newPassword, String token) {

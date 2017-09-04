@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.data.model;
+package in.ac.amu.zhcet.data.model.token;
 
 import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
 import lombok.AllArgsConstructor;

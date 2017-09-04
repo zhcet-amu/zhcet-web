@@ -1,8 +1,8 @@
-package in.ac.amu.zhcet.data.service;
+package in.ac.amu.zhcet.data.service.user;
 
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.model.base.user.UserDetail;
-import in.ac.amu.zhcet.data.service.user.CustomUser;
+import in.ac.amu.zhcet.data.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

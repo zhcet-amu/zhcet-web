@@ -1,10 +1,10 @@
 package in.ac.amu.zhcet.controller;
 
 
-import in.ac.amu.zhcet.data.model.PasswordResetToken;
+import in.ac.amu.zhcet.data.model.token.PasswordResetToken;
 import in.ac.amu.zhcet.data.model.dto.PasswordReset;
-import in.ac.amu.zhcet.data.service.EmailService;
-import in.ac.amu.zhcet.data.service.PasswordResetService;
+import in.ac.amu.zhcet.data.service.token.EmailService;
+import in.ac.amu.zhcet.data.service.token.PasswordResetService;
 import in.ac.amu.zhcet.data.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+
+import static in.ac.amu.zhcet.utils.Utils.getAppUrl;
 
 @Slf4j
 @Controller
@@ -43,7 +45,7 @@ public class LoginController {
     public String sendEmailLink(RedirectAttributes redirectAttributes, @RequestParam String email, HttpServletRequest request) {
         try {
             PasswordResetToken token = passwordResetService.generate(email);
-            emailService.sendMail(getAppUrl(request), token.getToken(), token.getUserAuth());
+            passwordResetService.sendMail(getAppUrl(request), token);
             redirectAttributes.addFlashAttribute("reset_link_sent", true);
         } catch(UsernameNotFoundException e){
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -98,9 +100,6 @@ public class LoginController {
         passwordResetService.resetPassword(passwordReset.getNewPassword(), passwordReset.getToken());
         redirectAttributes.addFlashAttribute("reset_success", true);
         return "redirect:/login";
-    }
-    private String getAppUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 
 }

@@ -33,6 +33,15 @@ public class UserService {
         return userRepository.findByUserId(id);
     }
 
+    public UserAuth getUserByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    // Checking if the user is active prevents email hoarding
+    public boolean emailExists(String email) {
+        return getUserByEmail(email) != null;
+    }
+
     public UserAuth getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
@@ -62,10 +71,6 @@ public class UserService {
         UserAuth user = findById(id);
         user.getDetails().setDepartment(department);
         userRepository.save(user);
-    }
-
-    public UserAuth getUserByEmail(String email){
-        return userRepository.findByEmail(email);
     }
 
     public void changeUserPassword(UserAuth userAuth, String password) {

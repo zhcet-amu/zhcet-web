@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head(title = 'Verify Email')">
+</head>
+<body data-open="click" data-menu="vertical-menu" data-col="1-column"
+      class="vertical-layout vertical-menu 1-column  blank-page blank-page">
+<div>
+    <div class="app-content content container-fluid">
+        <div class="content-wrapper">
+            <div class="content-header row"></div>
+            <div class="content-body">
+                <section class="flexbox-container">
+                    <div class="col-md-4 offset-md-4 col-xs-10 offset-xs-1  box-shadow-2 p-0">
+                        <div class="card border-grey border-lighten-3 m-0">
+                            <div class="card-header no-border">
+                                <div class="card-title text-xs-center">
+                                    <div class="p-1"><img
+                                            src="https://res.cloudinary.com/zhcet/image/upload/robust-logo-light.png"
+                                            alt="branding logo"/></div>
+                                </div>
+                                <h6 class="card-subtitle line-on-side text-muted text-xs-center font-small-3 pt-2">
+                                    <span>Email Verification</span></h6>
+                            </div>
+                            <div class="card-body collapse in">
+                                <div class="card-block">
+                                    <div th:replace="fragments/layout :: success(condition = ${success}, title = 'Verified!', message = ${success})"></div>
+                                    <!--/*@thymesVar id="password" type="in.ac.amu.zhcet.data.model.dto.PasswordReset"*/-->
+                                    <div th:if="${error}" class="alert alert-dismissible alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <strong>ERROR!</strong>
+                                        <div th:text="${error}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/layout :: scripts"></div>
+</body>
+</html>

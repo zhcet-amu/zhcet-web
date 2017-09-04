@@ -1,6 +1,6 @@
-package in.ac.amu.zhcet.data.service;
+package in.ac.amu.zhcet.data.service.token;
 
-import in.ac.amu.zhcet.data.model.PersistentLogin;
+import in.ac.amu.zhcet.data.model.token.PersistentLogin;
 import in.ac.amu.zhcet.data.repository.PersistentLoginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
