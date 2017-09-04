@@ -41,8 +41,8 @@
                                     <tr th:each="inCharge : ${floatedCourse.inCharge}">
                                         <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
                                         <td>
-                                            <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png"
-                                                 th:src="${#strings.defaultString(inCharge.user.details.avatarUrl, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
+                                            <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
+                                                 th:src="${#strings.defaultString(inCharge.user.details.avatarUrl, 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg')}"
                                                  class="rounded-circle height-50" alt="Card image"/></td>
                                         <td th:text="${inCharge.facultyId}"></td>
                                         <td th:text="${inCharge.user.name}"></td>
@@ -169,8 +169,8 @@
                                                        th:disabled="${#lists.contains(floatedCourse.inCharge, inCharge)}">
                                             </td>
                                             <td>
-                                                <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png"
-                                                     th:src="${#strings.defaultString(inCharge.user.details.avatarUrl, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
+                                                <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
+                                                     th:src="${#strings.defaultString(inCharge.user.details.avatarUrl, 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg')}"
                                                      class="rounded-circle height-50" alt="Card image"/></td>
                                             <td th:text="${inCharge.facultyId}"></td>
                                             <td th:text="${inCharge.user.name}"></td>

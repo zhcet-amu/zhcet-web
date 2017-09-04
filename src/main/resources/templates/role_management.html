@@ -42,8 +42,8 @@
                     <form th:action="|${#httpServletRequest.requestURL}/save|" method="post" th:each="member : ${facultyMembers}">
                         <tr>
                             <td>
-                                <img src="https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png"
-                                     th:src="${#strings.defaultString(member.user.details.avatarUrl, 'https://res.cloudinary.com/zhcet/image/upload/avatar-s-1.png')}"
+                                <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
+                                     th:src="${#strings.defaultString(member.user.details.avatarUrl, 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg')}"
                                      class="rounded-circle height-100" alt="Card image"/></td>
                             <td th:text="${member.facultyId}"></td>
                             <td th:text="${member.user.name}"></td>
