@@ -8,6 +8,7 @@ import in.ac.amu.zhcet.data.model.dto.FacultyUpload;
 import in.ac.amu.zhcet.data.model.dto.StudentUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.service.FacultyService;
+import in.ac.amu.zhcet.data.service.StudentService;
 import in.ac.amu.zhcet.data.service.UserService;
 import in.ac.amu.zhcet.data.service.file.FileSystemStorageService;
 import in.ac.amu.zhcet.data.service.upload.FacultyUploadService;
@@ -44,6 +45,7 @@ import java.util.List;
 public class DeanController {
 
     private final UserService userService;
+    private final StudentService studentService;
     private final DepartmentRepository departmentRepository;
     private final StudentUploadService studentUploadService;
     private final FacultyService facultyService;
@@ -51,8 +53,9 @@ public class DeanController {
     private final FileSystemStorageService systemStorageService;
 
     @Autowired
-    public DeanController(UserService userService, FacultyService facultyService, DepartmentRepository departmentRepository, StudentUploadService studentUploadService, FacultyUploadService facultyUploadService, FileSystemStorageService systemStorageService) {
+    public DeanController(UserService userService, StudentService studentService, FacultyService facultyService, DepartmentRepository departmentRepository, StudentUploadService studentUploadService, FacultyUploadService facultyUploadService, FileSystemStorageService systemStorageService) {
         this.userService = userService;
+        this.studentService = studentService;
         this.departmentRepository = departmentRepository;
         this.studentUploadService = studentUploadService;
         this.facultyService = facultyService;
@@ -74,9 +77,15 @@ public class DeanController {
     }
 
     @GetMapping("/dean/students")
-    public String students(Model model) {
-
+    public String students() {
         return "students_page";
+    }
+
+    @GetMapping("/dean/students/{id}")
+    public String student(Model model, @PathVariable String id) {
+        model.addAttribute("student", studentService.getByEnrolmentNumber(id));
+
+        return "student_edit";
     }
 
     @GetMapping("/dean/roles/{id}")

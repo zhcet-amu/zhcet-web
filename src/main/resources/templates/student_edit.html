@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head(title = 'Profile')">
+</head>
+
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
+      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<nav th:replace="fragments/header :: header"></nav>
+<div th:replace="fragments/navigation :: navigation(pageId = 'dean', subPage='students')"></div>
+
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
+
+    <div th:if="${student}" class="col-xs-10  offset-xs-1 col-xl-8 offset-xl-2">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title" id="from-actions-top-left">Student Details</h4>
+                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-xs-center">
+                <div class="card-block">
+                    <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
+                         th:src="${#strings.defaultString(student.user.details.avatarUrl, 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg')}"
+                         class="rounded-circle height-150" alt="Card image"/>
+                </div>
+                <div class="card-block">
+                    <h6 class="card-subtitle text-muted" th:text="${student.user.name}">Name</h6>
+                    <ul class="list-inline list-inline-pipe">
+                        <li th:text="${student.facultyNumber}">FacultyNumber</li>
+                        <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
+                    </ul>
+                    <span th:text="${student.user.email}"></span><span th:if="${student.user.active}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:unless="${student}" class="row text-xs-center">
+        <div class="col-xs-6 offset-xs-3">
+            <h3 class="text-danger capsule">No such student found</h3>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/layout :: scripts"></div>
+</body>
+</html>

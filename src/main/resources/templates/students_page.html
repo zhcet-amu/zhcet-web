@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" data-textdirection="ltr" class="loading">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en" data-textdirection="ltr"
+      class="loading">
 <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <head th:replace="fragments/layout :: head(title = 'Students')">
@@ -10,7 +11,7 @@
       class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation(pageId = 'dean', subPage = 'students')"></div>
-<div th:fragment="content" th:include="fragments/layout :: wrapper">
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="row">
         <div class="col-xs-12">
             <div class="card">
