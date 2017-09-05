@@ -1,11 +1,11 @@
 package in.ac.amu.zhcet.data.repository;
 
 import in.ac.amu.zhcet.data.model.Student;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 
 import java.util.List;
 
-public interface StudentRepository extends CrudRepository<Student, Long> {
+public interface StudentRepository extends DataTablesRepository<Student, Long> {
 
     Student getByEnrolmentNumber(String enrolmentNumber);
 
@@ -13,6 +13,6 @@ public interface StudentRepository extends CrudRepository<Student, Long> {
 
     List<Student> getByEnrolmentNumberIn(List<String> ids);
 
-    Student getByUserDetails_Email(String email);
+    List<Student> findAll();
 
 }

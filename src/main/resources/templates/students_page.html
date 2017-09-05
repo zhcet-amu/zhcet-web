@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" data-textdirection="ltr" class="loading">
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<head th:replace="fragments/layout :: head(title = 'Students')">
+</head>
+<link rel="stylesheet"
+      href="https://zhcet-web-amu.firebaseapp.com/static/css/datatables.bs4.min.css">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
+      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<nav th:replace="fragments/header :: header"></nav>
+<div th:replace="fragments/navigation :: navigation"></div>
+<div th:fragment="content" th:include="fragments/layout :: wrapper">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Students</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in">
+                    <div class="card-block card-dashboard">
+                        <table id="studentTable" class="table display table-striped table-bordered">
+                            <!-- Header Table -->
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Faculty No.</th>
+                                <th>Enrolment No.</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Email</th>
+                            </tr>
+                            </thead>
+                            <!-- Footer Table -->
+                            <tfoot>
+                            <tr>
+                                <th></th>
+                                <th>Faculty No.</th>
+                                <th>Enrolment No.</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Email</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="studentModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Student Info</h4>
+                </div>
+                <div class="modal-body text-xs-center">
+                    <img id="avatar" src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg" class="rounded-circle height-150" alt="Card image"/>
+                    <br><br>
+                    <h4 id="name" class="card-subtitle">Areeb Jamal</h4>
+                    <br>
+                    <ul class="list-inline list-inline-pipe text-muted">
+                        <li id="faculty_no">14PEB049</li>
+                        <li id="enrolment_no">GF1032</li>
+                    </ul>
+                    <h5 id="department" class="capsule">Computer</h5>
+                    <span id="email" style="margin-left: 20px;">jamal.areeb@gmail.com</span><span id="verified" style="margin-left: 5px;"><i class="icon-check2"></i></span>
+                    <br>
+                    <span>Registered at : </span><span id="registered-at">2014-09-08T08:02:17-05:00</span>
+                    <br>
+                    <span>Registered by : </span><span id="registered-by">Dean</span>
+                    <br>
+
+                    <a id="link"><button class="mui-btn mui-btn--fab mui-btn--primary"><i class="material-icons md-24 md-light">edit</i></button></a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/layout :: scripts"></div>
+</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script src="https://zhcet-web-amu.firebaseapp.com/static/js/throttle.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="https://zhcet-web-amu.firebaseapp.com/static/js/datatables.bs4.min.js"></script>
+<script th:src="@{/js/students-datatable.js}"></script>
+</html>

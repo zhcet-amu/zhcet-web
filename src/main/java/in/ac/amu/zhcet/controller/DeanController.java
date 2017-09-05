@@ -73,6 +73,12 @@ public class DeanController {
         return "dean";
     }
 
+    @GetMapping("/dean/students")
+    public String students(Model model) {
+
+        return "students_page";
+    }
+
     @GetMapping("/dean/roles/{id}")
     public String roleManagement(Model model, @PathVariable long id) {
         Department department = departmentRepository.findOne(id);
