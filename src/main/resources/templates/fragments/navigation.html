@@ -16,19 +16,23 @@
     <!-- main menu content-->
     <div class="main-menu-content">
         <ul id="main-menu-navigation" data-menu="menu-navigation" class="navigation navigation-main">
-            <li class="nav-item" sec:authorize="hasRole('ROLE_STUDENT')">
+            <li th:class="|nav-item ${pageId == 'student_attendance' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_STUDENT')">
                 <a th:href="@{/attendance}" href="attendance.html">
                     <i class="icon-calendar"></i>
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Attendance</span>
                 </a>
             </li>
-            <li class="nav-item" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
+            <li th:class="|nav-item ${pageId == 'dean' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
                 <a th:href="@{/dean}" href="dean.html">
                     <i class="icon-cog"></i>
                     <span data-i18n="nav.project.main" class="menu-title">Dean Panel</span>
                 </a>
+                <ul class="menu-content">
+                    <li th:class="${subPage == 'admin' ? 'active' : ''}" ><a th:href="@{/dean}" class="menu-item">Administration</a></li>
+                    <li th:class="${subPage == 'students' ? 'active' : ''}"><a th:href="@{/dean/students}" class="menu-item">Students</a></li>
+                </ul>
             </li>
-            <li class="nav-item" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
+            <li th:class="|nav-item ${pageId == 'department_admin' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
                 <a th:href="@{/department}" href="department.html">
                     <i class="icon-cog"></i>
                     <span data-i18n="nav.project.main" class="menu-title">Department Panel</span>
@@ -40,13 +44,13 @@
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Login</span>
                 </a>
             </li>
-            <li class="nav-item" sec:authorize="hasRole('ROLE_FACULTY')">
+            <li th:class="|nav-item ${pageId == 'faculty_courses' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_FACULTY')">
                 <a th:href="@{/faculty/courses}" href="floatedCourse.html">
                     <i class="icon-stack-2"></i>
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Floated Courses</span>
                 </a>
             </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
+            <li th:class="|nav-item ${pageId == 'profile' ? 'active' : ''} |" sec:authorize="isAuthenticated()">
                 <a th:href="@{/profile}" href="profile.html">
                     <i class="icon-profile"></i>
                     <span data-i18n="nav.project.main" class="menu-title">Profile</span>
