@@ -58,7 +58,7 @@ public class AbstractUploadService<T, U, V> {
 
             uploadResult.getErrors().addAll(
                     parseErrors.stream().map(parseError -> {
-                        String message = parseError.getMessage() +
+                        String message = parseError.getMessage().replace("suppled", "supplied") +
                                 "<br>Line Number: " + parseError.getLineNumber() + " Position: " + parseError.getLinePos();
 
                         if (parseError.getLine() != null)
