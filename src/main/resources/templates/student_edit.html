@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en"
       data-textdirection="ltr"
       class="loading">
-<head th:replace="fragments/layout :: head(title = 'Profile')">
+<head th:replace="fragments/layout :: head(title = 'Edit Student')">
 </head>
 
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
@@ -12,7 +12,8 @@
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
 
-    <div th:if="${student}" class="col-xs-10  offset-xs-1 col-xl-8 offset-xl-2">
+    <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
+    <div th:if="${student}" class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title" id="from-actions-top-left">Student Details</h4>
@@ -37,14 +38,83 @@
                         <li th:text="${student.facultyNumber}">FacultyNumber</li>
                         <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
                     </ul>
+                    <div class="row">
+                        <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
+                            <h5 th:text="${student.user.details.department.name}" class="capsule"></h5>
+                        </div>
+                    </div>
                     <span th:text="${student.user.email}"></span><span th:if="${student.user.active}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
+                    <br>
                 </div>
+            </div>
+            <div class="card-block">
+                <!--/*@thymesVar id="studentModel" type="in.ac.amu.zhcet.data.model.dto.StudentEditModel"*/-->
+                <form class="form" th:action="@{'/dean/students/' + ${student.user.userId}}" method="post" th:object="${studentModel}">
+                    <div class="row">
+                        <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
+                            <div th:each="message : ${success}" class="alert alert-dismissible alert-success">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <span th:text="${message}"></span>
+                            </div>
+                            <div th:each="error : ${#fields.detailedErrors('*')}">
+                                <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                            </div>
+                            <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <div th:utext="${error}">Fix this and try and try again</div>
+                            </div>
+                            <div class="mui-form">
+                                <div class="mui-select">
+                                    <label for="courseCode">Department</label>
+                                    <select id="courseCode" th:field="*{department}" name="courseCode">
+                                        <option th:each="department : ${departments}"
+                                                th:value="${department.name}"
+                                                th:text="${department.name}"
+                                                class="my-dropdown">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="form-group col-xs-12 mb-2">
+                                        <label for="faculty_no">Faculty Number</label>
+                                        <input id="faculty_no" name="description"
+                                               class="form-control"
+                                               type="text"
+                                               th:field="*{facultyNumber}"/>
+                                    </div>
+
+                                    <div class="form-group col-xs-12 mb-2">
+                                        <label for="name">Name</label>
+                                        <input id="name" name="addressLine1"
+                                               class="form-control"
+                                               type="text"
+                                               th:field="*{name}"/>
+                                    </div>
+
+                                    <div class="form-group col-xs-12 mb-2">
+                                        <label for="email">Email</label>
+                                        <input id="email" name="addressLine2"
+                                               class="form-control"
+                                               type="text"
+                                               th:field="*{email}"/>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="icon-check2"></i> Update
+                                </button>
+                                <br><br>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
     <div th:unless="${student}" class="row text-xs-center">
-        <div class="col-xs-6 offset-xs-3">
-            <h3 class="text-danger capsule">No such student found</h3>
+        <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
+            <h3 class="capsule bg-danger">No such student found</h3>
         </div>
     </div>
 </div>

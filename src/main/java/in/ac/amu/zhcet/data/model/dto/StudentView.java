@@ -6,7 +6,7 @@ import lombok.Data;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 @Data
-public class StudentDto {
+public class StudentView {
 
     @JsonView(DataTablesOutput.View.class)
     @JsonProperty("faculty-number")

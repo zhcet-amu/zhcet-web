@@ -48,4 +48,8 @@ public class Utils {
     public static String getAppUrl(HttpServletRequest request) {
         return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
+
+    public static boolean isEmpty(CharSequence charSequence) {
+        return charSequence == null || charSequence.length() == 0;
+    }
 }

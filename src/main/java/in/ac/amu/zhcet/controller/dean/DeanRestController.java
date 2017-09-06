@@ -1,8 +1,8 @@
-package in.ac.amu.zhcet.controller;
+package in.ac.amu.zhcet.controller.dean;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.dto.StudentDto;
+import in.ac.amu.zhcet.data.model.dto.StudentView;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -43,7 +43,7 @@ public class DeanRestController {
 
     @JsonView(DataTablesOutput.View.class)
     @RequestMapping(value = "/dean/users", method = RequestMethod.POST)
-    public DataTablesOutput<StudentDto> getUsers(@Valid @RequestBody DataTablesInput input) {
+    public DataTablesOutput<StudentView> getUsers(@Valid @RequestBody DataTablesInput input) {
         convertInput(input);
         return studentRepository.findAll(input, this::fromStudent);
     }
@@ -56,8 +56,8 @@ public class DeanRestController {
         });
     }
 
-    private StudentDto fromStudent(Student student) {
-        return modelMapper.map(student, StudentDto.class);
+    private StudentView fromStudent(Student student) {
+        return modelMapper.map(student, StudentView.class);
     }
 
 }
