@@ -43,6 +43,31 @@
     </div>
 </div>
 
+<div class="content-header row" style="margin-bottom: 10px;" th:fragment="toolbar">
+    <div class="breadcrumb-wrapper col-xs-12" th:if="${path}">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a>
+            </li>
+            <li class="breadcrumb-item"><a href="#">Page Layouts</a>
+            </li>
+            <li class="breadcrumb-item active">2 Columns
+            </li>
+        </ol>
+    </div>
+    <div class="content-header-left col-md-6 col-xs-12">
+        <div th:if="${title}">
+            <h3 class="content-header-title mb-0" th:text="${title}"></h3>
+            <p class="text-muted mb-0" th:text="${subtitle}"></p>
+        </div>
+    </div>
+    <div class="content-header-right col-md-6 col-xs-12" >
+        <h5 class="float-md-right capsule bg-primary text-white text-xs-center" th:text="|Session : ${@configurationService.getSessionName()}|" style="padding: 10px;"></h5>
+    </div>
+    <div class="content-header-lead col-xs-12 mt-1" th:if="${description}">
+        <p class="lead" th:text="${description}"></p>
+    </div>
+</div>
+
 <div th:fragment="uploader" class="file-uploader">
     <div class="file-container">
         <label class="btn btn-primary" th:for="${id}">

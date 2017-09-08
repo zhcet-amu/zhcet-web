@@ -14,9 +14,10 @@
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_FACULTY')">
     <div class="col-md-12">
+        <div th:replace="fragments/layout :: toolbar"></div>
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title" th:text="|Floated Courses : ${T(in.ac.amu.zhcet.utils.Utils).getCurrentSessionName()}|">Floated Courses</h4>
+                <h4 class="card-title">Floated Courses</h4>
                 <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
                 These are the courses managed by you this session
                 <div class="heading-elements">

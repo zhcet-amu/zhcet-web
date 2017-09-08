@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
-import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.data.service.ConfigurationService;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.NotBlank;
@@ -45,7 +45,7 @@ public class FloatedCourse extends BaseEntity implements Serializable {
     @PrePersist
     public void setDefaults() {
         if (session == null)
-            session = Utils.getCurrentSession();
+            session = ConfigurationService.getDefaultSessionCode();
 
         id = session + "_" + course.getCode();
     }

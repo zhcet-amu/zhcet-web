@@ -1,11 +1,12 @@
 package in.ac.amu.zhcet.data.service;
 
-import in.ac.amu.zhcet.data.model.*;
-import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
+import in.ac.amu.zhcet.data.model.Attendance;
+import in.ac.amu.zhcet.data.model.CourseRegistration;
+import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.repository.AttendanceRepository;
 import in.ac.amu.zhcet.data.repository.CourseRegistrationRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
-import in.ac.amu.zhcet.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,14 +31,14 @@ public class RegisteredCourseService {
 
     @Transactional
     public CourseRegistration registerStudent(FloatedCourse course, String studentId) {
-        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), course.getCourse().getCode());
+        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), course.getCourse().getCode());
 
         return courseRegistrationRepository.save(new CourseRegistration(studentService.getByEnrolmentNumber(studentId), stored));
     }
 
     @Transactional
     public boolean exists(String enrolment, String courseCode) {
-        FloatedCourse course = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), courseCode);
+        FloatedCourse course = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseCode);
 
         return courseRegistrationRepository.existsByFloatedCourseAndStudent_EnrolmentNumber(course, enrolment);
     }
@@ -45,7 +46,7 @@ public class RegisteredCourseService {
     @Transactional
     public CourseRegistration getByStudentAndCourse(String enrolment, String courseCode) {
         Student student = studentService.getByEnrolmentNumber(enrolment);
-        FloatedCourse course = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), courseCode);
+        FloatedCourse course = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseCode);
 
         return courseRegistrationRepository.findByStudentAndFloatedCourse(student, course);
     }
@@ -93,6 +94,6 @@ public class RegisteredCourseService {
 
     @Transactional
     public List<Attendance> getAttendanceByStudent(String studentId) {
-        return attendanceRepository.getByCourseRegistration_Student_EnrolmentNumberAndCourseRegistration_FloatedCourse_Session(studentId, Utils.getCurrentSession());
+        return attendanceRepository.getByCourseRegistration_Student_EnrolmentNumberAndCourseRegistration_FloatedCourse_Session(studentId, ConfigurationService.getDefaultSessionCode());
     }
 }

@@ -24,8 +24,9 @@ public class AttendanceController {
     @GetMapping("/attendance")
     public String attendance(Model model) {
         Student student = studentService.getLoggedInStudent();
-
-        model.addAttribute("student", student);
+        model.addAttribute("title", "Attendance");
+        model.addAttribute("subtitle", "Attendance Panel for " + student.getEnrolmentNumber() + " | " + student.getUser().getName());
+        model.addAttribute("description", "View attendance of floated courses this session");
         model.addAttribute("attendances", registeredCourseService.getAttendanceByStudent(student.getEnrolmentNumber()));
         return "attendance";
     }

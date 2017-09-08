@@ -9,7 +9,7 @@ import java.util.Locale;
 
 public class Utils {
 
-    public static String getCurrentSession(){
+    public static String getDefaultSessionCode(){
         LocalDate localDate = LocalDate.now();
         int month = localDate.getMonthValue();
 
@@ -23,14 +23,15 @@ public class Utils {
         return session;
     }
 
-    public static String getCurrentSessionName() {
-        String session = getCurrentSession();
+    public static String getDefaultSessionName() {
+        return getSessionName(getDefaultSessionCode());
+    }
 
-        if (session.charAt(0) == 'A') {
-            return "Autumn '" + session.substring(1);
-        } else {
-            return "Winter '" + session.substring(1);
-        }
+    public static String getSessionName(String sessionCode) {
+        if (sessionCode.charAt(0) == 'A')
+            return "Autumn '" + sessionCode.substring(1);
+        else
+            return "Winter '" + sessionCode.substring(1);
     }
 
     public static String capitalizeFirst(String string) {

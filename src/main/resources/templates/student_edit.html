@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en"
       data-textdirection="ltr"
       class="loading">
-<head th:replace="fragments/layout :: head(title = 'Edit Student')">
+<head th:replace="fragments/layout :: head">
 </head>
 
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
@@ -14,6 +14,7 @@
 
     <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
     <div th:if="${student}" class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
+        <div th:replace="fragments/layout :: toolbar"></div>
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title" id="from-actions-top-left">Student Details</h4>

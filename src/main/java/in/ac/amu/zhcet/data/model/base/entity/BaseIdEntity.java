@@ -11,5 +11,5 @@ import javax.persistence.*;
 public abstract class BaseIdEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id = null;
+    private Long id = null;
 }

@@ -3,7 +3,7 @@
       class="loading">
 <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-<head th:replace="fragments/layout :: head(title = 'Students')">
+<head th:replace="fragments/layout :: head">
 </head>
 <link rel="stylesheet"
       href="https://zhcet-web-amu.firebaseapp.com/static/css/datatables.bs4.min.css">
@@ -14,6 +14,7 @@
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="row">
         <div class="col-xs-12">
+            <div th:replace="fragments/layout :: toolbar"></div>
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Students</h4>

@@ -11,8 +11,7 @@
 <div th:replace="fragments/navigation :: navigation"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper">
-    <h3 th:text="|${floatedCourse.course.code} - ${floatedCourse.course.title} : ${T(in.ac.amu.zhcet.utils.Utils).getCurrentSessionName()}|"></h3>
-    <br>
+    <div th:replace="fragments/layout :: toolbar"></div>
     <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <strong>Unknown Error!</strong>

@@ -3,10 +3,14 @@ package in.ac.amu.zhcet.controller.dean;
 import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
+import in.ac.amu.zhcet.data.model.configuration.ConfigurationModel;
+import in.ac.amu.zhcet.data.service.ConfigurationService;
 import in.ac.amu.zhcet.data.service.DepartmentService;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.UserService;
 import in.ac.amu.zhcet.utils.DuplicateException;
+import in.ac.amu.zhcet.utils.Utils;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -30,22 +36,26 @@ public class DeanController {
     private final UserService userService;
     private final DepartmentService departmentService;
     private final FacultyService facultyService;
+    private final ConfigurationService configurationService;
 
     @Autowired
-    public DeanController(UserService userService, FacultyService facultyService, DepartmentService departmentService) {
+    public DeanController(UserService userService, FacultyService facultyService, DepartmentService departmentService, ConfigurationService configurationService) {
         this.userService = userService;
         this.departmentService = departmentService;
         this.facultyService = facultyService;
+        this.configurationService = configurationService;
     }
 
     @GetMapping("/dean")
     public String deanAdmin(Model model) {
+        model.addAttribute("title", "Administration Panel");
+        model.addAttribute("subtitle", "Dean Administration Panel");
+        model.addAttribute("description", "Register Students and Faculty, manage roles and users");
+
+
         model.addAttribute("users", userService.getAll());
-
-        if (!model.containsAttribute("department")) {
+        if (!model.containsAttribute("department"))
             model.addAttribute("department", new Department());
-        }
-
         model.addAttribute("departments", departmentService.findAll());
 
         return "dean";
@@ -113,5 +123,73 @@ public class DeanController {
         return "redirect:/dean";
     }
 
+    @Data
+    private static class Config {
+        private int threshold;
+        @NotNull
+        private char term;
+        private int year;
+        private boolean automatic;
+        private final String defaultSession = Utils.getDefaultSessionName();
+    }
+
+    private Config toConfig(ConfigurationModel configurationModel) {
+        Config config = new Config();
+        config.setThreshold(configurationModel.getAttendanceThreshold());
+        config.setTerm(configurationModel.getSession().charAt(0));
+        config.setYear(2000 + Integer.parseInt(configurationModel.getSession().substring(1)));
+        config.setAutomatic(configurationModel.isAutomatic());
+
+        return config;
+    }
+
+    private ConfigurationModel toConfigModel(Config config) {
+        ConfigurationModel configurationModel = new ConfigurationModel();
+        configurationModel.setAttendanceThreshold(config.getThreshold());
+        configurationModel.setSession(config.getTerm() + String.valueOf(config.getYear() - 2000));
+        configurationModel.setAutomatic(config.isAutomatic());
+
+        return configurationModel;
+    }
+
+    @GetMapping("/dean/configuration")
+    public String configuration(Model model) {
+        model.addAttribute("title", "Configuration");
+        model.addAttribute("subtitle", "Configuration Management Panel");
+        model.addAttribute("description", "Manage site wide configurations and parameters");
+        if (!model.containsAttribute("config"))
+            model.addAttribute("config", toConfig(configurationService.getConfig()));
+        return "configuration";
+    }
+
+    @PostMapping("/dean/configuration")
+    public String configurationPost(RedirectAttributes redirectAttributes, @Valid Config config, BindingResult result) {
+        String redirectUrl = "redirect:/dean/configuration";
+
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("config", config);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.config", result);
+            return redirectUrl;
+        }
+
+        List<String> errors = new ArrayList<>();
+        if (config.getThreshold() < 50)
+            errors.add("Threshold should be greater than 50%");
+        if (config.getYear() < 2000)
+            errors.add("Year should be greater than 2000");
+        if (config.getTerm() != 'A' && config.getTerm() != 'W')
+            errors.add("Term can only be Autumn or Winter");
+
+        if (!errors.isEmpty()) {
+            redirectAttributes.addFlashAttribute("config", config);
+            redirectAttributes.addFlashAttribute("errors", errors);
+            return redirectUrl;
+        } else {
+            configurationService.save(toConfigModel(config));
+            redirectAttributes.addFlashAttribute("success", Collections.singletonList("Configuration successfully saved!"));
+        }
+
+        return redirectUrl;
+    }
 
 }

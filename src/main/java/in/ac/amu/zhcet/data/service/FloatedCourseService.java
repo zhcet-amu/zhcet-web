@@ -3,7 +3,6 @@ package in.ac.amu.zhcet.data.service;
 import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
-import in.ac.amu.zhcet.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,7 @@ public class FloatedCourseService {
     }
 
     public List<FloatedCourse> getCurrentFloatedCourses(Department department) {
-        return floatedCourseRepository.getBySessionAndCourse_Department(Utils.getCurrentSession(), department);
+        return floatedCourseRepository.getBySessionAndCourse_Department(ConfigurationService.getDefaultSessionCode(), department);
     }
 
     @Transactional
@@ -44,7 +43,7 @@ public class FloatedCourseService {
     public FloatedCourse floatCourse(Course course) {
         Course stored = courseRepository.findOne(course.getCode());
 
-        return floatedCourseRepository.save(new FloatedCourse(Utils.getCurrentSession(), stored));
+        return floatedCourseRepository.save(new FloatedCourse(ConfigurationService.getDefaultSessionCode(), stored));
     }
 
     @Transactional
@@ -57,14 +56,14 @@ public class FloatedCourseService {
 
     @Transactional
     public void addInCharge(String courseId, List<String> facultyMemberIds) {
-        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), courseId);
+        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseId);
 
         stored.getInCharge().addAll(facultyService.getByIds(facultyMemberIds));
     }
 
     @Transactional
     public void registerStudents(String courseId, List<String> studentIds) {
-        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), courseId);
+        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseId);
 
         List<Student> students = studentService.getByIds(studentIds);
         List<CourseRegistration> registrations = new ArrayList<>();
@@ -85,10 +84,10 @@ public class FloatedCourseService {
     }
 
     public List<FloatedCourse> getByFaculty(FacultyMember facultyMember) {
-        return floatedCourseRepository.getBySessionAndInCharge(Utils.getCurrentSession(), facultyMember);
+        return floatedCourseRepository.getBySessionAndInCharge(ConfigurationService.getDefaultSessionCode(), facultyMember);
     }
 
     public FloatedCourse getCourseById(String courseId){
-        return floatedCourseRepository.getBySessionAndCourse_Code(Utils.getCurrentSession(), courseId);
+        return floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseId);
     }
 }

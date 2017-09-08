@@ -38,6 +38,9 @@ public class DepartmentController {
 
     @GetMapping("/department")
     public String department(Model model) {
+        model.addAttribute("title", "Department Panel");
+        model.addAttribute("subtitle", "Course management for Department");
+        model.addAttribute("description", "Manage and float courses for the session");
         model.addAttribute("floatedCourses", departmentAdminService.getFloatedCourses());
         model.addAttribute("courses", departmentAdminService.getAllCourses());
         FacultyMember facultyMember = departmentAdminService.getFacultyMember();
@@ -110,6 +113,10 @@ public class DepartmentController {
     @GetMapping("department/courses/{id}")
     public String courseDetail(Model model, @PathVariable String id) {
         FloatedCourse floatedCourse = verifyAndGetCourse(id);
+
+        model.addAttribute("title", floatedCourse.getCourse().getTitle());
+        model.addAttribute("subtitle", "Course management for " + floatedCourse.getCourse().getCode());
+        model.addAttribute("description", "Register Students and add Faculty In-Charge for the course");
 
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
         model.addAttribute("courseRegistrations", courseRegistrations);

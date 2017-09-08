@@ -30,6 +30,7 @@
                 <ul class="menu-content">
                     <li th:class="${subPage == 'admin' ? 'active' : ''}" ><a th:href="@{/dean}" class="menu-item">Administration</a></li>
                     <li th:class="${subPage == 'students' ? 'active' : ''}"><a th:href="@{/dean/students}" class="menu-item">Students</a></li>
+                    <li th:class="${subPage == 'config' ? 'active' : ''}"><a th:href="@{/dean/configuration}" class="menu-item">Configuration</a></li>
                 </ul>
             </li>
             <li th:class="|nav-item ${pageId == 'department_admin' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">

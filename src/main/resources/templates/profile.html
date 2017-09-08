@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en"
       data-textdirection="ltr"
       class="loading">
 <head th:replace="fragments/layout :: head(title = 'Profile')">
@@ -14,50 +15,59 @@
     <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
     <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
 
-        <div th:if="${!user.active}" class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
-            <div class="mui-panel">
-                <div class="text-danger">
-                    <h3>Register Email Address</h3>
-                </div>
-                <div th:text="${user.email}"></div>
-                <div th:if="${user.email == null}">
-                    <p>
-                        Your email address is not registered yet! You won't be getting password reset emails from us in case you forget it!
-                    </p>
-                    <div class="row">
-                        <div class="col-xs-6 offset-xs-3">
-                            <form th:action="@{/profile/register_email}" method="post">
-                                <fieldset class="form-group">
-                                    <div class="input-group">
-                                        <input type="email" class="form-control" title="email" name="email" th:value="${email}" placeholder="Email" required>
-                                        <span class="input-group-btn">
-                                            <button type="submit" class="btn btn-primary"><i class="icon-check2"></i></button>
+    <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
+        <div th:replace="fragments/layout :: toolbar"></div>
+    </div>
+
+    <div th:if="${!user.active}" class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
+        <div class="mui-panel">
+            <div class="text-danger">
+                <h3>Register Email Address</h3>
+            </div>
+            <div th:text="${user.email}"></div>
+            <div th:if="${user.email == null}">
+                <p>
+                    Your email address is not registered yet! You won't be getting password reset emails from us in case
+                    you forget it!
+                </p>
+                <div class="row">
+                    <div class="col-xs-6 offset-xs-3">
+                        <form th:action="@{/profile/register_email}" method="post">
+                            <fieldset class="form-group">
+                                <div class="input-group">
+                                    <input type="email" class="form-control" title="email" name="email"
+                                           th:value="${email}" placeholder="Email" required>
+                                    <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-primary"><i
+                                                    class="icon-check2"></i></button>
                                         </span>
-                                    </div>
-                                </fieldset>
-                                <div th:replace="fragments/layout :: success(condition = ${link_sent}, title = 'Sent!', message = ${link_sent})"></div>
-                                <div th:replace="fragments/layout :: error(condition = ${invalid_email}, error = ${invalid_email})"></div>
-                                <div th:replace="fragments/layout :: error(condition = ${duplicate_email}, error = ${duplicate_email})"></div>
-                            </form>
-                        </div>
+                                </div>
+                            </fieldset>
+                            <div th:replace="fragments/layout :: success(condition = ${link_sent}, title = 'Sent!', message = ${link_sent})"></div>
+                            <div th:replace="fragments/layout :: error(condition = ${invalid_email}, error = ${invalid_email})"></div>
+                            <div th:replace="fragments/layout :: error(condition = ${duplicate_email}, error = ${duplicate_email})"></div>
+                        </form>
                     </div>
                 </div>
-                <div th:unless="${user.email == null}">
-                    <p>
-                        Your email address is registered, but not verified! You won't be getting password reset emails from us in case you forget it!
-                    </p>
-                    <div class="row">
-                        <div class="col-xs-6 offset-xs-3">
-                            <form th:action="@{/profile/confirm_email}" method="post">
-                                <button type="submit" class="btn btn-primary block">Resend Verification Link</button><br>
-                                <div th:replace="fragments/layout :: success(condition = ${link_sent}, title = 'Sent!', message = ${link_sent})"></div>
-                                <div th:replace="fragments/layout :: error(condition = ${invalid_email}, error = ${invalid_email})"></div>
-                            </form>
-                        </div>
+            </div>
+            <div th:unless="${user.email == null}">
+                <p>
+                    Your email address is registered, but not verified! You won't be getting password reset emails from
+                    us in case you forget it!
+                </p>
+                <div class="row">
+                    <div class="col-xs-6 offset-xs-3">
+                        <form th:action="@{/profile/confirm_email}" method="post">
+                            <button type="submit" class="btn btn-primary block">Resend Verification Link</button>
+                            <br>
+                            <div th:replace="fragments/layout :: success(condition = ${link_sent}, title = 'Sent!', message = ${link_sent})"></div>
+                            <div th:replace="fragments/layout :: error(condition = ${invalid_email}, error = ${invalid_email})"></div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
     <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
         <div class="card">
@@ -87,7 +97,8 @@
                     <ul class="list-inline list-inline-pipe" sec:authorize="hasRole('FACULTY')">
                         <li th:text="${faculty.facultyId}">FacultyNumber</li>
                     </ul>
-                    <span th:text="${user.email}"></span><span th:if="${user.active}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
+                    <span th:text="${user.email}"></span><span th:if="${user.active}" style="margin-left: 5px;"><i
+                        class="icon-check2"></i></span>
                 </div>
             </div>
             <!--/*@thymesVar id="user_details" type="in.ac.amu.zhcet.data.model.base.user.UserDetail"*/-->

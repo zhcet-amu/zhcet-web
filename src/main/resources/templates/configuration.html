@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head">
+</head>
+
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
+      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<nav th:replace="fragments/header :: header"></nav>
+<div th:replace="fragments/navigation :: navigation(pageId = 'dean', subPage='config')"></div>
+
+<link rel="stylesheet" type="text/css" href="https://zhcet-web-amu.firebaseapp.com/static/css/switchery.min.css">
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
+
+    <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
+        <div th:replace="fragments/layout :: toolbar"></div>
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title" id="from-actions-top-left">Configurations</h4>
+                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-block">
+                <div th:each="message : ${success}" class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <span th:text="${message}"></span>
+                </div>
+                <div th:each="error : ${#fields.detailedErrors('*')}">
+                    <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                </div>
+                <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <div th:utext="${error}">Fix this and try and try again</div>
+                </div>
+                <form class="form form-horizontal" th:action="@{/dean/configuration}" method="post" th:object="${config}">
+                    <div class="form-body">
+                        <div class="form-group row" style="vertical-align: middle">
+                            <label class="col-md-3 label-control" for="threshold">Attendance Threshold</label>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="number" id="threshold" class="form-control"
+                                           placeholder="Threshold Percentage" th:field="*{threshold}">
+                                    <span class="input-group-addon">%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 label-control" for="session-year">Session</label>
+                            <div class="col-md-3">
+                                <select class="form-control" th:field="*{term}" id="session-term">
+                                    <option value="W">Winter</option>
+                                    <option value="A">Autumn</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" id="session-year" th:field="*{year}" class="form-control" placeholder="Session Year">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-3 label-control">Auto Session Change</label>
+                            <div class="col-md-9">
+                                <label id="auto-session" class="file center-block">
+                                    <input type="checkbox" id="auto" data-color="primary" class="switchery" th:field="*{automatic}">
+                                </label>
+                            </div>
+                        </div>
+                        <div id="default-session" class="row text-xs-center" th:hidden="${!config.automatic}">
+                            <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+                                <h5 class="capsule bg-primary text-white" th:text="|The applied session is ${config.defaultSession}|"></h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="icon-check2"></i> Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/layout :: scripts"></div>
+
+<script src="https://zhcet-web-amu.firebaseapp.com/static/js/switchery.min.js" type="text/javascript"></script>
+<script src="https://zhcet-web-amu.firebaseapp.com/static/js/switch.min.js" type="text/javascript"></script>
+<script th:src="@{/js/app-config.js}"></script>
+</body>
+</html>

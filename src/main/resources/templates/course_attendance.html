@@ -12,6 +12,9 @@
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_FACULTY')">
     <div class="row">
+        <div class="col-xs-12">
+            <div th:replace="fragments/layout :: toolbar"></div>
+        </div>
         <div class="col-xs-12 col-xl-7">
             <div class="card">
                 <div class="card-header">
