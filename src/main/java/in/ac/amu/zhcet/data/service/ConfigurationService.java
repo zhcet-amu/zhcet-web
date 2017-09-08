@@ -45,10 +45,18 @@ public class ConfigurationService {
         return configurationRepository.findFirstByOrderByIdDesc().getConfig();
     }
 
-    @Cacheable("session")
+    @Cacheable("config")
+    public ConfigurationModel getConfigCache() {
+        return configurationRepository.findFirstByOrderByIdDesc().getConfig();
+    }
+
     public String getSession() {
-        ConfigurationModel config = getConfig();
+        ConfigurationModel config = getConfigCache();
         return getSessionCode(config);
+    }
+
+    public int getThreshold() {
+        return getConfigCache().getAttendanceThreshold();
     }
 
     public String getSessionName() {
@@ -56,7 +64,7 @@ public class ConfigurationService {
     }
 
     @Transactional
-    @CacheEvict("session")
+    @CacheEvict("config")
     public void save(ConfigurationModel config) {
         Configuration configuration = new Configuration();
         configuration.setConfig(config);

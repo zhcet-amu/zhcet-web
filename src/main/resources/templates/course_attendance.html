@@ -19,6 +19,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Course Attendance</h4>
+                    <h6 th:text="|Threshold Percentage : ${@configurationService.getThreshold()}%|"></h6>
                     <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -45,7 +46,7 @@
                                     <tbody>
                                     <th:block th:each="registration: ${courseRegistrations}">
                                         <tr th:with="percent=${registration.attendance.attended*100.0/registration.attendance.delivered}"
-                                            th:class="(${percent &lt; 75} ? 'bg-danger white':'')">
+                                            th:class="(${percent &lt; @configurationService.getThreshold()} ? 'bg-danger white':'')">
                                             <td class="text-xs-center"
                                                 th:text="${registration.student.user.userId}"></td>
                                             <td class="text-xs-center" th:text="${registration.student.user.name}"></td>
@@ -184,7 +185,7 @@
                                     <tbody>
                                     <tr th:each="attendance, rowStat: *{uploadList}"
                                         th:with="percent=${attendance.attended*100.0/attendance.delivered}"
-                                        th:class="(${percent &lt; 75} ? 'bg-danger':'')">
+                                        th:class="(${percent &lt; @configurationService.getThreshold()} ? 'bg-danger':'')">
                                         <input type="hidden" th:field="*{uploadList[__${rowStat.index}__].student}"/>
                                         <td class="text-xs-center" th:text="${attendance.student}"></td>
                                         <td class="text-xs-center"><input type="number" class="attended"
@@ -232,7 +233,7 @@
     </div>
 </div>
 <script th:src="@{/js/file-uploader.js}" type="text/javascript"></script>
-<script>
+<script th:inline="javascript">
     truncateDecimals = function (number, digits) {
         var multiplier = Math.pow(10, digits),
             adjustedNum = number * multiplier,
@@ -248,10 +249,12 @@
         var delivered = cell.find('.delivered').val();
         var percent = attended/delivered*100;
 
-        if (percent < 75)
+        /*<![CDATA[*/
+        if (percent < /*[[${@configurationService.getThreshold()}]]*/ 75)
             cell.addClass('bg-danger');
         else
             cell.removeClass('bg-danger');
+        /*]]>*/
 
         cell.find('.percent').text(truncateDecimals(percent, 2) + '%')
     }

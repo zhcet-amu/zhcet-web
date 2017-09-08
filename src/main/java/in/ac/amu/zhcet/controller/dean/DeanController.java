@@ -163,6 +163,12 @@ public class DeanController {
         model.addAttribute("title", "Configuration");
         model.addAttribute("subtitle", "Configuration Management Panel");
         model.addAttribute("description", "Manage site wide configurations and parameters");
+
+        log.info(configurationService.getConfig().toString());
+        log.info(configurationService.getSessionName());
+        log.info(configurationService.getSession());
+        log.info(configurationService.getThreshold() + "");
+
         if (!model.containsAttribute("config"))
             model.addAttribute("config", toConfig(configurationService.getConfig()));
         return "configuration";
@@ -179,8 +185,8 @@ public class DeanController {
         }
 
         List<String> errors = new ArrayList<>();
-        if (config.getThreshold() < 50)
-            errors.add("Threshold should be greater than 50%");
+        if (config.getThreshold() < 50 || config.getThreshold() > 100)
+            errors.add("Threshold should be 50% and 100%");
         if (config.getYear() < 2000)
             errors.add("Year should be greater than 2000");
         if (config.getTerm() != 'A' && config.getTerm() != 'W')

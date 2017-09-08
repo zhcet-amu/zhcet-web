@@ -15,6 +15,7 @@
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title">Attendance</h4>
+                <h6 th:text="|Threshold Percentage : ${@configurationService.getThreshold()}%|"></h6>
                 <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
                 <div class="heading-elements">
                     <ul class="list-inline mb-0">
@@ -43,7 +44,7 @@
                                 <!--/*@thymesVar id="attendance" type="in.ac.amu.zhcet.data.model.Attendance"*/-->
                                 <th:block th:each="attendance: ${attendances}">
                                     <tr th:with="percent=${attendance.attended*100.0/attendance.delivered}"
-                                        th:class="(${percent &lt; 75} ? 'bg-danger white':'')">
+                                        th:class="(${percent &lt; @configurationService.getThreshold()} ? 'bg-danger white':'')">
                                         <td class="text-xs-center" th:text="${attendance.courseRegistration.floatedCourse.course.code}"></td>
                                         <td class="text-xs-center" th:text="${attendance.courseRegistration.floatedCourse.course.title}"></td>
                                         <td class="text-xs-center" th:with="attended = ${attendance.attended}"
