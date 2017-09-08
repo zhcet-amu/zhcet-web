@@ -3,7 +3,7 @@
       lang="en"
       data-textdirection="ltr"
       class="loading">
-<head th:replace="fragments/layout :: head(title = 'Role Management')"></head>
+<head th:replace="fragments/layout :: head"></head>
 
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
       class="vertical-layout vertical-menu 2-columns  fixed-navbar">
@@ -11,9 +11,7 @@
 <div th:replace="fragments/navigation :: navigation"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper">
-    <h3 th:text="|${department.name} Department Role Management|"></h3>
-
-    <br>
+    <div th:replace="fragments/layout :: toolbar"></div>
 
     <div th:if="${saved}" class="alert alert-dismissible alert-success">
         <button type="button" class="close" data-dismiss="alert">&times;</button>

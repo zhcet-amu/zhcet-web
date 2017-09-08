@@ -65,8 +65,14 @@ public class DeanController {
     public String roleManagement(Model model, @PathVariable long id) {
         Department department = departmentService.findOne(id);
 
-        model.addAttribute("department", department);
-        model.addAttribute("facultyMembers", facultyService.getByDepartment(department));
+        if (department != null) {
+            model.addAttribute("title", "Role Management");
+            model.addAttribute("subtitle", "Role Management Panel for " + department.getName() + " Department");
+            model.addAttribute("description", "Manage Faculty Roles and Permissions");
+
+            model.addAttribute("department", department);
+            model.addAttribute("facultyMembers", facultyService.getByDepartment(department));
+        }
 
         return "role_management";
     }

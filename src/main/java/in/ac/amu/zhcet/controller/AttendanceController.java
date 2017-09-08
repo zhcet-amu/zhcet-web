@@ -20,7 +20,6 @@ public class AttendanceController {
         this.registeredCourseService = registeredCourseService;
     }
 
-
     @GetMapping("/attendance")
     public String attendance(Model model) {
         Student student = studentService.getLoggedInStudent();
