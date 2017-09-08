@@ -56,12 +56,16 @@ public class StudentEditService {
         Student checkDuplicate = studentService.getByFacultyNumber(studentEditModel.getFacultyNumber());
         if (checkDuplicate != null && !checkDuplicate.getUser().getUserId().equals(student.getUser().getUserId()))
             throw new DuplicateException("Student", "Faculty Number", studentEditModel.getFacultyNumber(), studentEditModel);
-        UserAuth checkEmailDuplicate = userService.getUserByEmail(studentEditModel.getEmail());
-        if (checkEmailDuplicate != null && !checkEmailDuplicate.getUserId().equals(student.getUser().getUserId()))
-            throw new DuplicateException("User", "email", studentEditModel.getEmail(), studentEditModel);
 
-        if (!Utils.isEmpty(studentEditModel.getEmail()) && !Utils.isValidEmail(studentEditModel.getEmail()))
-            throw new RuntimeException("Invalid Email");
+        if (!Utils.isEmpty(studentEditModel.getEmail())) {
+            UserAuth checkEmailDuplicate = userService.getUserByEmail(studentEditModel.getEmail());
+            if (checkEmailDuplicate != null && !checkEmailDuplicate.getUserId().equals(student.getUser().getUserId()))
+                throw new DuplicateException("User", "email", studentEditModel.getEmail(), studentEditModel);
+            if (!Utils.isValidEmail(studentEditModel.getEmail()))
+                throw new RuntimeException("Invalid Email");
+        } else {
+            studentEditModel.setEmail(null);
+        }
 
         mergeModel(student, studentEditModel, department);
         studentService.save(student);
