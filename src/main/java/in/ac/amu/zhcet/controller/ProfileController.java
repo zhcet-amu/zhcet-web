@@ -170,7 +170,8 @@ public class ProfileController {
             }
 
             log.info("Uploading photo " + file.getOriginalFilename() + " for " + user.getUserId());
-            InputStream resizedImage = ImageUtils.generateThumbnail(image, extension, 500);
+            log.info(String.format("Original Image Size : %s", Utils.humanReadableByteCount(file.getSize(), true)));
+            InputStream resizedImage = ImageUtils.generateThumbnail(image, extension, 1000);
             if (resizedImage == null) // File is appropriate, hence no thumbnail generated
                 resizedImage = file.getInputStream();
             String link = firebaseService.uploadFile("profile/" + user.getUserId() + "/profile." + extension, file.getContentType(), resizedImage );
