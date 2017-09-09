@@ -66,7 +66,6 @@ public class UserDetailService implements UserDetailsService {
     @Transactional
     public void updateDetails(UserAuth user, UserDetail userDetail) {
         UserDetail details = user.getDetails();
-        details.setAvatarUrl(userDetail.getAvatarUrl());
         details.setDescription(userDetail.getDescription());
         details.setAddressLine1(userDetail.getAddressLine1());
         details.setAddressLine2(userDetail.getAddressLine2());
@@ -74,7 +73,12 @@ public class UserDetailService implements UserDetailsService {
         details.setState(userDetail.getState());
 
         userService.save(user);
+    }
 
+    @Transactional
+    public void updateAvatar(UserAuth user, String avatarUrl) {
+        user.getDetails().setAvatarUrl(avatarUrl);
+        userService.save(user);
         updatePrincipal(user);
     }
 }

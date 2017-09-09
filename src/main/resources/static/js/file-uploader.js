@@ -1,12 +1,23 @@
-function formatBytes(a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]}
+function formatBytes(a,b){if(0===a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]}
 
 function setText(element, text) {
     element.html(text);
     element.removeClass('hidden');
 }
 
+var typesById = {};
+var sizeById = {};
+
+function setTypes(id, types) {
+    typesById[id] = types;
+}
+
+function setMaxSize(id, size) {
+    sizeById[id] = size;
+}
+
 function fileUploaded(event) {
-    var types = event.accept.split(',').map(function(item) {
+    var types = (typesById[event.id] ? typesById[event.id] : event.accept).split(',').map(function(item) {
         return item.trim();
     });
 
@@ -28,22 +39,24 @@ function fileUploaded(event) {
 
     uploadBtn.addClass('hidden');
 
-    if (types.indexOf(file.type) === -1) {
-        toastr.error('The type of file must be CSV');
-        fileName.addClass('bg-danger');
-        return;
-    } else {
+    console.log(file.type);
+    if (types.indexOf(file.type) !== -1) {
         fileName.removeClass('bg-danger');
-    }
+        var maxSize = sizeById[event.id] ? sizeById[event.id] : 5*1024*1024;
 
-    if (file.size > 5 * 1024 * 1024) {
-        toastr.error('The file size must be under 5 MB');
-        fileSize.addClass('bg-danger');
+        if (file.size > maxSize) {
+            toastr.error('The file size must be under ' + formatBytes(maxSize));
+            fileSize.addClass('bg-danger');
+            return;
+        } else {
+            fileSize.removeClass('bg-danger');
+            fileSize.addClass('bg-success');
+        }
+
+        uploadBtn.removeClass('hidden');
         return;
-    } else {
-        fileSize.removeClass('bg-danger');
-        fileSize.addClass('bg-success');
     }
 
-    uploadBtn.removeClass('hidden');
+    toastr.error('The type of file must be either of ' + types);
+    fileName.addClass('bg-danger');
 }

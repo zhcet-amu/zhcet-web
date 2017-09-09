@@ -99,6 +99,17 @@
                     </ul>
                     <span th:text="${user.email}"></span><span th:if="${user.active}" style="margin-left: 5px;"><i
                         class="icon-check2"></i></span>
+                    <form th:action="@{/profile/picture}" enctype="multipart/form-data" method="post">
+                        <div th:replace="fragments/layout :: uploader(id = 'avatar_upload', btn_choose = 'Change Avatar', upload_types = 'image/*')"></div>
+                        <div th:each="success : ${avatar_success}" class="alert alert-dismissible alert-success">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <span th:text="${success}">Your profile was updated successfully!</span>
+                        </div>
+                        <div th:each="error : ${avatar_errors}" class="alert alert-dismissible alert-danger">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <div th:utext="${error}">Fix this and try and try again</div>
+                        </div>
+                    </form>
                 </div>
             </div>
             <!--/*@thymesVar id="user_details" type="in.ac.amu.zhcet.data.model.base.user.UserDetail"*/-->
@@ -170,5 +181,10 @@
     </div>
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
+<script th:src="@{/js/file-uploader.js}" type="text/javascript"></script>
+<script>
+    setTypes('avatar_upload', 'image/png,image/jpeg,image/jpg,image/bmp,image/gif');
+    setMaxSize('avatar_upload', 2*1024*1024);
+</script>
 </body>
 </html>

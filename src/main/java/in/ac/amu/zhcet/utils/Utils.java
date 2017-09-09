@@ -2,8 +2,12 @@ package in.ac.amu.zhcet.utils;
 
 import org.apache.commons.text.WordUtils;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Locale;
 
@@ -52,5 +56,13 @@ public class Utils {
 
     public static boolean isEmpty(CharSequence charSequence) {
         return charSequence == null || charSequence.length() == 0;
+    }
+
+    public static BufferedImage readImage(MultipartFile file) {
+        try {
+            return ImageIO.read(file.getInputStream());
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

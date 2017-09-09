@@ -72,7 +72,8 @@ public class FirebaseService {
         log.info("Media Link : " + uploaded.getMediaLink());
         log.info("Metadata : " + uploaded.getMetadata().toString());
 
-        String link = String.format("https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media", uploaded.getBucket(), URLEncoder.encode(uploaded.getName(), "UTF-8"));
+        String link = String.format("https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media&token=%s",
+                uploaded.getBucket(), URLEncoder.encode(uploaded.getName(), "UTF-8"), uuid);
         log.info("Firebase Link : " + link);
 
         return link;

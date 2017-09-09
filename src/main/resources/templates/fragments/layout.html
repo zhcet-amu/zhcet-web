@@ -73,8 +73,8 @@
         <label class="btn btn-primary" th:for="${id}">
             <input th:id="${id}" type="file" name="file" style="display: none"
                    onchange="fileUploaded(this)"
-                   accept="text/csv, .csv">
-            Choose
+                   th:accept="${upload_types == null ? 'text/csv, .csv' : upload_types}">
+            <span th:text="${btn_choose == null ? 'Choose' : btn_choose}">Choose</span>
         </label>
         <span class="file-name capsule hidden"></span>
         <span class="file-size capsule hidden"></span>
