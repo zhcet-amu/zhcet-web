@@ -19,3 +19,5 @@ gradle-app.setting
 
 # Upload directory
 /upload-dir/
+
+service-account.json

@@ -42,5 +42,6 @@ dependencies {
     compile 'org.modelmapper:modelmapper:1.1.0'
     compile 'mysql:mysql-connector-java'
     compile 'com.github.darrachequesne:spring-data-jpa-datatables:4.1'
+    compile 'com.google.firebase:firebase-admin:5.3.0'
     compileOnly "org.projectlombok:lombok:1.16.18"
 }
