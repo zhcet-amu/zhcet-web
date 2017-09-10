@@ -21,3 +21,5 @@ gradle-app.setting
 /upload-dir/
 
 service-account.json
+
+logs/
