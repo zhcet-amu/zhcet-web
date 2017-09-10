@@ -21,5 +21,6 @@ gradle-app.setting
 /upload-dir/
 
 service-account.json
+secret.properties
 
 logs/

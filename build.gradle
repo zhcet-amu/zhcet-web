@@ -22,6 +22,35 @@ repositories {
     mavenCentral()
 }
 
+// attach new global property to the `project`. Will not override by default
+def safeLoad(String name, Object value, Boolean override = false) {
+    if (!hasProperty(name) || override)
+        project.ext.set(name as String, value as String)
+}
+
+File secretPropsFile = file('secret.properties')
+if (secretPropsFile.exists()) {
+    println 'Loading Secret Properties...'
+    Properties p = new Properties()
+    p.load(new FileInputStream(secretPropsFile))
+    p.each { name, value ->
+        safeLoad name as String, value
+    }
+} else {
+    println 'Secret Properties not found. Relying on Environment Variables'
+}
+
+processResources {
+    // Saving secrets in application.properties
+    filesMatching("**/application.properties") {
+        expand(project.ext.properties)
+    }
+}
+
+build {
+    dependsOn processResources
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")

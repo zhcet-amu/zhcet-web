@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -11,6 +12,11 @@ import java.util.Properties;
 @Configuration
 public class EmailConfiguration {
 
+    @Value("${email}")
+    private String email;
+    @Value("${email.password}")
+    private String password;
+
     @Bean
     @Primary
     public JavaMailSender getJavaMailSender() {
@@ -18,8 +24,8 @@ public class EmailConfiguration {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername(System.getenv("ZHCET_WEB_EMAIL"));
-        mailSender.setPassword(System.getenv("ZHCET_WEB_EMAIL_PASSWORD"));
+        mailSender.setUsername(email);
+        mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
