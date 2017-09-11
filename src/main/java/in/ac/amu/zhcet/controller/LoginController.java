@@ -1,11 +1,10 @@
 package in.ac.amu.zhcet.controller;
 
 
-import in.ac.amu.zhcet.data.model.token.PasswordResetToken;
 import in.ac.amu.zhcet.data.model.dto.PasswordReset;
-import in.ac.amu.zhcet.data.service.token.EmailService;
+import in.ac.amu.zhcet.data.model.token.PasswordResetToken;
 import in.ac.amu.zhcet.data.service.token.PasswordResetService;
-import in.ac.amu.zhcet.data.service.UserService;
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 import static in.ac.amu.zhcet.utils.Utils.getAppUrl;
@@ -27,13 +25,9 @@ import static in.ac.amu.zhcet.utils.Utils.getAppUrl;
 public class LoginController {
 
     private final PasswordResetService passwordResetService;
-    private final EmailService emailService;
-    private final UserService userService;
 
-    public LoginController(PasswordResetService passwordResetService, EmailService emailService, UserService userService) {
+    public LoginController(PasswordResetService passwordResetService) {
         this.passwordResetService = passwordResetService;
-        this.emailService = emailService;
-        this.userService = userService;
     }
 
     @GetMapping("/login/forget_password")
@@ -79,20 +73,9 @@ public class LoginController {
             return redirectUrl;
         }
 
-        boolean correct = true;
-        List<String> errors = new ArrayList<>();
+        List<String> errors = Utils.validatePassword(passwordReset.getNewPassword(), passwordReset.getConfirmPassword());
 
-        if(!passwordReset.getNewPassword().equals(passwordReset.getConfirmPassword())) {
-            errors.add("Passwords don't match!");
-            correct = false;
-        }
-
-        if(passwordReset.getNewPassword().length() < 6) {
-            errors.add("Passwords should be at least 6 characters long!");
-            correct = false;
-        }
-
-        if (!correct) {
+        if (!errors.isEmpty()) {
             redirectAttributes.addFlashAttribute("pass_errors", errors);
             return redirectUrl;
         }

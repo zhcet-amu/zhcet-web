@@ -35,6 +35,7 @@ public class UserAuth extends BaseEntity {
     private String name;
 
     private boolean active;
+    private boolean passwordChanged;
 
     @NotNull
     @Size(min = 4, max = 100)

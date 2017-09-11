@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class Utils {
@@ -72,5 +74,16 @@ public class Utils {
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+
+    public static List<String> validatePassword(String pass, String repass) {
+        List<String> errors = new ArrayList<>();
+
+        if(!pass.equals(repass))
+            errors.add("Passwords don't match!");
+        if (repass.length() < 6)
+            errors.add("Passwords should be at least 6 characters long!");
+
+        return errors;
     }
 }

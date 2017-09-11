@@ -46,6 +46,9 @@
                             <a href="#" th:href="@{/profile}" class="dropdown-item" sec:authorize="isAuthenticated()">
                                 <i class="icon-head"></i> Edit Profile
                             </a>
+                            <a href="#" th:href="@{/profile/change_password}" class="dropdown-item" sec:authorize="isAuthenticated()">
+                                <i class="icon-unlock"></i> Change Password
+                            </a>
                             <div class="dropdown-divider"></div>
                             <form id="logout-form" th:action="@{/logout}" method="post">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>

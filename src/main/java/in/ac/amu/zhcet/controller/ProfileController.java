@@ -5,6 +5,7 @@ import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.base.user.Type;
 import in.ac.amu.zhcet.data.model.base.user.UserAuth;
 import in.ac.amu.zhcet.data.model.base.user.UserDetail;
+import in.ac.amu.zhcet.data.model.dto.PasswordChange;
 import in.ac.amu.zhcet.data.model.token.VerificationToken;
 import in.ac.amu.zhcet.data.service.FacultyService;
 import in.ac.amu.zhcet.data.service.FirebaseService;
@@ -28,10 +29,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -133,6 +136,45 @@ public class ProfileController {
             redirectAttributes.addFlashAttribute("errors", Collections.singletonList(exc.getMessage()));
         }
 
+        return "redirect:/profile";
+    }
+
+    @GetMapping("/profile/change_password")
+    public String changePassword(Model model) {
+        UserAuth userAuth = userService.getLoggedInUser();
+        if (!userAuth.isActive()) {
+            model.addAttribute("error", "The user is not verified, and hence can't change the password");
+            return "change_password";
+        }
+        PasswordChange passwordChange = new PasswordChange();
+        model.addAttribute("password", passwordChange);
+        return "change_password";
+    }
+
+    @PostMapping("/profile/change_password")
+    public String savePassword(@Valid PasswordChange passwordChange, RedirectAttributes redirectAttributes) {
+        String redirectUrl = "redirect:/profile/change_password";
+
+        UserAuth userAuth = userService.getLoggedInUser();
+        if (!userAuth.isActive()) {
+            redirectAttributes.addFlashAttribute("error", "The user is not verified, and hence can't change the password");
+            return redirectUrl;
+        }
+
+        if (!UserAuth.PASSWORD_ENCODER.matches(passwordChange.getOldPassword(), userAuth.getPassword())) {
+            redirectAttributes.addFlashAttribute("pass_errors", "Current password does not match provided password");
+            return redirectUrl;
+        }
+
+        List<String> errors = Utils.validatePassword(passwordChange.getNewPassword(), passwordChange.getConfirmPassword());
+
+        if (!errors.isEmpty()) {
+            redirectAttributes.addFlashAttribute("pass_errors", errors);
+            return redirectUrl;
+        }
+
+        userService.changeUserPassword(userAuth, passwordChange.getNewPassword());
+        redirectAttributes.addFlashAttribute("password_change_success", "Password was changed successfully");
         return "redirect:/profile";
     }
 

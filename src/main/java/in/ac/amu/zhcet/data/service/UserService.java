@@ -74,8 +74,8 @@ public class UserService {
     }
 
     public void changeUserPassword(UserAuth userAuth, String password) {
-        //UserAuth userAuth = userRepository.findByUserId(user.getUsername());
         userAuth.setPassword(UserAuth.PASSWORD_ENCODER.encode(password));
+        userAuth.setPasswordChanged(true);
         userRepository.save(userAuth);
     }
 }
