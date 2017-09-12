@@ -41,6 +41,7 @@
                                         <th class="text-xs-center">ATTENDED</th>
                                         <th class="text-xs-center">DELIVERED</th>
                                         <th class="text-xs-center">PERCENTAGE</th>
+                                        <th class="text-xs-center">LAST UPDATED</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -59,6 +60,7 @@
                                                 th:text="${delivered}"></td>
                                             <td class="text-xs-center"
                                                 th:text="${registration.attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent,0,2)}+'%'"></td>
+                                            <td class="text-xs-center" th:text="${registration.attendance.updatedAt != null ? #temporals.format(registration.attendance.updatedAt, 'EEE, MMM d, yy hh:mm a') : ''}"></td>
                                         </tr>
                                     </th:block>
                                     </tbody>

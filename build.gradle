@@ -60,8 +60,10 @@ dependencies {
     compile("org.thymeleaf:thymeleaf:3.0.6.RELEASE")
     compile("org.thymeleaf:thymeleaf-spring4:3.0.6.RELEASE")
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.2.RELEASE")
+    compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-java8time', version: '3.0.1.RELEASE'
     compile("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.2.2")
-    compile "net.sf.supercsv:super-csv:2.4.0"
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.10.Final'
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.2.10.Final'
     compile "com.j256.simplecsv:simplecsv:2.1"
     compile "org.flywaydb:flyway-core:4.2.0"
     compile "org.apache.commons:commons-text:1.1"

@@ -7,18 +7,20 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
+import java.time.ZonedDateTime;
 
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
     @CreatedDate
-    private Date createdAt;
+    private ZonedDateTime createdAt;
 
     @LastModifiedDate
-    private Date updatedAt;
+    private ZonedDateTime updatedAt;
 
     @CreatedBy
     private String createdBy;

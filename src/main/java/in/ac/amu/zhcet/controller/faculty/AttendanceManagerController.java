@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.controller.faculty;
 
 import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
+import in.ac.amu.zhcet.service.EmailNotificationService;
 import in.ac.amu.zhcet.service.core.upload.AttendanceUploadService;
 import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
@@ -16,20 +17,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static in.ac.amu.zhcet.utils.Utils.getAppUrl;
 
 @Slf4j
 @Controller
 public class AttendanceManagerController {
 
     private final AttendanceUploadService attendanceUploadService;
+    private final EmailNotificationService emailNotificationService;
 
     @Autowired
-    public AttendanceManagerController(AttendanceUploadService attendanceUploadService) {
+    public AttendanceManagerController(AttendanceUploadService attendanceUploadService, EmailNotificationService emailNotificationService) {
         this.attendanceUploadService = attendanceUploadService;
+        this.emailNotificationService = emailNotificationService;
     }
 
     @Data
@@ -66,7 +72,7 @@ public class AttendanceManagerController {
     }
 
     @PostMapping("faculty/courses/{id}/attendance_confirmed")
-    public String uploadAttendance(RedirectAttributes attributes, @PathVariable String id, @Valid @ModelAttribute AttendanceModel attendanceModel, BindingResult bindingResult) {
+    public String uploadAttendance(RedirectAttributes attributes, @PathVariable String id, @Valid @ModelAttribute AttendanceModel attendanceModel, BindingResult bindingResult, HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
             attributes.addFlashAttribute("attendanceModel", attendanceModel);
@@ -74,6 +80,7 @@ public class AttendanceManagerController {
         } else {
             try {
                 attendanceUploadService.updateAttendance(id, attendanceModel.getUploadList());
+                emailNotificationService.sendNotificationsForAttendance(id, getAppUrl(request), attendanceModel.getUploadList());
                 attributes.addFlashAttribute("updated", true);
             } catch (Exception e) {
                 attributes.addFlashAttribute("attendanceModel", attendanceModel);
