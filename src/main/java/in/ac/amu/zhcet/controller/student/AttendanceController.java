@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller;
+package in.ac.amu.zhcet.controller.student;
 
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.service.core.RegisteredCourseService;

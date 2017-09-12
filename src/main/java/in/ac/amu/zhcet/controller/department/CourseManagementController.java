@@ -1,16 +1,17 @@
-package in.ac.amu.zhcet.controller;
+package in.ac.amu.zhcet.controller.department;
 
-import in.ac.amu.zhcet.data.model.*;
+import in.ac.amu.zhcet.data.model.CourseRegistration;
+import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.RegistrationUpload;
 import in.ac.amu.zhcet.service.core.DepartmentAdminService;
-import in.ac.amu.zhcet.service.core.FacultyService;
 import in.ac.amu.zhcet.service.core.upload.RegistrationUploadService;
 import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,88 +19,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 @Controller
-public class DepartmentController {
+public class CourseManagementController {
 
     private final DepartmentAdminService departmentAdminService;
     private final RegistrationUploadService registrationUploadService;
 
-    public DepartmentController(DepartmentAdminService departmentAdminService, RegistrationUploadService registrationUploadService) {
+    @Autowired
+    public CourseManagementController(DepartmentAdminService departmentAdminService, RegistrationUploadService registrationUploadService) {
         this.departmentAdminService = departmentAdminService;
         this.registrationUploadService = registrationUploadService;
-    }
-
-    @GetMapping("/department")
-    public String department(Model model) {
-        model.addAttribute("title", "Department Panel");
-        model.addAttribute("subtitle", "Course management for Department");
-        model.addAttribute("description", "Manage and float courses for the session");
-        model.addAttribute("floatedCourses", departmentAdminService.getFloatedCourses());
-        model.addAttribute("courses", departmentAdminService.getAllCourses());
-        FacultyMember facultyMember = departmentAdminService.getFacultyMember();
-        model.addAttribute("department", FacultyService.getDepartment(facultyMember));
-        if (!model.containsAttribute("course")) {
-            Course course = new Course();
-            course.setDepartment(FacultyService.getDepartment(facultyMember));
-            model.addAttribute("course", course);
-        }
-        model.addAttribute("facultyMembers", departmentAdminService.getAllFacultyMembers());
-
-        return "department";
-    }
-
-    @PostMapping("/department/create_course")
-    public String createCourse(@Valid Course course, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-
-        if (bindingResult.hasErrors() && !bindingResult.hasFieldErrors("department")) {
-            redirectAttributes.addFlashAttribute("course", course);
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.course", bindingResult);
-        } else {
-            try {
-                departmentAdminService.registerCourse(course);
-                redirectAttributes.addFlashAttribute("course_success", true);
-            } catch (Exception e) {
-                List<String> errors = new ArrayList<>();
-                if (e.getMessage().contains("PRIMARY")) {
-                    errors.add("Course with this code already exists");
-                }
-
-                redirectAttributes.addFlashAttribute("course", course);
-                redirectAttributes.addFlashAttribute("course_errors", errors);
-            }
-        }
-
-        return "redirect:/department";
-    }
-
-    @PostMapping("/department/float_course")
-    public String floatCourse(@RequestParam String courseCode, @RequestParam List<String> faculty, RedirectAttributes redirectAttributes) {
-        Course course = departmentAdminService.findCourseByCode(courseCode);
-
-        List<String> errors = new ArrayList<>();
-        if (course == null) {
-            errors.add("No valid course selected");
-        } else {
-            try {
-                departmentAdminService.floatCourse(course, faculty);
-                redirectAttributes.addFlashAttribute("float_success", true);
-            } catch (Exception exc) {
-                if (exc.getMessage().contains("PRIMARY")) {
-                    errors.add("This course is already floated!");
-                }
-            }
-        }
-
-        redirectAttributes.addFlashAttribute("float_errors", errors);
-
-        return "redirect:/department";
     }
 
     private FloatedCourse verifyAndGetCourse(String courseId) {

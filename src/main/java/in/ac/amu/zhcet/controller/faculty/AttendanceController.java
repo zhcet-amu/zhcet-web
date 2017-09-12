@@ -1,11 +1,6 @@
-package in.ac.amu.zhcet.controller;
+package in.ac.amu.zhcet.controller.faculty;
 
-import in.ac.amu.zhcet.data.model.CourseRegistration;
-import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
-import in.ac.amu.zhcet.service.core.FacultyService;
-import in.ac.amu.zhcet.service.core.FloatedCourseService;
 import in.ac.amu.zhcet.service.core.upload.AttendanceUploadService;
 import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
@@ -13,9 +8,11 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -26,46 +23,13 @@ import java.util.List;
 
 @Slf4j
 @Controller
-public class FacultyController {
-    private final FacultyService facultyService;
-    private final FloatedCourseService floatedCourseService;
+public class AttendanceController {
+
     private final AttendanceUploadService attendanceUploadService;
 
     @Autowired
-    public FacultyController(FacultyService facultyService, FloatedCourseService floatedCourseService, AttendanceUploadService attendanceUploadService) {
-        this.facultyService = facultyService;
-        this.floatedCourseService = floatedCourseService;
+    public AttendanceController(AttendanceUploadService attendanceUploadService) {
         this.attendanceUploadService = attendanceUploadService;
-    }
-
-    @GetMapping("/faculty/courses")
-    public String getCourse(Model model) {
-        model.addAttribute("title", "Course Management");
-        model.addAttribute("subtitle", "Faculty Floated Course Management");
-        model.addAttribute("description", "Manage and upload attendance for currently floated courses");
-        String selected = "";
-        FacultyMember facultyMember = facultyService.getLoggedInMember();
-        List<FloatedCourse> floatedCourses = floatedCourseService.getByFaculty(facultyMember);
-        model.addAttribute("floatedCourses", floatedCourses);
-        model.addAttribute("selectedCourse", selected);
-        return "faculty_courses";
-    }
-
-    @GetMapping("faculty/courses/{id}")
-    public String getStudents(Model model, @PathVariable String id) {
-        FloatedCourse floatedCourse = floatedCourseService.getCourseById(id);
-
-        if (floatedCourse != null) {
-            model.addAttribute("title", floatedCourse.getCourse().getTitle());
-            model.addAttribute("subtitle", "Attendance management for " + floatedCourse.getCourse().getCode());
-            model.addAttribute("description", "Upload attendance for the floated course");
-
-            List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-            model.addAttribute("courseRegistrations", courseRegistrations);
-            model.addAttribute("course_id", id);
-        }
-
-        return "course_attendance";
     }
 
     @Data
@@ -119,4 +83,5 @@ public class FacultyController {
 
         return "redirect:/faculty/courses/{id}";
     }
+
 }
