@@ -2,11 +2,11 @@ package in.ac.amu.zhcet.controller;
 
 import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.model.dto.RegistrationUpload;
-import in.ac.amu.zhcet.data.service.DepartmentAdminService;
-import in.ac.amu.zhcet.data.service.FacultyService;
-import in.ac.amu.zhcet.data.service.upload.RegistrationUploadService;
-import in.ac.amu.zhcet.data.service.upload.base.Confirmation;
-import in.ac.amu.zhcet.data.service.upload.base.UploadResult;
+import in.ac.amu.zhcet.service.core.DepartmentAdminService;
+import in.ac.amu.zhcet.service.core.FacultyService;
+import in.ac.amu.zhcet.service.core.upload.RegistrationUploadService;
+import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
+import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

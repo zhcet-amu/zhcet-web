@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="html/core :: head"></head>
+<body>
+<div class="content" th:fragment="content" th:include="html/core :: wrapper">
+    <td th:fragment="content">
+        <p th:utext="|Hi ${name != null ? name : 'there'},|">Hi there,</p>
+        <p th:utext="${pre_message}">Sometimes you just want to send a simple HTML email with a simple design and clear call
+            to action. This is it.</p>
+        <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+            <tbody>
+            <tr>
+                <td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0">
+                        <tbody>
+                        <tr>
+                            <td><a th:href="${link}" target="_blank"><span th:text="|${link_text != null ? link_text : 'Click Here'}|">Call to Action</span></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p>If you cannot see or click the button above, please click the link below or carefully copy and paste it in your browser :</p>
+        <a th:href="${link}" th:text="${link}"></a>
+        <p></p>
+        <p th:utext="${post_message}">This is a really simple email template. Its sole purpose is to get the recipient to click
+            the button with no distractions.</p>
+        <p>Regards, ZHCET Web Team</p>
+        <p>Have a nice day!</p>
+    </td>
+</div>
+</body>
+</html>

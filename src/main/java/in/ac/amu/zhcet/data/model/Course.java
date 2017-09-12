@@ -1,7 +1,6 @@
 package in.ac.amu.zhcet.data.model;
 
-import in.ac.amu.zhcet.data.model.base.entity.BaseEntity;
-import in.ac.amu.zhcet.data.model.base.entity.BaseIdEntity;
+import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.NotBlank;

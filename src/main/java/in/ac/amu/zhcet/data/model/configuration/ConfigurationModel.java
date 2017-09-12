@@ -4,7 +4,7 @@ import in.ac.amu.zhcet.utils.Utils;
 import lombok.Data;
 
 /**
- * This model will be saved in database as JSON
+ * This core will be saved in database as JSON
  */
 
 @Data

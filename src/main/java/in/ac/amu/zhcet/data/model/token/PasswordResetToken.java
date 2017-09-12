@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.data.model.token;
 
-import in.ac.amu.zhcet.data.model.base.entity.BaseIdEntity;
-import in.ac.amu.zhcet.data.model.base.user.UserAuth;
+import in.ac.amu.zhcet.data.model.base.BaseIdEntity;
+import in.ac.amu.zhcet.data.model.user.UserAuth;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

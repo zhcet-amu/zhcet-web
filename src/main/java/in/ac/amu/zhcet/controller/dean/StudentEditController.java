@@ -2,9 +2,9 @@ package in.ac.amu.zhcet.controller.dean;
 
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.StudentEditModel;
-import in.ac.amu.zhcet.data.service.DepartmentService;
-import in.ac.amu.zhcet.data.service.StudentEditService;
-import in.ac.amu.zhcet.data.service.StudentService;
+import in.ac.amu.zhcet.service.core.DepartmentService;
+import in.ac.amu.zhcet.service.core.StudentEditService;
+import in.ac.amu.zhcet.service.core.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

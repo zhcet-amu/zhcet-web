@@ -20,7 +20,7 @@ public class ConfigurationConverter implements AttributeConverter<ConfigurationM
             return objectMapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            throw new RuntimeException("Error converting model into JSON");
+            throw new RuntimeException("Error converting core into JSON");
         }
     }
 
@@ -30,7 +30,7 @@ public class ConfigurationConverter implements AttributeConverter<ConfigurationM
             return objectMapper.readValue(dbData, ConfigurationModel.class);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("Error converting JSON to model");
+            throw new RuntimeException("Error converting JSON to core");
         }
     }
 }

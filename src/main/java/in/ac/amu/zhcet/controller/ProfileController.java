@@ -2,18 +2,18 @@ package in.ac.amu.zhcet.controller;
 
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.base.user.Type;
-import in.ac.amu.zhcet.data.model.base.user.UserAuth;
-import in.ac.amu.zhcet.data.model.base.user.UserDetail;
 import in.ac.amu.zhcet.data.model.dto.PasswordChange;
 import in.ac.amu.zhcet.data.model.token.VerificationToken;
-import in.ac.amu.zhcet.data.service.FacultyService;
-import in.ac.amu.zhcet.data.service.FirebaseService;
-import in.ac.amu.zhcet.data.service.StudentService;
-import in.ac.amu.zhcet.data.service.UserService;
-import in.ac.amu.zhcet.data.service.token.DuplicateEmailException;
-import in.ac.amu.zhcet.data.service.token.EmailVerificationService;
-import in.ac.amu.zhcet.data.service.user.UserDetailService;
+import in.ac.amu.zhcet.data.model.user.Type;
+import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.UserDetail;
+import in.ac.amu.zhcet.service.FirebaseService;
+import in.ac.amu.zhcet.service.core.FacultyService;
+import in.ac.amu.zhcet.service.core.StudentService;
+import in.ac.amu.zhcet.service.core.UserService;
+import in.ac.amu.zhcet.service.token.DuplicateEmailException;
+import in.ac.amu.zhcet.service.token.EmailVerificationService;
+import in.ac.amu.zhcet.service.user.UserDetailService;
 import in.ac.amu.zhcet.utils.ImageUtils;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -170,6 +170,11 @@ public class ProfileController {
 
         if (!errors.isEmpty()) {
             redirectAttributes.addFlashAttribute("pass_errors", errors);
+            return redirectUrl;
+        }
+
+        if (passwordChange.getOldPassword().equals(passwordChange.getNewPassword())) {
+            redirectAttributes.addFlashAttribute("pass_errors", Collections.singletonList("New and old password cannot be same"));
             return redirectUrl;
         }
 

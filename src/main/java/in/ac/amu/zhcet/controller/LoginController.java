@@ -3,7 +3,7 @@ package in.ac.amu.zhcet.controller;
 
 import in.ac.amu.zhcet.data.model.dto.PasswordReset;
 import in.ac.amu.zhcet.data.model.token.PasswordResetToken;
-import in.ac.amu.zhcet.data.service.token.PasswordResetService;
+import in.ac.amu.zhcet.service.token.PasswordResetService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

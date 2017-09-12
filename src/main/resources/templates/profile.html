@@ -13,7 +13,7 @@
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="isAuthenticated()">
     <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
-    <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.base.user.UserAuth"*/-->
+    <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.user.UserAuth"*/-->
 
     <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
         <div th:replace="fragments/layout :: toolbar"></div>
@@ -42,7 +42,7 @@
                     you forget it!
                 </p>
                 <div class="row">
-                    <div class="col-xs-6 offset-xs-3">
+                    <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
                         <form th:action="@{/profile/register_email}" method="post">
                             <fieldset class="form-group">
                                 <div class="input-group">
@@ -67,7 +67,7 @@
                     us in case you forget it!
                 </p>
                 <div class="row">
-                    <div class="col-xs-6 offset-xs-3">
+                    <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
                         <form th:action="@{/profile/confirm_email}" method="post">
                             <button type="submit" class="btn btn-primary block">Resend Verification Link</button>
                             <br>
@@ -123,7 +123,7 @@
                         class="icon-check2"></i></span>
                 </div>
             </div>
-            <!--/*@thymesVar id="user_details" type="in.ac.amu.zhcet.data.model.base.user.UserDetail"*/-->
+            <!--/*@thymesVar id="user_details" type="in.ac.amu.zhcet.data.model.user.UserDetail"*/-->
             <form class="form" th:action="@{/profile/details}" method="post" th:object="${user_details}">
                 <div class="row">
                     <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">

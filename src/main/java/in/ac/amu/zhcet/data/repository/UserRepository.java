@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.data.repository;
 
-import in.ac.amu.zhcet.data.model.base.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.UserAuth;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface UserRepository extends PagingAndSortingRepository<UserAuth, Long> {
