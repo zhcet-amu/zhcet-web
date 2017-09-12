@@ -42,13 +42,11 @@ if (secretPropsFile.exists()) {
 
 processResources {
     // Saving secrets in application.properties
-    filesMatching("**/application.properties") {
-        expand(project.ext.properties)
+    if (secretPropsFile.exists()) {
+        filesMatching("**/application.properties") {
+            expand(project.ext.properties)
+        }
     }
-}
-
-build {
-    dependsOn processResources
 }
 
 dependencies {

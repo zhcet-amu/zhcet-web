@@ -23,12 +23,12 @@ import java.util.List;
 
 @Slf4j
 @Controller
-public class AttendanceController {
+public class AttendanceManagerController {
 
     private final AttendanceUploadService attendanceUploadService;
 
     @Autowired
-    public AttendanceController(AttendanceUploadService attendanceUploadService) {
+    public AttendanceManagerController(AttendanceUploadService attendanceUploadService) {
         this.attendanceUploadService = attendanceUploadService;
     }
 
