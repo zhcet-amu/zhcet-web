@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.data.model;
 
+import in.ac.amu.zhcet.data.CourseType;
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,4 +24,21 @@ public class Course extends BaseEntity {
     @ManyToOne
     @NotNull
     private Department department;
+
+    private String category;
+    private Boolean compulsory;
+    private Integer semester;
+    private Integer startYear;
+    private Integer finishYear;
+    private Float credits;
+    private String branch;
+    @Enumerated(EnumType.STRING)
+    private CourseType type;
+    private Integer classWorkMarks;
+    private Integer midSemMarks;
+    private Integer finalMarks;
+    private Integer totalMarks;
+    private Integer lecturePart;
+    private Integer theoryPart;
+    private Integer practicalPart;
 }
