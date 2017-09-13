@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FloatedCourseService {
@@ -46,19 +47,28 @@ public class FloatedCourseService {
         return floatedCourseRepository.save(new FloatedCourse(ConfigurationService.getDefaultSessionCode(), stored));
     }
 
+    private List<CourseInCharge> fromFacultyIds(FloatedCourse course, List<String> facultyMembersId) {
+        return facultyService.getByIds(facultyMembersId)
+                .stream()
+                .map(facultyMember -> {
+                    CourseInCharge courseInCharge = new CourseInCharge();
+                    courseInCharge.setFacultyMember(facultyMember);
+                    courseInCharge.setFloatedCourse(course);
+                    return courseInCharge;
+                }).collect(Collectors.toList());
+    }
+
     @Transactional
     public FloatedCourse floatCourse(Course course, List<String> facultyMembersId) throws IllegalAccessException {
         FloatedCourse stored = floatCourse(course);
-
-        stored.setInCharge(facultyService.getByIds(facultyMembersId));
+        stored.setInCharge(fromFacultyIds(stored, facultyMembersId));
         return stored;
     }
 
     @Transactional
     public void addInCharge(String courseId, List<String> facultyMemberIds) {
         FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseId);
-
-        stored.getInCharge().addAll(facultyService.getByIds(facultyMemberIds));
+        stored.getInCharge().addAll(fromFacultyIds(stored, facultyMemberIds));
     }
 
     @Transactional

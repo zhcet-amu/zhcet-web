@@ -36,7 +36,7 @@
                 <div class="table-responsive">
                 <table class="table">
                     <tbody>
-                    <!--/*@thymesVar id="member" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+                    <!--/*@thymesidr id="member" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
                     <form th:action="|${#httpServletRequest.requestURL}/save|" method="post" th:each="member : ${facultyMembers}">
                         <tr>
                             <td>

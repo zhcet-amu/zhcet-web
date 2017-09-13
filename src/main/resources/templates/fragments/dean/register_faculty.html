@@ -71,10 +71,10 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
+                                        <!--/*@thymesidr id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
                                         <th:block th:each="confirm: ${confirmRegistration.data}">
                                             <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
-                                                <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
+                                                <!--/*@thymesidr id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
                                                 <td class="text-xs-center" th:text="${confirm.key.facultyId}"></td>
                                                 <td class="text-xs-center" th:text="${confirm.key.user.name}"></td>
                                                 <td class="text-xs-center"

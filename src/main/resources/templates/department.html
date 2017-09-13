@@ -32,7 +32,7 @@
 
                 <div class="card-body collapse in">
                     <div class="card-block">
-                        <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
+                        <!--/*@thymesidr id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
                         <form class="mui-form" th:action="@{/department/create_course}" method="post"
                               th:object="${course}">
                             <div class="form-body">
@@ -110,7 +110,7 @@
                                     <label for="faculty">In-Charge</label>
                                     <select id="faculty" name="faculty">
                                         <option value="-1">Select Faculty</option>
-                                        <!--/*@thymesVar id="faculty" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+                                        <!--/*@thymesidr id="faculty" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
                                         <option th:each="faculty : ${facultyMembers}"
                                                 th:value="${faculty.facultyId}"
                                                 th:text="${faculty.user.name}">

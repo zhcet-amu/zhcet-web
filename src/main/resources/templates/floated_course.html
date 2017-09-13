@@ -38,7 +38,7 @@
                                 <table class="table vertical-align">
                                     <tbody>
                                     <tr th:each="inCharge : ${floatedCourse.inCharge}">
-                                        <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+                                        <!--/*@thymesidr id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
                                         <td>
                                             <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
                                                  th:src="${#strings.defaultString(inCharge.user.details.avatarUrl, 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg')}"
@@ -129,7 +129,7 @@
                                     <tbody>
                                     <th:block th:each="registration: ${courseRegistrations}">
                                         <tr>
-                                            <!--/*@thymesVar id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
+                                            <!--/*@thymesidr id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
                                             <td class="text-xs-center"
                                                 th:text="${registration.student.user.userId}"></td>
                                             <td class="text-xs-center"
@@ -162,7 +162,7 @@
                                     <table class="table">
                                         <tbody>
                                         <tr th:each="inCharge : ${facultyMembers}">
-                                            <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+                                            <!--/*@thymesidr id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
                                             <td><input type="radio" name="facultyId"
                                                        th:value="${inCharge.facultyId}"
                                                        th:disabled="${#lists.contains(floatedCourse.inCharge, inCharge)}">
@@ -180,7 +180,7 @@
                             </div>
                             <div th:each="error : ${incharge_errors}"
                                  class="alert alert-dismissible alert-danger">
-                                <!--/*@thymesVar id="error" type="String"*/-->
+                                <!--/*@thymesidr id="error" type="String"*/-->
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                                 <strong>Something went wrong!</strong>
                                 <div th:utext="${error}">Fix this and try and try again</div>
@@ -218,10 +218,10 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
+                                        <!--/*@thymesidr id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
                                         <th:block th:each="confirm: ${confirmRegistration.data}">
                                             <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
-                                                <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
+                                                <!--/*@thymesidr id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
                                                 <input type="hidden" name="studentId" th:value="${confirm.key.enrolmentNumber}">
                                                 <td class="text-xs-center"
                                                     th:text="${confirm.key.enrolmentNumber}"></td>
@@ -238,7 +238,7 @@
                             </div>
                             <div th:each="error : ${confirmRegistration.errors}"
                                  class="alert alert-dismissible alert-danger">
-                                <!--/*@thymesVar id="error" type="String"*/-->
+                                <!--/*@thymesidr id="error" type="String"*/-->
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                                 <strong>Something went wrong!</strong>
                                 <div th:utext="${error}">Fix this and try and try again</div>

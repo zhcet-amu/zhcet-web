@@ -30,9 +30,8 @@ public class FloatedCourse extends BaseEntity implements Serializable {
     @NaturalId
     private String session;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "COURSE_IN_CHARGE")
-    private List<FacultyMember> inCharge;
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "floatedCourse")
+    private List<CourseInCharge> inCharge;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "floatedCourse")
     private List<CourseRegistration> courseRegistrations;

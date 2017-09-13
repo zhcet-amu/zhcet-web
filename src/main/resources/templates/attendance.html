@@ -42,7 +42,7 @@
                                 </thead>
                                 <tbody>
 
-                                <!--/*@thymesVar id="attendance" type="in.ac.amu.zhcet.data.model.Attendance"*/-->
+                                <!--/*@thymesidr id="attendance" type="in.ac.amu.zhcet.data.model.Attendance"*/-->
                                 <th:block th:each="attendance: ${attendances}">
                                     <tr th:with="percent=${attendance.attended*100.0/attendance.delivered}"
                                         th:class="(${percent &lt; @configurationService.getThreshold()} ? 'bg-danger white':'')">

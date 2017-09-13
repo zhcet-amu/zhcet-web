@@ -26,6 +26,8 @@ public class CourseRegistration extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Student student;
 
+    private char mode;
+
     @Valid
     @NotNull
     @PrimaryKeyJoinColumn
