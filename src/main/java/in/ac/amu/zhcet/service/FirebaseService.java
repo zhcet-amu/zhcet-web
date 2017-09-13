@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,8 +41,21 @@ public class FirebaseService {
     }
 
     private InputStream getServiceAccountJson() {
+        String fileName = "service-account.json";
         try {
-            return new FileInputStream("service-account.json");
+            InputStream is = getClass().getResourceAsStream("/" + fileName);
+            if (is == null) {
+                log.info("service-account.json not found in class resources. Maybe debug build? Trying to load another way");
+                URL url = getClass().getClassLoader().getResource(fileName);
+
+                if (url == null) {
+                    log.info(fileName + " not found in class loader resource as well... Using last resort...");
+                    throw new FileNotFoundException();
+                }
+
+                is = new FileInputStream(url.getFile());
+            }
+            return is;
         } catch (FileNotFoundException e) {
             log.info("service-account.json not found in file system... Attempting to load from environment...");
             return new ByteArrayInputStream(System.getenv("FIREBASE_JSON").getBytes());
