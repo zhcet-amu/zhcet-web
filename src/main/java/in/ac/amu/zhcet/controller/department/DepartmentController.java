@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.controller.department;
 
 import in.ac.amu.zhcet.data.model.Course;
+import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.service.core.DepartmentAdminService;
 import in.ac.amu.zhcet.service.core.FacultyService;
@@ -21,13 +22,14 @@ public class DepartmentController {
 
     @GetMapping("/department")
     public String department(Model model) {
-        model.addAttribute("title", "Department Panel");
-        model.addAttribute("subtitle", "Course management for Department");
         model.addAttribute("description", "Manage and float courses for the session");
         model.addAttribute("floatedCourses", departmentAdminService.getFloatedCourses());
         model.addAttribute("courses", departmentAdminService.getAllCourses());
         FacultyMember facultyMember = departmentAdminService.getFacultyMember();
-        model.addAttribute("department", FacultyService.getDepartment(facultyMember));
+        Department department = FacultyService.getDepartment(facultyMember);
+        model.addAttribute("department", department);
+        model.addAttribute("title", department.getName() + " Department Panel");
+        model.addAttribute("subtitle", "Course management for Department");
         if (!model.containsAttribute("course")) {
             Course course = new Course();
             course.setDepartment(FacultyService.getDepartment(facultyMember));

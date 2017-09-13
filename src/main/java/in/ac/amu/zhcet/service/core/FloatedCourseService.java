@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.service.core;
 
 import in.ac.amu.zhcet.data.model.*;
+import in.ac.amu.zhcet.data.repository.CourseInChargeRepository;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,15 @@ import java.util.stream.Collectors;
 public class FloatedCourseService {
 
     private final FloatedCourseRepository floatedCourseRepository;
+    private final CourseInChargeRepository courseInChargeRepository;
     private final FacultyService facultyService;
     private final StudentService studentService;
     private final CourseRepository courseRepository;
 
     @Autowired
-    public FloatedCourseService(FloatedCourseRepository floatedCourseRepository, FacultyService facultyService, StudentService studentService, CourseRepository courseRepository) {
+    public FloatedCourseService(FloatedCourseRepository floatedCourseRepository, CourseInChargeRepository courseInChargeRepository, FacultyService facultyService, StudentService studentService, CourseRepository courseRepository) {
         this.floatedCourseRepository = floatedCourseRepository;
+        this.courseInChargeRepository = courseInChargeRepository;
         this.facultyService = facultyService;
         this.studentService = studentService;
         this.courseRepository = courseRepository;
@@ -94,10 +97,22 @@ public class FloatedCourseService {
     }
 
     public List<FloatedCourse> getByFaculty(FacultyMember facultyMember) {
-        return floatedCourseRepository.getBySessionAndInCharge(ConfigurationService.getDefaultSessionCode(), facultyMember);
+        return courseInChargeRepository.findByFacultyMemberAndFloatedCourse_Session(facultyMember, ConfigurationService.getDefaultSessionCode())
+                .stream()
+                .map(CourseInCharge::getFloatedCourse)
+                .collect(Collectors.toList());
     }
 
     public FloatedCourse getCourseById(String courseId){
         return floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseId);
     }
+
+    public boolean isInCharge(List<CourseInCharge> courseInCharges, FacultyMember member) {
+        return courseInCharges
+                .stream()
+                .map(CourseInCharge::getFacultyMember)
+                .collect(Collectors.toList())
+                .contains(member);
+    }
+
 }

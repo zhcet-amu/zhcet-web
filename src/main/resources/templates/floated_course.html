@@ -10,6 +10,10 @@
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation"></div>
 
+
+<!--/*@thymesVar id="floatedCourse" type="in.ac.amu.zhcet.data.model.FloatedCourse"*/-->
+<!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+<!--/*@thymesVar id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
 <div th:fragment="content" th:include="fragments/layout :: wrapper">
     <div th:replace="fragments/layout :: toolbar"></div>
     <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
@@ -38,13 +42,12 @@
                                 <table class="table vertical-align">
                                     <tbody>
                                     <tr th:each="inCharge : ${floatedCourse.inCharge}">
-                                        <!--/*@thymesidr id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
                                         <td>
                                             <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
-                                                 th:src="${#strings.defaultString(inCharge.user.details.avatarUrl, 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg')}"
+                                                 th:src="${#strings.defaultString(inCharge.facultyMember.user.details.avatarUrl, 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg')}"
                                                  class="rounded-circle height-50" alt="Card image"/></td>
-                                        <td th:text="${inCharge.facultyId}"></td>
-                                        <td th:text="${inCharge.user.name}"></td>
+                                        <td th:text="${inCharge.facultyMember.facultyId}"></td>
+                                        <td th:text="${inCharge.facultyMember.user.name}"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -129,7 +132,6 @@
                                     <tbody>
                                     <th:block th:each="registration: ${courseRegistrations}">
                                         <tr>
-                                            <!--/*@thymesidr id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
                                             <td class="text-xs-center"
                                                 th:text="${registration.student.user.userId}"></td>
                                             <td class="text-xs-center"
@@ -165,7 +167,7 @@
                                             <!--/*@thymesidr id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
                                             <td><input type="radio" name="facultyId"
                                                        th:value="${inCharge.facultyId}"
-                                                       th:disabled="${#lists.contains(floatedCourse.inCharge, inCharge)}">
+                                                       th:disabled="${@floatedCourseService.isInCharge(floatedCourse.inCharge, inCharge)}">
                                             </td>
                                             <td>
                                                 <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
@@ -180,7 +182,6 @@
                             </div>
                             <div th:each="error : ${incharge_errors}"
                                  class="alert alert-dismissible alert-danger">
-                                <!--/*@thymesidr id="error" type="String"*/-->
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                                 <strong>Something went wrong!</strong>
                                 <div th:utext="${error}">Fix this and try and try again</div>
