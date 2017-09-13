@@ -46,7 +46,7 @@ $(document).ready(function () {
         scrollCollapse: true,
         'ajax': {
             'contentType': 'application/json',
-            'url': '/dean/users',
+            'url': '/dean/students',
             'type': 'POST',
             'data': function (d) {
                 return JSON.stringify(d);
@@ -77,6 +77,12 @@ $(document).ready(function () {
             data: 'name'
         }, {
             data: 'department'
+        }, {
+            data: 'hall-code'
+        }, {
+            data: 'section'
+        }, {
+            data: 'status'
         }, {
             data: 'email'
         }],

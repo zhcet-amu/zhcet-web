@@ -42,6 +42,7 @@
                     <div class="row">
                         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
                             <h5 th:text="${student.user.details.department.name}" class="capsule"></h5>
+                            <span><h6>Registration Year : </h6><h6 th:text="${student.registrationYear}"></h6></span>
                         </div>
                     </div>
                     <span th:text="${student.user.email}"></span><span th:if="${student.user.active}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
@@ -66,11 +67,37 @@
                             </div>
                             <div class="mui-form">
                                 <div class="mui-select">
-                                    <label for="courseCode">Department</label>
-                                    <select id="courseCode" th:field="*{department}" name="courseCode">
+                                    <label for="department">Department</label>
+                                    <select id="department" th:field="*{department}" name="courseCode">
                                         <option th:each="department : ${departments}"
                                                 th:value="${department.name}"
                                                 th:text="${department.name}"
+                                                class="my-dropdown">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mui-form">
+                                <div class="mui-select">
+                                    <label for="hallCode">Hall Code</label>
+                                    <select id="hallCode" th:field="*{hallCode}" name="courseCode">
+                                        <option value="">Select Hall</option>
+                                        <option th:each="hall : ${hallCodes}"
+                                                th:value="${hall}"
+                                                th:text="${hall}"
+                                                class="my-dropdown">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mui-form">
+                                <div class="mui-select">
+                                    <label for="status">Status</label>
+                                    <select id="status" th:field="*{status}" name="courseCode">
+                                        <option value="">Select Status</option>
+                                        <option th:each="status : ${statuses}"
+                                                th:value="${status}"
+                                                th:text="${status}"
                                                 class="my-dropdown">
                                         </option>
                                     </select>
@@ -80,7 +107,7 @@
                                 <div class="row">
                                     <div class="form-group col-xs-12 mb-2">
                                         <label for="faculty_no">Faculty Number</label>
-                                        <input id="faculty_no" name="description"
+                                        <input id="faculty_no" name="faculty_num"
                                                class="form-control"
                                                type="text"
                                                th:field="*{facultyNumber}"/>
@@ -88,7 +115,7 @@
 
                                     <div class="form-group col-xs-12 mb-2">
                                         <label for="name">Name</label>
-                                        <input id="name" name="addressLine1"
+                                        <input id="name" name="name"
                                                class="form-control"
                                                type="text"
                                                th:field="*{name}"/>
@@ -96,10 +123,18 @@
 
                                     <div class="form-group col-xs-12 mb-2">
                                         <label for="email">Email</label>
-                                        <input id="email" name="addressLine2"
+                                        <input id="email" name="email"
                                                class="form-control"
                                                type="text"
                                                th:field="*{email}"/>
+                                    </div>
+
+                                    <div class="form-group col-xs-12 mb-2">
+                                        <label for="section">Section</label>
+                                        <input id="section" name="section"
+                                               class="form-control"
+                                               type="text"
+                                               th:field="*{section}"/>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary">

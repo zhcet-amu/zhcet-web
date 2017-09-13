@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -26,6 +27,12 @@ public class Student extends BaseEntity {
     @Column(unique = true)
     private String facultyNumber;
 
+    @Max(2)
+    private String hallCode;
+    private String section;
+    private Integer registrationYear = getYear();
+    private Character status = 'A';
+
     @Valid
     @NotNull
     @PrimaryKeyJoinColumn
@@ -35,6 +42,13 @@ public class Student extends BaseEntity {
     public Student(UserAuth user, String facultyNumber) {
         this.user = user;
         setFacultyNumber(facultyNumber);
+    }
+
+    private Integer getYear() {
+        if (getCreatedAt() == null)
+            return null;
+
+        return getCreatedAt().getYear();
     }
 
     @PrePersist

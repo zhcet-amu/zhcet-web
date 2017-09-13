@@ -1,11 +1,14 @@
 package in.ac.amu.zhcet.controller.dean;
 
+import in.ac.amu.zhcet.data.HallCode;
+import in.ac.amu.zhcet.data.StudentStatus;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.StudentEditModel;
 import in.ac.amu.zhcet.service.core.DepartmentService;
 import in.ac.amu.zhcet.service.core.StudentEditService;
 import in.ac.amu.zhcet.service.core.StudentService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,6 +51,8 @@ public class StudentEditController {
         model.addAttribute("description", "Change student specific details");
         model.addAttribute("student", student);
         model.addAttribute("departments", departmentService.findAll());
+        model.addAttribute("hallCodes", EnumUtils.getEnumMap(HallCode.class).keySet());
+        model.addAttribute("statuses", EnumUtils.getEnumMap(StudentStatus.class).keySet());
         if (student != null && !model.containsAttribute("studentModel")) {
             model.addAttribute("subtitle", "Edit details of " + student.getUser().getName());
             model.addAttribute("studentModel", studentEditService.fromStudent(student));

@@ -42,8 +42,8 @@ public class DeanRestController {
     }
 
     @JsonView(DataTablesOutput.View.class)
-    @RequestMapping(value = "/dean/users", method = RequestMethod.POST)
-    public DataTablesOutput<StudentView> getUsers(@Valid @RequestBody DataTablesInput input) {
+    @RequestMapping(value = "/dean/students", method = RequestMethod.POST)
+    public DataTablesOutput<StudentView> getStudents(@Valid @RequestBody DataTablesInput input) {
         convertInput(input);
         return studentRepository.findAll(input, this::fromStudent);
     }

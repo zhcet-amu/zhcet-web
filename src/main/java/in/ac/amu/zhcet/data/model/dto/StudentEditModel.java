@@ -12,4 +12,7 @@ public class StudentEditModel {
     private String email;
     @NotBlank
     private String department;
+    private String hallCode;
+    private String section;
+    private Character status;
 }

@@ -1,16 +1,21 @@
 package in.ac.amu.zhcet.service.core;
 
+import in.ac.amu.zhcet.data.HallCode;
+import in.ac.amu.zhcet.data.StudentStatus;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.model.dto.StudentEditModel;
 import in.ac.amu.zhcet.utils.DuplicateException;
 import in.ac.amu.zhcet.utils.Utils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+@Slf4j
 @Service
 public class StudentEditService {
 
@@ -31,6 +36,9 @@ public class StudentEditService {
         studentEditModel.setName(student.getUser().getName());
         studentEditModel.setEmail(student.getUser().getEmail());
         studentEditModel.setDepartment(student.getUser().getDetails().getDepartment().getName());
+        studentEditModel.setHallCode(student.getHallCode());
+        studentEditModel.setSection(student.getSection());
+        studentEditModel.setStatus(student.getStatus());
 
         return studentEditModel;
     }
@@ -40,6 +48,11 @@ public class StudentEditService {
         student.getUser().setName(studentEditModel.getName());
         student.getUser().setEmail(studentEditModel.getEmail());
         student.getUser().getDetails().setDepartment(department);
+        student.setHallCode(studentEditModel.getHallCode());
+        student.setSection(studentEditModel.getSection());
+        student.setStatus(studentEditModel.getStatus());
+
+        log.info(student.toString());
     }
 
     @Transactional
@@ -66,6 +79,13 @@ public class StudentEditService {
         } else {
             studentEditModel.setEmail(null);
         }
+
+        if (!Utils.isEmpty(studentEditModel.getHallCode()) && !EnumUtils.isValidEnum(HallCode.class, studentEditModel.getHallCode()))
+            throw new RuntimeException("Invalid Hall : " + studentEditModel.getHallCode() + ". Must be within " + EnumUtils.getEnumMap(HallCode.class).keySet());
+
+        if (studentEditModel.getStatus() != null && !EnumUtils.isValidEnum(StudentStatus.class, studentEditModel.getStatus()+""))
+            throw new RuntimeException("Invalid Hall : " + studentEditModel.getStatus() + ". Must be within " + EnumUtils.getEnumMap(StudentStatus.class).keySet());
+
 
         mergeModel(student, studentEditModel, department);
         studentService.save(student);

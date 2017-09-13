@@ -30,6 +30,18 @@ public class StudentView {
     @JsonProperty("is-verified")
     private boolean userActive;
     @JsonView(DataTablesOutput.View.class)
+    @JsonProperty("hall-code")
+    private String hallCode;
+    @JsonView(DataTablesOutput.View.class)
+    @JsonProperty("section")
+    private String section;
+    @JsonView(DataTablesOutput.View.class)
+    @JsonProperty("registration-year")
+    private int registrationYear;
+    @JsonView(DataTablesOutput.View.class)
+    @JsonProperty("status")
+    private char status;
+    @JsonView(DataTablesOutput.View.class)
     @JsonProperty("created-at")
     private String createdAt;
     @JsonView(DataTablesOutput.View.class)
