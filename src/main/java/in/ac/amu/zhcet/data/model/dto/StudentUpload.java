@@ -9,8 +9,16 @@ public class StudentUpload {
     private String enrolmentNo;
     @CsvColumn(columnName = "faculty_no", mustNotBeBlank = true)
     private String facultyNo;
+    @CsvColumn(mustBeSupplied = false)
+    private String section;
     @CsvColumn(mustNotBeBlank = true)
     private String name;
+    @CsvColumn(mustBeSupplied = false)
+    private String hall;
+    @CsvColumn(mustBeSupplied = false)
+    private char status;
+    @CsvColumn(columnName = "registration_year", mustBeSupplied = false)
+    private int registrationYear;
     @CsvColumn(mustNotBeBlank = true)
     private String department;
 }

@@ -1,5 +1,8 @@
+function fixDate(date) {
+    return date.split('[')[0];
+}
+
 function showStudent(data) {
-    console.log(data);
     var modal = $('#studentModal');
     modal.modal();
 
@@ -25,7 +28,7 @@ function showStudent(data) {
         modal.find('#verified i').removeClass('icon-check2');
 
     if (data['createdAt'] && data['createdAt'] !== '')
-        modal.find('#registered-at').html(moment(data['createdAt']).format('dddd, MMMM Do YYYY, h:mm:ss a'));
+        modal.find('#registered-at').html(moment(fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));
     else
         modal.find('#registered-at').html('No Record');
 

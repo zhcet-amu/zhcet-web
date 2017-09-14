@@ -41,10 +41,12 @@ public class Utils {
     }
 
     public static String capitalizeFirst(String string) {
+        if (string == null) return null;
         return WordUtils.capitalizeFully(string.trim());
     }
 
     public static String capitalizeAll(String string) {
+        if (string == null) return null;
         return string.trim().toUpperCase(Locale.getDefault());
     }
 

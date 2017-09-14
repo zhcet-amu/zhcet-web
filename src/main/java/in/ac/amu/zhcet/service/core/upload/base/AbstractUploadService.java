@@ -39,7 +39,6 @@ public class AbstractUploadService<T, U, V> {
     private boolean validateType(MultipartFile file, UploadResult<T> uploadResult) {
         if (!file.getContentType().equals("text/csv")) {
             logAndError(uploadResult, "Uploaded file is not of CSV format");
-
             return false;
         }
 
@@ -47,7 +46,10 @@ public class AbstractUploadService<T, U, V> {
     }
 
     private void parseFile(Class<T> uploadClass, MultipartFile file, UploadResult<T> uploadResult) throws IOException {
-        CsvProcessor<T> csvProcessor = new CsvProcessor<>(uploadClass);
+        CsvProcessor<T> csvProcessor = new CsvProcessor<>(uploadClass)
+                .withAlwaysTrimInput(true)
+                .withIgnoreUnknownColumns(true)
+                .withFlexibleOrder(true);
         try {
             List<ParseError> parseErrors = new ArrayList<>();
             List<T> uploads = csvProcessor.readAll(new InputStreamReader(file.getInputStream()), parseErrors);

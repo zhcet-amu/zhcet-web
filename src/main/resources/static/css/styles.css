@@ -39,15 +39,13 @@ table td {
 .material-icons.md-light { color: rgba(255, 255, 255, 0.95); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
-table.dataTable.display tr {
-    cursor: pointer;
-    *cursor: hand;
-}
-
 table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd {
     background-color: #ede7f6;
 }
 
-table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
-    background-color: #d1c4e9;
+@media (min-width: 768px) {
+    .modal-xl {
+        width: 90%;
+        max-width:1200px;
+    }
 }

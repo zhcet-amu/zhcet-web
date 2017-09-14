@@ -42,7 +42,7 @@
                     <div class="row">
                         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
                             <h5 th:text="${student.user.department.name}" class="capsule"></h5>
-                            <span><h6>Registration Year : </h6><h6 th:text="${student.registrationYear}"></h6></span>
+                            <span>Registration Year : </span><span th:text="${student.registrationYear}"></span></span>
                         </div>
                     </div>
                     <span th:text="${student.user.email}"></span><span th:if="${student.user.active}" style="margin-left: 5px;"><i class="icon-check2"></i></span>

@@ -27,6 +27,7 @@ public class StudentUploadService {
     private boolean invalidDepartment;
     private boolean duplicateFacultyNo;
     private boolean duplicateEnrolmentNo;
+    private boolean invalidHallCode;
 
     private final DepartmentRepository departmentRepository;
     private final StudentService studentService;
@@ -48,13 +49,17 @@ public class StudentUploadService {
         student.setEnrolmentNumber(capitalizeAll(studentUpload.getEnrolmentNo()));
         student.setFacultyNumber(capitalizeAll(studentUpload.getFacultyNo()));
         student.getUser().setName(capitalizeFirst(studentUpload.getName()));
-        student.getUser().setDepartment(new Department(studentUpload.getDepartment()));
+        student.getUser().setDepartment(new Department(capitalizeFirst(studentUpload.getDepartment())));
+        student.setSection(capitalizeAll(studentUpload.getSection()));
+        student.setHallCode(capitalizeAll(studentUpload.getHall()));
+        student.setRegistrationYear(studentUpload.getRegistrationYear());
+        student.setStatus(studentUpload.getStatus());
 
         return student;
     }
 
     private String getMappedValue(Student student, List<Department> departments) {
-        String departmentName = capitalizeFirst(student.getUser().getDepartment().getName());
+        String departmentName = student.getUser().getDepartment().getName();
 
         Optional<Department> optional = departments.stream()
                 .filter(department -> department.getName().equals(departmentName))
@@ -69,6 +74,9 @@ public class StudentUploadService {
         } else if (studentService.getByFacultyNumber(student.getFacultyNumber()) != null) {
             duplicateFacultyNo = true;
             return "Duplicate faculty number";
+        } else if (student.getHallCode().length() > 2) {
+            invalidHallCode = true;
+            return "Invalid Hall Code : " + student.getHallCode();
         } else {
             student.getUser().setDepartment(optional.get());
             return null;
@@ -79,6 +87,7 @@ public class StudentUploadService {
         invalidDepartment = false;
         duplicateFacultyNo = false;
         duplicateEnrolmentNo = false;
+        invalidHallCode = false;
 
         List<Department> departments = departmentRepository.findAll();
 
@@ -94,6 +103,8 @@ public class StudentUploadService {
             studentConfirmation.getErrors().add("Students with duplicate enrolment found");
         if (duplicateFacultyNo)
             studentConfirmation.getErrors().add("Students with duplicate faculty number found");
+        if (invalidHallCode)
+            studentConfirmation.getErrors().add("Students with invalid hall code found. Hall Code should be of 2 characters");
 
         return studentConfirmation;
     }

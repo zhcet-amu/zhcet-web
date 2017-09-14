@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RestController
@@ -23,8 +21,6 @@ public class DeanRestController {
 
     private final ModelMapper modelMapper;
     private final StudentRepository studentRepository;
-
-    private static Map<String, String> propertyMap = new ConcurrentHashMap<>();
 
     @Autowired
     public DeanRestController(ModelMapper modelMapper, StudentRepository studentRepository) {
