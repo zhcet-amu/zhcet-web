@@ -9,16 +9,12 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 public class StudentView {
 
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("faculty-number")
     private String facultyNumber;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("enrolment-number")
     private String enrolmentNumber;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("name")
     private String userName;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("email")
     private String userEmail;
     @JsonView(DataTablesOutput.View.class)
     @JsonProperty("avatar-url")
@@ -30,31 +26,22 @@ public class StudentView {
     @JsonProperty("is-verified")
     private boolean userActive;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("hall-code")
     private String hallCode;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("section")
     private String section;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("registration-year")
     private int registrationYear;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("status")
     private char status;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("created-at")
     private String createdAt;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("modified-at")
     private String modifiedAt;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("created-by")
     private String createdBy;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("modified-by")
     private String modifiedBy;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("version")
     private String version;
 
 }

@@ -9,9 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -28,10 +27,8 @@ public class DeanRestController {
     private static Map<String, String> propertyMap = new ConcurrentHashMap<>();
 
     static {
-        propertyMap.put("enrolment-number", "enrolmentNumber");
-        propertyMap.put("faculty-number", "facultyNumber");
-        propertyMap.put("name", "user.name");
-        propertyMap.put("email", "user.email");
+        propertyMap.put("userName", "user.name");
+        propertyMap.put("userEmail", "user.email");
         propertyMap.put("department", "user.details.department.name");
     }
 
@@ -42,7 +39,7 @@ public class DeanRestController {
     }
 
     @JsonView(DataTablesOutput.View.class)
-    @RequestMapping(value = "/dean/students", method = RequestMethod.POST)
+    @PostMapping(value = "/dean/students")
     public DataTablesOutput<StudentView> getStudents(@Valid @RequestBody DataTablesInput input) {
         convertInput(input);
         return studentRepository.findAll(input, this::fromStudent);

@@ -3,19 +3,19 @@ function showStudent(data) {
     var modal = $('#studentModal');
     modal.modal();
 
-    modal.find('#name').html(data['name']);
-    modal.find('#faculty_no').html(data['faculty-number']);
-    modal.find('#enrolment_no').html(data['enrolment-number']);
+    modal.find('#name').html(data['userName']);
+    modal.find('#faculty_no').html(data['facultyNumber']);
+    modal.find('#enrolment_no').html(data['enrolmentNumber']);
     modal.find('#department').html(data['department']);
-    modal.find('#link').attr('href', '/dean/students/' + data['enrolment-number']);
+    modal.find('#link').attr('href', '/dean/students/' + data['enrolmentNumber']);
 
     if (data['avatar-url'] && data['avatar-url'] !== '')
         modal.find('#avatar').attr('src', data['avatar-url']);
     else
         modal.find('#avatar').attr('src', 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg');
 
-    if (data['email'] && data['email'] !== '')
-        modal.find('#email').html(data['email']);
+    if (data['userEmail'] && data['userEmail'] !== '')
+        modal.find('#email').html(data['userEmail']);
     else
         modal.find('#email').html('No Email Registered');
 
@@ -24,13 +24,13 @@ function showStudent(data) {
     else
         modal.find('#verified i').removeClass('icon-check2');
 
-    if (data['created-at'] && data['created-at'] !== '')
-        modal.find('#registered-at').html(moment(data['created-at']).format('dddd, MMMM Do YYYY, h:mm:ss a'));
+    if (data['createdAt'] && data['createdAt'] !== '')
+        modal.find('#registered-at').html(moment(data['createdAt']).format('dddd, MMMM Do YYYY, h:mm:ss a'));
     else
         modal.find('#registered-at').html('No Record');
 
-    if (data['created-by'] && data['created-by'] !== '')
-        modal.find('#registered-by').html(data['created-by']);
+    if (data['createdBy'] && data['createdBy'] !== '')
+        modal.find('#registered-by').html(data['createdBy']);
     else
         modal.find('#registered-by').html('No Record');
 }
@@ -70,21 +70,21 @@ $(document).ready(function () {
                 return '<img class="rounded-circle" src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg" />';
             }
         }, {
-            data: 'faculty-number'
+            data: 'facultyNumber'
         }, {
-            data: 'enrolment-number'
+            data: 'enrolmentNumber'
         }, {
-            data: 'name'
+            data: 'userName'
         }, {
             data: 'department'
         }, {
-            data: 'hall-code'
+            data: 'hallCode'
         }, {
             data: 'section'
         }, {
             data: 'status'
         }, {
-            data: 'email'
+            data: 'userEmail'
         }],
         "initComplete": function () {
             var $searchInput = $('div.dataTables_filter input');
