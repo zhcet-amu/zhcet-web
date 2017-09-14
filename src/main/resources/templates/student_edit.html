@@ -12,7 +12,7 @@
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
 
-    <!--/*@thymesidr id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
+    <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
     <div th:if="${student}" class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
         <div th:replace="fragments/layout :: toolbar"></div>
         <div class="card">
@@ -41,7 +41,7 @@
                     </ul>
                     <div class="row">
                         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
-                            <h5 th:text="${student.user.details.department.name}" class="capsule"></h5>
+                            <h5 th:text="${student.user.department.name}" class="capsule"></h5>
                             <span><h6>Registration Year : </h6><h6 th:text="${student.registrationYear}"></h6></span>
                         </div>
                     </div>

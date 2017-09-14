@@ -27,7 +27,7 @@ public class FacultyService {
     }
 
     public static Department getDepartment(FacultyMember facultyMember) {
-        return facultyMember.getUser().getDetails().getDepartment();
+        return facultyMember.getUser().getDepartment();
     }
 
     public FacultyMember getById(String facultyId) {
@@ -39,7 +39,7 @@ public class FacultyService {
     }
 
     public List<FacultyMember> getByDepartment(Department department) {
-        return facultyRepository.getByUser_Details_Department(department);
+        return facultyRepository.getByUser_Department(department);
     }
 
     public FacultyMember getLoggedInMember() {

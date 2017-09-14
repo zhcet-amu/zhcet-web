@@ -42,7 +42,7 @@ public class UserDetailService implements UserDetailsService {
                 .name(user.getName())
                 .avatar(user.getDetails().getAvatarUrl())
                 .type(user.getType())
-                .department(user.getDetails().getDepartment());
+                .department(user.getDepartment());
     }
 
     private static Collection<? extends GrantedAuthority> getAuthorities(String... roles) {

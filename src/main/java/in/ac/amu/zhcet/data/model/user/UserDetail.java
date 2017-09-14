@@ -1,12 +1,12 @@
 package in.ac.amu.zhcet.data.model.user;
 
-import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import lombok.*;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 @Data
 @Entity
@@ -30,10 +30,6 @@ public class UserDetail extends BaseEntity {
     private String addressLine2;
     private String city;
     private String state;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Department department;
 
     private String phoneNumbers;
 

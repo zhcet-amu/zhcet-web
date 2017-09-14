@@ -26,12 +26,6 @@ public class DeanRestController {
 
     private static Map<String, String> propertyMap = new ConcurrentHashMap<>();
 
-    static {
-        propertyMap.put("userName", "user.name");
-        propertyMap.put("userEmail", "user.email");
-        propertyMap.put("department", "user.details.department.name");
-    }
-
     @Autowired
     public DeanRestController(ModelMapper modelMapper, StudentRepository studentRepository) {
         this.modelMapper = modelMapper;
@@ -47,8 +41,7 @@ public class DeanRestController {
 
     private static void convertInput(DataTablesInput input) {
         input.getColumns().replaceAll(column -> {
-            String mapped = propertyMap.get(column.getData());
-            if (mapped != null) column.setData(mapped);
+            column.setData(column.getData().replace('_', '.'));
             return column;
         });
     }

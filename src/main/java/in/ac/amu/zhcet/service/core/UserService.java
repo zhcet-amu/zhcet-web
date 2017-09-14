@@ -69,7 +69,7 @@ public class UserService {
     @Transactional
     public void updateDepartment(String id, Department department) {
         UserAuth user = findById(id);
-        user.getDetails().setDepartment(department);
+        user.setDepartment(department);
         userRepository.save(user);
     }
 

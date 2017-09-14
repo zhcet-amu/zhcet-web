@@ -50,7 +50,7 @@ public class FacultyUploadService {
     }
 
     private String getMappedValue(FacultyMember facultyMember, List<Department> departments) {
-        String departmentName = facultyMember.getUser().getDetails().getDepartment().getName();
+        String departmentName = facultyMember.getUser().getDepartment().getName();
 
         Optional<Department> optional = departments.stream()
                 .filter(department -> department.getName().equals(departmentName))
@@ -63,7 +63,7 @@ public class FacultyUploadService {
             duplicateFacultyId = true;
             return "Duplicate Faculty ID";
         } else {
-            facultyMember.getUser().getDetails().setDepartment(optional.get());
+            facultyMember.getUser().setDepartment(optional.get());
             return null;
         }
     }
@@ -122,7 +122,7 @@ public class FacultyUploadService {
         facultyMember.setFacultyId(Utils.capitalizeAll(facultyUpload.getFacultyId()));
         facultyMember.getUser().setName(Utils.capitalizeFirst(facultyUpload.getName()));
         facultyMember.getUser().setPassword(password);
-        facultyMember.getUser().getDetails().setDepartment(new Department(Utils.capitalizeFirst(facultyUpload.getDepartment())));
+        facultyMember.getUser().setDepartment(new Department(Utils.capitalizeFirst(facultyUpload.getDepartment())));
 
         return facultyMember;
     }
@@ -131,7 +131,7 @@ public class FacultyUploadService {
         FacultyUpload facultyUpload = new FacultyUpload();
         facultyUpload.setFacultyId(facultyMember.getFacultyId());
         facultyUpload.setName(facultyMember.getUser().getName());
-        facultyUpload.setDepartment(facultyMember.getUser().getDetails().getDepartment().getName());
+        facultyUpload.setDepartment(facultyMember.getUser().getDepartment().getName());
         facultyUpload.setPassword(facultyMember.getUser().getPassword());
 
         return facultyUpload;

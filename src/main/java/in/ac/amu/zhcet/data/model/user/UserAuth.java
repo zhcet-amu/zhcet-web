@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.data.model.user;
 
+import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -33,6 +34,10 @@ public class UserAuth extends BaseEntity {
 
     @NotBlank
     private String name;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Department department;
 
     private boolean active;
     private boolean passwordChanged;

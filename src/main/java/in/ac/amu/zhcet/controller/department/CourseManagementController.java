@@ -38,7 +38,7 @@ public class CourseManagementController {
 
     private FloatedCourse verifyAndGetCourse(String courseId) {
         FloatedCourse floatedCourse = departmentAdminService.getCourseById(courseId);
-        if (!floatedCourse.getCourse().getDepartment().equals(departmentAdminService.getFacultyMember().getUser().getDetails().getDepartment()))
+        if (!floatedCourse.getCourse().getDepartment().equals(departmentAdminService.getFacultyMember().getUser().getDepartment()))
             throw new IllegalArgumentException("Unauthorized access");
 
         return floatedCourse;

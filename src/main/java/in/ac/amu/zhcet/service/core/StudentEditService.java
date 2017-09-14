@@ -35,7 +35,7 @@ public class StudentEditService {
         studentEditModel.setFacultyNumber(student.getFacultyNumber());
         studentEditModel.setName(student.getUser().getName());
         studentEditModel.setEmail(student.getUser().getEmail());
-        studentEditModel.setDepartment(student.getUser().getDetails().getDepartment().getName());
+        studentEditModel.setDepartment(student.getUser().getDepartment().getName());
         studentEditModel.setHallCode(student.getHallCode());
         studentEditModel.setSection(student.getSection());
         studentEditModel.setStatus(student.getStatus());
@@ -47,7 +47,7 @@ public class StudentEditService {
         student.setFacultyNumber(studentEditModel.getFacultyNumber());
         student.getUser().setName(studentEditModel.getName());
         student.getUser().setEmail(studentEditModel.getEmail());
-        student.getUser().getDetails().setDepartment(department);
+        student.getUser().setDepartment(department);
         student.setHallCode(studentEditModel.getHallCode());
         student.setSection(studentEditModel.getSection());
         student.setStatus(studentEditModel.getStatus());

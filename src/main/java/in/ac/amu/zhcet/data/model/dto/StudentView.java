@@ -13,15 +13,17 @@ public class StudentView {
     @JsonView(DataTablesOutput.View.class)
     private String enrolmentNumber;
     @JsonView(DataTablesOutput.View.class)
+    @JsonProperty("user_name")
     private String userName;
     @JsonView(DataTablesOutput.View.class)
+    @JsonProperty("user_email")
     private String userEmail;
     @JsonView(DataTablesOutput.View.class)
     @JsonProperty("avatar-url")
     private String userDetailsAvatarUrl;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("department")
-    private String userDetailsDepartmentName;
+    @JsonProperty("user_department_name")
+    private String userDepartmentName;
     @JsonView(DataTablesOutput.View.class)
     @JsonProperty("is-verified")
     private boolean userActive;

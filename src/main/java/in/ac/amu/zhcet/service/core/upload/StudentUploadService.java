@@ -48,13 +48,13 @@ public class StudentUploadService {
         student.setEnrolmentNumber(capitalizeAll(studentUpload.getEnrolmentNo()));
         student.setFacultyNumber(capitalizeAll(studentUpload.getFacultyNo()));
         student.getUser().setName(capitalizeFirst(studentUpload.getName()));
-        student.getUser().getDetails().setDepartment(new Department(studentUpload.getDepartment()));
+        student.getUser().setDepartment(new Department(studentUpload.getDepartment()));
 
         return student;
     }
 
     private String getMappedValue(Student student, List<Department> departments) {
-        String departmentName = capitalizeFirst(student.getUser().getDetails().getDepartment().getName());
+        String departmentName = capitalizeFirst(student.getUser().getDepartment().getName());
 
         Optional<Department> optional = departments.stream()
                 .filter(department -> department.getName().equals(departmentName))
@@ -70,7 +70,7 @@ public class StudentUploadService {
             duplicateFacultyNo = true;
             return "Duplicate faculty number";
         } else {
-            student.getUser().getDetails().setDepartment(optional.get());
+            student.getUser().setDepartment(optional.get());
             return null;
         }
     }

@@ -12,7 +12,7 @@ public interface FacultyRepository extends CrudRepository<FacultyMember, Long>{
 
     List<FacultyMember> getByFacultyIdIn(List<String> facultyIds);
 
-    List<FacultyMember> getByUser_Details_Department(Department department);
+    List<FacultyMember> getByUser_Department(Department department);
 
-    FacultyMember getByUserDetails_Email(String email);
+    FacultyMember getByUser_Email(String email);
 }
