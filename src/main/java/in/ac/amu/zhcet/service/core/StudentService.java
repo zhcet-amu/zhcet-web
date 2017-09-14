@@ -5,6 +5,7 @@ import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.user.Type;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,7 +13,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class StudentService {
 
@@ -48,7 +52,7 @@ public class StudentService {
         return studentRepository.getByFacultyNumber(userId);
     }
 
-    private static void initializeStudent(Student student) {
+    private static Student initializeStudent(Student student) {
         student.getUser().setType(Type.STUDENT);
 
         if (student.getUser().getUserId() == null)
@@ -59,6 +63,8 @@ public class StudentService {
             student.getUser().setPassword(student.getFacultyNumber());
 
         student.getUser().setPassword(UserAuth.PASSWORD_ENCODER.encode(student.getUser().getPassword()));
+
+        return student;
     }
 
     @Transactional
@@ -67,6 +73,25 @@ public class StudentService {
 
         userService.save(student.getUser());
         studentRepository.save(student);
+    }
+
+    @Transactional
+    public void register(Set<Student> students) {
+        log.info("Initializing Students");
+        List<Student> studentList = students.parallelStream()
+                .map(StudentService::initializeStudent)
+                .collect(Collectors.toList());
+        log.info("Students Initialized");
+        log.info("Saving Users");
+        List<UserAuth> userAuths = students.parallelStream()
+                .map(Student::getUser)
+                .collect(Collectors.toList());
+        log.info("Extracted Users");
+        userService.save(userAuths);
+        log.info("Saved Users");
+        log.info("Saving students");
+        studentRepository.save(studentList);
+        log.info("Saved Students");
     }
 
     @Transactional

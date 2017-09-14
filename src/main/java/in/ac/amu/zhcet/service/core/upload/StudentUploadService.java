@@ -113,8 +113,6 @@ public class StudentUploadService {
 
     @Transactional
     public void registerStudents(Confirmation<Student, String> confirmation) {
-        for (Student student : confirmation.getData().keySet()) {
-            studentService.register(student);
-        }
+        studentService.register(confirmation.getData().keySet());
     }
 }

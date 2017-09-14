@@ -29,6 +29,10 @@ public class UserService {
         userRepository.save(userAuth);
     }
 
+    public void save(List<UserAuth> userAuths) {
+        userRepository.save(userAuths);
+    }
+
     public UserAuth findById(String id) {
         return userRepository.findByUserId(id);
     }
