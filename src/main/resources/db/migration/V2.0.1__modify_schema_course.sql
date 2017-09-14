@@ -1,4 +1,4 @@
-ALTER TABLE zhcet.course 
+ALTER TABLE course
   ADD category VARCHAR(255) NULL,
   ADD compulsory BIT(1) NULL,
   ADD semester INT NULL,
