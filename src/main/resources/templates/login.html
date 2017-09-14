@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="container"
-      th:include="fragments/login :: login(title = 'Login', message = 'Login with ZHCET')" lang="en" data-textdirection="ltr" class="loading">
+      th:include="fragments/login :: login(page_title = 'Login', message = 'Login with ZHCET')" lang="en" data-textdirection="ltr" class="loading">
 <div class="card-body collapse in">
     <div class="card-block">
         <form class="form-horizontal form-simple" action="#" th:action="@{/login}" method="post">

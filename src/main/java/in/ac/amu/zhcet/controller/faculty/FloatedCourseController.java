@@ -28,9 +28,9 @@ public class FloatedCourseController {
 
     @GetMapping("/faculty/courses")
     public String getCourse(Model model) {
-        model.addAttribute("title", "Course Management");
-        model.addAttribute("subtitle", "Faculty Floated Course Management");
-        model.addAttribute("description", "Manage and upload attendance for currently floated courses");
+        model.addAttribute("page_title", "Course Management");
+        model.addAttribute("page_subtitle", "Faculty Floated Course Management");
+        model.addAttribute("page_description", "Manage and upload attendance for currently floated courses");
         String selected = "";
         FacultyMember facultyMember = facultyService.getLoggedInMember();
         List<FloatedCourse> floatedCourses = floatedCourseService.getByFaculty(facultyMember);
@@ -44,9 +44,9 @@ public class FloatedCourseController {
         FloatedCourse floatedCourse = floatedCourseService.getCourseById(id);
 
         if (floatedCourse != null) {
-            model.addAttribute("title", floatedCourse.getCourse().getTitle());
-            model.addAttribute("subtitle", "Attendance management for " + floatedCourse.getCourse().getCode());
-            model.addAttribute("description", "Upload attendance for the floated course");
+            model.addAttribute("page_title", floatedCourse.getCourse().getTitle());
+            model.addAttribute("page_subtitle", "Attendance management for " + floatedCourse.getCourse().getCode());
+            model.addAttribute("page_description", "Upload attendance for the floated course");
 
             List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
             model.addAttribute("courseRegistrations", courseRegistrations);

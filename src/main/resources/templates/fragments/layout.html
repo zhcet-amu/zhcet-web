@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head th:fragment="head">
-    <title th:text="${title}">Home</title>
+    <title th:text="${page_title}">Home</title>
     <meta charset="UTF-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -54,7 +54,7 @@
 </div>
 
 <div class="content-header row" style="margin-bottom: 10px;" th:fragment="toolbar">
-    <div class="breadcrumb-wrapper col-xs-12" th:if="${path}">
+    <div class="breadcrumb-wrapper col-xs-12" th:if="${page_path}">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Home</a>
             </li>
@@ -65,16 +65,16 @@
         </ol>
     </div>
     <div class="content-header-left col-md-6 col-xs-12">
-        <div th:if="${title}">
-            <h3 class="content-header-title mb-0" th:text="${title}"></h3>
-            <p class="text-muted mb-0" th:text="${subtitle}"></p>
+        <div th:if="${page_title}">
+            <h3 class="content-header-title mb-0" th:text="${page_title}"></h3>
+            <p class="text-muted mb-0" th:text="${page_subtitle}"></p>
         </div>
     </div>
     <div class="content-header-right col-md-6 col-xs-12" >
         <h5 class="float-md-right capsule bg-primary text-white text-xs-center" th:text="|Session : ${@configurationService.getSessionName()}|" style="padding: 10px;"></h5>
     </div>
-    <div class="content-header-lead col-xs-12 mt-1" th:if="${description}">
-        <p class="lead" th:text="${description}"></p>
+    <div class="content-header-lead col-xs-12 mt-1" th:if="${page_description}">
+        <p class="lead" th:text="${page_description}"></p>
     </div>
 </div>
 
@@ -97,13 +97,13 @@
 
 <div th:fragment="error" th:if="${condition}" class="alert alert-dismissible alert-danger">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <strong th:if="${title}" th:text="${title}"></strong>
+    <strong th:if="${error_title}" th:text="${error_title}"></strong>
     <div th:utext="${error}">Fix this and try and try again</div>
 </div>
 
 <div th:fragment="success" th:if="${condition}" class="alert alert-dismissible alert-success">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <strong th:if="${title}" th:text="${title}"></strong>
+    <strong th:if="${success_title}" th:text="${success_title}"></strong>
     <span th:utext="${message}">Fix this and try and try again</span>
 </div>
 

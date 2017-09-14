@@ -43,9 +43,9 @@ public class ProfileController {
         model.addAttribute("user", userAuth);
         model.addAttribute("user_details", userAuth.getDetails());
 
-        model.addAttribute("title", "Profile");
-        model.addAttribute("subtitle", "Profile Settings for " + userAuth.getName());
-        model.addAttribute("description", "Manage Profile Details and Information");
+        model.addAttribute("page_title", "Profile");
+        model.addAttribute("page_subtitle", "Profile Settings for " + userAuth.getName());
+        model.addAttribute("page_description", "Manage Profile Details and Information");
 
         if (userAuth.getType().equals(Type.STUDENT)) {
             Student student = studentService.getLoggedInStudent();

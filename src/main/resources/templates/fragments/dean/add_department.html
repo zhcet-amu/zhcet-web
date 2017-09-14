@@ -28,7 +28,7 @@
                         <div th:each="error : ${dept_errors}">
                             <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
                         </div>
-                        <div th:replace="fragments/layout :: success(condition = ${dept_success}, title = 'Uploaded!', message = 'Department was added successfully!')"></div>
+                        <div th:replace="fragments/layout :: success(condition = ${dept_success}, success_title = 'Uploaded!', message = 'Department was added successfully!')"></div>
                         <button type="submit" class="btn btn-primary">
                             <i class="icon-check2"></i> Add
                         </button>

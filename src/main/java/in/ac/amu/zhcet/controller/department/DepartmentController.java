@@ -22,14 +22,14 @@ public class DepartmentController {
 
     @GetMapping("/department")
     public String department(Model model) {
-        model.addAttribute("description", "Manage and float courses for the session");
+        model.addAttribute("page_description", "Manage and float courses for the session");
         model.addAttribute("floatedCourses", departmentAdminService.getFloatedCourses());
         model.addAttribute("courses", departmentAdminService.getAllCourses());
         FacultyMember facultyMember = departmentAdminService.getFacultyMember();
         Department department = FacultyService.getDepartment(facultyMember);
         model.addAttribute("department", department);
-        model.addAttribute("title", department.getName() + " Department Panel");
-        model.addAttribute("subtitle", "Course management for Department");
+        model.addAttribute("page_title", department.getName() + " Department Panel");
+        model.addAttribute("page_subtitle", "Course management for Department");
         if (!model.containsAttribute("course")) {
             Course course = new Course();
             course.setDepartment(FacultyService.getDepartment(facultyMember));

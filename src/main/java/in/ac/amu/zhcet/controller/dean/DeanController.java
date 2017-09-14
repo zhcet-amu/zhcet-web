@@ -48,9 +48,9 @@ public class DeanController {
 
     @GetMapping("/dean")
     public String deanAdmin(Model model) {
-        model.addAttribute("title", "Administration Panel");
-        model.addAttribute("subtitle", "Dean Administration Panel");
-        model.addAttribute("description", "Register Students and Faculty, manage roles and users");
+        model.addAttribute("page_title", "Administration Panel");
+        model.addAttribute("page_subtitle", "Dean Administration Panel");
+        model.addAttribute("page_description", "Register Students and Faculty, manage roles and users");
 
 
         model.addAttribute("users", userService.getAll());
@@ -66,9 +66,9 @@ public class DeanController {
         Department department = departmentService.findOne(id);
 
         if (department != null) {
-            model.addAttribute("title", "Role Management");
-            model.addAttribute("subtitle", "Role Management Panel for " + department.getName() + " Department");
-            model.addAttribute("description", "Manage Faculty Roles and Permissions");
+            model.addAttribute("page_title", "Role Management");
+            model.addAttribute("page_subtitle", "Role Management Panel for " + department.getName() + " Department");
+            model.addAttribute("page_description", "Manage Faculty Roles and Permissions");
 
             model.addAttribute("department", department);
             model.addAttribute("facultyMembers", facultyService.getByDepartment(department));
@@ -160,9 +160,9 @@ public class DeanController {
 
     @GetMapping("/dean/configuration")
     public String configuration(Model model) {
-        model.addAttribute("title", "Configuration");
-        model.addAttribute("subtitle", "Configuration Management Panel");
-        model.addAttribute("description", "Manage site wide configurations and parameters");
+        model.addAttribute("page_title", "Configuration");
+        model.addAttribute("page_subtitle", "Configuration Management Panel");
+        model.addAttribute("page_description", "Manage site wide configurations and parameters");
 
         log.info(configurationService.getConfig().toString());
         log.info(configurationService.getSessionName());

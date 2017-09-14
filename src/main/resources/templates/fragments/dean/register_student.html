@@ -20,8 +20,8 @@
                         <div>Download the <a th:href="@{/csv/student_format.csv}">student format</a></div>
                         <br/>
                         <div th:replace="fragments/layout :: uploader(id = 'student_upload')"></div>
-                        <div th:replace="fragments/layout :: success(condition = ${students_registered}, title = 'Registered!', message = 'Students were successfully registered')"></div>
-                        <div th:replace="fragments/layout :: success(condition = ${students_success}, title = 'Uploaded!', message = 'Your file was correctly uploaded. Now, confirm the prompt to register the students')"></div>
+                        <div th:replace="fragments/layout :: success(condition = ${students_registered}, success_title = 'Registered!', message = 'Students were successfully registered')"></div>
+                        <div th:replace="fragments/layout :: success(condition = ${students_success}, success_title = 'Uploaded!', message = 'Your file was correctly uploaded. Now, confirm the prompt to register the students')"></div>
                         <div th:each="error : ${students_errors}">
                             <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
                         </div>

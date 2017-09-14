@@ -38,23 +38,23 @@ public class StudentEditController {
 
     @GetMapping("/dean/students")
     public String students(Model model) {
-        model.addAttribute("title", "Student Manager");
-        model.addAttribute("subtitle", "Registered Student Management");
-        model.addAttribute("description", "Search and manage registered students and edit details");
+        model.addAttribute("page_title", "Student Manager");
+        model.addAttribute("page_subtitle", "Registered Student Management");
+        model.addAttribute("page_description", "Search and manage registered students and edit details");
         return "students_page";
     }
 
     @GetMapping("/dean/students/{id}")
     public String student(Model model, @PathVariable String id) {
         Student student = studentService.getByEnrolmentNumber(id);
-        model.addAttribute("title", "Student Editor");
-        model.addAttribute("description", "Change student specific details");
+        model.addAttribute("page_title", "Student Editor");
+        model.addAttribute("page_description", "Change student specific details");
         model.addAttribute("student", student);
         model.addAttribute("departments", departmentService.findAll());
         model.addAttribute("hallCodes", EnumUtils.getEnumMap(HallCode.class).keySet());
         model.addAttribute("statuses", EnumUtils.getEnumMap(StudentStatus.class).keySet());
         if (student != null && !model.containsAttribute("studentModel")) {
-            model.addAttribute("subtitle", "Edit details of " + student.getUser().getName());
+            model.addAttribute("page_subtitle", "Edit details of " + student.getUser().getName());
             model.addAttribute("studentModel", studentEditService.fromStudent(student));
         }
 

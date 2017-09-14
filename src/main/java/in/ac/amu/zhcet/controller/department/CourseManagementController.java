@@ -48,9 +48,9 @@ public class CourseManagementController {
     public String courseDetail(Model model, @PathVariable String id) {
         FloatedCourse floatedCourse = verifyAndGetCourse(id);
 
-        model.addAttribute("title", floatedCourse.getCourse().getTitle());
-        model.addAttribute("subtitle", "Course management for " + floatedCourse.getCourse().getCode());
-        model.addAttribute("description", "Register Students and add Faculty In-Charge for the course");
+        model.addAttribute("page_title", floatedCourse.getCourse().getTitle());
+        model.addAttribute("page_subtitle", "Course management for " + floatedCourse.getCourse().getCode());
+        model.addAttribute("page_description", "Register Students and add Faculty In-Charge for the course");
 
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
         model.addAttribute("courseRegistrations", courseRegistrations);

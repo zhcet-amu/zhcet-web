@@ -3,7 +3,7 @@
       lang="en"
       data-textdirection="ltr"
       class="loading">
-<head th:replace="fragments/layout :: head(title = 'Profile')">
+<head th:replace="fragments/layout :: head">
 </head>
 
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
@@ -54,7 +54,7 @@
                                         </span>
                                 </div>
                             </fieldset>
-                            <div th:replace="fragments/layout :: success(condition = ${link_sent}, title = 'Sent!', message = ${link_sent})"></div>
+                            <div th:replace="fragments/layout :: success(condition = ${link_sent}, success_title = 'Sent!', message = ${link_sent})"></div>
                             <div th:replace="fragments/layout :: error(condition = ${invalid_email}, error = ${invalid_email})"></div>
                             <div th:replace="fragments/layout :: error(condition = ${duplicate_email}, error = ${duplicate_email})"></div>
                         </form>
@@ -71,7 +71,7 @@
                         <form th:action="@{/profile/confirm_email}" method="post">
                             <button type="submit" class="btn btn-primary block">Resend Verification Link</button>
                             <br>
-                            <div th:replace="fragments/layout :: success(condition = ${link_sent}, title = 'Sent!', message = ${link_sent})"></div>
+                            <div th:replace="fragments/layout :: success(condition = ${link_sent}, success_title = 'Sent!', message = ${link_sent})"></div>
                             <div th:replace="fragments/layout :: error(condition = ${invalid_email}, error = ${invalid_email})"></div>
                         </form>
                     </div>
