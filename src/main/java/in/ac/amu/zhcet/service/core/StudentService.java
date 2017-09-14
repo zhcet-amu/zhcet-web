@@ -36,6 +36,10 @@ public class StudentService {
         return studentRepository.getByEnrolmentNumber(userId);
     }
 
+    public List<StudentRepository.Identifier> getAllIdentifiers() {
+        return studentRepository.findAllIdentifiers();
+    }
+
     public List<Student> getByIds(List<String> studentIds) {
         return studentRepository.getByEnrolmentNumberIn(studentIds);
     }

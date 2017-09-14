@@ -4,9 +4,10 @@ import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.StudentUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
+import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.service.core.StudentService;
-import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.AbstractUploadService;
+import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class StudentUploadService {
         return student;
     }
 
-    private String getMappedValue(Student student, List<Department> departments) {
+    private String getMappedValue(Student student, List<Department> departments, List<StudentRepository.Identifier> identifiers) {
         String departmentName = student.getUser().getDepartment().getName();
 
         Optional<Department> optional = departments.stream()
@@ -68,10 +69,10 @@ public class StudentUploadService {
         if (!optional.isPresent()) {
             invalidDepartment = true;
             return  "No such department: " + departmentName;
-        } else if (studentService.getByEnrolmentNumber(student.getEnrolmentNumber()) != null) {
+        } else if (identifiers.parallelStream().anyMatch(identifier -> identifier.getEnrolmentNumber().equals(student.getEnrolmentNumber()))) {
             duplicateEnrolmentNo = true;
             return  "Duplicate enrolment number";
-        } else if (studentService.getByFacultyNumber(student.getFacultyNumber()) != null) {
+        } else if (identifiers.parallelStream().anyMatch(identifier -> identifier.getFacultyNumber().equals(student.getFacultyNumber()))) {
             duplicateFacultyNo = true;
             return "Duplicate faculty number";
         } else if (student.getHallCode().length() > 2) {
@@ -90,11 +91,12 @@ public class StudentUploadService {
         invalidHallCode = false;
 
         List<Department> departments = departmentRepository.findAll();
+        List<StudentRepository.Identifier> identifiers = studentService.getAllIdentifiers();
 
         Confirmation<Student, String> studentConfirmation = uploadService.confirmUpload(
                 uploadResult,
                 StudentUploadService::fromStudentUpload,
-                student -> getMappedValue(student, departments)
+                student -> getMappedValue(student, departments, identifiers)
         );
 
         if (invalidDepartment)
