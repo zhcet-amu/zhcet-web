@@ -10,7 +10,7 @@
 <div th:replace="fragments/navigation :: navigation(pageId = 'student_attendance')"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_STUDENT')">
-    <div class="col-xs-12">
+    <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
         <div th:replace="fragments/layout :: toolbar"></div>
         <div class="card">
             <div class="card-header">

@@ -2,8 +2,7 @@
 <html lang="en" data-textdirection="ltr" class="loading"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:replace="fragments/layout :: head">
-</head>
+<head th:replace="fragments/layout :: head"></head>
 
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
       class="vertical-layout vertical-menu 2-columns  fixed-navbar">
@@ -11,36 +10,38 @@
 <div th:replace="fragments/navigation :: navigation(pageId = 'faculty_courses')"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_FACULTY')">
-    <div class="col-md-12">
-        <div th:replace="fragments/layout :: toolbar"></div>
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Floated Courses</h4>
-                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                These are the courses managed by you this session
-                <div class="heading-elements">
-                    <ul class="list-inline mb-0">
-                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                    </ul>
+    <div class="row">
+        <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
+            <div th:replace="fragments/layout :: toolbar"></div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Floated Courses</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    These are the courses managed by you this session
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body collapse in collapse in">
-                <div class="card-block">
-                    <div class="row">
-                        <div th:each="floated: ${floatedCourses}" style="display: inline;">
-                            <!--/*@thymesVar id="floated" type="in.ac.amu.zhcet.data.model.FloatedCourse"*/-->
-                            <a th:href="|/faculty/courses/${floated.course.code}|" style="display: inline">
-                                <button class="btn btn-outline-primary btn-lg" type="submit"
-                                        th:text='${floated.course.title}' style="margin: 5px"
-                                        data-toggle="tooltip" th:title="${floated.course.code}"></button>
-                            </a>
+                <div class="card-body collapse in collapse in">
+                    <div class="card-block">
+                        <div class="row">
+                            <div th:each="floated: ${floatedCourses}" style="display: inline;">
+                                <!--/*@thymesVar id="floated" type="in.ac.amu.zhcet.data.model.FloatedCourse"*/-->
+                                <a th:href="|/faculty/courses/${floated.course.code}|" style="display: inline">
+                                    <button class="btn btn-outline-primary btn-lg" type="submit"
+                                            th:text='${floated.course.title}' style="margin: 5px"
+                                            data-toggle="tooltip" th:title="${floated.course.code}"></button>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 </div>
