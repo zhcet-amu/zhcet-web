@@ -37,7 +37,7 @@ public class DepartmentController {
         }
         model.addAttribute("facultyMembers", departmentAdminService.getAllFacultyMembers());
 
-        return "department";
+        return "department/admin";
     }
 
 }

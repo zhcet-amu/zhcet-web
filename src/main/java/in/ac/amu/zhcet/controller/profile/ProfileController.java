@@ -55,7 +55,7 @@ public class ProfileController {
             model.addAttribute("faculty", facultyMember);
         }
 
-        return "profile";
+        return "user/profile";
     }
 
     @PostMapping("/profile/details")

@@ -10,9 +10,8 @@
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation"></div>
 
-
 <!--/*@thymesVar id="floatedCourse" type="in.ac.amu.zhcet.data.model.FloatedCourse"*/-->
-<!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+<!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.CourseInCharge"*/-->
 <!--/*@thymesVar id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
 <div th:fragment="content" th:include="fragments/layout :: wrapper">
     <div th:replace="fragments/layout :: toolbar"></div>
@@ -57,7 +56,7 @@
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <strong>Added!</strong> Course In-Charge was successfully added<br/>
                         </div>
-                        <a th:href="|${#httpServletRequest.requestURL}/add_in_charge|">
+                        <a th:href="|/department/course/${floatedCourse.course.code}/add_in_charge|">
                             <div>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="icon-add"></i> Add
@@ -82,7 +81,7 @@
                 <div class="card-body collapse in collapse in">
                     <div class="card-block">
                         <form class="form" enctype="multipart/form-data"
-                              th:action="|${#httpServletRequest.requestURL}/register|"
+                              th:action="|/department/courses/${floatedCourse.course.code}/register|"
                               method="post">
                             <div>
                                 Download the <a th:href="@{/csv/registration_format.csv}">registration format</a>
@@ -152,7 +151,7 @@
         <div th:if="${facultyMembers}" id="faculty-modal" class="modal">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <form class="form" th:action="|${#httpServletRequest.requestURL}/confirm_in_charge|"
+                    <form class="form" th:action="|/department/courses/${floatedCourse.course.code}/confirm_in_charge|"
                           method="post">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -199,7 +198,7 @@
         </div>
         <div th:if="${confirmRegistration}" id="registration-modal" class="modal">
             <div class="modal-dialog modal-lg">
-                <form th:action="|${#httpServletRequest.requestURL}/confirm_registration|" method="post">
+                <form th:action="|/department/courses/${floatedCourse.course.code}/confirm_registration|" method="post">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -219,10 +218,9 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!--/*@thymesidr id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
                                         <th:block th:each="confirm: ${confirmRegistration.data}">
                                             <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
-                                                <!--/*@thymesidr id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
+                                                <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
                                                 <input type="hidden" name="studentId" th:value="${confirm.key.enrolmentNumber}">
                                                 <td class="text-xs-center"
                                                     th:text="${confirm.key.enrolmentNumber}"></td>

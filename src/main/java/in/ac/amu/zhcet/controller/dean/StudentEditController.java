@@ -41,7 +41,7 @@ public class StudentEditController {
         model.addAttribute("page_title", "Student Manager");
         model.addAttribute("page_subtitle", "Registered Student Management");
         model.addAttribute("page_description", "Search and manage registered students and edit details");
-        return "students_page";
+        return "dean/students_page";
     }
 
     @GetMapping("/dean/students/{id}")
@@ -58,7 +58,7 @@ public class StudentEditController {
             model.addAttribute("studentModel", studentEditService.fromStudent(student));
         }
 
-        return "student_edit";
+        return "dean/student_edit";
     }
 
     @PostMapping("/dean/students/{id}")

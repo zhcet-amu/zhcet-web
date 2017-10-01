@@ -27,7 +27,7 @@ public class AttendanceController {
         model.addAttribute("page_subtitle", "Attendance Panel for " + student.getEnrolmentNumber() + " | " + student.getUser().getName());
         model.addAttribute("page_description", "View attendance of floated courses this session");
         model.addAttribute("attendances", registeredCourseService.getAttendanceByStudent(student.getEnrolmentNumber()));
-        return "attendance";
+        return "student/attendance";
     }
 
 }

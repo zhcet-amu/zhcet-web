@@ -31,12 +31,11 @@ public class FloatedCourseController {
         model.addAttribute("page_title", "Course Management");
         model.addAttribute("page_subtitle", "Faculty Floated Course Management");
         model.addAttribute("page_description", "Manage and upload attendance for currently floated courses");
-        String selected = "";
+
         FacultyMember facultyMember = facultyService.getLoggedInMember();
         List<FloatedCourse> floatedCourses = floatedCourseService.getByFaculty(facultyMember);
         model.addAttribute("floatedCourses", floatedCourses);
-        model.addAttribute("selectedCourse", selected);
-        return "faculty_courses";
+        return "faculty/courses";
     }
 
     @GetMapping("faculty/courses/{id}")
@@ -53,6 +52,6 @@ public class FloatedCourseController {
             model.addAttribute("course_id", id);
         }
 
-        return "course_attendance";
+        return "faculty/course_attendance";
     }
 }

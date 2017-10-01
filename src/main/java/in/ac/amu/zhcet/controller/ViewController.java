@@ -10,7 +10,7 @@ public class ViewController {
 
     @RequestMapping("/login")
     public String getLoginPage() {
-        return "login";
+        return "user/login";
     }
 
     @RequestMapping(value = {"/", ""})

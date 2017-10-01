@@ -29,14 +29,15 @@ public class PasswordChangeController {
 
     @GetMapping("/profile/change_password")
     public String changePassword(Model model) {
+        String renderUrl = "user/change_password";
         UserAuth userAuth = userService.getLoggedInUser();
         if (!userAuth.isActive()) {
             model.addAttribute("error", "The user is not verified, and hence can't change the password");
-            return "change_password";
+            return renderUrl;
         }
         PasswordChange passwordChange = new PasswordChange();
         model.addAttribute("password", passwordChange);
-        return "change_password";
+        return renderUrl;
     }
 
     @PostMapping("/profile/change_password")

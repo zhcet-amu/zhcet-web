@@ -37,7 +37,7 @@
                 <table class="table">
                     <tbody>
                     <!--/*@thymesidr id="member" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
-                    <form th:action="|${#httpServletRequest.requestURL}/save|" method="post" th:each="member : ${facultyMembers}">
+                    <form th:action="|/dean/roles/${department.id}/save|" method="post" th:each="member : ${facultyMembers}">
                         <tr>
                             <td>
                                 <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"

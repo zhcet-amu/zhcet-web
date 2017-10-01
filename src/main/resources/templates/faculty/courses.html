@@ -30,12 +30,12 @@
                 <div class="card-block">
                     <div class="row">
                         <div th:each="floated: ${floatedCourses}" style="display: inline;">
-                            <form th:with="selectedCourse=${floated.course.code}"
-                                  th:action="'/faculty/courses/' + ${selectedCourse}" method="get" style="display: inline">
+                            <!--/*@thymesVar id="floated" type="in.ac.amu.zhcet.data.model.FloatedCourse"*/-->
+                            <a th:href="|/faculty/courses/${floated.course.code}|" style="display: inline">
                                 <button class="btn btn-outline-primary btn-lg" type="submit"
                                         th:text='${floated.course.title}' style="margin: 5px"
                                         data-toggle="tooltip" th:title="${floated.course.code}"></button>
-                            </form>
+                            </a>
                         </div>
                     </div>
                 </div>

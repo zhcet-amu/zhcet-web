@@ -87,7 +87,7 @@
                 <div class="card-body collapse in collapse in">
                     <div class="card-block">
                         <form class="form" enctype="multipart/form-data"
-                              th:action="|${#httpServletRequest.requestURL}/attendance|"
+                              th:action="|/faculty/courses/${course_id}/attendance|"
                               method="post">
                             <div>
                                 Download the <a th:href="@{/csv/attendance_format.csv}">attendance format</a>
@@ -171,7 +171,7 @@
                 </div>
                 <div class="card-body collapse in collapse in">
                     <form th:object="${attendanceModel}"
-                          th:action="|${#httpServletRequest.requestURL}/attendance_confirmed|" method="post"
+                          th:action="|/faculty/course/${course_id}/attendance_confirmed|" method="post"
                           class="card-block">
                         <div class="row">
                             <div class="table-responsive">

@@ -75,7 +75,7 @@ public class EmailVerificationController {
             emailVerificationService.confirmEmail(token);
             model.addAttribute("success", "Your email was successfully verified!");
         }
-        return "verify_email";
+        return "user/verify_email";
     }
 
 }

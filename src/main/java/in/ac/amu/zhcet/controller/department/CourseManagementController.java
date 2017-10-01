@@ -55,7 +55,7 @@ public class CourseManagementController {
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("floatedCourse", floatedCourse);
-        return "floated_course";
+        return "department/floated_course";
     }
 
     @PostMapping("department/courses/{id}/register")

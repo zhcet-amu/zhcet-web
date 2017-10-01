@@ -28,7 +28,7 @@ public class ForgotPasswordController {
 
     @GetMapping("/login/forgot_password")
     public String getForgetPassword() {
-        return "forgot_password";
+        return "user/forgot_password";
     }
 
     @PostMapping("/login/forgot_password")
