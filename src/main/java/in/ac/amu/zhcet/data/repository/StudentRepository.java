@@ -22,4 +22,6 @@ public interface StudentRepository extends DataTablesRepository<Student, Long> {
     @Query(value = "SELECT enrolment_number, faculty_number FROM student", nativeQuery = true)
     List<Identifier> findAllIdentifiers();
 
+    List<Student> findAll();
+
 }

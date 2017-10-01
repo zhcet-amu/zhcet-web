@@ -80,10 +80,10 @@ public class CourseManagementController {
     }
 
     @PostMapping("department/courses/{id}/confirm_registration")
-    public String confirmRegistration(RedirectAttributes attributes, @PathVariable String id, @RequestParam List<String> studentId) {
+    public String confirmRegistration(RedirectAttributes attributes, @PathVariable String id, @RequestParam List<String> studentId, @RequestParam List<String> mode) {
 
         try {
-            registrationUploadService.registerStudents(id, studentId);
+            registrationUploadService.registerStudents(id, studentId, mode);
             attributes.addFlashAttribute("registered", true);
         } catch (Exception e) {
             e.printStackTrace();

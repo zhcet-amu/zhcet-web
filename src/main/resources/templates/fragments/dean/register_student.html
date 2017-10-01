@@ -1,5 +1,4 @@
 <div xmlns:th="http://www.thymeleaf.org" lang="en">
-    <link rel="stylesheet" href="https://zhcet-web-amu.firebaseapp.com/static/css/datatables.bs4.min.css">
     <div class="card" th:fragment="register_student">
         <div class="card-header">
             <h4 class="card-title">Register Students</h4>
@@ -110,8 +109,6 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script src="https://zhcet-web-amu.firebaseapp.com/static/js/datatables.bs4.min.js"></script>
     <script th:fragment="script">
         $(window).load(function () {
             $('#registration-modal').modal('show');

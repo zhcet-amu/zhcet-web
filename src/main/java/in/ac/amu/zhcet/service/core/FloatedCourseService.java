@@ -75,20 +75,23 @@ public class FloatedCourseService {
     }
 
     @Transactional
-    public void registerStudents(String courseId, List<String> studentIds) {
+    public void registerStudents(String courseId, List<String> studentIds, List<String> modes) {
+        if (studentIds.size() != modes.size())
+            return;
+
         FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseId);
 
         List<Student> students = studentService.getByIds(studentIds);
         List<CourseRegistration> registrations = new ArrayList<>();
 
-        for (Student student : students) {
+        for (int i = 0; i < students.size(); i++) {
             CourseRegistration registration = new CourseRegistration();
 
-            registration.setStudent(student);
+            registration.setStudent(students.get(i));
             registration.setFloatedCourse(stored);
+            registration.setMode(modes.get(i).charAt(0));
             registration.getAttendance().setId(registration.generateId());
             registrations.add(registration);
-
         }
 
         stored.getCourseRegistrations().addAll(registrations);

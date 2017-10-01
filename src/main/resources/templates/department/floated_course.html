@@ -8,7 +8,7 @@
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
       class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
-<div th:replace="fragments/navigation :: navigation"></div>
+<div th:replace="fragments/navigation :: navigation(pageId = 'department_admin')"></div>
 
 <!--/*@thymesVar id="floatedCourse" type="in.ac.amu.zhcet.data.model.FloatedCourse"*/-->
 <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.CourseInCharge"*/-->
@@ -119,25 +119,24 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="table-responsive">
-                                <table class="table">
-                                    <thead class="thead-inverse">
+                                <table id="registrationTable" class="table">
+                                    <thead>
                                     <tr>
-                                        <th class="text-xs-center">ID</th>
                                         <th class="text-xs-center">FACULTY NO</th>
                                         <th class="text-xs-center">ENROLMENT NO</th>
                                         <th class="text-xs-center">NAME</th>
+                                        <th class="text-xs-center">SECTION</th>
+                                        <th class="text-xs-center">MODE</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <th:block th:each="registration: ${courseRegistrations}">
                                         <tr>
-                                            <td class="text-xs-center"
-                                                th:text="${registration.student.user.userId}"></td>
-                                            <td class="text-xs-center"
-                                                th:text="${registration.student.facultyNumber}"></td>
-                                            <td class="text-xs-center"
-                                                th:text="${registration.student.enrolmentNumber}"></td>
+                                            <td class="text-xs-center" th:text="${registration.student.facultyNumber}"></td>
+                                            <td class="text-xs-center" th:text="${registration.student.enrolmentNumber}"></td>
                                             <td class="text-xs-center" th:text="${registration.student.user.name}"></td>
+                                            <td class="text-xs-center" th:text="${registration.student.section}"></td>
+                                            <td class="text-xs-center" th:text="${registration.mode}"></td>
                                         </tr>
                                     </th:block>
                                     </tbody>
@@ -207,13 +206,15 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="table-responsive">
-                                    <table class="table">
-                                        <thead class="thead-inverse">
+                                    <table id="confirmRegistrationTable" class="table">
+                                        <thead>
                                         <tr>
                                             <th class="text-xs-center">Enrolment</th>
                                             <th class="text-xs-center">Faculty</th>
                                             <th class="text-xs-center">Name</th>
+                                            <th class="text-xs-center">Section</th>
                                             <th class="text-xs-center">Department</th>
+                                            <th class="text-xs-center">Mode</th>
                                             <th class="text-xs-center">Error</th>
                                         </tr>
                                         </thead>
@@ -222,12 +223,13 @@
                                             <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
                                                 <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
                                                 <input type="hidden" name="studentId" th:value="${confirm.key.enrolmentNumber}">
-                                                <td class="text-xs-center"
-                                                    th:text="${confirm.key.enrolmentNumber}"></td>
+                                                <input type="hidden" name="mode" th:value="${confirm.key.meta}">
+                                                <td class="text-xs-center" th:text="${confirm.key.enrolmentNumber}"></td>
                                                 <td class="text-xs-center" th:text="${confirm.key.facultyNumber}"></td>
                                                 <td class="text-xs-center" th:text="${confirm.key.user?.name}"></td>
-                                                <td class="text-xs-center"
-                                                    th:text="${confirm.key.user?.details?.department?.name}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.key.section}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.key.user?.department?.name}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.key.meta}"></td>
                                                 <td class="text-xs-center" th:text="${confirm.value}"></td>
                                             </tr>
                                         </th:block>
@@ -261,6 +263,16 @@
     $(window).load(function () {
         $('#faculty-modal').modal('show');
         $('#registration-modal').modal('show');
+        $('#registrationTable').dataTable({
+            scrollY:        true,
+            scrollCollapse: true,
+            "order": []
+        });
+        $('#confirmRegistrationTable').dataTable({
+            scrollY:        true,
+            scrollCollapse: true,
+            "order": []
+        });
     });
 </script>
 </body>

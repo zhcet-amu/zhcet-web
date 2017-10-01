@@ -42,16 +42,17 @@ public class RegistrationUploadService {
     }
 
     private Student fromRegistrationUpload(RegistrationUpload upload) {
-        Student student = studentService.getByEnrolmentNumber(capitalizeAll(upload.getEnrolmentNo()));
+        Student student = studentService.getByFacultyNumber(capitalizeAll(upload.getFacultyNo()));
 
         if (student == null)
-            student = Student.builder().enrolmentNumber(upload.getEnrolmentNo()).build();
+            return Student.builder().facultyNumber(upload.getFacultyNo()).build();
 
+        student.setMeta(String.valueOf(upload.getMode()));
         return student;
     }
 
     private String getMappedValue(Student student, String courseId, List<CourseRegistration> registrations) {
-        if (student.getFacultyNumber() == null) {
+        if (student.getEnrolmentNumber() == null) {
             invalidEnrolment = true;
             return  "No such student found";
         } else if(registrations.stream()
@@ -77,7 +78,7 @@ public class RegistrationUploadService {
         );
 
         if (invalidEnrolment)
-            registrationConfirmation.getErrors().add("Invalid student enrolment number found");
+            registrationConfirmation.getErrors().add("Invalid student faculty number found");
         if (alreadyEnrolled)
             registrationConfirmation.getErrors().add("Students already enrolled in course found");
 
@@ -85,8 +86,8 @@ public class RegistrationUploadService {
     }
 
     @Transactional
-    public void registerStudents(String courseId, List<String> studentIds) {
-        floatedCourseService.registerStudents(courseId, studentIds);
+    public void registerStudents(String courseId, List<String> studentIds, List<String> modes) {
+        floatedCourseService.registerStudents(courseId, studentIds, modes);
     }
 
 }

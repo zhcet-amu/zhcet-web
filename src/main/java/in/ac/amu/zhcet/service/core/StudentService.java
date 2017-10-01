@@ -44,6 +44,10 @@ public class StudentService {
         return studentRepository.findAllIdentifiers();
     }
 
+    public List<Student> getAll() {
+        return studentRepository.findAll();
+    }
+
     public List<Student> getByIds(List<String> studentIds) {
         return studentRepository.getByEnrolmentNumberIn(studentIds);
     }
