@@ -1,27 +1,32 @@
 package in.ac.amu.zhcet.service.token;
 
-import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.model.token.VerificationToken;
+import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.VerificationTokenRepository;
 import in.ac.amu.zhcet.service.EmailService;
+import in.ac.amu.zhcet.service.core.ConfigurationService;
 import in.ac.amu.zhcet.service.core.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
 @Service
 public class EmailVerificationService {
 
+    private final ConfigurationService configurationService;
     private final UserService userService;
     private final EmailService emailService;
     private final VerificationTokenRepository verificationTokenRepository;
 
     @Autowired
-    public EmailVerificationService(UserService userService, EmailService emailService, VerificationTokenRepository verificationTokenRepository) {
+    public EmailVerificationService(ConfigurationService configurationService, UserService userService, EmailService emailService, VerificationTokenRepository verificationTokenRepository) {
+        this.configurationService = configurationService;
         this.userService = userService;
         this.emailService = emailService;
         this.verificationTokenRepository = verificationTokenRepository;
@@ -73,13 +78,22 @@ public class EmailVerificationService {
         userService.save(userAuth);
     }
 
-    public void sendMail(String appUrl, VerificationToken token) {
-        String url = appUrl + "/login/verify?token=" + token.getToken();
-        log.info("Verification link generated : " + url);
-        String message = "You requested email verification on zhcet for user ID: " + token.getUser().getUserId() + "\r\n" +
-                "Please click this link to verify your email ID. \r\n" + url;
+    public void sendMail(VerificationToken token) {
+        String url = configurationService.getBaseUrl() + "/login/verify?token=" + token.getToken();
 
-        emailService.sendSimpleMail(token.getEmail(), "ZHCET Email Verification", message);
+        Map<String, Object> map = new HashMap<>();
+        map.put("title", "Email Verification");
+        map.put("name", token.getUser().getName());
+        map.put("link", url);
+        map.put("link_text", "Verify Account");
+        map.put("pre_message", "You  for user ID: " + token.getUser().getUserId() +
+                "<br>Please click the button below to verify your email and account");
+        map.put("post_message", "If you did not request the password reset, please contact website admin");
+
+        log.info("Verification link generated : " + url);
+        String message = emailService.render("html/link", map);
+
+        emailService.sendHtmlMail(token.getEmail(), "ZHCET Email Verification", message);
     }
 
 }

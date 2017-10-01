@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.service.core.ConfigurationService;
 import in.ac.amu.zhcet.service.core.FloatedCourseService;
 import in.ac.amu.zhcet.service.core.StudentService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,20 +21,22 @@ import java.util.stream.Collectors;
 @Service
 public class EmailNotificationService {
 
+    private final ConfigurationService configurationService;
     private final EmailService emailService;
     private final StudentService studentService;
     private final FloatedCourseService floatedCourseService;
 
     @Autowired
-    public EmailNotificationService(EmailService emailService, StudentService studentService, FloatedCourseService floatedCourseService) {
+    public EmailNotificationService(ConfigurationService configurationService, EmailService emailService, StudentService studentService, FloatedCourseService floatedCourseService) {
+        this.configurationService = configurationService;
         this.emailService = emailService;
         this.studentService = studentService;
         this.floatedCourseService = floatedCourseService;
     }
 
     @Async
-    public void sendNotificationsForAttendance(String id, String url, List<AttendanceUpload> uploadList) {
-        url += "/attendance";
+    public void sendNotificationsForAttendance(String id, List<AttendanceUpload> uploadList) {
+        String url = configurationService.getBaseUrl() + "/attendance";
         log.info("Email Attendance Notification : " + id);
         log.info("URL : " + url);
         FloatedCourse floatedCourse = floatedCourseService.getCourseById(id);

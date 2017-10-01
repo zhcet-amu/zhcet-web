@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.net.URL;
 
 @Slf4j
 @Service
@@ -63,6 +64,21 @@ public class ConfigurationService {
         return Utils.getSessionName(getSession());
     }
 
+    public static String getBase(String urlString) {
+
+        if(urlString == null) {
+            return null;
+        }
+
+        try {
+            URL url = new URL(urlString);
+            return url.getProtocol() + "://" + url.getAuthority() + "/";
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
     @Transactional
     @CacheEvict("config")
     public void save(ConfigurationModel config) {
@@ -72,4 +88,13 @@ public class ConfigurationService {
         updateConfiguration(config);
     }
 
+    public String getBaseUrl(String defaultUrl) {
+        if ((defaultUrl == null || defaultUrl.contains("127.0.0.1") || defaultUrl.contains("localhost")) && !Utils.isEmpty(configuration.getUrl()))
+            return configuration.getUrl();
+        return getBase(defaultUrl);
+    }
+
+    public String getBaseUrl() {
+        return getBaseUrl(null);
+    }
 }

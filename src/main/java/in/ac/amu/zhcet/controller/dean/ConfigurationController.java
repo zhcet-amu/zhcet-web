@@ -32,6 +32,7 @@ public class ConfigurationController {
 
     @Data
     private static class Config {
+        private String siteUrl;
         private int threshold;
         @NotNull
         private char term;
@@ -46,6 +47,7 @@ public class ConfigurationController {
         config.setTerm(configurationModel.getSession().charAt(0));
         config.setYear(2000 + Integer.parseInt(configurationModel.getSession().substring(1)));
         config.setAutomatic(configurationModel.isAutomatic());
+        config.setSiteUrl(configurationModel.getUrl());
 
         return config;
     }
@@ -55,6 +57,7 @@ public class ConfigurationController {
         configurationModel.setAttendanceThreshold(config.getThreshold());
         configurationModel.setSession(config.getTerm() + String.valueOf(config.getYear() - 2000));
         configurationModel.setAutomatic(config.isAutomatic());
+        configurationModel.setUrl(config.getSiteUrl());
 
         return configurationModel;
     }
@@ -64,11 +67,6 @@ public class ConfigurationController {
         model.addAttribute("page_title", "Configuration");
         model.addAttribute("page_subtitle", "Configuration Management Panel");
         model.addAttribute("page_description", "Manage site wide configurations and parameters");
-
-        log.info(configurationService.getConfig().toString());
-        log.info(configurationService.getSessionName());
-        log.info(configurationService.getSession());
-        log.info(configurationService.getThreshold() + "");
 
         if (!model.containsAttribute("config"))
             model.addAttribute("config", toConfig(configurationService.getConfig()));

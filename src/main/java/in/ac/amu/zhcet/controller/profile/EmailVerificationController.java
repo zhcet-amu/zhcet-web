@@ -30,10 +30,10 @@ public class EmailVerificationController {
         this.emailVerificationService = emailVerificationService;
     }
 
-    private void sendVerificationLink(String email, String appUrl, RedirectAttributes redirectAttributes) {
+    private void sendVerificationLink(String email, RedirectAttributes redirectAttributes) {
         try {
             VerificationToken token = emailVerificationService.generate(email);
-            emailVerificationService.sendMail(appUrl, token);
+            emailVerificationService.sendMail(token);
             redirectAttributes.addFlashAttribute("link_sent", "Verification link sent to '" + email + "'!");
         } catch (DuplicateEmailException de) {
             redirectAttributes.addFlashAttribute("duplicate_email", de.getMessage());
@@ -43,7 +43,7 @@ public class EmailVerificationController {
     @PostMapping("/profile/register_email")
     public String registerEmail(RedirectAttributes redirectAttributes, @RequestParam String email, HttpServletRequest request) {
         if (Utils.isValidEmail(email)) {
-            sendVerificationLink(email, Utils.getAppUrl(request), redirectAttributes);
+            sendVerificationLink(email, redirectAttributes);
         } else {
             redirectAttributes.addFlashAttribute("email", email);
             redirectAttributes.addFlashAttribute("invalid_email", "The provided email is invalid!");
@@ -58,7 +58,7 @@ public class EmailVerificationController {
         String email = user.getEmail();
 
         if (Utils.isValidEmail(user.getEmail())) {
-            sendVerificationLink(email, Utils.getAppUrl(request), redirectAttributes);
+            sendVerificationLink(email, redirectAttributes);
         } else {
             redirectAttributes.addFlashAttribute("invalid_email", "The provided email is invalid!");
         }

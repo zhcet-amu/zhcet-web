@@ -5,6 +5,7 @@ import in.ac.amu.zhcet.data.model.configuration.ConfigurationModel;
 import in.ac.amu.zhcet.data.repository.ConfigurationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -12,13 +13,14 @@ import org.springframework.stereotype.Component;
 public class ConfigurationComponent {
 
     @Autowired
-    public ConfigurationComponent(ConfigurationRepository configurationRepository) {
+    public ConfigurationComponent(ConfigurationRepository configurationRepository, Environment env) {
         log.info("Checking default configuration of application");
         Configuration configuration = configurationRepository.findFirstByOrderByIdDesc();
 
         if (configuration == null) {
             log.info("Default configuration absent... Building new config");
             Configuration defaultConfiguration = new Configuration();
+            defaultConfiguration.getConfig().setUrl(env.getProperty("base.url"));
             configurationRepository.save(defaultConfiguration);
             log.info("Saved default configuration : " + defaultConfiguration);
         } else if(configuration.getConfig().getVersion() < ConfigurationModel.VERSION) {

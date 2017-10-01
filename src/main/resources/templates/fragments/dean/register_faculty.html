@@ -38,7 +38,7 @@
                             </div>
                             <div class="col-xs-12 col-md-3" style="margin-right: 20px; margin-bottom: 5px;">
                                 <button type="button" class="btn"
-                                        th:attr="data-clipboard-text=|${#httpServletRequest.getRequestURL()}@{/download_password(filename=${file_saved})}">
+                                        th:attr="data-clipboard-text=|${@configurationService.getBaseUrl(#httpServletRequest.getRequestURL())}@{/dean/download_password(filename=${file_saved})}">
                                     Copy Link
                                 </button>
                             </div>

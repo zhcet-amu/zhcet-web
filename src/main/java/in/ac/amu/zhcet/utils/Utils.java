@@ -5,7 +5,6 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -52,10 +51,6 @@ public class Utils {
 
     public static boolean isValidEmail(String email) {
         return EmailValidator.getInstance().isValid(email);
-    }
-
-    public static String getAppUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 
     public static boolean isEmpty(CharSequence charSequence) {

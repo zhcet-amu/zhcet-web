@@ -9,10 +9,11 @@ import lombok.Data;
 
 @Data
 public class ConfigurationModel {
-    public static final int VERSION = 2;
+    public static final int VERSION = 3;
 
     private int attendanceThreshold = 75;
     private String session = Utils.getDefaultSessionCode();
+    private String url;
     private boolean automatic = true;
     private int version;
 

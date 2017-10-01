@@ -43,6 +43,12 @@
                 <form class="form form-horizontal" th:action="@{/dean/configuration}" method="post" th:object="${config}">
                     <div class="form-body">
                         <div class="form-group row" style="vertical-align: middle">
+                            <label class="col-md-3 label-control" for="site">Site URL</label>
+                            <div class="col-md-9">
+                                <input type="text" id="site" class="form-control" th:field="*{siteUrl}">
+                            </div>
+                        </div>
+                        <div class="form-group row" style="vertical-align: middle">
                             <label class="col-md-3 label-control" for="threshold">Attendance Threshold</label>
                             <div class="col-md-3">
                                 <div class="input-group">

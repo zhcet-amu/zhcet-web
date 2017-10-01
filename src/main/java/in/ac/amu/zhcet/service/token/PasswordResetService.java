@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.token.PasswordResetToken;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.PasswordResetTokenRepository;
 import in.ac.amu.zhcet.service.EmailService;
+import in.ac.amu.zhcet.service.core.ConfigurationService;
 import in.ac.amu.zhcet.service.core.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,14 @@ public class PasswordResetService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final EmailService emailService;
     private final UserService userService;
+    private final ConfigurationService configurationService;
 
     @Autowired
-    public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository, EmailService emailService, UserService userService) {
+    public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository, EmailService emailService, UserService userService, ConfigurationService configurationService) {
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.emailService = emailService;
         this.userService = userService;
+        this.configurationService = configurationService;
     }
 
     public String validate(String id, String token) {
@@ -66,8 +69,8 @@ public class PasswordResetService {
         return passwordResetToken;
     }
 
-    public void sendMail(String appUrl, PasswordResetToken token) {
-        String url = appUrl + "/login/reset_password?id=" + token.getUserAuth().getUserId() + "&token=" + token.getToken();
+    public void sendMail(PasswordResetToken token) {
+        String url = configurationService.getBaseUrl() + "/login/reset_password?id=" + token.getUserAuth().getUserId() + "&token=" + token.getToken();
 
         Map<String, Object> map = new HashMap<>();
         map.put("title", "Password Reset Link");

@@ -13,8 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static in.ac.amu.zhcet.utils.Utils.getAppUrl;
-
 @Slf4j
 @Controller
 public class ForgotPasswordController {
@@ -32,10 +30,10 @@ public class ForgotPasswordController {
     }
 
     @PostMapping("/login/forgot_password")
-    public String sendEmailLink(RedirectAttributes redirectAttributes, @RequestParam String email, HttpServletRequest request) {
+    public String sendEmailLink(RedirectAttributes redirectAttributes, @RequestParam String email) {
         try {
             PasswordResetToken token = passwordResetService.generate(email);
-            passwordResetService.sendMail(getAppUrl(request), token);
+            passwordResetService.sendMail(token);
             redirectAttributes.addFlashAttribute("reset_link_sent", true);
         } catch(UsernameNotFoundException e){
             redirectAttributes.addFlashAttribute("error", e.getMessage());
