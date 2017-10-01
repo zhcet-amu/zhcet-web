@@ -10,6 +10,7 @@ import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +39,8 @@ public class CourseManagementController {
 
     private FloatedCourse verifyAndGetCourse(String courseId) {
         FloatedCourse floatedCourse = departmentAdminService.getCourseById(courseId);
-        if (!floatedCourse.getCourse().getDepartment().equals(departmentAdminService.getFacultyMember().getUser().getDepartment()))
-            throw new IllegalArgumentException("Unauthorized access");
+        if (floatedCourse == null || !floatedCourse.getCourse().getDepartment().equals(departmentAdminService.getFacultyMember().getUser().getDepartment()))
+            throw new AccessDeniedException("403");
 
         return floatedCourse;
     }
@@ -60,6 +61,7 @@ public class CourseManagementController {
 
     @PostMapping("department/courses/{id}/register")
     public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("file") MultipartFile file) {
+        verifyAndGetCourse(id);
         try {
             UploadResult<RegistrationUpload> result = registrationUploadService.handleUpload(file);
 
@@ -68,8 +70,6 @@ public class CourseManagementController {
             } else {
                 attributes.addFlashAttribute("success", true);
                 Confirmation<Student, String> confirmation = registrationUploadService.confirmUpload(id, result);
-
-                log.info(confirmation.toString());
                 attributes.addFlashAttribute("confirmRegistration", confirmation);
             }
         } catch (IOException ioe) {
@@ -81,7 +81,7 @@ public class CourseManagementController {
 
     @PostMapping("department/courses/{id}/confirm_registration")
     public String confirmRegistration(RedirectAttributes attributes, @PathVariable String id, @RequestParam List<String> studentId, @RequestParam List<String> mode) {
-
+        verifyAndGetCourse(id);
         try {
             registrationUploadService.registerStudents(id, studentId, mode);
             attributes.addFlashAttribute("registered", true);
@@ -95,6 +95,7 @@ public class CourseManagementController {
 
     @GetMapping("department/courses/{id}/add_in_charge")
     public String addInCharge(Model model, RedirectAttributes redirectAttributes, @PathVariable String id) {
+        verifyAndGetCourse(id);
         redirectAttributes.addFlashAttribute("facultyMembers", departmentAdminService.getAllFacultyMembers());
         return "redirect:/department/courses/{id}";
     }

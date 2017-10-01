@@ -40,17 +40,16 @@ public class FloatedCourseController {
 
     @GetMapping("faculty/courses/{id}")
     public String getStudents(Model model, @PathVariable String id) {
-        FloatedCourse floatedCourse = floatedCourseService.getCourseById(id);
+        FloatedCourse floatedCourse = floatedCourseService.getCourseAndVerify(id);
 
-        if (floatedCourse != null) {
-            model.addAttribute("page_title", floatedCourse.getCourse().getTitle());
-            model.addAttribute("page_subtitle", "Attendance management for " + floatedCourse.getCourse().getCode());
-            model.addAttribute("page_description", "Upload attendance for the floated course");
+        model.addAttribute("page_title", floatedCourse.getCourse().getTitle());
+        model.addAttribute("page_subtitle", "Attendance management for " + floatedCourse.getCourse().getCode());
+        model.addAttribute("page_description", "Upload attendance for the floated course");
 
-            List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-            model.addAttribute("courseRegistrations", courseRegistrations);
-            model.addAttribute("course_id", id);
-        }
+        List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
+        model.addAttribute("courseRegistrations", courseRegistrations);
+        model.addAttribute("course_id", id);
+
 
         return "faculty/course_attendance";
     }

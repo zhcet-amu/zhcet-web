@@ -5,6 +5,7 @@ import in.ac.amu.zhcet.data.repository.CourseInChargeRepository;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -104,6 +105,15 @@ public class FloatedCourseService {
                 .stream()
                 .map(CourseInCharge::getFloatedCourse)
                 .collect(Collectors.toList());
+    }
+
+    public FloatedCourse getCourseAndVerify(String courseId) {
+        FloatedCourse floatedCourse = getCourseById(courseId);
+        List<FloatedCourse> floatedCourses = getByFaculty(facultyService.getLoggedInMember());
+        if (floatedCourse == null || !floatedCourses.contains(floatedCourse))
+            throw new AccessDeniedException("403");
+
+        return floatedCourse;
     }
 
     public FloatedCourse getCourseById(String courseId){
