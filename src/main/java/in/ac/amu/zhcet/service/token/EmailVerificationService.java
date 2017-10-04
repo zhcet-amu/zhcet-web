@@ -86,7 +86,7 @@ public class EmailVerificationService {
         map.put("name", token.getUser().getName());
         map.put("link", url);
         map.put("link_text", "Verify Account");
-        map.put("pre_message", "You  for user ID: " + token.getUser().getUserId() +
+        map.put("pre_message", "You need to verify your email for user ID: " + token.getUser().getUserId() +
                 "<br>Please click the button below to verify your email and account");
         map.put("post_message", "If you did not request the password reset, please contact website admin");
 

@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.CourseType;
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -26,7 +27,7 @@ public class Course extends BaseEntity {
     private Department department;
 
     private String category;
-    private Boolean compulsory;
+    private Boolean compulsory = true;
     private Integer semester;
     private Integer startYear;
     private Integer finishYear;
@@ -41,4 +42,7 @@ public class Course extends BaseEntity {
     private Integer lecturePart;
     private Integer theoryPart;
     private Integer practicalPart;
+
+    @Type(type = "text")
+    private String description;
 }

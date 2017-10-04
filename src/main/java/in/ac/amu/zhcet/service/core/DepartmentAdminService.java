@@ -42,9 +42,8 @@ public class DepartmentAdminService {
     }
 
     @Transactional
-    public void registerCourse(Course course) {
-        course.setDepartment(FacultyService.getDepartment(getFacultyMember()));
-        floatedCourseService.register(course);
+    public void addCourse(Course course) {
+        floatedCourseService.addCourse(course);
     }
 
     public void floatCourse(Course course, List<String> facultyMembers) throws IllegalAccessException {

@@ -1,10 +1,17 @@
 package in.ac.amu.zhcet.controller.department;
 
+import in.ac.amu.zhcet.data.CourseType;
 import in.ac.amu.zhcet.data.model.Course;
+import in.ac.amu.zhcet.data.model.Department;
+import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.service.core.DepartmentAdminService;
+import in.ac.amu.zhcet.service.core.FacultyService;
+import in.ac.amu.zhcet.utils.DuplicateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -23,6 +30,48 @@ public class CourseCreationController {
         this.departmentAdminService = departmentAdminService;
     }
 
+    @GetMapping("/department/course/add")
+    public String addCourse(Model model) {
+        model.addAttribute("page_description", "Create new global course for the Department");
+        FacultyMember facultyMember = departmentAdminService.getFacultyMember();
+        Department department = FacultyService.getDepartment(facultyMember);
+        model.addAttribute("department", department);
+        model.addAttribute("page_title", department.getName() + " Department : Add Course");
+        model.addAttribute("page_subtitle", "Course Management");
+
+        model.addAttribute("form_title", "Add Course");
+        model.addAttribute("course_types", CourseType.values());
+
+        if (!model.containsAttribute("course")) {
+            Course course = new Course();
+            course.setDepartment(FacultyService.getDepartment(facultyMember));
+            model.addAttribute("course", course);
+        }
+
+        return "department/add_course";
+    }
+
+    @PostMapping("/department/course/add")
+    public String postCourse(@Valid Course course, BindingResult result, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("course", course);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.course", result);
+        } else {
+            try {
+                course.setDepartment(departmentAdminService.getFacultyMember().getUser().getDepartment());
+                departmentAdminService.addCourse(course);
+                redirectAttributes.addFlashAttribute("course_success", true);
+
+                return "redirect:/department";
+            } catch (DuplicateException e) {
+                redirectAttributes.addFlashAttribute("course", course);
+                redirectAttributes.addFlashAttribute("course_errors", e.getMessage());
+            }
+        }
+
+        return "redirect:/department/course/add";
+    }
+
     @PostMapping("/department/create_course")
     public String createCourse(@Valid Course course, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
@@ -31,7 +80,8 @@ public class CourseCreationController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.course", bindingResult);
         } else {
             try {
-                departmentAdminService.registerCourse(course);
+                course.setDepartment(departmentAdminService.getFacultyMember().getUser().getDepartment());
+                departmentAdminService.addCourse(course);
                 redirectAttributes.addFlashAttribute("course_success", true);
             } catch (Exception e) {
                 List<String> errors = new ArrayList<>();

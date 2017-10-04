@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.repository.CourseInChargeRepository;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
+import in.ac.amu.zhcet.utils.DuplicateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -40,8 +41,11 @@ public class FloatedCourseService {
     }
 
     @Transactional
-    public Course register(Course course) {
-        return courseRepository.save(course);
+    public void addCourse(Course course) {
+        Course duplicate = courseRepository.findByCode(course.getCode());
+        if (duplicate != null)
+            throw new DuplicateException("Course", "code", duplicate.getCode(), duplicate);
+        courseRepository.save(course);
     }
 
     @Transactional
