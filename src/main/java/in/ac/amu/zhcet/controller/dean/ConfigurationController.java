@@ -1,9 +1,9 @@
 package in.ac.amu.zhcet.controller.dean;
 
 import in.ac.amu.zhcet.data.model.configuration.ConfigurationModel;
+import in.ac.amu.zhcet.data.model.dto.Config;
+import in.ac.amu.zhcet.data.model.dto.mapper.ConfigurationMapper;
 import in.ac.amu.zhcet.service.core.ConfigurationService;
-import in.ac.amu.zhcet.utils.Utils;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,34 +29,17 @@ public class ConfigurationController {
         this.configurationService = configurationService;
     }
 
-    @Data
-    private static class Config {
-        private String siteUrl;
-        private int threshold;
-        @NotNull
-        private char term;
-        private int year;
-        private boolean automatic;
-        private final String defaultSession = Utils.getDefaultSessionName();
-    }
-
     private Config toConfig(ConfigurationModel configurationModel) {
-        Config config = new Config();
-        config.setThreshold(configurationModel.getAttendanceThreshold());
+        Config config = ConfigurationMapper.MAPPER.toConfig(configurationModel);
         config.setTerm(configurationModel.getSession().charAt(0));
         config.setYear(2000 + Integer.parseInt(configurationModel.getSession().substring(1)));
-        config.setAutomatic(configurationModel.isAutomatic());
-        config.setSiteUrl(configurationModel.getUrl());
 
         return config;
     }
 
     private ConfigurationModel toConfigModel(Config config) {
-        ConfigurationModel configurationModel = new ConfigurationModel();
-        configurationModel.setAttendanceThreshold(config.getThreshold());
+        ConfigurationModel configurationModel = ConfigurationMapper.MAPPER.fromConfig(config);
         configurationModel.setSession(config.getTerm() + String.valueOf(config.getYear() - 2000));
-        configurationModel.setAutomatic(config.isAutomatic());
-        configurationModel.setUrl(config.getSiteUrl());
 
         return configurationModel;
     }
