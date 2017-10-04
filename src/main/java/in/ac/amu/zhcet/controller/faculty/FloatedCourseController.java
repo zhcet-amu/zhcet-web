@@ -4,7 +4,7 @@ import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.service.core.FacultyService;
-import in.ac.amu.zhcet.service.core.FloatedCourseService;
+import in.ac.amu.zhcet.service.core.CourseManagementService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,12 +18,12 @@ import java.util.List;
 @Controller
 public class FloatedCourseController {
     private final FacultyService facultyService;
-    private final FloatedCourseService floatedCourseService;
+    private final CourseManagementService courseManagementService;
 
     @Autowired
-    public FloatedCourseController(FacultyService facultyService, FloatedCourseService floatedCourseService) {
+    public FloatedCourseController(FacultyService facultyService, CourseManagementService courseManagementService) {
         this.facultyService = facultyService;
-        this.floatedCourseService = floatedCourseService;
+        this.courseManagementService = courseManagementService;
     }
 
     @GetMapping("/faculty/courses")
@@ -33,14 +33,14 @@ public class FloatedCourseController {
         model.addAttribute("page_description", "Manage and upload attendance for currently floated courses");
 
         FacultyMember facultyMember = facultyService.getLoggedInMember();
-        List<FloatedCourse> floatedCourses = floatedCourseService.getByFaculty(facultyMember);
+        List<FloatedCourse> floatedCourses = courseManagementService.getByFaculty(facultyMember);
         model.addAttribute("floatedCourses", floatedCourses);
         return "faculty/courses";
     }
 
     @GetMapping("faculty/courses/{id}")
     public String getStudents(Model model, @PathVariable String id) {
-        FloatedCourse floatedCourse = floatedCourseService.getCourseAndVerify(id);
+        FloatedCourse floatedCourse = courseManagementService.getCourseAndVerify(id);
 
         model.addAttribute("page_title", floatedCourse.getCourse().getTitle());
         model.addAttribute("page_subtitle", "Attendance management for " + floatedCourse.getCourse().getCode());

@@ -30,6 +30,10 @@ public class FacultyService {
         return facultyMember.getUser().getDepartment();
     }
 
+    public Department getFacultyDepartment() {
+        return FacultyService.getDepartment(getLoggedInMember());
+    }
+
     public FacultyMember getById(String facultyId) {
         return facultyRepository.getByFacultyId(facultyId);
     }

@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.controller.faculty;
 
 import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
 import in.ac.amu.zhcet.service.EmailNotificationService;
-import in.ac.amu.zhcet.service.core.FloatedCourseService;
+import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.upload.AttendanceUploadService;
 import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
@@ -27,13 +27,13 @@ import java.util.List;
 @Controller
 public class AttendanceManagerController {
 
-    private final FloatedCourseService floatedCourseService;
+    private final CourseManagementService courseManagementService;
     private final AttendanceUploadService attendanceUploadService;
     private final EmailNotificationService emailNotificationService;
 
     @Autowired
-    public AttendanceManagerController(FloatedCourseService floatedCourseService, AttendanceUploadService attendanceUploadService, EmailNotificationService emailNotificationService) {
-        this.floatedCourseService = floatedCourseService;
+    public AttendanceManagerController(CourseManagementService courseManagementService, AttendanceUploadService attendanceUploadService, EmailNotificationService emailNotificationService) {
+        this.courseManagementService = courseManagementService;
         this.attendanceUploadService = attendanceUploadService;
         this.emailNotificationService = emailNotificationService;
     }
@@ -45,7 +45,7 @@ public class AttendanceManagerController {
 
     @PostMapping("faculty/courses/{id}/attendance")
     public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("file") MultipartFile file) {
-        floatedCourseService.getCourseAndVerify(id);
+        courseManagementService.getCourseAndVerify(id);
         try {
             UploadResult<AttendanceUpload> result = attendanceUploadService.handleUpload(file);
 
@@ -74,7 +74,7 @@ public class AttendanceManagerController {
 
     @PostMapping("faculty/courses/{id}/attendance_confirmed")
     public String uploadAttendance(RedirectAttributes attributes, @PathVariable String id, @Valid @ModelAttribute AttendanceModel attendanceModel, BindingResult bindingResult) {
-        floatedCourseService.getCourseAndVerify(id);
+        courseManagementService.getCourseAndVerify(id);
         if (bindingResult.hasErrors()) {
             attributes.addFlashAttribute("attendanceModel", attendanceModel);
             attributes.addFlashAttribute("org.springframework.validation.BindingResult.attendanceModel", bindingResult);

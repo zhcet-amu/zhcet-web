@@ -3,9 +3,10 @@ package in.ac.amu.zhcet.controller.department;
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.service.core.DepartmentAdminService;
+import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.FacultyService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,19 +15,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class DepartmentController {
 
-    private final DepartmentAdminService departmentAdminService;
+    private final FacultyService facultyService;
+    private final CourseManagementService courseManagementService;
 
-    public DepartmentController(DepartmentAdminService departmentAdminService) {
-        this.departmentAdminService = departmentAdminService;
+    @Autowired
+    public DepartmentController(FacultyService facultyService, CourseManagementService departmentAdminService) {
+        this.facultyService = facultyService;
+        this.courseManagementService = departmentAdminService;
     }
 
     @GetMapping("/department")
     public String department(Model model) {
-        model.addAttribute("page_description", "Manage and float courses for the session");
-        model.addAttribute("floatedCourses", departmentAdminService.getFloatedCourses());
-        model.addAttribute("courses", departmentAdminService.getAllCourses());
-        FacultyMember facultyMember = departmentAdminService.getFacultyMember();
+        FacultyMember facultyMember = facultyService.getLoggedInMember();
         Department department = FacultyService.getDepartment(facultyMember);
+        model.addAttribute("page_description", "Manage and float courses for the session");
+        model.addAttribute("floatedCourses", courseManagementService.getCurrentFloatedCourses(department));
+        model.addAttribute("courses", courseManagementService.getAllCourses(department));
         model.addAttribute("department", department);
         model.addAttribute("page_title", department.getName() + " Department Panel");
         model.addAttribute("page_subtitle", "Course management for Department");
@@ -35,7 +39,7 @@ public class DepartmentController {
             course.setDepartment(FacultyService.getDepartment(facultyMember));
             model.addAttribute("course", course);
         }
-        model.addAttribute("facultyMembers", departmentAdminService.getAllFacultyMembers());
+        model.addAttribute("facultyMembers", facultyService.getByDepartment(department));
 
         return "department/admin";
     }

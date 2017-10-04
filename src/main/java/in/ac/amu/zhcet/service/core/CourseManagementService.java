@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class FloatedCourseService {
+public class CourseManagementService {
 
     private final FloatedCourseRepository floatedCourseRepository;
     private final CourseInChargeRepository courseInChargeRepository;
@@ -24,12 +24,16 @@ public class FloatedCourseService {
     private final CourseRepository courseRepository;
 
     @Autowired
-    public FloatedCourseService(FloatedCourseRepository floatedCourseRepository, CourseInChargeRepository courseInChargeRepository, FacultyService facultyService, StudentService studentService, CourseRepository courseRepository) {
+    public CourseManagementService(FloatedCourseRepository floatedCourseRepository, CourseInChargeRepository courseInChargeRepository, FacultyService facultyService, StudentService studentService, CourseRepository courseRepository) {
         this.floatedCourseRepository = floatedCourseRepository;
         this.courseInChargeRepository = courseInChargeRepository;
         this.facultyService = facultyService;
         this.studentService = studentService;
         this.courseRepository = courseRepository;
+    }
+
+    public Course findCourseByCode(String code) {
+        return courseRepository.findByCode(code);
     }
 
     public List<Course> getAllCourses(Department department) {
@@ -112,7 +116,7 @@ public class FloatedCourseService {
     }
 
     public FloatedCourse getCourseAndVerify(String courseId) {
-        FloatedCourse floatedCourse = getCourseById(courseId);
+        FloatedCourse floatedCourse = findFloatedCourseByCode(courseId);
         List<FloatedCourse> floatedCourses = getByFaculty(facultyService.getLoggedInMember());
         if (floatedCourse == null || !floatedCourses.contains(floatedCourse))
             throw new AccessDeniedException("403");
@@ -120,7 +124,7 @@ public class FloatedCourseService {
         return floatedCourse;
     }
 
-    public FloatedCourse getCourseById(String courseId){
+    public FloatedCourse findFloatedCourseByCode(String courseId){
         return floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseId);
     }
 

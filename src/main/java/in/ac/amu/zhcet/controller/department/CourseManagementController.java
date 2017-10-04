@@ -4,7 +4,8 @@ import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.RegistrationUpload;
-import in.ac.amu.zhcet.service.core.DepartmentAdminService;
+import in.ac.amu.zhcet.service.core.CourseManagementService;
+import in.ac.amu.zhcet.service.core.FacultyService;
 import in.ac.amu.zhcet.service.core.upload.RegistrationUploadService;
 import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
@@ -28,18 +29,20 @@ import java.util.List;
 @Controller
 public class CourseManagementController {
 
-    private final DepartmentAdminService departmentAdminService;
+    private final FacultyService facultyService;
+    private final CourseManagementService courseManagementService;
     private final RegistrationUploadService registrationUploadService;
 
     @Autowired
-    public CourseManagementController(DepartmentAdminService departmentAdminService, RegistrationUploadService registrationUploadService) {
-        this.departmentAdminService = departmentAdminService;
+    public CourseManagementController(FacultyService facultyService, CourseManagementService courseManagementService, RegistrationUploadService registrationUploadService) {
+        this.facultyService = facultyService;
+        this.courseManagementService = courseManagementService;
         this.registrationUploadService = registrationUploadService;
     }
 
     private FloatedCourse verifyAndGetCourse(String courseId) {
-        FloatedCourse floatedCourse = departmentAdminService.getCourseById(courseId);
-        if (floatedCourse == null || !floatedCourse.getCourse().getDepartment().equals(departmentAdminService.getFacultyMember().getUser().getDepartment()))
+        FloatedCourse floatedCourse = courseManagementService.getCourseAndVerify(courseId);
+        if (floatedCourse == null || !floatedCourse.getCourse().getDepartment().equals(facultyService.getFacultyDepartment()))
             throw new AccessDeniedException("403");
 
         return floatedCourse;
@@ -96,7 +99,7 @@ public class CourseManagementController {
     @GetMapping("department/courses/{id}/add_in_charge")
     public String addInCharge(Model model, RedirectAttributes redirectAttributes, @PathVariable String id) {
         verifyAndGetCourse(id);
-        redirectAttributes.addFlashAttribute("facultyMembers", departmentAdminService.getAllFacultyMembers());
+        redirectAttributes.addFlashAttribute("facultyMembers", facultyService.getByDepartment(facultyService.getFacultyDepartment()));
         return "redirect:/department/courses/{id}";
     }
 
@@ -104,7 +107,7 @@ public class CourseManagementController {
     public String confirmInCharge(Model model, RedirectAttributes redirectAttributes, @PathVariable String id, @RequestParam String facultyId) {
         verifyAndGetCourse(id);
         try {
-            departmentAdminService.addInCharge(id, facultyId);
+            courseManagementService.addInCharge(id, Collections.singletonList(facultyId));
             redirectAttributes.addFlashAttribute("incharge_success", true);
             return "redirect:/department/courses/{id}";
         } catch (Exception e) {

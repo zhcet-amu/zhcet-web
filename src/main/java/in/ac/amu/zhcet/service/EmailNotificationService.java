@@ -5,7 +5,7 @@ import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.core.ConfigurationService;
-import in.ac.amu.zhcet.service.core.FloatedCourseService;
+import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +24,14 @@ public class EmailNotificationService {
     private final ConfigurationService configurationService;
     private final EmailService emailService;
     private final StudentService studentService;
-    private final FloatedCourseService floatedCourseService;
+    private final CourseManagementService courseManagementService;
 
     @Autowired
-    public EmailNotificationService(ConfigurationService configurationService, EmailService emailService, StudentService studentService, FloatedCourseService floatedCourseService) {
+    public EmailNotificationService(ConfigurationService configurationService, EmailService emailService, StudentService studentService, CourseManagementService courseManagementService) {
         this.configurationService = configurationService;
         this.emailService = emailService;
         this.studentService = studentService;
-        this.floatedCourseService = floatedCourseService;
+        this.courseManagementService = courseManagementService;
     }
 
     @Async
@@ -39,7 +39,7 @@ public class EmailNotificationService {
         String url = configurationService.getBaseUrl() + "/attendance";
         log.info("Email Attendance Notification : " + id);
         log.info("URL : " + url);
-        FloatedCourse floatedCourse = floatedCourseService.getCourseById(id);
+        FloatedCourse floatedCourse = courseManagementService.findFloatedCourseByCode(id);
 
         if (floatedCourse == null) {
             log.warn("Email request for invalid course " + id);
