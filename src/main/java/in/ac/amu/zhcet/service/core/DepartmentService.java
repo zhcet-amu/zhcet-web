@@ -32,8 +32,7 @@ public class DepartmentService {
     }
 
     public boolean exists(String departmentName) {
-        String sanitized = Utils.capitalizeFirst(departmentName);
-        return departmentRepository.findByName(departmentName) != null;
+        return departmentRepository.findByName(Utils.capitalizeFirst(departmentName)) != null;
     }
 
     public void addDepartment(Department department) {

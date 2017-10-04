@@ -71,10 +71,9 @@ public class CourseManagementService {
     }
 
     @Transactional
-    public FloatedCourse floatCourse(Course course, List<String> facultyMembersId) throws IllegalAccessException {
+    public void floatCourse(Course course, List<String> facultyMembersId) throws IllegalAccessException {
         FloatedCourse stored = floatCourse(course);
         stored.setInCharge(fromFacultyIds(stored, facultyMembersId));
-        return stored;
     }
 
     @Transactional
