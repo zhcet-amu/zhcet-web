@@ -12,8 +12,8 @@
 <div th:replace="fragments/navigation :: navigation(pageId = 'profile')"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="isAuthenticated()">
-    <!--/*@thymesidr id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
-    <!--/*@thymesidr id="user" type="in.ac.amu.zhcet.data.model.user.UserAuth"*/-->
+    <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
+    <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.user.UserAuth"*/-->
 
     <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
         <div th:replace="fragments/layout :: toolbar"></div>

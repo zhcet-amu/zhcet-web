@@ -28,16 +28,20 @@
                     <span data-i18n="nav.project.main" class="menu-title">Dean Panel</span>
                 </a>
                 <ul class="menu-content">
-                    <li th:class="${subPage == 'admin' ? 'active' : ''}" ><a th:href="@{/dean}" class="menu-item">Administration</a></li>
+                    <li th:class="${subPage == 'dean_admin' ? 'active' : ''}" ><a th:href="@{/dean}" class="menu-item">Administration</a></li>
                     <li th:class="${subPage == 'students' ? 'active' : ''}"><a th:href="@{/dean/students}" class="menu-item">Students</a></li>
                     <li th:class="${subPage == 'config' ? 'active' : ''}"><a th:href="@{/dean/configuration}" class="menu-item">Configuration</a></li>
                 </ul>
             </li>
-            <li th:class="|nav-item ${pageId == 'department_admin' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
+            <li th:class="|nav-item ${pageId == 'department' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
                 <a th:href="@{/department}" href="department.html">
                     <i class="icon-cog"></i>
                     <span data-i18n="nav.project.main" class="menu-title">Department Panel</span>
                 </a>
+                <ul class="menu-content">
+                    <li th:class="${subPage == 'department_admin' ? 'active' : ''}" ><a th:href="@{/department}" class="menu-item">Admin Panel</a></li>
+                    <li th:class="${subPage == 'add_course' ? 'active' : ''}" ><a th:href="@{/department/course/add}" class="menu-item">Add Course</a></li>
+                </ul>
             </li>
             <li class="nav-item" sec:authorize="!isAuthenticated()">
                 <a th:href="@{/login}" href="login.html">
