@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class RegisteredCourseService {
+public class CourseRegistrationService {
 
     private final StudentService studentService;
     private final FloatedCourseRepository floatedCourseRepository;
@@ -22,18 +22,11 @@ public class RegisteredCourseService {
     private final AttendanceRepository attendanceRepository;
 
     @Autowired
-    public RegisteredCourseService(StudentService studentService, FloatedCourseRepository floatedCourseRepository, CourseRegistrationRepository courseRegistrationRepository, AttendanceRepository attendanceRepository) {
+    public CourseRegistrationService(StudentService studentService, FloatedCourseRepository floatedCourseRepository, CourseRegistrationRepository courseRegistrationRepository, AttendanceRepository attendanceRepository) {
         this.studentService = studentService;
         this.floatedCourseRepository = floatedCourseRepository;
         this.courseRegistrationRepository = courseRegistrationRepository;
         this.attendanceRepository = attendanceRepository;
-    }
-
-    @Transactional
-    public CourseRegistration registerStudent(FloatedCourse course, String studentId) {
-        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), course.getCourse().getCode());
-
-        return courseRegistrationRepository.save(new CourseRegistration(studentService.getByEnrolmentNumber(studentId), stored));
     }
 
     @Transactional
@@ -52,29 +45,7 @@ public class RegisteredCourseService {
     }
 
     @Transactional
-    public Attendance setAttendance(CourseRegistration courseRegistration, Attendance attendance) {
-        CourseRegistration stored = courseRegistrationRepository
-                .findByStudentAndFloatedCourse(
-                        courseRegistration.getStudent(), courseRegistration.getFloatedCourse()
-                );
-
-        Attendance storedAttendance = stored.getAttendance();
-        if (storedAttendance == null) {
-            storedAttendance = attendance;
-
-            stored.setAttendance(storedAttendance);
-            storedAttendance.setCourseRegistration(stored);
-            courseRegistrationRepository.save(stored);
-        }
-
-        storedAttendance.setDelivered(attendance.getDelivered());
-        storedAttendance.setAttended(attendance.getAttended());
-
-        return storedAttendance;
-    }
-
-    @Transactional
-    public Attendance setAttendance(CourseRegistration courseRegistration, int delivered, int attended) {
+    public void setAttendance(CourseRegistration courseRegistration, int delivered, int attended) {
         CourseRegistration registration = courseRegistrationRepository.findOne(courseRegistration.getId());
 
         Attendance storedAttendance = registration.getAttendance();
@@ -88,8 +59,6 @@ public class RegisteredCourseService {
 
         storedAttendance.setDelivered(delivered);
         storedAttendance.setAttended(attended);
-
-        return storedAttendance;
     }
 
     @Transactional

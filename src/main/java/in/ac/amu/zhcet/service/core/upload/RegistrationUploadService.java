@@ -3,7 +3,7 @@ package in.ac.amu.zhcet.service.core.upload;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.RegistrationUpload;
-import in.ac.amu.zhcet.service.core.FloatedCourseService;
+import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.StudentService;
 import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.AbstractUploadService;
@@ -27,13 +27,13 @@ public class RegistrationUploadService {
     private boolean alreadyEnrolled;
 
     private final StudentService studentService;
-    private final FloatedCourseService floatedCourseService;
+    private final CourseManagementService courseManagementService;
     private final AbstractUploadService<RegistrationUpload, Student, String> uploadService;
 
     @Autowired
-    public RegistrationUploadService(StudentService studentService, FloatedCourseService floatedCourseService, AbstractUploadService<RegistrationUpload, Student, String> uploadService) {
+    public RegistrationUploadService(StudentService studentService, CourseManagementService courseManagementService, AbstractUploadService<RegistrationUpload, Student, String> uploadService) {
         this.studentService = studentService;
-        this.floatedCourseService = floatedCourseService;
+        this.courseManagementService = courseManagementService;
         this.uploadService = uploadService;
     }
 
@@ -69,7 +69,7 @@ public class RegistrationUploadService {
         invalidEnrolment = false;
         alreadyEnrolled = false;
 
-        List<CourseRegistration> registrations = floatedCourseService.getCourseById(courseId).getCourseRegistrations();
+        List<CourseRegistration> registrations = courseManagementService.findFloatedCourseByCode(courseId).getCourseRegistrations();
 
         Confirmation<Student, String> registrationConfirmation = uploadService.confirmUpload(
                 uploadResult,
@@ -87,7 +87,7 @@ public class RegistrationUploadService {
 
     @Transactional
     public void registerStudents(String courseId, List<String> studentIds, List<String> modes) {
-        floatedCourseService.registerStudents(courseId, studentIds, modes);
+        courseManagementService.registerStudents(courseId, studentIds, modes);
     }
 
 }

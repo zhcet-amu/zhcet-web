@@ -4,10 +4,11 @@ import in.ac.amu.zhcet.data.CourseType;
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.service.core.DepartmentAdminService;
+import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.FacultyService;
 import in.ac.amu.zhcet.utils.DuplicateException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,16 +25,19 @@ import java.util.List;
 @Controller
 public class CourseCreationController {
 
-    private final DepartmentAdminService departmentAdminService;
+    private final FacultyService facultyService;
+    private final CourseManagementService courseManagementService;
 
-    public CourseCreationController(DepartmentAdminService departmentAdminService) {
-        this.departmentAdminService = departmentAdminService;
+    @Autowired
+    public CourseCreationController(FacultyService facultyService, CourseManagementService courseManagementService) {
+        this.facultyService = facultyService;
+        this.courseManagementService = courseManagementService;
     }
 
     @GetMapping("/department/course/add")
     public String addCourse(Model model) {
         model.addAttribute("page_description", "Create new global course for the Department");
-        FacultyMember facultyMember = departmentAdminService.getFacultyMember();
+        FacultyMember facultyMember = facultyService.getLoggedInMember();
         Department department = FacultyService.getDepartment(facultyMember);
         model.addAttribute("department", department);
         model.addAttribute("page_title", department.getName() + " Department : Add Course");
@@ -58,8 +62,8 @@ public class CourseCreationController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.course", result);
         } else {
             try {
-                course.setDepartment(departmentAdminService.getFacultyMember().getUser().getDepartment());
-                departmentAdminService.addCourse(course);
+                course.setDepartment(facultyService.getFacultyDepartment());
+                courseManagementService.addCourse(course);
                 redirectAttributes.addFlashAttribute("course_success", true);
 
                 return "redirect:/department";
@@ -80,8 +84,8 @@ public class CourseCreationController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.course", bindingResult);
         } else {
             try {
-                course.setDepartment(departmentAdminService.getFacultyMember().getUser().getDepartment());
-                departmentAdminService.addCourse(course);
+                course.setDepartment(facultyService.getFacultyDepartment());
+                courseManagementService.addCourse(course);
                 redirectAttributes.addFlashAttribute("course_success", true);
             } catch (Exception e) {
                 List<String> errors = new ArrayList<>();
@@ -99,14 +103,14 @@ public class CourseCreationController {
 
     @PostMapping("/department/float_course")
     public String floatCourse(@RequestParam String courseCode, @RequestParam List<String> faculty, RedirectAttributes redirectAttributes) {
-        Course course = departmentAdminService.findCourseByCode(courseCode);
+        Course course = courseManagementService.findCourseByCode(courseCode);
 
         List<String> errors = new ArrayList<>();
         if (course == null) {
             errors.add("No valid course selected");
         } else {
             try {
-                departmentAdminService.floatCourse(course, faculty);
+                courseManagementService.floatCourse(course, faculty);
                 redirectAttributes.addFlashAttribute("float_success", true);
             } catch (Exception exc) {
                 if (exc.getMessage().contains("PRIMARY")) {

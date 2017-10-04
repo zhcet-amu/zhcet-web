@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.service.core.upload;
 
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
-import in.ac.amu.zhcet.service.core.RegisteredCourseService;
+import in.ac.amu.zhcet.service.core.CourseRegistrationService;
 import in.ac.amu.zhcet.service.core.upload.base.AbstractUploadService;
 import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
@@ -22,12 +22,12 @@ public class AttendanceUploadService {
     private boolean uniqueError;
 
     private final AbstractUploadService<AttendanceUpload, AttendanceUpload, Boolean> uploadService;
-    private final RegisteredCourseService registeredCourseService;
+    private final CourseRegistrationService courseRegistrationService;
 
     @Autowired
-    public AttendanceUploadService(AbstractUploadService<AttendanceUpload, AttendanceUpload, Boolean> uploadService, RegisteredCourseService registeredCourseService) {
+    public AttendanceUploadService(AbstractUploadService<AttendanceUpload, AttendanceUpload, Boolean> uploadService, CourseRegistrationService courseRegistrationService) {
         this.uploadService = uploadService;
-        this.registeredCourseService = registeredCourseService;
+        this.courseRegistrationService = courseRegistrationService;
     }
 
     public UploadResult<AttendanceUpload> handleUpload(MultipartFile file) throws IOException {
@@ -35,7 +35,7 @@ public class AttendanceUploadService {
     }
 
     private boolean getMappedValue(AttendanceUpload upload, String course) {
-        boolean unique = registeredCourseService.exists(upload.getStudent(), course);
+        boolean unique = courseRegistrationService.exists(upload.getStudent(), course);
 
         if (!unique)
             uniqueError = true;
@@ -61,8 +61,8 @@ public class AttendanceUploadService {
     @Transactional
     public void updateAttendance(String course, List<AttendanceUpload> uploadList) {
         for (AttendanceUpload attendance : uploadList) {
-            CourseRegistration courseRegistration = registeredCourseService.getByStudentAndCourse(attendance.getStudent(), course);
-            registeredCourseService.setAttendance(courseRegistration, attendance.getDelivered(), attendance.getAttended());
+            CourseRegistration courseRegistration = courseRegistrationService.getByStudentAndCourse(attendance.getStudent(), course);
+            courseRegistrationService.setAttendance(courseRegistration, attendance.getDelivered(), attendance.getAttended());
         }
     }
 
