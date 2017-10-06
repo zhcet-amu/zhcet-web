@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" data-textdirection="ltr" class="loading"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/layout :: head"></head>
+
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
+      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<nav th:replace="fragments/header :: header"></nav>
+<div th:replace="fragments/navigation :: navigation(pageId = 'department', subPage = 'courses')"></div>
+
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
+    <div class="row">
+        <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
+        <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
+            <div th:replace="fragments/layout :: toolbar"></div>
+            <div class="text-xs-right">
+                <input id="course-code" th:value="${course.code}" type="text" hidden>
+                <button class="btn btn-round btn-danger mb-2" data-toggle="modal" data-target="#delete">Delete Course</button>
+            </div>
+
+            <div class="modal fade text-xs-left" id="delete" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger white">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Delete Course</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h5 th:text="|Delete Course ${course.code} : ${course.title}|"></h5>
+                            <div class="alert alert-danger" role="alert">
+                                <span class="text-bold-600">Beware!</span> Deleting the course is irreversible and will remove all current and previous data including attendance, course registrations
+                                 and all other course related items from current and previous sessions for all students!
+                            </div>
+                            <p>If you wish to continue, please enter the course code (case sensitive) in the field below to activate the delete button</p>
+                            <hr>
+                            <h5>Course Code</h5>
+                            <input id="delete-code" title="Delete Course Code" type="text">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+                            <a th:href="|/department/courses/${course.code}/delete|">
+                                <button type="button" id="delete-button" class="btn btn-outline-danger" disabled>Delete Course</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Course here-->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title" id="basic-layout-icons">Edit Course</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in">
+                    <div class="card-block">
+                        <form class="form" th:action="|/department/courses/${course.code}/edit|" method="post" th:object="${course}">
+                            <div th:replace="fragments/layout :: success(condition = ${course_success}, message = ${course_success})"></div>
+                            <div th:replace="department/fragments/course_form"></div>
+                            <div class="form-actions right">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="icon-check2"></i> Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/layout :: scripts"></div>
+<script>
+    $(document).ready(function () {
+        var deleteCode = $('#delete-code');
+        var deleteButton = $('#delete-button');
+        var code = $('#course-code').val();
+        deleteCode.on('keyup', function () {
+            deleteButton.prop('disabled', deleteCode.val() !== code);
+        })
+    });
+</script>
+</body>
+</html>
