@@ -9,6 +9,7 @@ import in.ac.amu.zhcet.service.core.FacultyService;
 import in.ac.amu.zhcet.service.core.upload.RegistrationUploadService;
 import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -57,6 +58,7 @@ public class CourseManagementController {
         model.addAttribute("page_description", "Register Students and add Faculty In-Charge for the course");
 
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
+        Utils.sortAttendance(courseRegistrations);
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("floatedCourse", floatedCourse);
         return "department/floated_course";
