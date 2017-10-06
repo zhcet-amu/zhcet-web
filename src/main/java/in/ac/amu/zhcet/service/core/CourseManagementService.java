@@ -5,6 +5,8 @@ import in.ac.amu.zhcet.data.repository.CourseInChargeRepository;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.utils.DuplicateException;
+import in.ac.amu.zhcet.utils.UpdateException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class CourseManagementService {
         this.courseRepository = courseRepository;
     }
 
-    public Course findCourseByCode(String code) {
+    public Course getCourseByCode(String code) {
         return courseRepository.findByCode(code);
     }
 
@@ -57,6 +59,17 @@ public class CourseManagementService {
         if (duplicate != null)
             throw new DuplicateException("Course", "code", duplicate.getCode(), duplicate);
         courseRepository.save(course);
+    }
+
+    @Transactional
+    public void saveCourse(Course course) {
+        Course managed = courseRepository.findByCode(course.getCode());
+
+        if (managed == null)
+            throw new UpdateException("Course Code");
+
+        BeanUtils.copyProperties(course, managed);
+        courseRepository.save(managed);
     }
 
     @Transactional
@@ -142,4 +155,7 @@ public class CourseManagementService {
                 .contains(member);
     }
 
+    public void deleteCourse(String id) {
+        courseRepository.delete(id);
+    }
 }

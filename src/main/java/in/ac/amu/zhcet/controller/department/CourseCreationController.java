@@ -43,7 +43,6 @@ public class CourseCreationController {
         model.addAttribute("page_title", "Add Course : " + department.getName() + " Department");
         model.addAttribute("page_subtitle", "Course Management");
 
-        model.addAttribute("form_title", "Add Course");
         model.addAttribute("course_types", CourseType.values());
 
         if (!model.containsAttribute("course")) {
@@ -103,7 +102,7 @@ public class CourseCreationController {
 
     @PostMapping("/department/float_course")
     public String floatCourse(@RequestParam String courseCode, @RequestParam List<String> faculty, RedirectAttributes redirectAttributes) {
-        Course course = courseManagementService.findCourseByCode(courseCode);
+        Course course = courseManagementService.getCourseByCode(courseCode);
 
         List<String> errors = new ArrayList<>();
         if (course == null) {
