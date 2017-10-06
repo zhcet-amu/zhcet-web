@@ -40,7 +40,7 @@ public class CourseCreationController {
         FacultyMember facultyMember = facultyService.getLoggedInMember();
         Department department = FacultyService.getDepartment(facultyMember);
         model.addAttribute("department", department);
-        model.addAttribute("page_title", department.getName() + " Department : Add Course");
+        model.addAttribute("page_title", "Add Course : " + department.getName() + " Department");
         model.addAttribute("page_subtitle", "Course Management");
 
         model.addAttribute("form_title", "Add Course");
@@ -64,9 +64,9 @@ public class CourseCreationController {
             try {
                 course.setDepartment(facultyService.getFacultyDepartment());
                 courseManagementService.addCourse(course);
-                redirectAttributes.addFlashAttribute("course_success", true);
+                redirectAttributes.addFlashAttribute("course_success", "Course created successfully!");
 
-                return "redirect:/department";
+                return "redirect:/department/courses?active=true";
             } catch (DuplicateException e) {
                 redirectAttributes.addFlashAttribute("course", course);
                 redirectAttributes.addFlashAttribute("course_errors", e.getMessage());

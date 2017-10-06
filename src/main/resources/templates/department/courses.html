@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" data-textdirection="ltr" class="loading"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/layout :: head"></head>
+
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
+      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<nav th:replace="fragments/header :: header"></nav>
+<div th:replace="fragments/navigation :: navigation(pageId = 'department', subPage = 'courses')"></div>
+
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
+    <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
+    <div class="row">
+        <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
+            <div th:replace="fragments/layout :: toolbar"></div>
+            <a th:href="@{/department/course/add}">
+                <button class="btn btn-success btn-round">New Course</button>
+            </a>
+            <a th:with="toggle = ${!param.active}" th:href="@{/department/courses(active=${toggle})}">
+                <button th:class="|btn btn-round btn-${toggle ? 'info' : 'primary'}|" th:text="${toggle ? 'Active Courses' : 'All Courses'}"></button>
+            </a>
+            <hr>
+            <div th:replace="fragments/layout :: success(condition = ${course_success}, message = ${course_success})"></div>
+            <div id="courses">
+                <input class="fuzzy-search form-control round mb-1" placeholder="Search" />
+                <div class="row">
+                    <div class="col-md-4">
+                        <button class="sort btn btn-block btn-outline-default btn-round mb-2" data-sort="code">Sort by code</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="sort btn btn-block btn-outline-primary btn-round mb-2" data-sort="title">Sort by title</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="sort btn btn-block btn-outline-success btn-round mb-2" data-sort="credits">Sort by credits</button>
+                    </div>
+                </div>
+                <ul class="list-group list">
+                    <li th:each="course : ${courses}" class="list-group-item mui-panel mb-2">
+                        <div class="row">
+                            <div class="col-xs-12" style="margin-left: 10px;">
+                                <h4>
+                                    <strong><span th:class="|code tag tag-pill tag-glow ${@viewService.getClassForCourse(course)}|" th:text="${course.code}"></span></strong> :
+                                    <span class="title" th:text="${course.title}"></span>
+                                </h4>
+                                <br>
+                            </div>
+                            <div class="pl-1">
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-3 col-lg-2 pb-2">
+                                        <span class="capsule"><span>Semester : </span><span class="semester" th:text="${course.semester}"></span></span>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-3 col-lg-2 pb-2">
+                                        <span class="capsule"><span>Category : </span><span class="category" th:text="${course.category}"></span></span>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-3 col-lg-2 pb-2">
+                                        <span class="capsule"><span>Credits : </span><span class="credits" th:text="${course.credits}"></span></span>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-3 col-lg-2 pb-2">
+                                        <span class="capsule"><span>Branch : </span><span class="branch" th:text="${course.branch}"></span></span>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-3 col-lg-2 pb-2">
+                                        <span class="capsule type" th:text="${course.type}"></span>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-3 col-lg-2 pb-2">
+                                        <span th:class="|capsule ${(course.compulsory != null && course.compulsory) ? 'bg-success' : 'bg-info'} text-white|" th:text="${(course.compulsory != null && course.compulsory) ? 'Compulsory' : 'Optional'}"></span>
+                                    </div>
+                                    <div th:if="${!course.active}" class="col-xs-6 col-sm-3 col-lg-2 pb-2">
+                                        <span class="capsule bg-danger">Inactive</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="pagination pagination-separate pagination-flat"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:replace="fragments/layout :: scripts"></div>
+<script src="https://zhcet-web-amu.firebaseapp.com/static/js/list.min.js"></script>
+<script>
+    var options = {
+        valueNames: [ 'code', 'title', 'semester', 'credits', 'branch', 'category' ],
+        page: 5,
+        pagination: true
+    };
+
+    new List('courses', options);
+</script>
+</body>
+</html>

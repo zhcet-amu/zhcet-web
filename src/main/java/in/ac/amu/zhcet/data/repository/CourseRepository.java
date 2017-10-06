@@ -10,10 +10,8 @@ public interface CourseRepository extends CrudRepository<Course, String> {
 
     Course findByCode(String code);
 
-    List<Course> findByTitle(String title);
-
     List<Course> findByDepartment(Department department);
 
-    List<Course> findByDepartment_Name(String name);
+    List<Course> findByDepartmentAndActive(Department department, Boolean active);
 
 }
