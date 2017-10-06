@@ -40,6 +40,13 @@ public class CourseManagementService {
         return courseRepository.findByDepartment(department);
     }
 
+    public List<Course> getAllActiveCourse(Department department, boolean active) {
+        if (!active) // Get all courses
+            return courseRepository.findByDepartment(department);
+
+        return courseRepository.findByDepartmentAndActive(department, true);
+    }
+
     public List<FloatedCourse> getCurrentFloatedCourses(Department department) {
         return floatedCourseRepository.getBySessionAndCourse_Department(ConfigurationService.getDefaultSessionCode(), department);
     }

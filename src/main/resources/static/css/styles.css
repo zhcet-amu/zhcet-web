@@ -49,3 +49,21 @@ table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd {
         max-width:1200px;
     }
 }
+
+.bg-orange {
+    background-color: #FF5722;
+}
+
+.bg-orange.tag-glow {
+    -webkit-box-shadow: 0 0 10px #FF5722;
+    box-shadow: 0 0 10px #FF5722;
+}
+
+.bg-pink {
+    background-color: #E91E63;
+}
+
+.bg-pink.tag-glow {
+    -webkit-box-shadow: 0 0 10px #E91E63;
+    box-shadow: 0 0 10px #E91E63;
+}
