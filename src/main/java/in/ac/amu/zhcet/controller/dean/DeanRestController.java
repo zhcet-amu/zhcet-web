@@ -29,7 +29,7 @@ public class DeanRestController {
     }
 
     @JsonView(DataTablesOutput.View.class)
-    @PostMapping(value = "/dean/students")
+    @PostMapping(value = "/dean/api/students")
     public DataTablesOutput<StudentView> getStudents(@Valid @RequestBody DataTablesInput input) {
         convertInput(input);
         return studentRepository.findAll(input, this::fromStudent);

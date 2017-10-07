@@ -19,23 +19,23 @@
     </div>
     <div class="row">
         <div class="col-xs-12 col-md-10 offset-md-1 offset-lg-0 col-lg-6 col-xl-4 offset-xl-2">
-            <div th:replace="fragments/dean/register_student:: register_student"></div>
-            <div th:replace="fragments/dean/register_faculty :: register_faculty"></div>
+            <div th:replace="dean/fragments/register_student:: register_student"></div>
+            <div th:replace="dean/fragments/register_faculty :: register_faculty"></div>
         </div>
         <div class="col-xs-12 col-md-10 offset-md-1 offset-lg-0 col-lg-6 col-xl-4">
-            <div th:replace="fragments/dean/add_department"></div>
-            <div th:replace="fragments/dean/role_management"></div>
+            <div th:replace="dean/fragments/add_department"></div>
+            <div th:replace="dean/fragments/role_management"></div>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-12 col-md-10 offset-md-1 offset-lg-0 col-xl-8 offset-xl-2">
-            <div th:replace="fragments/dean/user_table"></div>
+            <div th:replace="dean/fragments/user_table"></div>
         </div>
     </div>
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
 <script th:src="@{/js/file-uploader.js}" type="text/javascript"></script>
-<script th:replace="fragments/dean/register_student :: script"></script>
-<script th:replace="fragments/dean/register_faculty :: script"></script>
+<script th:replace="dean/fragments/register_student :: script"></script>
+<script th:replace="dean/fragments/register_faculty :: script"></script>
 </body>
 </html>
