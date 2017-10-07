@@ -39,7 +39,7 @@ public class EmailNotificationService {
         String url = configurationService.getBaseUrl() + "/attendance";
         log.info("Email Attendance Notification : " + id);
         log.info("URL : " + url);
-        FloatedCourse floatedCourse = courseManagementService.findFloatedCourseByCode(id);
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(id);
 
         if (floatedCourse == null) {
             log.warn("Email request for invalid course " + id);

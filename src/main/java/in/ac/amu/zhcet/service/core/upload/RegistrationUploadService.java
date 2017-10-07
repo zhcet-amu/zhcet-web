@@ -69,7 +69,7 @@ public class RegistrationUploadService {
         invalidEnrolment = false;
         alreadyEnrolled = false;
 
-        List<CourseRegistration> registrations = courseManagementService.findFloatedCourseByCode(courseId).getCourseRegistrations();
+        List<CourseRegistration> registrations = courseManagementService.getFloatedCourseByCode(courseId).getCourseRegistrations();
 
         Confirmation<Student, String> registrationConfirmation = uploadService.confirmUpload(
                 uploadResult,

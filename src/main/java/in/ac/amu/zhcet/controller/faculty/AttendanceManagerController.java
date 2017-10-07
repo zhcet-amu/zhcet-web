@@ -45,7 +45,7 @@ public class AttendanceManagerController {
 
     @PostMapping("faculty/courses/{id}/attendance")
     public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("file") MultipartFile file) {
-        courseManagementService.getCourseAndVerify(id);
+        courseManagementService.getFloatedCourseAndVerify(id);
         try {
             UploadResult<AttendanceUpload> result = attendanceUploadService.handleUpload(file);
 
@@ -74,7 +74,7 @@ public class AttendanceManagerController {
 
     @PostMapping("faculty/courses/{id}/attendance_confirmed")
     public String uploadAttendance(RedirectAttributes attributes, @PathVariable String id, @Valid @ModelAttribute AttendanceModel attendanceModel, BindingResult bindingResult) {
-        courseManagementService.getCourseAndVerify(id);
+        courseManagementService.getFloatedCourseAndVerify(id);
         if (bindingResult.hasErrors()) {
             attributes.addFlashAttribute("attendanceModel", attendanceModel);
             attributes.addFlashAttribute("org.springframework.validation.BindingResult.attendanceModel", bindingResult);

@@ -42,7 +42,7 @@ public class CourseManagementController {
     }
 
     private FloatedCourse verifyAndGetCourse(String courseId) {
-        FloatedCourse floatedCourse = courseManagementService.getCourseAndVerify(courseId);
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(courseId);
         if (floatedCourse == null || !floatedCourse.getCourse().getDepartment().equals(facultyService.getFacultyDepartment()))
             throw new AccessDeniedException("403");
 

@@ -41,7 +41,7 @@ public class FloatedCourseController {
 
     @GetMapping("faculty/courses/{id}")
     public String getStudents(Model model, @PathVariable String id) {
-        FloatedCourse floatedCourse = courseManagementService.getCourseAndVerify(id);
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseAndVerify(id);
 
         model.addAttribute("page_title", floatedCourse.getCourse().getTitle());
         model.addAttribute("page_subtitle", "Attendance management for " + floatedCourse.getCourse().getCode());

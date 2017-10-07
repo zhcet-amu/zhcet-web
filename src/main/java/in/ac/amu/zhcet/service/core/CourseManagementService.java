@@ -134,8 +134,8 @@ public class CourseManagementService {
                 .collect(Collectors.toList());
     }
 
-    public FloatedCourse getCourseAndVerify(String courseId) {
-        FloatedCourse floatedCourse = findFloatedCourseByCode(courseId);
+    public FloatedCourse getFloatedCourseAndVerify(String courseId) {
+        FloatedCourse floatedCourse = getFloatedCourseByCode(courseId);
         List<FloatedCourse> floatedCourses = getByFaculty(facultyService.getLoggedInMember());
         if (floatedCourse == null || !floatedCourses.contains(floatedCourse))
             throw new AccessDeniedException("403");
@@ -143,7 +143,7 @@ public class CourseManagementService {
         return floatedCourse;
     }
 
-    public FloatedCourse findFloatedCourseByCode(String courseId){
+    public FloatedCourse getFloatedCourseByCode(String courseId){
         return floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseId);
     }
 
