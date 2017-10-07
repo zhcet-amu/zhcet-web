@@ -49,7 +49,7 @@ $(document).ready(function () {
         scrollCollapse: true,
         'ajax': {
             'contentType': 'application/json',
-            'url': '/dean/students',
+            'url': '/dean/api/students',
             'type': 'POST',
             'data': function (d) {
                 return JSON.stringify(d);
