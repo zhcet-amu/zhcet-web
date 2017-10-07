@@ -42,6 +42,7 @@
                     <li th:class="${subPage == 'department_admin' ? 'active' : ''}" ><a th:href="@{/department}" class="menu-item">Admin Panel</a></li>
                     <li th:class="${subPage == 'add_course' ? 'active' : ''}" ><a th:href="@{/department/course/add}" class="menu-item">Add Course</a></li>
                     <li th:class="${subPage == 'courses' ? 'active' : ''}" ><a th:href="@{/department/courses(active = true)}" class="menu-item">Courses</a></li>
+                    <li th:class="${subPage == 'float_course' ? 'active' : ''}" ><a th:href="@{/department/float}" class="menu-item">Float Course</a></li>
                 </ul>
             </li>
             <li class="nav-item" sec:authorize="!isAuthenticated()">

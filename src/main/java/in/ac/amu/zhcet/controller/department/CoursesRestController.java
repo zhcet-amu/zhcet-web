@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.controller.department;
 
+import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.FacultyService;
 import lombok.Data;
@@ -29,15 +30,24 @@ public class CoursesRestController {
     private static class CourseDto {
         private String code;
         private String title;
+        private Integer semester;
+        private String category;
+        private Float credits;
+        private boolean floated;
+    }
+
+    private CourseDto attachStatus(CourseDto courseDto, List<FloatedCourse> floatedCourses) {
+        courseDto.setFloated(floatedCourses.stream().map(FloatedCourse::getCourse).anyMatch(course -> course.getCode().equals(courseDto.getCode())));
+        return courseDto;
     }
 
     @GetMapping("/department/api/courses")
     public List<CourseDto> courses() {
+        List<FloatedCourse> floatedCourses = courseManagementService.getCurrentFloatedCourses(facultyService.getFacultyDepartment());
         return courseManagementService.getAllActiveCourse(facultyService.getFacultyDepartment(), true)
                 .stream()
-                .map(course ->
-                        modelMapper
-                        .map(course, CourseDto.class))
+                .map(course -> modelMapper.map(course, CourseDto.class))
+                .map(courseDto -> attachStatus(courseDto, floatedCourses))
                 .collect(Collectors.toList());
     }
 

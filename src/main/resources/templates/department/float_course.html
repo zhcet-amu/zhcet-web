@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" data-textdirection="ltr" class="loading"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/layout :: head"></head>
+<style>
+    .category, .semester, .credits {
+        font-size: small;
+    }
+
+    .category {
+        background-color: rgba(0,0,0,0.1);
+    }
+</style>
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
+      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<nav th:replace="fragments/header :: header"></nav>
+<div th:replace="fragments/navigation :: navigation(pageId = 'department', subPage = 'float_course')"></div>
+
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
+    <div class="row">
+        <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
+        <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
+            <div th:replace="fragments/layout :: toolbar"></div>
+            <div class="row">
+                <div class="col-md-10 col-xl-8 offset-md-1 offset-xl-2">
+                    <div class="bs-callout-primary callout-border-left p-1">
+                        <strong>Add courses by searching</strong><br>
+                        Search for courses by course code or title and float multiple courses in one go!
+                    </div>
+                    <br>
+                    <div th:replace="fragments/layout :: success(condition = ${float_success}, message = ${float_success})"></div>
+                    <div th:replace="fragments/layout :: error(condition = ${float_error}, error = ${float_error})"></div>
+                    <input class="courses twitter-typeahead form-control round mb-1" autocomplete="off" placeholder="Search" />
+
+                    <form class="selected-courses-container" th:hidden="${courses == null ? true : false}" method="post" th:action="@{/department/float}">
+                        <div class="selected-courses">
+                            <div th:each="course : ${courses}" class="course card">
+                                <input type="text" class="chosen-code" name="code" th:value="${course.code}" hidden>
+                                <div class="card-body">
+                                    <div class="card-block">
+                                        <h4 class="card-title"><strong th:value="${course.code}">CO304</strong> - <span th:value="${course.title}">Computer Architecture</span></h4>
+                                        <p class="card-text">
+                                            <span class="capsule category" th:value="${course.category}">DC</span>
+                                            <span class="semester" th:value="|Semester : ${course.semester}|">Semester : 3</span> -
+                                            <span class="credits" th:value="|Credits : ${course.credits}|">Credits : 4</span>
+                                        </p>
+                                        <a class="remove btn btn-outline-danger float-xs-right">Remove</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="submit" class="btn btn-primary float-xs-right" value="Float">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/layout :: scripts"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.jquery.min.js"></script>
+<script src="https://zhcet-web-amu.firebaseapp.com/static/js/FuzzySearch.min.js"></script>
+<script th:src="@{/js/fuzzyhound.js}"></script>
+<script th:src="@{/js/float-course.js}"></script>
+</body>
+</html>
