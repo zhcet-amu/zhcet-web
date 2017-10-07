@@ -22,7 +22,7 @@
             </a>
             <hr>
             <div th:replace="fragments/layout :: success(condition = ${course_success}, message = ${course_success})"></div>
-            <div th:replace="fragments/layout :: error(condition = ${course_error}, message = ${course_error})"></div>
+            <div th:replace="fragments/layout :: error(condition = ${course_error}, error = ${course_error})"></div>
             <div id="courses">
                 <input class="fuzzy-search form-control round mb-1" placeholder="Search" />
                 <div class="row">
