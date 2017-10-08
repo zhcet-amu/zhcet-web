@@ -16,6 +16,12 @@
             <div th:replace="fragments/layout :: toolbar"></div>
             <div class="text-xs-right">
                 <input id="course-code" th:value="${course.code}" type="text" hidden>
+                <a th:href="|/department/floated/${course.code}|" th:if="${floated}">
+                    <button class="btn btn-round btn-primary mb-2">Manage Floated Course</button>
+                </a>
+                <a th:href="|/department/courses/${course.code}/float|" th:unless="${floated}">
+                    <button class="btn btn-round btn-info mb-2">Float Course</button>
+                </a>
                 <button class="btn btn-round btn-danger mb-2" data-toggle="modal" data-target="#delete">Delete Course</button>
             </div>
 

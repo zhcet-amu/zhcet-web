@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.CourseType;
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
+import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.FacultyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,10 @@ public class CourseEditController {
             Course course = verifyAndGetCourse(id);
             model.addAttribute("course", course);
         }
+
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(id);
+        if (floatedCourse != null)
+            model.addAttribute("floated", true);
 
         return "department/edit_course";
     }
