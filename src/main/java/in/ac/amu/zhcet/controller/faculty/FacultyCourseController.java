@@ -17,12 +17,12 @@ import java.util.List;
 
 @Slf4j
 @Controller
-public class FloatedCourseController {
+public class FacultyCourseController {
     private final FacultyService facultyService;
     private final CourseManagementService courseManagementService;
 
     @Autowired
-    public FloatedCourseController(FacultyService facultyService, CourseManagementService courseManagementService) {
+    public FacultyCourseController(FacultyService facultyService, CourseManagementService courseManagementService) {
         this.facultyService = facultyService;
         this.courseManagementService = courseManagementService;
     }

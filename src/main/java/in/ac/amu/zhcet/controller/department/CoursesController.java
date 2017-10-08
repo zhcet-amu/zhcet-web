@@ -3,6 +3,7 @@ package in.ac.amu.zhcet.controller.department;
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
+import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.FacultyService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -42,6 +44,19 @@ public class CoursesController {
 
         List<Course> courses = courseManagementService.getAllActiveCourse(department, active);
         courses.sort(Comparator.comparing(Course::getCode));
+
+        List<Course> floatedCourses = courseManagementService.getCurrentFloatedCourses(department)
+                .stream()
+                .map(FloatedCourse::getCourse)
+                .collect(Collectors.toList());
+
+        courses = courses.stream()
+                .map(course -> {
+                    if (floatedCourses.contains(course))
+                        course.setMeta("Floated");
+
+                    return course;
+                }).collect(Collectors.toList());
 
         model.addAttribute("courses", courses);
 

@@ -28,14 +28,14 @@ import java.util.List;
 
 @Slf4j
 @Controller
-public class CourseManagementController {
+public class FloatedCourseController {
 
     private final FacultyService facultyService;
     private final CourseManagementService courseManagementService;
     private final RegistrationUploadService registrationUploadService;
 
     @Autowired
-    public CourseManagementController(FacultyService facultyService, CourseManagementService courseManagementService, RegistrationUploadService registrationUploadService) {
+    public FloatedCourseController(FacultyService facultyService, CourseManagementService courseManagementService, RegistrationUploadService registrationUploadService) {
         this.facultyService = facultyService;
         this.courseManagementService = courseManagementService;
         this.registrationUploadService = registrationUploadService;
@@ -49,7 +49,7 @@ public class CourseManagementController {
         return floatedCourse;
     }
 
-    @GetMapping("department/courses/{id}")
+    @GetMapping("department/floated/{id}")
     public String courseDetail(Model model, @PathVariable String id) {
         FloatedCourse floatedCourse = verifyAndGetCourse(id);
 
@@ -64,7 +64,7 @@ public class CourseManagementController {
         return "department/floated_course";
     }
 
-    @PostMapping("department/courses/{id}/register")
+    @PostMapping("department/floated/{id}/register")
     public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("file") MultipartFile file) {
         verifyAndGetCourse(id);
         try {
@@ -81,10 +81,10 @@ public class CourseManagementController {
             ioe.printStackTrace();
         }
 
-        return "redirect:/department/courses/{id}";
+        return "redirect:/department/floated/{id}";
     }
 
-    @PostMapping("department/courses/{id}/confirm_registration")
+    @PostMapping("department/floated/{id}/confirm_registration")
     public String confirmRegistration(RedirectAttributes attributes, @PathVariable String id, @RequestParam List<String> studentId, @RequestParam List<String> mode) {
         verifyAndGetCourse(id);
         try {
@@ -95,17 +95,17 @@ public class CourseManagementController {
             attributes.addFlashAttribute("unknown_error", true);
         }
 
-        return "redirect:/department/courses/{id}";
+        return "redirect:/department/floated/{id}";
     }
 
-    @GetMapping("department/courses/{id}/add_in_charge")
+    @GetMapping("department/floated/{id}/add_in_charge")
     public String addInCharge(Model model, RedirectAttributes redirectAttributes, @PathVariable String id) {
         verifyAndGetCourse(id);
         redirectAttributes.addFlashAttribute("facultyMembers", facultyService.getByDepartment(facultyService.getFacultyDepartment()));
         return "redirect:/department/courses/{id}";
     }
 
-    @PostMapping("department/courses/{id}/confirm_in_charge")
+    @PostMapping("department/floated/{id}/confirm_in_charge")
     public String confirmInCharge(Model model, RedirectAttributes redirectAttributes, @PathVariable String id, @RequestParam String facultyId) {
         verifyAndGetCourse(id);
         try {
