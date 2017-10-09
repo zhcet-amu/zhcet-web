@@ -38,12 +38,16 @@ public class FacultyService {
         return facultyRepository.getByFacultyId(facultyId);
     }
 
+    public List<FacultyMember> getAll() {
+        return facultyRepository.findAllByWorking(true);
+    }
+
     public List<FacultyMember> getByIds(List<String> facultyIds) {
         return facultyRepository.getByFacultyIdIn(facultyIds);
     }
 
     public List<FacultyMember> getByDepartment(Department department) {
-        return facultyRepository.getByUser_Department(department);
+        return facultyRepository.getByUser_DepartmentAndWorking(department, true);
     }
 
     public FacultyMember getLoggedInMember() {

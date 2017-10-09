@@ -1,0 +1,38 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="unfloat_course">
+    <!--/*@thymesVar id="floatedCourse" type="in.ac.amu.zhcet.data.model.FloatedCourse"*/-->
+    <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.CourseInCharge"*/-->
+    <!--/*@thymesVar id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
+    <div class="text-xs-right">
+        <input id="course-code" th:value="${floatedCourse.course.code}" type="text" hidden>
+        <button class="btn btn-round btn-danger mb-2" data-toggle="modal" data-target="#delete">Unfloat Course</button>
+    </div>
+    <div class="modal fade text-xs-left" id="delete" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger white">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Unfloat Course</h4>
+                </div>
+                <div class="modal-body">
+                    <h5 th:text="|Unfloat Course ${floatedCourse.course.code} : ${floatedCourse.course.title}|"></h5>
+                    <div class="alert alert-danger" role="alert">
+                        <span class="text-bold-600">Beware!</span> Unfloating the course is irreversible and will remove all current session's data including attendance, course registrations
+                        and all other course related items for all students!
+                    </div>
+                    <p>If you wish to continue, please enter the course code (case sensitive) in the field below to activate the delete button</p>
+                    <hr>
+                    <h5>Course Code</h5>
+                    <input id="delete-code" title="Unfloat Course Code" type="text">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <a th:href="|/department/floated/${floatedCourse.course.code}/unfloat|">
+                        <button type="button" id="delete-button" class="btn btn-outline-danger" disabled>Unfloat Course</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="registered_students" class="card">
+    <!--/*@thymesVar id="floatedCourse" type="in.ac.amu.zhcet.data.model.FloatedCourse"*/-->
+    <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.CourseInCharge"*/-->
+    <!--/*@thymesVar id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
+    <div class="card-header">
+        <h4 class="card-title">Registered Students</h4>
+        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+        <div class="heading-elements">
+            <ul class="list-inline mb-0">
+                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="card-body collapse in collapse in">
+        <div class="card-block">
+            <div class="row">
+                <div class="table-responsive">
+                    <table id="registrationTable" class="table">
+                        <thead>
+                        <tr>
+                            <th class="text-xs-center">FACULTY NO</th>
+                            <th class="text-xs-center">ENROLMENT NO</th>
+                            <th class="text-xs-center">NAME</th>
+                            <th class="text-xs-center">SECTION</th>
+                            <th class="text-xs-center">MODE</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="registration: ${courseRegistrations}">
+                            <tr>
+                                <td class="text-xs-center" th:text="${registration.student.facultyNumber}"></td>
+                                <td class="text-xs-center" th:text="${registration.student.enrolmentNumber}"></td>
+                                <td class="text-xs-center" th:text="${registration.student.user.name}"></td>
+                                <td class="text-xs-center" th:text="${registration.student.section}"></td>
+                                <td class="text-xs-center" th:text="${registration.mode}"></td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

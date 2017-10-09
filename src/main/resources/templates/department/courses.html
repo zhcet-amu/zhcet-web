@@ -4,6 +4,10 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="fragments/layout :: head"></head>
 <style>
+    .pad {
+        padding: 0.3rem;
+    }
+
     .list {
         list-style-type: none;
     }
@@ -19,6 +23,10 @@
 
     .inactive-title {
         background-color: #ffcdd2;
+    }
+
+    .course-title:hover {
+        color: #304FFE;
     }
 </style>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
@@ -62,34 +70,42 @@
                         <a th:href="|/department/courses/${course.code}/edit|" style="color: inherit">
                             <div class="card">
                                 <div th:class="|card-header ${course.meta != null ? 'floated-title' : ''} ${course.active ? '' : 'inactive-title'}|">
-                                    <h4 class="card-title" id="heading-icon">
+                                    <h4 class="course-title card-title" id="heading-icon">
                                         <strong><span th:class="|code tag tag-pill tag-glow ${@viewService.getClassForCourse(course)}|" th:text="${course.code}"></span></strong> :
                                         <span class="title" th:text="${course.title}"></span>
                                     </h4>
+                                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                                    <div class="heading-elements">
+                                        <ul class="list-inline mb-0">
+                                            <li th:if="${course.meta}"><a th:href="|/department/floated/${course.code}|" data-toggle="tooltip" data-placement="top" data-original-title="Manage Course"><i class="icon-paper"></i></a></li>
+                                            <li th:unless="${course.meta}"><a th:href="|/department/courses/${course.code}/float|" data-toggle="tooltip" data-placement="top" data-original-title="Float Course"><i class="icon-layers"></i></a></li>
+                                            <li><a th:href="|/department/courses/${course.code}/edit|" data-toggle="tooltip" data-placement="top" data-original-title="Edit Course"><i class="icon-cog3"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <div class="card-body collapse in">
+                                <div class="card-body collapse in" style="padding:0">
                                     <div class="card-block">
-                                        <h4 class="card-title">
-                                            <span class="col category capsule" th:text="${course.category}"></span>&nbsp;
+                                        <h5 class="card-title">
+                                            <span class="category capsule" th:text="${course.category}"></span>&nbsp;
                                             <span class="capsule type" th:if="${course.type != null}"><i th:class="${course.type.name() == 'T' ? 'icon-book' : 'icon-lab'}"></i>&nbsp;<span th:text="${course.type}"></span></span>&nbsp;
                                             <span th:class="|capsule ${(course.compulsory != null && course.compulsory) ? 'bg-primary' : 'bg-info'} text-white|" th:text="${(course.compulsory != null && course.compulsory) ? 'Compulsory' : 'Optional'}"></span>
-                                        </h4>
+                                        </h5>
                                         <p class="card-text" th:text="${course.description}"></p>
                                         <br>
                                         <div class="row">
-                                            <div class="col-xs-6 col-sm-3 col-lg-2 pb-2">
+                                            <div class="pad col-xs-6 col-sm-3 col-lg-2">
                                                 <span class="capsule"><span>Semester : </span><span class="semester" th:text="${course.semester}"></span></span>
                                             </div>
-                                            <div class="col-xs-6 col-sm-3 col-lg-2 pb-2">
+                                            <div class="pad col-xs-6 col-sm-3 col-lg-2">
                                                 <span class="capsule"><span>Credits : </span><span class="credits" th:text="${course.credits}"></span></span>
                                             </div>
-                                            <div class="col-xs-6 col-sm-3 col-lg-2 pb-2">
+                                            <div class="pad col-xs-6 col-sm-3 col-lg-2">
                                                 <span class="capsule"><span>Branch : </span><span class="branch" th:text="${course.branch}"></span></span>
                                             </div>
-                                            <div class="col-xs-6 col-sm-3 col-lg-2 pb-2" th:if="${!course.active}">
+                                            <div class="pad col-xs-6 col-sm-3 col-lg-2" th:if="${!course.active}">
                                                 <span class="capsule bg-danger">Deactivated</span>
                                             </div>
-                                            <div class="col-xs-6 col-sm-3 col-lg-2 pb-2" th:hidden="${course.meta == null}">
+                                            <div class="pad col-xs-6 col-sm-3 col-lg-2" th:hidden="${course.meta == null}">
                                                 <span class="floated capsule bg-success text-white" th:text="${course.meta}"></span>
                                             </div>
                                         </div>
@@ -122,7 +138,7 @@
     }
 
     var options = {
-        valueNames: [ 'code', 'title', 'semester', 'credits', 'branch', 'category', 'floated' ],
+        valueNames: [ 'code', 'title', 'semester', 'floated' ],
         page: 10,
         pagination: true
     };

@@ -1,0 +1,44 @@
+hr {
+    padding: 0;
+    margin: 0;
+}
+
+.tt-suggestion {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.in-charge {
+    padding-top: 10px;
+}
+
+.in-charge-avatar {
+    margin-left: 10px;
+}
+
+.avatar-img {
+    max-height: 30px;
+    margin: 5px;
+    background-color: white;
+}
+
+.faculty-id {
+    font-size: small;
+}
+
+.department {
+    background-color: rgba(0, 0, 0, 0.1);
+    font-size: small;
+}
+
+.section-select {
+    display: inline-block;
+}
+
+.mui-select>select {
+    width: auto;
+}
+
+.new {
+    background-color: #DCEDC8;
+}

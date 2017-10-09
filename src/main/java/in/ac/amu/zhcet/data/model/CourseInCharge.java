@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.BaseIdEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
+@Slf4j
 @Entity
 public class CourseInCharge extends BaseIdEntity {
 
@@ -24,5 +24,20 @@ public class CourseInCharge extends BaseIdEntity {
     private FacultyMember facultyMember;
 
     private String section;
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof CourseInCharge))
+            return false;
+
+        CourseInCharge inCharge2 = (CourseInCharge) o;
+        if (!getFacultyMember().getFacultyId().equals(inCharge2.getFacultyMember().getFacultyId()))
+            return false;
+        if (getSection() == null && inCharge2.getSection() == null)
+            return true;
+        if ((getSection() == null && inCharge2.getSection() != null) || (getSection() != null && inCharge2.getSection() == null))
+            return false;
+        return (getSection().equals(inCharge2.getSection()));
+    }
 
 }
