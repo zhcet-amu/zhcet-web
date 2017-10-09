@@ -28,6 +28,7 @@ public class FacultyMember extends BaseEntity {
     private UserAuth user = new UserAuth();
 
     private boolean working;
+    private String designation;
 
     public FacultyMember(UserAuth user) {
         this.user = user;

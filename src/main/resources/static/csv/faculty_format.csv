@@ -1,2 +1,2 @@
-faculty_id,name,department
-DEP123,Faculty Member,Computer
+faculty_id,name,designation,department
+DEP123,Faculty Member,Assistant Professor,Computer

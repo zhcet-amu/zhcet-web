@@ -8,12 +8,15 @@ public class FacultyUpload {
     @CsvColumn(columnName = "faculty_id", mustNotBeBlank = true)
     private String facultyId;
 
-    @CsvColumn(columnName = "name", mustNotBeBlank = true)
+    @CsvColumn(mustNotBeBlank = true)
     private String name;
 
-    @CsvColumn(columnName = "department", mustNotBeBlank = true)
+    @CsvColumn(mustNotBeBlank = true)
+    private String designation;
+
+    @CsvColumn(mustNotBeBlank = true)
     private String department;
 
-    @CsvColumn(columnName = "password", mustBeSupplied = false)
+    @CsvColumn(mustBeSupplied = false)
     private String password;
 }

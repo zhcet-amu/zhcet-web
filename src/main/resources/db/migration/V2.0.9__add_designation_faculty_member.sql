@@ -1,0 +1,1 @@
+ALTER TABLE zhcet.faculty_member ADD designation VARCHAR(255) DEFAULT 'Faculty Member';

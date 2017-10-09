@@ -120,6 +120,7 @@ public class FacultyUploadService {
         facultyUpload.setPassword(password);
         FacultyMember facultyMember = new FacultyMember();
         facultyMember.setFacultyId(Utils.capitalizeAll(facultyUpload.getFacultyId()));
+        facultyMember.setDesignation(Utils.capitalizeFirst(facultyUpload.getDesignation()));
         facultyMember.getUser().setName(Utils.capitalizeFirst(facultyUpload.getName()));
         facultyMember.getUser().setPassword(password);
         facultyMember.getUser().setDepartment(new Department(Utils.capitalizeFirst(facultyUpload.getDepartment())));
@@ -131,6 +132,7 @@ public class FacultyUploadService {
         FacultyUpload facultyUpload = new FacultyUpload();
         facultyUpload.setFacultyId(facultyMember.getFacultyId());
         facultyUpload.setName(facultyMember.getUser().getName());
+        facultyUpload.setDesignation(facultyMember.getDesignation());
         facultyUpload.setDepartment(facultyMember.getUser().getDepartment().getName());
         facultyUpload.setPassword(facultyMember.getUser().getPassword());
 
@@ -139,6 +141,6 @@ public class FacultyUploadService {
 
     private static String generatePassword(int length){
         String uuid = UUID.randomUUID().toString();
-        return uuid.replaceAll("-", "").substring(0,length);
+        return uuid.replaceAll("-", "").substring(0, Math.min(length, uuid.length()));
     }
 }

@@ -65,20 +65,20 @@
                                         <tr>
                                             <th class="text-xs-center">Faculty ID</th>
                                             <th class="text-xs-center">Name</th>
+                                            <th class="text-xs-center">Designation</th>
                                             <th class="text-xs-center">Department</th>
                                             <th class="text-xs-center">Password</th>
                                             <th class="text-xs-center">Error</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!--/*@thymesidr id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
+                                        <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.FacultyMember, String>"*/-->
                                         <th:block th:each="confirm: ${confirmRegistration.data}">
                                             <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
-                                                <!--/*@thymesidr id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
                                                 <td class="text-xs-center" th:text="${confirm.key.facultyId}"></td>
                                                 <td class="text-xs-center" th:text="${confirm.key.user.name}"></td>
-                                                <td class="text-xs-center"
-                                                    th:text="${confirm.key.user.department?.name}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.key.designation}"></td>
+                                                <td class="text-xs-center" th:text="${confirm.key.user.department?.name}"></td>
                                                 <td class="text-xs-center" th:text="${confirm.key.user.password}"></td>
                                                 <td class="text-xs-center" th:text="${confirm.value}"></td>
                                             </tr>
