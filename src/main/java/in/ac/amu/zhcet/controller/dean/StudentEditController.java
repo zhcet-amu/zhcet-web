@@ -3,7 +3,7 @@ package in.ac.amu.zhcet.controller.dean;
 import in.ac.amu.zhcet.data.HallCode;
 import in.ac.amu.zhcet.data.StudentStatus;
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.dto.StudentEditModel;
+import in.ac.amu.zhcet.data.model.dto.datatables.StudentEditModel;
 import in.ac.amu.zhcet.service.core.DepartmentService;
 import in.ac.amu.zhcet.service.core.StudentEditService;
 import in.ac.amu.zhcet.service.core.StudentService;

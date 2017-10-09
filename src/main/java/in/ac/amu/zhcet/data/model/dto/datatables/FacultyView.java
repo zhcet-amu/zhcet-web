@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.data.model.dto;
+package in.ac.amu.zhcet.data.model.dto.datatables;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -6,12 +6,14 @@ import lombok.Data;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 @Data
-public class StudentView {
+public class FacultyView {
 
     @JsonView(DataTablesOutput.View.class)
-    private String facultyNumber;
+    private String facultyId;
     @JsonView(DataTablesOutput.View.class)
-    private String enrolmentNumber;
+    private String designation;
+    @JsonView(DataTablesOutput.View.class)
+    private boolean working;
     @JsonView(DataTablesOutput.View.class)
     @JsonProperty("user_name")
     private String userName;
@@ -27,14 +29,6 @@ public class StudentView {
     @JsonView(DataTablesOutput.View.class)
     @JsonProperty("is-verified")
     private boolean userActive;
-    @JsonView(DataTablesOutput.View.class)
-    private String hallCode;
-    @JsonView(DataTablesOutput.View.class)
-    private String section;
-    @JsonView(DataTablesOutput.View.class)
-    private int registrationYear;
-    @JsonView(DataTablesOutput.View.class)
-    private char status;
     @JsonView(DataTablesOutput.View.class)
     private String createdAt;
     @JsonView(DataTablesOutput.View.class)

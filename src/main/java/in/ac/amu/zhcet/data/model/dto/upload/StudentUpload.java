@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.data.model.dto;
+package in.ac.amu.zhcet.data.model.dto.upload;
 
 import com.j256.simplecsv.common.CsvColumn;
 import lombok.Data;

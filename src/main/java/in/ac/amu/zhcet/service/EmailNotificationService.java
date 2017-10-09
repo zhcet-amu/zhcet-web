@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.service;
 
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
+import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.core.ConfigurationService;
 import in.ac.amu.zhcet.service.core.CourseManagementService;

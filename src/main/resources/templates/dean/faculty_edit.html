@@ -8,16 +8,16 @@
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
       class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
-<div th:replace="fragments/navigation :: navigation(pageId = 'dean', subPage='students_page')"></div>
+<div th:replace="fragments/navigation :: navigation(pageId = 'dean', subPage='faculty_page')"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
 
-    <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
-    <div th:if="${student}" class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
+    <!--/*@thymesVar id="faculty" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+    <div th:if="${faculty}" class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
         <div th:replace="fragments/layout :: toolbar"></div>
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title" id="from-actions-top-left">Student Details</h4>
+                <h4 class="card-title" id="from-actions-top-left">Faculty Details</h4>
                 <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
                 <div class="heading-elements">
                     <ul class="list-inline mb-0">
@@ -30,28 +30,29 @@
             <div class="text-xs-center">
                 <div class="card-block">
                     <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
-                         th:src="${@viewService.getAvatarUrl(student.user.details.avatarUrl)}"
+                         th:src="${@viewService.getAvatarUrl(faculty.user.details.avatarUrl)}"
                          class="rounded-circle height-150" alt="Card image"/>
                 </div>
                 <div class="card-block">
-                    <h6 class="card-subtitle text-muted" th:text="${student.user.name}">Name</h6>
-                    <ul class="list-inline list-inline-pipe">
-                        <li th:text="${student.facultyNumber}">FacultyNumber</li>
-                        <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
-                    </ul>
+                    <h4 class="card-subtitle" th:text="${faculty.user.name}">Name</h4>
+                    <br>
+                    <h5>
+                        <span th:text="${faculty.facultyId}">14PEB049</span><br>
+                        <span th:text="${faculty.designation}">Faculty Member</span>
+                    </h5>
                     <div class="row">
                         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
-                            <h5 th:text="${student.user.department.name}" class="capsule"></h5>
-                            <span>Registration Year : </span><span th:text="${student.registrationYear}"></span></span>
+                            <h5 th:text="${faculty.user.department.name}" class="capsule"></h5>
                         </div>
                     </div>
-                    <span th:text="${student.user.email}"></span><span th:if="${student.user.active}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
+                    <div th:class="|capsule ${faculty.working ? 'bg-success' : 'bg-danger'}|" style="width: 120px;display: inline-block" th:text="${faculty.working ? 'Active' : 'Inactive'}">Active</div>
+                    <span th:text="${faculty.user.email}"></span><span th:if="${faculty.user.active}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
                     <br>
                 </div>
             </div>
             <div class="card-block">
-                <!--/*@thymesVar id="studentModel" type="in.ac.amu.zhcet.data.model.dto.datatables.StudentEditModel"*/-->
-                <form class="form" th:action="@{'/dean/students/' + ${student.user.userId}}" method="post" th:object="${studentModel}">
+                <!--/*@thymesVar id="facultyModel" type="in.ac.amu.zhcet.data.model.dto.datatables.FacultyEditModel"*/-->
+                <form class="form" th:action="|/dean/faculty/${faculty.facultyId}|" method="post" th:object="${facultyModel}">
                     <div class="row">
                         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
                             <div th:each="message : ${success}" class="alert alert-dismissible alert-success">
@@ -77,48 +78,28 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="mui-form">
-                                <div class="mui-select">
-                                    <label for="hallCode">Hall Code</label>
-                                    <select id="hallCode" th:field="*{hallCode}" name="courseCode">
-                                        <option value="">Select Hall</option>
-                                        <option th:each="hall : ${hallCodes}"
-                                                th:value="${hall}"
-                                                th:text="${hall}"
-                                                class="my-dropdown">
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="mui-form">
-                                <div class="mui-select">
-                                    <label for="status">Status</label>
-                                    <select id="status" th:field="*{status}" name="courseCode">
-                                        <option value="">Select Status</option>
-                                        <option th:each="status : ${statuses}"
-                                                th:value="${status}"
-                                                th:text="${status}"
-                                                class="my-dropdown">
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
                             <div class="form-body">
                                 <div class="row">
-                                    <div class="form-group col-xs-12 mb-2">
-                                        <label for="faculty_no">Faculty Number</label>
-                                        <input id="faculty_no" name="faculty_num"
-                                               class="form-control"
-                                               type="text"
-                                               th:field="*{facultyNumber}"/>
-                                    </div>
-
                                     <div class="form-group col-xs-12 mb-2">
                                         <label for="name">Name</label>
                                         <input id="name" name="name"
                                                class="form-control"
                                                type="text"
                                                th:field="*{userName}"/>
+                                    </div>
+
+                                    <div class="form-group col-xs-12 mb-2">
+                                        <label for="designation">Designation</label>
+                                        <input id="designation" name="designation"
+                                               class="form-control"
+                                               type="text"
+                                               th:field="*{designation}"/>
+                                    </div>
+
+                                    <div class="form-group col-xs-12 mb-2">
+                                        <label for="working">Active</label>&nbsp;
+                                        <input type="checkbox" id="working" data-color="primary"
+                                               class="switchery" th:field="*{working}">
                                     </div>
 
                                     <div class="form-group col-xs-12 mb-2">
@@ -129,13 +110,6 @@
                                                th:field="*{userEmail}"/>
                                     </div>
 
-                                    <div class="form-group col-xs-12 mb-2">
-                                        <label for="section">Section</label>
-                                        <input id="section" name="section"
-                                               class="form-control"
-                                               type="text"
-                                               th:field="*{section}"/>
-                                    </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary float-xs-right">
                                     <i class="icon-check2"></i> Update
@@ -148,9 +122,9 @@
             </div>
         </div>
     </div>
-    <div th:unless="${student}" class="row text-xs-center">
+    <div th:unless="${faculty}" class="row text-xs-center">
         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
-            <h3 class="capsule bg-danger">No such student found</h3>
+            <h3 class="capsule bg-danger">No such faculty member found</h3>
         </div>
     </div>
 </div>

@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.controller.faculty;
 
-import in.ac.amu.zhcet.data.model.dto.AttendanceUpload;
+import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.service.EmailNotificationService;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.upload.AttendanceUploadService;

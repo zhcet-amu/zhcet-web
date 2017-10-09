@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.controller.department;
 
 import in.ac.amu.zhcet.data.model.*;
-import in.ac.amu.zhcet.data.model.dto.RegistrationUpload;
+import in.ac.amu.zhcet.data.model.dto.upload.RegistrationUpload;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.FacultyService;
 import in.ac.amu.zhcet.service.core.upload.RegistrationUploadService;

@@ -4,6 +4,8 @@ import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.UserRepository;
+import in.ac.amu.zhcet.utils.DuplicateException;
+import in.ac.amu.zhcet.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -44,6 +46,20 @@ public class UserService {
     // Checking if the user is active prevents email hoarding
     public boolean emailExists(String email) {
         return getUserByEmail(email) != null;
+    }
+
+    public boolean throwDuplicateEmail(String email, UserAuth userAuth) {
+        if (!Utils.isEmpty(email)) {
+            UserAuth checkEmailDuplicate = getUserByEmail(email);
+            if (checkEmailDuplicate != null && !checkEmailDuplicate.getUserId().equals(userAuth.getUserId()))
+                throw new DuplicateException("User", "email", email);
+            if (!Utils.isValidEmail(email))
+                throw new RuntimeException("Invalid Email");
+        } else {
+            return true;
+        }
+
+        return false;
     }
 
     public UserAuth getLoggedInUser() {

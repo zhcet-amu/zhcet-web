@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.service.core.upload;
 
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.dto.RegistrationUpload;
+import in.ac.amu.zhcet.data.model.dto.upload.RegistrationUpload;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.StudentService;
 import in.ac.amu.zhcet.service.core.upload.base.Confirmation;

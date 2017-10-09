@@ -2,8 +2,8 @@ package in.ac.amu.zhcet.controller.dean;
 
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.dto.FacultyUpload;
-import in.ac.amu.zhcet.data.model.dto.StudentUpload;
+import in.ac.amu.zhcet.data.model.dto.upload.FacultyUpload;
+import in.ac.amu.zhcet.data.model.dto.upload.StudentUpload;
 import in.ac.amu.zhcet.service.file.FileSystemStorageService;
 import in.ac.amu.zhcet.service.core.upload.FacultyUploadService;
 import in.ac.amu.zhcet.service.core.upload.StudentUploadService;
