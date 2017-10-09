@@ -5,8 +5,8 @@
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
 
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
-      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<link rel="stylesheet" th:href="@{/css/floated-course.css}">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation(pageId = 'department_admin', subPage = 'courses')"></div>
 
@@ -20,260 +20,33 @@
         <strong>Unknown Error!</strong>
         <div>This can only happen if you tried to POST invalid data by force!</div>
     </div>
+    <div th:replace="department/fragments/unfloat_course"></div>
     <div class="row">
         <div class="col-xs-12 col-lg-6 col-xl-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Teacher In Charge</h4>
-                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                    <div class="heading-elements">
-                        <ul class="list-inline mb-0">
-                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-body collapse in collapse in">
-                    <div class="card-block">
-                        <div class="table-responsive">
-                            <form>
-                                <table class="table vertical-align">
-                                    <tbody>
-                                    <tr th:each="inCharge : ${floatedCourse.inCharge}">
-                                        <td>
-                                            <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
-                                                 th:src="${#strings.defaultString(inCharge.facultyMember.user.details.avatarUrl, 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg')}"
-                                                 class="rounded-circle height-50" alt="Card image"/></td>
-                                        <td th:text="${inCharge.facultyMember.facultyId}"></td>
-                                        <td th:text="${inCharge.facultyMember.user.name}"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </form>
-                        </div>
-                        <div th:if="${incharge_success}" class="alert alert-dismissible alert-success">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong>Added!</strong> Course In-Charge was successfully added<br/>
-                        </div>
-                        <a th:href="|/department/courses/${floatedCourse.course.code}/add_in_charge|">
-                            <div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="icon-add"></i> Add
-                                </button>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Register New Students</h4>
-                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                    <div class="heading-elements">
-                        <ul class="list-inline mb-0">
-                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-body collapse in collapse in">
-                    <div class="card-block">
-                        <form class="form" enctype="multipart/form-data"
-                              th:action="|/department/courses/${floatedCourse.course.code}/register|"
-                              method="post">
-                            <div>
-                                Download the <a th:href="@{/csv/registration_format.csv}">registration format</a>
-                            </div>
-                            <br/>
-                            <div th:replace="fragments/layout :: uploader(id = 'registration_upload')"></div>
-                            <div th:if="${registered}" class="alert alert-dismissible alert-success">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong>Updated!</strong> Students were successfully registered<br/>
-                            </div>
-                            <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong>Something went wrong!</strong>
-                                <div th:utext="${error}">Fix this and try and try again</div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+            <div th:replace="department/fragments/add_in_charge"></div>
+            <div th:replace="department/fragments/register_students"></div>
         </div>
         <div class="col-xs-12 col-xl-8">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Registered Students</h4>
-                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                    <div class="heading-elements">
-                        <ul class="list-inline mb-0">
-                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-body collapse in collapse in">
-                    <div class="card-block">
-                        <div class="row">
-                            <div class="table-responsive">
-                                <table id="registrationTable" class="table">
-                                    <thead>
-                                    <tr>
-                                        <th class="text-xs-center">FACULTY NO</th>
-                                        <th class="text-xs-center">ENROLMENT NO</th>
-                                        <th class="text-xs-center">NAME</th>
-                                        <th class="text-xs-center">SECTION</th>
-                                        <th class="text-xs-center">MODE</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <th:block th:each="registration: ${courseRegistrations}">
-                                        <tr>
-                                            <td class="text-xs-center" th:text="${registration.student.facultyNumber}"></td>
-                                            <td class="text-xs-center" th:text="${registration.student.enrolmentNumber}"></td>
-                                            <td class="text-xs-center" th:text="${registration.student.user.name}"></td>
-                                            <td class="text-xs-center" th:text="${registration.student.section}"></td>
-                                            <td class="text-xs-center" th:text="${registration.mode}"></td>
-                                        </tr>
-                                    </th:block>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div th:replace="department/fragments/registered_students"></div>
         </div>
-        <div th:if="${facultyMembers}" id="faculty-modal" class="modal">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <form class="form" th:action="|/department/courses/${floatedCourse.course.code}/confirm_in_charge|"
-                          method="post">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Add Course In-Charge</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <tbody>
-                                        <tr th:each="inCharge : ${facultyMembers}">
-                                            <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
-                                            <td><input type="radio" name="facultyId"
-                                                       th:value="${inCharge.facultyId}"
-                                                       th:disabled="${@courseManagementService.isInCharge(floatedCourse.inCharge, inCharge)}">
-                                            </td>
-                                            <td>
-                                                <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
-                                                     th:src="${#strings.defaultString(inCharge.user.details.avatarUrl, 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg')}"
-                                                     class="rounded-circle height-50" alt="Card image"/></td>
-                                            <td th:text="${inCharge.facultyId}"></td>
-                                            <td th:text="${inCharge.user.name}"></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div th:each="error : ${incharge_errors}"
-                                 class="alert alert-dismissible alert-danger">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong>Something went wrong!</strong>
-                                <div th:utext="${error}">Fix this and try and try again</div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit"
-                                    class="btn btn-primary">Add
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div th:if="${confirmRegistration}" id="registration-modal" class="modal">
-            <div class="modal-dialog modal-lg">
-                <form th:action="|/department/courses/${floatedCourse.course.code}/confirm_registration|" method="post">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Confirm Student Registration</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="table-responsive">
-                                    <table id="confirmRegistrationTable" class="table">
-                                        <thead>
-                                        <tr>
-                                            <th class="text-xs-center">Enrolment</th>
-                                            <th class="text-xs-center">Faculty</th>
-                                            <th class="text-xs-center">Name</th>
-                                            <th class="text-xs-center">Section</th>
-                                            <th class="text-xs-center">Department</th>
-                                            <th class="text-xs-center">Mode</th>
-                                            <th class="text-xs-center">Error</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <th:block th:each="confirm: ${confirmRegistration.data}">
-                                            <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
-                                                <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
-                                                <input type="hidden" name="studentId" th:value="${confirm.key.enrolmentNumber}">
-                                                <input type="hidden" name="mode" th:value="${confirm.key.meta}">
-                                                <td class="text-xs-center" th:text="${confirm.key.enrolmentNumber}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.facultyNumber}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.user?.name}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.section}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.user?.department?.name}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.meta}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.value}"></td>
-                                            </tr>
-                                        </th:block>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div th:each="error : ${confirmRegistration.errors}"
-                                 class="alert alert-dismissible alert-danger">
-                                <!--/*@thymesidr id="error" type="String"*/-->
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong>Something went wrong!</strong>
-                                <div th:utext="${error}">Fix this and try and try again</div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button th:if="${confirmRegistration.errors.isEmpty()}" type="submit"
-                                    class="btn btn-primary">Register
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div th:replace="fragments/layout :: scripts"></div>
+
     </div>
 </div>
-<script th:src="@{/js/file-uploader.js}" type="text/javascript"></script>
-<script>
-    $(window).load(function () {
-        $('#faculty-modal').modal('show');
-        $('#registration-modal').modal('show');
-        $('#registrationTable').dataTable({
-            scrollY:        true,
-            scrollCollapse: true,
-            "order": []
-        });
-        $('#confirmRegistrationTable').dataTable({
-            scrollY:        true,
-            scrollCollapse: true,
-            "order": []
-        });
-    });
+<script id="sections" type="text/plain">
+    <span id="sections" class="mui-select section-select mx-1" hidden>
+        <label for="section">Section</label>
+        <select id="section" name="section">
+            <option th:each="section : ${sections}" th:value="${section}"
+                    th:text="${section}"></option>
+        </select>
+    </span>
 </script>
+<div th:replace="fragments/layout :: scripts"></div>
+<script th:src="@{/js/file-uploader.js}" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.jquery.min.js"></script>
+<script src="https://zhcet-web-amu.firebaseapp.com/static/js/FuzzySearch.min.js"></script>
+<script src="https://zhcet-web-amu.firebaseapp.com/static/js/tmpl.min.js"></script>
+<script th:src="@{/js/fuzzyhound.js}"></script>
+<script th:src="@{/js/floated-course.js}"></script>
 </body>
 </html>

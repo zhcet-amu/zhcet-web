@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "courseRegistrations")
+@ToString(exclude = {"courseRegistrations", "inCharge"})
 @EqualsAndHashCode(callSuper = true)
 public class FloatedCourse extends BaseEntity implements Serializable {
     @Id

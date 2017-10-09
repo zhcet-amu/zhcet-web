@@ -19,11 +19,11 @@ public class CourseRegistration extends BaseEntity {
     private String id;
 
     @NonNull
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private FloatedCourse floatedCourse;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Student student;
 
     private char mode;

@@ -105,6 +105,9 @@ public class FloatCourseController {
 
         redirectAttributes.addFlashAttribute("float_success", "Courses floated successfully!");
 
+        if (courseList.size() == 1)
+            return String.format("redirect:/department/floated/%s", courseList.get(0).getCode());
+
         return "redirect:/department/course/float";
     }
 

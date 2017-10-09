@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.service;
 
 import in.ac.amu.zhcet.data.model.Course;
+import in.ac.amu.zhcet.utils.Utils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +27,13 @@ public class ViewService {
             default:
                 return "tag-default";
         }
+    }
+
+    public String getAvatarUrl(String url) {
+        if (Utils.isEmpty(url))
+            return "https://zhcet-web-amu.firebaseapp.com/static/img/account.svg";
+
+        return url;
     }
 
 }

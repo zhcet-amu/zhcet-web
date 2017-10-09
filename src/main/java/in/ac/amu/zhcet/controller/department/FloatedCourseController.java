@@ -1,8 +1,6 @@
 package in.ac.amu.zhcet.controller.department;
 
-import in.ac.amu.zhcet.data.model.CourseRegistration;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
-import in.ac.amu.zhcet.data.model.Student;
+import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.model.dto.RegistrationUpload;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.FacultyService;
@@ -23,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,7 +60,56 @@ public class FloatedCourseController {
         Utils.sortAttendance(courseRegistrations);
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("floatedCourse", floatedCourse);
+        model.addAttribute("sections", courseManagementService.getSections(floatedCourse));
+
         return "department/floated_course";
+    }
+
+    @GetMapping("department/floated/{id}/unfloat")
+    public String unfloat(RedirectAttributes redirectAttributes, @PathVariable String id) {
+        courseManagementService.unfloatCourse(verifyAndGetCourse(id));
+        redirectAttributes.addFlashAttribute("course_success", "Course " + id + " unfloated successfully!");
+
+        return "redirect:/department/courses?active=true";
+    }
+
+    private List<CourseInCharge> merge(List<String> facultyId, List<String> section) {
+        if (facultyId.size() < section.size())
+            return null;
+
+        List<CourseInCharge> courseInCharges = new ArrayList<>();
+        for (int i = 0; i < section.size(); i++) {
+            CourseInCharge courseInCharge = new CourseInCharge();
+            courseInCharge.setSection(section.get(i));
+            courseInCharge.setFacultyMember(FacultyMember.builder().facultyId(facultyId.get(i)).build());
+            courseInCharges.add(courseInCharge);
+        }
+
+        for (int i = section.size(); i < facultyId.size(); i++) {
+            CourseInCharge courseInCharge = new CourseInCharge();
+            courseInCharge.setSection(null);
+            courseInCharge.setFacultyMember(FacultyMember.builder().facultyId(facultyId.get(i)).build());
+            courseInCharges.add(courseInCharge);
+        }
+
+        return courseInCharges;
+    }
+
+    @PostMapping("department/floated/{id}/in_charge")
+    public String addInCharge(RedirectAttributes redirectAttributes, @PathVariable String id, @RequestParam(required = false) List<String> facultyId, @RequestParam(required = false) List<String> section) {
+        verifyAndGetCourse(id);
+
+        if (facultyId == null) {
+            courseManagementService.setInCharge(id, Collections.emptyList());
+        } else if (section == null) {
+            courseManagementService.setInCharge(id, merge(facultyId, Collections.nCopies(facultyId.size(), null)));
+        } else {
+            courseManagementService.setInCharge(id, merge(facultyId, section));
+        }
+
+        redirectAttributes.addFlashAttribute("incharge_success", "Course In-Charge saved successfully");
+
+        return "redirect:/department/floated/{id}";
     }
 
     @PostMapping("department/floated/{id}/register")
@@ -96,26 +144,6 @@ public class FloatedCourseController {
         }
 
         return "redirect:/department/floated/{id}";
-    }
-
-    @GetMapping("department/floated/{id}/add_in_charge")
-    public String addInCharge(Model model, RedirectAttributes redirectAttributes, @PathVariable String id) {
-        verifyAndGetCourse(id);
-        redirectAttributes.addFlashAttribute("facultyMembers", facultyService.getByDepartment(facultyService.getFacultyDepartment()));
-        return "redirect:/department/courses/{id}";
-    }
-
-    @PostMapping("department/floated/{id}/confirm_in_charge")
-    public String confirmInCharge(Model model, RedirectAttributes redirectAttributes, @PathVariable String id, @RequestParam String facultyId) {
-        verifyAndGetCourse(id);
-        try {
-            courseManagementService.addInCharge(id, Collections.singletonList(facultyId));
-            redirectAttributes.addFlashAttribute("incharge_success", true);
-            return "redirect:/department/courses/{id}";
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("incharge_errors", Collections.singletonList(e.getLocalizedMessage()));
-            return "redirect:/department/courses/{id}/add_in_charge";
-        }
     }
 
 }
