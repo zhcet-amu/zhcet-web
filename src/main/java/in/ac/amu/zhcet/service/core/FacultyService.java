@@ -50,6 +50,10 @@ public class FacultyService {
         return facultyRepository.getByUser_DepartmentAndWorking(department, true);
     }
 
+    public List<FacultyMember> getAllByDepartment(Department department) {
+        return facultyRepository.getByUser_Department(department);
+    }
+
     public FacultyMember getLoggedInMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();

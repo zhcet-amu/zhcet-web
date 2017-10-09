@@ -106,6 +106,7 @@ public class RegistrationController {
             try {
                 String filename = facultyUploadService.registerFaculty(confirmation);
                 attributes.addFlashAttribute("file_saved", filename);
+                attributes.addFlashAttribute("faculty_registered", true);
             } catch (IOException e) {
                 e.printStackTrace();
                 attributes.addFlashAttribute("file_error", true);
@@ -115,7 +116,6 @@ public class RegistrationController {
             }
 
             webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);
-            attributes.addFlashAttribute("faculty_registered", true);
         }
 
         return "redirect:/dean";

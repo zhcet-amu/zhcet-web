@@ -44,7 +44,7 @@
                         <span class="mui-select section-select mx-1">
                             <label for="section">Section</label>
                             <select id="section"  name="section">
-                                <option value="">&lt;null&gt;</option>
+                                <option value="">All</option>
                                 <option th:each="section : ${sections}" th:value="${section}" th:text="${section}" th:selected="${inCharge.section == section}"></option>
                             </select>
                         </span>
@@ -67,7 +67,7 @@
             <span class="mui-select section-select mx-1">
                 <label for="section">Section</label>
                 <select id="section" name="section">
-                    <option value="">&lt;null&gt;</option>
+                    <option value="">All</option>
                     <option th:each="section : ${sections}" th:value="${section}" th:text="${section}"></option>
                 </select>
             </span>

@@ -14,5 +14,7 @@ public interface FacultyRepository extends DataTablesRepository<FacultyMember, L
 
     List<FacultyMember> getByUser_DepartmentAndWorking(Department department, boolean working);
 
+    List<FacultyMember> getByUser_Department(Department department);
+
     List<FacultyMember> findAllByWorking(boolean working);
 }

@@ -39,18 +39,19 @@ public class RoleManagementController {
             model.addAttribute("page_description", "Manage Faculty Roles and Permissions");
 
             model.addAttribute("department", department);
-            model.addAttribute("facultyMembers", facultyService.getByDepartment(department));
+            model.addAttribute("facultyMembers", facultyService.getAllByDepartment(department));
         }
 
         return "dean/role_management";
     }
 
-    @PostMapping("/dean/roles/{id}/save")
-    public String saveRoles(Model model, @PathVariable long id, RedirectAttributes redirectAttributes, @RequestParam String facultyId, @RequestParam List<String> roles) {
+    @PostMapping("/dean/roles/{id}")
+    public String saveRoles(RedirectAttributes redirectAttributes, @RequestParam String facultyId, @RequestParam(required = false) List<String> roles) {
         FacultyMember facultyMember = facultyService.getById(facultyId);
 
         List<String> newRoles = new ArrayList<>();
 
+        if (roles != null)
         for (String role : roles) {
             switch (role) {
                 case "dean":

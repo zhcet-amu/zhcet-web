@@ -27,7 +27,7 @@ public class FacultyMember extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL)
     private UserAuth user = new UserAuth();
 
-    private boolean working;
+    private boolean working = true;
     private String designation;
 
     public FacultyMember(UserAuth user) {

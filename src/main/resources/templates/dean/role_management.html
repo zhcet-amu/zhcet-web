@@ -4,13 +4,13 @@
       data-textdirection="ltr"
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
-
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
       class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
-<div th:replace="fragments/navigation :: navigation"></div>
+<div th:replace="fragments/navigation :: navigation(pageId = 'dean', subPage = 'dean_admin')"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper">
+    <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
     <div th:replace="fragments/layout :: toolbar"></div>
 
     <div th:if="${saved}" class="alert alert-dismissible alert-success">
@@ -32,53 +32,65 @@
         </div>
 
         <div class="card-body collapse in">
-            <div class="card-block">
+            <div id="payload" class="card-block">
+                <input class="fuzzy-search form-control round mb-1" placeholder="Search" />
                 <div class="table-responsive">
                 <table class="table">
-                    <tbody>
-                    <!--/*@thymesidr id="member" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
-                    <form th:action="|/dean/roles/${department.id}/save|" method="post" th:each="member : ${facultyMembers}">
+                    <tbody class="list">
+                    <!--/*@thymesVar id="member" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+                    <form th:action="|/dean/roles/${department.id}|" method="post" th:each="member : ${facultyMembers}">
                         <tr>
-                            <td>
+                            <td width="50" style="padding: 0;">
                                 <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
-                                     th:src="${#strings.defaultString(member.user.details.avatarUrl, 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg')}"
-                                     class="rounded-circle height-100" alt="Card image"/></td>
-                            <td th:text="${member.facultyId}"></td>
-                            <td th:text="${member.user.name}"></td>
-                            <td>
-                                <div class="mui-checkbox">
-                                    <label>
-                                        <input type="checkbox" name="roles" value="dean" th:checked="${#lists.contains(member.user.roles, 'ROLE_DEAN_ADMIN')}">
-                                        Dean Admin
-                                    </label>
-                                </div>
-                                <div class="mui-checkbox">
-                                    <label>
-                                        <input type="checkbox" name="roles" value="department" th:checked="${#lists.contains(member.user.roles, 'ROLE_DEPARTMENT_ADMIN')}">
-                                        Department Admin
-                                    </label>
-                                </div>
-                                <div class="mui-checkbox">
-                                    <label>
-                                        <input type="checkbox" name="roles" value="faculty" th:checked="${#lists.contains(member.user.roles, 'ROLE_FACULTY')}">
-                                        Faculty Member
-                                    </label>
-                                </div>
+                                     th:src="${@viewService.getAvatarUrl(member.user.details.avatarUrl)}"
+                                     class="rounded-circle" width="70" alt="Card image"/>
+                            </td>
+                            <td class="faculty-id" th:text="${member.facultyId}"></td>
+                            <td class="name" th:text="${member.user.name}"></td>
+                            <td class="active" width="50" style="padding: 0">
+                                <span th:class="|capsule ${member.working ? 'bg-success' : 'bg-danger'}|" th:text="${member.working ? 'Active' : 'Inactive'}"></span>
                             </td>
                             <td>
+                                <table class="table table-column" style="background-color: white">
+                                    <tr>
+                                        <td><label>Dean Admin</label></td>
+                                        <td><input type="checkbox" class="switchery" data-color="primary" name="roles" value="dean" th:checked="${#lists.contains(member.user.roles, 'ROLE_DEAN_ADMIN')}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>Department Admin&nbsp;</label></td>
+                                        <td><input type="checkbox" class="switchery" data-color="primary"  name="roles" value="department" th:checked="${#lists.contains(member.user.roles, 'ROLE_DEPARTMENT_ADMIN')}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>Faculty Member&nbsp;</label></td>
+                                        <td><input type="checkbox" class="switchery" data-color="primary" name="roles" value="faculty" th:checked="${#lists.contains(member.user.roles, 'ROLE_FACULTY')}"></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="padding: 5px;">
                                 <input type="hidden" name="facultyId" th:value="${member.facultyId}">
-                                <button class="mui-btn mui-btn--primary mui-btn--raised">Save</button>
+                                <button class="mui-btn mui-btn--primary mui-btn--small mui-btn--fab bg-primary"><i class=" icon-check2"></i></button>
                             </td>
                         </tr>
                     </form>
                     </tbody>
                 </table>
                 </div>
+                <ul class="pagination pagination-separate pagination-flat"></ul>
             </div>
         </div>
     </div>
-</div>
+    </div>
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
+<script src="https://zhcet-web-amu.firebaseapp.com/static/js/list.min.js"></script>
+<script>
+    var options = {
+        valueNames: [ 'faculty-id', 'name' ],
+        page: 30,
+        pagination: true
+    };
+
+    new List('payload', options);
+</script>
 </body>
 </html>
