@@ -64,8 +64,10 @@ public class UserService {
 
     public UserAuth getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
+        if (authentication == null)
+            return null;
 
+        String userName = authentication.getName();
         return findById(userName);
     }
 

@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.data.model.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,9 +22,11 @@ public abstract class BaseEntity {
     private String meta; // For storing temporary info
 
     @CreatedDate
+    @JsonIgnore
     private ZonedDateTime createdAt;
 
     @LastModifiedDate
+    @JsonIgnore
     private ZonedDateTime updatedAt;
 
     @CreatedBy

@@ -24,3 +24,5 @@ service-account.json
 secret.properties
 
 logs/
+
+src/main/resources/sentry.properties

@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.data.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import lombok.*;
@@ -44,6 +45,7 @@ public class UserAuth extends BaseEntity {
     private boolean emailUnsubscribed;
 
     @NotNull
+    @JsonIgnore
     @Size(min = 4, max = 100)
     private String password;
     @NotBlank

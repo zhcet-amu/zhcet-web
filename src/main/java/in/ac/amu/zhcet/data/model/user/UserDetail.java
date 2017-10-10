@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.data.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import lombok.*;
 
@@ -21,6 +22,7 @@ public class UserDetail extends BaseEntity {
 
     @OneToOne
     @PrimaryKeyJoinColumn
+    @JsonIgnore
     UserAuth userAuth;
 
     private String avatarUrl;
