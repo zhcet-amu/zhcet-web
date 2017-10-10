@@ -1,7 +1,6 @@
 package in.ac.amu.zhcet.service.core;
 
 import in.ac.amu.zhcet.data.model.*;
-import in.ac.amu.zhcet.data.repository.CourseInChargeRepository;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.utils.DuplicateException;
@@ -9,31 +8,23 @@ import in.ac.amu.zhcet.utils.UpdateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class CourseManagementService {
 
     private final FloatedCourseRepository floatedCourseRepository;
-    private final CourseInChargeRepository courseInChargeRepository;
-    private final FacultyService facultyService;
     private final StudentService studentService;
     private final CourseRepository courseRepository;
 
     @Autowired
-    public CourseManagementService(FloatedCourseRepository floatedCourseRepository, CourseInChargeRepository courseInChargeRepository, FacultyService facultyService, StudentService studentService, CourseRepository courseRepository) {
+    public CourseManagementService(FloatedCourseRepository floatedCourseRepository, StudentService studentService, CourseRepository courseRepository) {
         this.floatedCourseRepository = floatedCourseRepository;
-        this.courseInChargeRepository = courseInChargeRepository;
-        this.facultyService = facultyService;
         this.studentService = studentService;
         this.courseRepository = courseRepository;
     }
@@ -77,65 +68,9 @@ public class CourseManagementService {
     }
 
     @Transactional
-    public FloatedCourse floatCourse(Course course) {
+    public void floatCourse(Course course) {
         Course stored = courseRepository.findOne(course.getCode());
-
-        return floatedCourseRepository.save(new FloatedCourse(ConfigurationService.getDefaultSessionCode(), stored));
-    }
-
-    private List<CourseInCharge> fromFacultyIds(FloatedCourse course, List<String> facultyMembersId) {
-        return facultyService.getByIds(facultyMembersId)
-                .stream()
-                .map(facultyMember -> {
-                    CourseInCharge courseInCharge = new CourseInCharge();
-                    courseInCharge.setFacultyMember(facultyMember);
-                    courseInCharge.setFloatedCourse(course);
-                    return courseInCharge;
-                }).collect(Collectors.toList());
-    }
-
-    @Transactional
-    public void floatCourse(Course course, List<String> facultyMembersId) throws IllegalAccessException {
-        FloatedCourse stored = floatCourse(course);
-        stored.setInCharge(fromFacultyIds(stored, facultyMembersId));
-    }
-
-    @Transactional
-    public void setInCharge(String courseId, List<CourseInCharge> courseInCharges) {
-        if (courseInCharges == null)
-            return;
-
-        FloatedCourse stored = getFloatedCourseByCode(courseId);
-        if (stored == null)
-            return;
-
-        for (CourseInCharge inCharge : stored.getInCharge()) {
-            if (!courseInCharges.contains(inCharge))
-                courseInChargeRepository.delete(inCharge.getId());
-        }
-
-        stored.getInCharge().clear();
-
-        for (CourseInCharge courseInCharge : courseInCharges)
-            addInCharge(stored, courseInCharge.getFacultyMember().getFacultyId(), courseInCharge.getSection());
-    }
-
-    private void addInCharge(FloatedCourse stored, String facultyId, String section) {
-        FacultyMember facultyMember = facultyService.getById(facultyId);
-        if (facultyMember == null)
-            return;
-
-        CourseInCharge inCharge = courseInChargeRepository.findByFloatedCourseAndFacultyMemberAndSection(stored, facultyMember, section);
-        if (inCharge != null)
-            return;
-
-        CourseInCharge courseInCharge = new CourseInCharge();
-        courseInCharge.setFacultyMember(facultyMember);
-        courseInCharge.setFloatedCourse(stored);
-        courseInCharge.setSection(section);
-
-        stored.getInCharge().add(courseInCharge);
-        floatedCourseRepository.save(stored);
+        floatedCourseRepository.save(new FloatedCourse(ConfigurationService.getDefaultSessionCode(), stored));
     }
 
     @Transactional
@@ -163,45 +98,8 @@ public class CourseManagementService {
         floatedCourseRepository.save(stored);
     }
 
-    public List<FloatedCourse> getByFaculty(FacultyMember facultyMember) {
-        return courseInChargeRepository.findByFacultyMemberAndFloatedCourse_Session(facultyMember, ConfigurationService.getDefaultSessionCode())
-                .stream()
-                .map(CourseInCharge::getFloatedCourse)
-                .collect(Collectors.toList());
-    }
-
-    public FloatedCourse getFloatedCourseAndVerify(String courseId) {
-        FloatedCourse floatedCourse = getFloatedCourseByCode(courseId);
-        List<FloatedCourse> floatedCourses = getByFaculty(facultyService.getLoggedInMember());
-        if (floatedCourse == null || !floatedCourses.contains(floatedCourse))
-            throw new AccessDeniedException("403");
-
-        return floatedCourse;
-    }
-
     public FloatedCourse getFloatedCourseByCode(String courseId){
         return floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseId);
-    }
-
-    public Set<String> getSections(FloatedCourse floatedCourse) {
-        if (floatedCourse == null)
-            return Collections.emptySet();
-
-        return floatedCourse.getCourseRegistrations().stream()
-                .map(courseRegistration -> courseRegistration.getStudent().getSection())
-                .collect(Collectors.toSet());
-    }
-
-    public Set<String> getSections(String courseId) {
-        return getSections(getFloatedCourseByCode(courseId));
-    }
-
-    public boolean isInCharge(List<CourseInCharge> courseInCharges, FacultyMember member) {
-        return courseInCharges
-                .stream()
-                .map(CourseInCharge::getFacultyMember)
-                .collect(Collectors.toList())
-                .contains(member);
     }
 
     public void deleteCourse(String id) {

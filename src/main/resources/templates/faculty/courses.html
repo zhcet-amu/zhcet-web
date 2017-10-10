@@ -29,12 +29,12 @@
                 <div class="card-body collapse in collapse in">
                     <div class="card-block">
                         <div class="row">
-                            <div th:each="floated: ${floatedCourses}" style="display: inline;">
-                                <!--/*@thymesVar id="floated" type="in.ac.amu.zhcet.data.model.FloatedCourse"*/-->
-                                <a th:href="|/faculty/courses/${floated.course.code}|" style="display: inline">
+                            <div th:each="incharge: ${courseInCharges}" style="display: inline;">
+                                <!--/*@thymesVar id="incharge" type="in.ac.amu.zhcet.data.model.CourseInCharge"*/-->
+                                <a th:href="|/faculty/courses/${incharge.floatedCourse.course.code}?section=${#strings.defaultString(incharge.section, '')}|" style="display: inline">
                                     <button class="btn btn-outline-primary btn-lg" type="submit"
-                                            th:text='${floated.course.title}' style="margin: 5px"
-                                            data-toggle="tooltip" th:title="${floated.course.code}"></button>
+                                            th:text='${incharge.floatedCourse.course.title}' style="margin: 5px"
+                                            data-toggle="tooltip" th:title="${incharge.floatedCourse.course.code}"></button>
                                 </a>
                             </div>
                         </div>

@@ -2,6 +2,7 @@ package in.ac.amu.zhcet.controller.department;
 
 import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.model.dto.upload.RegistrationUpload;
+import in.ac.amu.zhcet.service.core.CourseInChargeService;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.FacultyService;
 import in.ac.amu.zhcet.service.core.upload.RegistrationUploadService;
@@ -30,12 +31,14 @@ import java.util.List;
 public class FloatedCourseController {
 
     private final FacultyService facultyService;
+    private final CourseInChargeService courseInChargeService;
     private final CourseManagementService courseManagementService;
     private final RegistrationUploadService registrationUploadService;
 
     @Autowired
-    public FloatedCourseController(FacultyService facultyService, CourseManagementService courseManagementService, RegistrationUploadService registrationUploadService) {
+    public FloatedCourseController(FacultyService facultyService, CourseInChargeService courseInChargeService, CourseManagementService courseManagementService, RegistrationUploadService registrationUploadService) {
         this.facultyService = facultyService;
+        this.courseInChargeService = courseInChargeService;
         this.courseManagementService = courseManagementService;
         this.registrationUploadService = registrationUploadService;
     }
@@ -60,7 +63,7 @@ public class FloatedCourseController {
         Utils.sortAttendance(courseRegistrations);
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("floatedCourse", floatedCourse);
-        model.addAttribute("sections", courseManagementService.getSections(floatedCourse));
+        model.addAttribute("sections", courseInChargeService.getSections(floatedCourse));
 
         return "department/floated_course";
     }
@@ -73,24 +76,26 @@ public class FloatedCourseController {
         return "redirect:/department/courses?active=true";
     }
 
+    private CourseInCharge create(String facultyId, String section) {
+        CourseInCharge courseInCharge = new CourseInCharge();
+        courseInCharge.setSection(section);
+        courseInCharge.setFacultyMember(FacultyMember.builder().facultyId(facultyId).build());
+
+        return courseInCharge;
+    }
+
     private List<CourseInCharge> merge(List<String> facultyId, List<String> section) {
+        if (section == null)
+            section = Collections.nCopies(facultyId.size(), null);
         if (facultyId.size() < section.size())
             return null;
 
         List<CourseInCharge> courseInCharges = new ArrayList<>();
-        for (int i = 0; i < section.size(); i++) {
-            CourseInCharge courseInCharge = new CourseInCharge();
-            courseInCharge.setSection(section.get(i));
-            courseInCharge.setFacultyMember(FacultyMember.builder().facultyId(facultyId.get(i)).build());
-            courseInCharges.add(courseInCharge);
-        }
+        for (int i = 0; i < section.size(); i++)
+            courseInCharges.add(create(facultyId.get(i), section.get(i)));
 
-        for (int i = section.size(); i < facultyId.size(); i++) {
-            CourseInCharge courseInCharge = new CourseInCharge();
-            courseInCharge.setSection(null);
-            courseInCharge.setFacultyMember(FacultyMember.builder().facultyId(facultyId.get(i)).build());
-            courseInCharges.add(courseInCharge);
-        }
+        for (int i = section.size(); i < facultyId.size(); i++)
+            courseInCharges.add(create(facultyId.get(i), null));
 
         return courseInCharges;
     }
@@ -99,16 +104,12 @@ public class FloatedCourseController {
     public String addInCharge(RedirectAttributes redirectAttributes, @PathVariable String id, @RequestParam(required = false) List<String> facultyId, @RequestParam(required = false) List<String> section) {
         verifyAndGetCourse(id);
 
-        if (facultyId == null) {
-            courseManagementService.setInCharge(id, Collections.emptyList());
-        } else if (section == null) {
-            courseManagementService.setInCharge(id, merge(facultyId, Collections.nCopies(facultyId.size(), null)));
-        } else {
-            courseManagementService.setInCharge(id, merge(facultyId, section));
-        }
+        if (facultyId == null)
+            courseInChargeService.setInCharge(id, Collections.emptyList());
+        else
+            courseInChargeService.setInCharge(id, merge(facultyId, section));
 
         redirectAttributes.addFlashAttribute("incharge_success", "Course In-Charge saved successfully");
-
         return "redirect:/department/floated/{id}";
     }
 

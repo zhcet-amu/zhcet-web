@@ -2,12 +2,13 @@ package in.ac.amu.zhcet.controller.faculty;
 
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.service.EmailNotificationService;
-import in.ac.amu.zhcet.service.core.CourseManagementService;
+import in.ac.amu.zhcet.service.core.CourseInChargeService;
 import in.ac.amu.zhcet.service.core.upload.AttendanceUploadService;
 import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -26,14 +27,13 @@ import java.util.List;
 @Slf4j
 @Controller
 public class AttendanceManagerController {
-
-    private final CourseManagementService courseManagementService;
+    private final CourseInChargeService courseInChargeService;
     private final AttendanceUploadService attendanceUploadService;
     private final EmailNotificationService emailNotificationService;
 
     @Autowired
-    public AttendanceManagerController(CourseManagementService courseManagementService, AttendanceUploadService attendanceUploadService, EmailNotificationService emailNotificationService) {
-        this.courseManagementService = courseManagementService;
+    public AttendanceManagerController(CourseInChargeService courseInChargeService, AttendanceUploadService attendanceUploadService, EmailNotificationService emailNotificationService) {
+        this.courseInChargeService = courseInChargeService;
         this.attendanceUploadService = attendanceUploadService;
         this.emailNotificationService = emailNotificationService;
     }
@@ -44,8 +44,8 @@ public class AttendanceManagerController {
     }
 
     @PostMapping("faculty/courses/{id}/attendance")
-    public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("file") MultipartFile file) {
-        courseManagementService.getFloatedCourseAndVerify(id);
+    public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam(required = false) String section, @RequestParam MultipartFile file) {
+        courseInChargeService.getCourseInChargeAndVerify(id, section);
         try {
             UploadResult<AttendanceUpload> result = attendanceUploadService.handleUpload(file);
 
@@ -53,7 +53,7 @@ public class AttendanceManagerController {
                 attributes.addFlashAttribute("errors", result.getErrors());
             } else {
                 attributes.addFlashAttribute("success", true);
-                Confirmation<AttendanceUpload, Boolean> confirmation = attendanceUploadService.confirmUpload(id, result);
+                Confirmation<AttendanceUpload, Boolean> confirmation = attendanceUploadService.confirmUpload(id, section, result);
 
                 if (confirmation.getErrors().isEmpty()) {
                     AttendanceModel attendanceModel = new AttendanceModel();
@@ -66,30 +66,31 @@ public class AttendanceManagerController {
                 }
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            log.error("Attendance Upload", ioe);
         }
 
-        return "redirect:/faculty/courses/{id}";
+        return "redirect:/faculty/courses/{id}?section=" + StringUtils.defaultString(section, "");
     }
 
     @PostMapping("faculty/courses/{id}/attendance_confirmed")
-    public String uploadAttendance(RedirectAttributes attributes, @PathVariable String id, @Valid @ModelAttribute AttendanceModel attendanceModel, BindingResult bindingResult) {
-        courseManagementService.getFloatedCourseAndVerify(id);
+    public String uploadAttendance(RedirectAttributes attributes, @PathVariable String id, @RequestParam(required = false) String section, @Valid @ModelAttribute AttendanceModel attendanceModel, BindingResult bindingResult) {
+        courseInChargeService.getCourseInChargeAndVerify(id, section);
         if (bindingResult.hasErrors()) {
             attributes.addFlashAttribute("attendanceModel", attendanceModel);
             attributes.addFlashAttribute("org.springframework.validation.BindingResult.attendanceModel", bindingResult);
         } else {
             try {
-                attendanceUploadService.updateAttendance(id, attendanceModel.getUploadList());
+                attendanceUploadService.updateAttendance(id, section, attendanceModel.getUploadList());
                 emailNotificationService.sendNotificationsForAttendance(id, attendanceModel.getUploadList());
                 attributes.addFlashAttribute("updated", true);
             } catch (Exception e) {
+                log.error("Attendance Confirm", e);
                 attributes.addFlashAttribute("attendanceModel", attendanceModel);
                 attributes.addFlashAttribute("unknown_error", true);
             }
         }
 
-        return "redirect:/faculty/courses/{id}";
+        return "redirect:/faculty/courses/{id}?section=" + StringUtils.defaultString(section, "");
     }
 
 }

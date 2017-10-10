@@ -60,6 +60,13 @@ public class Utils {
         return charSequence == null || charSequence.length() == 0;
     }
 
+    public static String nullIfEmpty(String string) {
+        if (isEmpty(string))
+            return null;
+
+        return string.trim();
+    }
+
     public static void sortAttendance(List<CourseRegistration> courseRegistrations) {
         courseRegistrations.sort((att1, att2) ->
                 ComparisonChain.start()

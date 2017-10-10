@@ -3,62 +3,53 @@ package in.ac.amu.zhcet.service.core;
 import in.ac.amu.zhcet.data.model.Attendance;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
-import in.ac.amu.zhcet.data.model.Student;
+import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.data.repository.AttendanceRepository;
 import in.ac.amu.zhcet.data.repository.CourseRegistrationRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
+@Slf4j
 @Service
 public class CourseRegistrationService {
 
-    private final StudentService studentService;
     private final FloatedCourseRepository floatedCourseRepository;
     private final CourseRegistrationRepository courseRegistrationRepository;
     private final AttendanceRepository attendanceRepository;
 
     @Autowired
-    public CourseRegistrationService(StudentService studentService, FloatedCourseRepository floatedCourseRepository, CourseRegistrationRepository courseRegistrationRepository, AttendanceRepository attendanceRepository) {
-        this.studentService = studentService;
+    public CourseRegistrationService(FloatedCourseRepository floatedCourseRepository, CourseRegistrationRepository courseRegistrationRepository, AttendanceRepository attendanceRepository) {
         this.floatedCourseRepository = floatedCourseRepository;
         this.courseRegistrationRepository = courseRegistrationRepository;
         this.attendanceRepository = attendanceRepository;
     }
 
-    @Transactional
-    public boolean exists(String enrolment, String courseCode) {
-        FloatedCourse course = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseCode);
-
-        return courseRegistrationRepository.existsByFloatedCourseAndStudent_EnrolmentNumber(course, enrolment);
-    }
-
-    @Transactional
     public CourseRegistration getByStudentAndCourse(String enrolment, String courseCode) {
-        Student student = studentService.getByEnrolmentNumber(enrolment);
         FloatedCourse course = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseCode);
-
-        return courseRegistrationRepository.findByStudentAndFloatedCourse(student, course);
+        return courseRegistrationRepository.findByStudent_EnrolmentNumberAndFloatedCourse(enrolment, course);
     }
 
     @Transactional
-    public void setAttendance(CourseRegistration courseRegistration, int delivered, int attended) {
-        CourseRegistration registration = courseRegistrationRepository.findOne(courseRegistration.getId());
+    public void setAttendance(String course, AttendanceUpload attendanceUpload) {
+        CourseRegistration registration = getByStudentAndCourse(attendanceUpload.getStudent(), course);
 
         Attendance storedAttendance = registration.getAttendance();
         if (storedAttendance == null) {
-            storedAttendance = new Attendance(registration, delivered, attended);
+            log.warn("Attendance for %s and %s was null!", course, attendanceUpload.getStudent());
+            storedAttendance = new Attendance(registration, attendanceUpload.getDelivered(), attendanceUpload.getAttended());
 
             registration.setAttendance(storedAttendance);
             storedAttendance.setCourseRegistration(registration);
-            courseRegistrationRepository.save(courseRegistration);
+            courseRegistrationRepository.save(registration);
         }
 
-        storedAttendance.setDelivered(delivered);
-        storedAttendance.setAttended(attended);
+        storedAttendance.setDelivered(attendanceUpload.getDelivered());
+        storedAttendance.setAttended(attendanceUpload.getAttended());
     }
 
     @Transactional

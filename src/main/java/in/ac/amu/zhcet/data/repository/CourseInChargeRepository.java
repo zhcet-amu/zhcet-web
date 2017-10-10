@@ -10,4 +10,5 @@ import java.util.List;
 public interface CourseInChargeRepository extends JpaRepository<CourseInCharge, Long> {
     List<CourseInCharge> findByFacultyMemberAndFloatedCourse_Session(FacultyMember member, String session);
     CourseInCharge findByFloatedCourseAndFacultyMemberAndSection(FloatedCourse floatedCourse, FacultyMember facultyMember, String section);
+    CourseInCharge findByFacultyMemberAndFloatedCourse_Course_CodeAndSection(FacultyMember facultyMember, String code, String section);
 }

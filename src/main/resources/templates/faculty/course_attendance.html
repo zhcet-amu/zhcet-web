@@ -86,12 +86,11 @@
                 </div>
                 <div class="card-body collapse in collapse in">
                     <div class="card-block">
-                        <form class="form" enctype="multipart/form-data"
-                              th:action="|/faculty/courses/${course_id}/attendance|"
-                              method="post">
+                        <form class="form" enctype="multipart/form-data" th:action="|/faculty/courses/${course_id}/attendance|" method="post">
                             <div>
                                 Download the <a th:href="@{/csv/attendance_format.csv}">attendance format</a>
                             </div>
+                            <input type="text" name="section" th:value="${param.section}" hidden>
                             <br/>
                             <div th:replace="fragments/layout :: uploader(id = 'attendance_upload')"></div>
                             <div th:if="${updated}" class="alert alert-dismissible alert-success">
@@ -170,9 +169,8 @@
                     </div>
                 </div>
                 <div class="card-body collapse in collapse in">
-                    <form th:object="${attendanceModel}"
-                          th:action="|/faculty/course/${course_id}/attendance_confirmed|" method="post"
-                          class="card-block">
+                    <form th:object="${attendanceModel}" th:action="|/faculty/courses/${course_id}/attendance_confirmed|" method="post" class="card-block">
+                        <input type="text" name="section" th:value="${param.section}" hidden>
                         <div class="row">
                             <div class="table-responsive">
                                 <table class="table" id="confirmation">
