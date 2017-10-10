@@ -25,4 +25,4 @@ secret.properties
 
 logs/
 
-src/main/resources/sentry.properties
+sentry.properties
