@@ -35,20 +35,32 @@
             <form method="post" th:action="|/department/floated/${floatedCourse.course.code}/in_charge|">
                 <div class="in-charge-container">
                     <div class="in-charge" th:each="inCharge : ${floatedCourse.inCharge}">
-                        <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
-                             th:src="${@viewService.getAvatarUrl(inCharge.facultyMember.user.details.avatarUrl)}"
-                             class="rounded-circle height-50 in-charge-avatar"/>
-                        <input type="text" name="facultyId" th:value="${inCharge.facultyMember.facultyId}" hidden>
-                        <span class="capsule mx-1" th:text="${inCharge.facultyMember.facultyId}"></span>
-                        <span th:text="${inCharge.facultyMember.user.name}"></span>
-                        <span class="mui-select section-select mx-1">
-                            <label for="section">Section</label>
-                            <select id="section"  name="section">
-                                <option value="">All</option>
-                                <option th:each="section : ${sections}" th:value="${section}" th:text="${section}" th:selected="${inCharge.section == section}"></option>
-                            </select>
-                        </span>
-                        <span><button type="button" class="remove float-xs-right mui-btn mui-btn--small mui-btn--danger mui-btn--fab"><i class="icon-cross2"></i></button></span>
+                        <div class="row vertical-align text-xs-center">
+                            <div class="col-xs-2">
+                                <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
+                                     th:src="${@viewService.getAvatarUrl(inCharge.facultyMember.user.details.avatarUrl)}"
+                                     class="rounded-circle height-50 in-charge-avatar" style="margin: 0"/>
+                            </div>
+                            <div class="col-xs-2">
+                                <input type="text" name="facultyId" th:value="${inCharge.facultyMember.facultyId}" hidden>
+                                <span class="capsule faculty-id" th:text="${inCharge.facultyMember.facultyId}"></span>
+                            </div>
+                            <div class="col-xs-3">
+                                <span th:text="${inCharge.facultyMember.user.name}"></span>
+                            </div>
+                            <div class="col-xs-3">
+                            <span class="mui-select section-select">
+                                <label for="section">Section</label>
+                                <select id="section"  name="section">
+                                    <option value="">All</option>
+                                    <option th:each="section : ${sections}" th:value="${section}" th:text="${section}" th:selected="${inCharge.section == section}"></option>
+                                </select>
+                            </span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span><button type="button" class="remove mui-btn mui-btn--small mui-btn--danger mui-btn--fab"><i class="icon-cross2"></i></button></span>
+                            </div>
+                        </div>
                         <hr>
                     </div>
                 </div>
@@ -60,18 +72,30 @@
     </div>
     <script id="in-charge-template" type="text/x-tmpl">
         <div class="in-charge new">
-            <img src="{%=o.userDetailsAvatarUrl%}" class="rounded-circle height-50 in-charge-avatar"/>
-            <input type="text" name="facultyId" value="{%=o.facultyId%}" hidden>
-            <span class="capsule mx-1">{%=o.facultyId%}</span>
-            <span>{%=o.userName%}</span>
-            <span class="mui-select section-select mx-1">
-                <label for="section">Section</label>
-                <select id="section" name="section">
-                    <option value="">All</option>
-                    <option th:each="section : ${sections}" th:value="${section}" th:text="${section}"></option>
-                </select>
-            </span>
-            <span><button type="button" class="remove float-xs-right mui-btn mui-btn--small mui-btn--danger mui-btn--fab"><i class="icon-cross2"></i></button></span>
+            <div class="row vertical-align text-xs-center">
+                <div class="col-xs-2">
+                    <img src="{%=o.userDetailsAvatarUrl%}" class="rounded-circle height-50 in-charge-avatar"/>
+                </div>
+                <div class="col-xs-2">
+                    <input type="text" name="facultyId" value="{%=o.facultyId%}" hidden>
+                    <span class="capsule faculty-id">{%=o.facultyId%}</span>
+                </div>
+                <div class="col-xs-3">
+                    <span>{%=o.userName%}</span>
+                </div>
+                <div class="col-xs-3">
+                <span class="mui-select section-select">
+                    <label for="section">Section</label>
+                    <select id="section" name="section">
+                        <option value="">All</option>
+                        <option th:each="section : ${sections}" th:value="${section}" th:text="${section}"></option>
+                    </select>
+                </span>
+                </div>
+                <div class="col-xs-2">
+                    <span><button type="button" class="remove mui-btn mui-btn--small mui-btn--danger mui-btn--fab"><i class="icon-cross2"></i></button></span>
+                </div>
+            </div>
             <hr>
         </div>
     </script>

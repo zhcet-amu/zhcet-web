@@ -6,11 +6,11 @@ function getImageUrl(url) {
 
 function itemTemplate(suggestion) {
     return [
-        "<div>",
+        "<div class='suggestion'>",
         '<span><img src="' + getImageUrl(suggestion._item.userDetailsAvatarUrl) + '" class="avatar-img rounded-circle"/></span>',
-        "<span class='name'>", fuzzyhound.highlight(suggestion.userName,"userName") ,"</span> ",
-        "<span class='faculty-id'><i>(", fuzzyhound.highlight(suggestion.facultyId, "facultyId"), ")</i></span>",
-        "<span class='department capsule text-xs-right'>", suggestion._item.userDepartmentName, "</span> ",
+        "<span class='pad-top name'>", fuzzyhound.highlight(suggestion.userName,"userName") ,"</span> ",
+        "<span class='pad-top faculty-id'><i>(", fuzzyhound.highlight(suggestion.facultyId, "facultyId"), ")</i></span>",
+        "<span class='pad-top department capsule'>", suggestion._item.userDepartmentName, "</span> ",
         "</div>"
     ].join("");
 }

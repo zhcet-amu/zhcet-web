@@ -8,6 +8,15 @@ hr {
     padding-right: 0;
 }
 
+.vertical-align {
+    display: flex;
+    align-items: center;
+}
+
+.pad-top {
+    margin-top: 3px;
+}
+
 .in-charge {
     padding-top: 10px;
 }
@@ -24,11 +33,14 @@ hr {
 
 .faculty-id {
     font-size: small;
+    margin: 0;
 }
 
 .department {
     background-color: rgba(0, 0, 0, 0.1);
     font-size: small;
+    float: right;
+    margin-right: 5px;
 }
 
 .section-select {
