@@ -43,7 +43,7 @@ public class AttendanceManagerController {
         private List<AttendanceUpload> uploadList;
     }
 
-    @PostMapping("faculty/courses/{id}/attendance")
+    @PostMapping("faculty/courses/{id}/attendance/edit")
     public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam(required = false) String section, @RequestParam MultipartFile file) {
         courseInChargeService.getCourseInChargeAndVerify(id, section);
         try {
@@ -69,10 +69,10 @@ public class AttendanceManagerController {
             log.error("Attendance Upload", ioe);
         }
 
-        return "redirect:/faculty/courses/{id}?section=" + StringUtils.defaultString(section, "");
+        return "redirect:/faculty/courses/{id}/attendance?section=" + StringUtils.defaultString(section, "");
     }
 
-    @PostMapping("faculty/courses/{id}/attendance_confirmed")
+    @PostMapping("faculty/courses/{id}/attendance/edit/confirm")
     public String uploadAttendance(RedirectAttributes attributes, @PathVariable String id, @RequestParam(required = false) String section, @Valid @ModelAttribute AttendanceModel attendanceModel, BindingResult bindingResult) {
         courseInChargeService.getCourseInChargeAndVerify(id, section);
         if (bindingResult.hasErrors()) {
@@ -90,7 +90,7 @@ public class AttendanceManagerController {
             }
         }
 
-        return "redirect:/faculty/courses/{id}?section=" + StringUtils.defaultString(section, "");
+        return "redirect:/faculty/courses/{id}/attendance?section=" + StringUtils.defaultString(section, "");
     }
 
 }

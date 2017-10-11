@@ -31,7 +31,7 @@
                         <div class="row">
                             <div th:each="incharge: ${courseInCharges}" style="display: inline;">
                                 <!--/*@thymesVar id="incharge" type="in.ac.amu.zhcet.data.model.CourseInCharge"*/-->
-                                <a th:href="|/faculty/courses/${incharge.floatedCourse.course.code}?section=${#strings.defaultString(incharge.section, '')}|" style="display: inline">
+                                <a th:href="|/faculty/courses/${incharge.floatedCourse.course.code}/attendance?section=${#strings.defaultString(incharge.section, '')}|" style="display: inline">
                                     <button class="btn btn-outline-primary btn-lg" type="submit"
                                             th:text='${incharge.floatedCourse.course.title}' style="margin: 5px"
                                             data-toggle="tooltip" th:title="${incharge.floatedCourse.course.code}"></button>

@@ -40,7 +40,7 @@ public class FacultyCourseController {
         return "faculty/courses";
     }
 
-    @GetMapping("faculty/courses/{id}")
+    @GetMapping("faculty/courses/{id}/attendance")
     public String getStudents(Model model, @PathVariable String id, @RequestParam(required = false) String section) {
         CourseInCharge courseInCharge = courseInChargeService.getCourseInChargeAndVerify(id, section);
 
