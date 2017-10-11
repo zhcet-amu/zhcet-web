@@ -105,7 +105,7 @@ public class FloatedCourseController {
         verifyAndGetCourse(id);
 
         if (facultyId == null) {
-            log.warn("Removed all course in charges : Course-%s Sections-%s", id, section);
+            log.warn("Removed all course in charges : Course-{} Sections-{}", id, section);
             courseInChargeService.setInCharge(id, Collections.emptyList());
         } else {
             courseInChargeService.setInCharge(id, merge(facultyId, section));

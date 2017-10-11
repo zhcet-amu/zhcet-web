@@ -57,7 +57,7 @@ public class FloatCourseController {
         FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(id);
 
         if (floatedCourse != null) {
-            log.warn("Course is already floated %s", id);
+            log.warn("Course is already floated {}", id);
             redirectAttributes.addFlashAttribute("float_error", "Course is already floated");
         }  else {
             redirectAttributes.addFlashAttribute("courses", Collections.singletonList(course));
@@ -87,7 +87,7 @@ public class FloatCourseController {
         verifyCoursePermission(courses);
 
         if (!courses.stream().map(Course::getCode).collect(Collectors.toList()).containsAll(codes)) {
-            log.warn("Has an invalid Course Codes : Floating %s", codes.toString());
+            log.warn("Has an invalid Course Codes : Floating {}", codes.toString());
             redirectAttributes.addFlashAttribute("float_error", "Invalid Course Code!");
             return redirectLink;
         }
@@ -95,7 +95,7 @@ public class FloatCourseController {
         List<FloatedCourse> floatedCourses = courseManagementService.getCurrentFloatedCourses(facultyService.getFacultyDepartment());
 
         if (floatedCourses.stream().map(floatedCourse -> floatedCourse.getCourse().getCode()).anyMatch(codes::contains)) {
-            log.warn("Some courses already floated : %s", codes.toString());
+            log.warn("Some courses already floated : {}", codes.toString());
             redirectAttributes.addFlashAttribute("float_error", "Some courses are already floated!");
             return redirectLink;
         }

@@ -40,7 +40,7 @@ public class AbstractUploadService<T, U, V> {
     private boolean validateType(MultipartFile file, UploadResult<T> uploadResult) {
         if (!file.getContentType().equals("text/csv")) {
             uploadResult.getErrors().add("Uploaded file is not of CSV format");
-            log.warn("Uploaded file is not of CSV format %s %s", file.getOriginalFilename(), file.getContentType());
+            log.warn("Uploaded file is not of CSV format {} {}", file.getOriginalFilename(), file.getContentType());
             return false;
         }
 

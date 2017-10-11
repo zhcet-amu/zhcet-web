@@ -54,11 +54,11 @@ public class UserService {
         if (!Utils.isEmpty(email)) {
             UserAuth checkEmailDuplicate = getUserByEmail(email);
             if (checkEmailDuplicate != null && !checkEmailDuplicate.getUserId().equals(userAuth.getUserId())) {
-                log.error("User with email already exists %s %s", userAuth.getUserId(), email);
+                log.error("User with email already exists {} {}", userAuth.getUserId(), email);
                 throw new DuplicateException("User", "email", email);
             }
             if (!Utils.isValidEmail(email)) {
-                log.error("Invalid Email %s %s", userAuth.getUserId(), email);
+                log.error("Invalid Email {} {}", userAuth.getUserId(), email);
                 throw new RuntimeException("Invalid Email");
             }
         } else {

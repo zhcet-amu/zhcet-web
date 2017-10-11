@@ -57,7 +57,7 @@ public class AvatarService {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 
         if (file.getSize() > 2*1024*1024) {
-            log.warn("Image larger than 2 MB : %s", file.getOriginalFilename());
+            log.warn("Image larger than 2 MB : {}", file.getOriginalFilename());
             redirectAttributes.addFlashAttribute("avatar_errors", Collections.singletonList("File should be smaller than 2 MB"));
             return redirectUrl;
         }
@@ -65,7 +65,7 @@ public class AvatarService {
         try {
             BufferedImage image = Utils.readImage(file);
             if (image == null || !verifyType(file.getOriginalFilename(), false) || !verifyType(file.getContentType(), true)) {
-                log.warn("Image should be of valid type : %s", file.getOriginalFilename());
+                log.warn("Image should be of valid type : {}", file.getOriginalFilename());
                 redirectAttributes.addFlashAttribute("avatar_errors", Collections.singletonList("File type must be image"));
                 return redirectUrl;
             }

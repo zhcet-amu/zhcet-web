@@ -98,7 +98,7 @@ public class CourseEditController {
         Course course = verifyAndGetCourse(id);
 
         if (course == null) {
-            log.warn("Course not deletable %s", id);
+            log.warn("Course not deletable {}", id);
             redirectAttributes.addFlashAttribute("course_error", "No such course exists");
         } else {
             courseManagementService.deleteCourse(id);

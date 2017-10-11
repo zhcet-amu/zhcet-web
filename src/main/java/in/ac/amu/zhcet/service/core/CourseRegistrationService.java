@@ -40,7 +40,7 @@ public class CourseRegistrationService {
 
         Attendance storedAttendance = registration.getAttendance();
         if (storedAttendance == null) {
-            log.warn("Attendance for %s and %s was null!", course, attendanceUpload.getStudent());
+            log.warn("Attendance for {} and {} was null!", course, attendanceUpload.getStudent());
             storedAttendance = new Attendance(registration, attendanceUpload.getDelivered(), attendanceUpload.getAttended());
 
             registration.setAttendance(storedAttendance);

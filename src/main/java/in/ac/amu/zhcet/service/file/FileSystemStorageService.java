@@ -106,7 +106,7 @@ public class FileSystemStorageService implements StorageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                log.error("Failed to read file %s", filename);
+                log.error("Failed to read file {}", filename);
                 throw new StorageFileNotFoundException("Could not read file: " + filename);
             }
         }

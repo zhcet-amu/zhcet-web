@@ -29,7 +29,7 @@ public class ResetPasswordController {
     public String resetPassword(Model model, @RequestParam("id") String id, @RequestParam("token") String token){
         String result = passwordResetService.validate(id, token);
         if (result != null) {
-            log.warn("Token Verification : Password Reset : %s", result);
+            log.warn("Token Verification : Password Reset : {}", result);
             model.addAttribute("error", result);
             return "reset_password";
         }
@@ -46,7 +46,7 @@ public class ResetPasswordController {
 
         String result = passwordResetService.validate(passwordReset.getId(), passwordReset.getToken());
         if (result != null) {
-            log.warn("Token Verification : Password Reset : %s", result);
+            log.warn("Token Verification : Password Reset : {}", result);
             redirectAttributes.addAttribute("error", result);
             return redirectUrl;
         }

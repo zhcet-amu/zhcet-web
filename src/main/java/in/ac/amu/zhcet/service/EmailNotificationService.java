@@ -42,7 +42,7 @@ public class EmailNotificationService {
         FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(id);
 
         if (floatedCourse == null) {
-            log.warn("Email request for invalid course %s", id);
+            log.warn("Email request for invalid course {}", id);
             return;
         }
 

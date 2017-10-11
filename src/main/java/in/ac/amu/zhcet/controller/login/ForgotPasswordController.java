@@ -34,7 +34,7 @@ public class ForgotPasswordController {
             passwordResetService.sendMail(token);
             redirectAttributes.addFlashAttribute("reset_link_sent", true);
         } catch(UsernameNotFoundException e){
-            log.warn("User not found : Password Forgot : %s", e);
+            log.warn("User not found : Password Forgot : {}", e);
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/login/forgot_password";
         }

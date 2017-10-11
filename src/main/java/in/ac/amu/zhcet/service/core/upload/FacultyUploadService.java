@@ -58,11 +58,11 @@ public class FacultyUploadService {
 
         if (!optional.isPresent()) {
             invalidDepartment = true;
-            log.warn("Faculty Registration : Invalid Department %s", departmentName);
+            log.warn("Faculty Registration : Invalid Department {}", departmentName);
             return "No such department: " + departmentName;
         } else if (facultyService.getById(facultyMember.getFacultyId()) != null) {
             duplicateFacultyId = true;
-            log.warn("Duplicate Faculty ID %s", facultyMember.getFacultyId());
+            log.warn("Duplicate Faculty ID {}", facultyMember.getFacultyId());
             return "Duplicate Faculty ID";
         } else {
             facultyMember.getUser().setDepartment(optional.get());

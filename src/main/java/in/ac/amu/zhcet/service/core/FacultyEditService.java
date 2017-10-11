@@ -35,14 +35,14 @@ public class FacultyEditService {
         FacultyMember facultyMember = facultyService.getById(id);
 
         if (facultyMember == null) {
-            log.error("Tried saving inexistent faculty member %s", id);
+            log.error("Tried saving non-existent faculty member {}", id);
             throw new UsernameNotFoundException("Invalid Request");
         }
 
         String departmentName = facultyEditModel.getUserDepartmentName();
         Department department = departmentService.findByName(departmentName);
         if (department == null) {
-            log.error("Tried saving faculty with inexistent department %s %s", id, departmentName);
+            log.error("Tried saving faculty with non-existent department {} {}", id, departmentName);
             throw new RuntimeException("No such department : " + departmentName);
         }
 

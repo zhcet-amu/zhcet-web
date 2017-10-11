@@ -61,7 +61,7 @@ public class CourseManagementService {
         Course managed = courseRepository.findByCode(course.getCode());
 
         if (managed == null || !managed.getCode().equals(original)) {
-            log.warn("Attempt to change course code: %s to %s", original, course.getCode());
+            log.warn("Attempt to change course code: {} to {}", original, course.getCode());
             throw new UpdateException("Course Code");
         }
 

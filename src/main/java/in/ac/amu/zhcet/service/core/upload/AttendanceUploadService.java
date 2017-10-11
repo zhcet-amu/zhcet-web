@@ -44,7 +44,7 @@ public class AttendanceUploadService {
                 .anyMatch(enrolment -> enrolment.equals(upload.getStudent()));
 
         if (!exists) {
-            log.warn("Student does not exist for course in-charge %s", upload.getStudent());
+            log.warn("Student does not exist for course in-charge {}", upload.getStudent());
             existsError = true;
         }
 
@@ -76,7 +76,7 @@ public class AttendanceUploadService {
 
         for (AttendanceUpload attendanceUpload : uploadList) {
             if (!studentExists(attendanceUpload, courseRegistrations)) {
-                log.error("Force updating attendance of invalid student %s %s %s", course, section, attendanceUpload.getStudent());
+                log.error("Force updating attendance of invalid student {} {} {}", course, section, attendanceUpload.getStudent());
                 throw new RuntimeException("Invalid Data : " + attendanceUpload);
             }
         }
