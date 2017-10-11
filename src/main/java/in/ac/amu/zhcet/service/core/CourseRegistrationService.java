@@ -36,11 +36,11 @@ public class CourseRegistrationService {
 
     @Transactional
     public void setAttendance(String course, AttendanceUpload attendanceUpload) {
-        CourseRegistration registration = getByStudentAndCourse(attendanceUpload.getStudent(), course);
+        CourseRegistration registration = getByStudentAndCourse(attendanceUpload.getEnrolment_no(), course);
 
         Attendance storedAttendance = registration.getAttendance();
         if (storedAttendance == null) {
-            log.warn("Attendance for {} and {} was null!", course, attendanceUpload.getStudent());
+            log.warn("Attendance for {} and {} was null!", course, attendanceUpload.getEnrolment_no());
             storedAttendance = new Attendance(registration, attendanceUpload.getDelivered(), attendanceUpload.getAttended());
 
             registration.setAttendance(storedAttendance);

@@ -1,5 +1,7 @@
 package in.ac.amu.zhcet;
 
+import com.j256.simplecsv.processor.CsvProcessor;
+import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.service.file.StorageProperties;
 import in.ac.amu.zhcet.service.file.StorageService;
 import io.sentry.Sentry;
@@ -37,6 +39,14 @@ public class CoreApplication {
     @Bean
     ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public CsvProcessor<AttendanceUpload> csvProcessor() {
+        return new CsvProcessor<>(AttendanceUpload.class)
+                .withAlwaysTrimInput(true)
+                .withIgnoreUnknownColumns(true)
+                .withFlexibleOrder(true);
     }
 
     @Bean

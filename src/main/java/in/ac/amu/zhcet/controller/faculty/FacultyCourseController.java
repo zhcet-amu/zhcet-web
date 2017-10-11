@@ -3,6 +3,7 @@ package in.ac.amu.zhcet.controller.faculty;
 import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FacultyMember;
+import in.ac.amu.zhcet.service.AttendanceDownloadService;
 import in.ac.amu.zhcet.service.core.CourseInChargeService;
 import in.ac.amu.zhcet.service.core.FacultyService;
 import in.ac.amu.zhcet.utils.Utils;
@@ -14,22 +15,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
 @Controller
 public class FacultyCourseController {
+
     private final FacultyService facultyService;
     private final CourseInChargeService courseInChargeService;
+    private final AttendanceDownloadService attendanceDownloadService;
 
     @Autowired
-    public FacultyCourseController(FacultyService facultyService, CourseInChargeService courseInChargeService) {
+    public FacultyCourseController(AttendanceDownloadService attendanceDownloadService, FacultyService facultyService, CourseInChargeService courseInChargeService) {
+        this.attendanceDownloadService = attendanceDownloadService;
         this.facultyService = facultyService;
         this.courseInChargeService = courseInChargeService;
     }
 
     @GetMapping("/faculty/courses")
-    public String getCourse(Model model) {
+    public String facultyCourses(Model model) {
         model.addAttribute("page_title", "Course Management");
         model.addAttribute("page_subtitle", "Faculty Floated Course Management");
         model.addAttribute("page_description", "Manage and upload attendance for currently floated courses");
@@ -41,7 +47,7 @@ public class FacultyCourseController {
     }
 
     @GetMapping("faculty/courses/{id}/attendance")
-    public String getStudents(Model model, @PathVariable String id, @RequestParam(required = false) String section) {
+    public String attendance(Model model, @PathVariable String id, @RequestParam(required = false) String section) {
         CourseInCharge courseInCharge = courseInChargeService.getCourseInChargeAndVerify(id, section);
 
         model.addAttribute("page_title", courseInCharge.getFloatedCourse().getCourse().getTitle());
@@ -54,5 +60,23 @@ public class FacultyCourseController {
         model.addAttribute("course_id", id);
 
         return "faculty/course_attendance";
+    }
+
+    @GetMapping("faculty/courses/{id}/attendance/download")
+    public void getStudents(HttpServletResponse response, @PathVariable String id, @RequestParam(required = false) String section) throws IOException {
+        CourseInCharge courseInCharge = courseInChargeService.getCourseInChargeAndVerify(id, section);
+
+        List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
+        Utils.sortAttendance(courseRegistrations);
+
+        response.setContentType("text/csv");
+        response.setHeader("Content-disposition", "attachment;filename=attendance_" + id + "_" + Utils.defaultString(section, "all") + ".csv");
+
+        List<String> lines = attendanceDownloadService.attendanceCsv("faculty", id + "_" + section, courseRegistrations);
+        for (String line : lines) {
+            response.getOutputStream().println(line);
+        }
+
+        response.getOutputStream().flush();
     }
 }

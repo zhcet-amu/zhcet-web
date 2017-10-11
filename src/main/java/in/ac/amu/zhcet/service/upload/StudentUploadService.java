@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.core.upload;
+package in.ac.amu.zhcet.service.upload;
 
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.Student;
@@ -6,9 +6,9 @@ import in.ac.amu.zhcet.data.model.dto.upload.StudentUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.service.core.StudentService;
-import in.ac.amu.zhcet.service.core.upload.base.AbstractUploadService;
-import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
-import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
+import in.ac.amu.zhcet.service.upload.base.AbstractUploadService;
+import in.ac.amu.zhcet.service.upload.base.Confirmation;
+import in.ac.amu.zhcet.service.upload.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

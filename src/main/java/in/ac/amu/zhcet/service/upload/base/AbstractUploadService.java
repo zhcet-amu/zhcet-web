@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.core.upload.base;
+package in.ac.amu.zhcet.service.upload.base;
 
 import com.j256.simplecsv.processor.CsvProcessor;
 import com.j256.simplecsv.processor.ParseError;

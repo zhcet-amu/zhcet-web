@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.core.upload;
+package in.ac.amu.zhcet.service.upload;
 
 import com.j256.simplecsv.processor.CsvProcessor;
 import in.ac.amu.zhcet.data.model.Department;
@@ -6,10 +6,10 @@ import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.dto.upload.FacultyUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.service.core.FacultyService;
-import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
+import in.ac.amu.zhcet.service.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.file.FileSystemStorageService;
-import in.ac.amu.zhcet.service.core.upload.base.AbstractUploadService;
-import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
+import in.ac.amu.zhcet.service.upload.base.AbstractUploadService;
+import in.ac.amu.zhcet.service.upload.base.UploadResult;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

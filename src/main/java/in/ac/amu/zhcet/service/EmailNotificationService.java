@@ -48,7 +48,7 @@ public class EmailNotificationService {
 
         List<String> emails = uploadList
                 .parallelStream()
-                .map(AttendanceUpload::getStudent)
+                .map(AttendanceUpload::getEnrolment_no)
                 .map(studentService::getByEnrolmentNumber)
                 .map(Student::getUser)
                 .filter(userAuth -> userAuth.isActive() && !userAuth.isEmailUnsubscribed())

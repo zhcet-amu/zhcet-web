@@ -1,13 +1,13 @@
-package in.ac.amu.zhcet.service.core.upload;
+package in.ac.amu.zhcet.service.upload;
 
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.upload.RegistrationUpload;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.StudentService;
-import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
-import in.ac.amu.zhcet.service.core.upload.base.AbstractUploadService;
-import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
+import in.ac.amu.zhcet.service.upload.base.Confirmation;
+import in.ac.amu.zhcet.service.upload.base.AbstractUploadService;
+import in.ac.amu.zhcet.service.upload.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

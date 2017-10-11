@@ -1,13 +1,13 @@
-package in.ac.amu.zhcet.service.core.upload;
+package in.ac.amu.zhcet.service.upload;
 
 import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.service.core.CourseInChargeService;
 import in.ac.amu.zhcet.service.core.CourseRegistrationService;
-import in.ac.amu.zhcet.service.core.upload.base.AbstractUploadService;
-import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
-import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
+import in.ac.amu.zhcet.service.upload.base.AbstractUploadService;
+import in.ac.amu.zhcet.service.upload.base.Confirmation;
+import in.ac.amu.zhcet.service.upload.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,10 +41,10 @@ public class AttendanceUploadService {
     private boolean studentExists(AttendanceUpload upload, List<CourseRegistration> registrations) {
         boolean exists = registrations.stream()
                 .map(registration -> registration.getStudent().getEnrolmentNumber())
-                .anyMatch(enrolment -> enrolment.equals(upload.getStudent()));
+                .anyMatch(enrolment -> enrolment.equals(upload.getEnrolment_no()));
 
         if (!exists) {
-            log.warn("Student does not exist for course in-charge {}", upload.getStudent());
+            log.warn("Student does not exist for course in-charge {}", upload.getEnrolment_no());
             existsError = true;
         }
 
@@ -76,7 +76,7 @@ public class AttendanceUploadService {
 
         for (AttendanceUpload attendanceUpload : uploadList) {
             if (!studentExists(attendanceUpload, courseRegistrations)) {
-                log.error("Force updating attendance of invalid student {} {} {}", course, section, attendanceUpload.getStudent());
+                log.error("Force updating attendance of invalid student {} {} {}", course, section, attendanceUpload.getEnrolment_no());
                 throw new RuntimeException("Invalid Data : " + attendanceUpload);
             }
         }

@@ -61,10 +61,14 @@ public class Utils {
     }
 
     public static String nullIfEmpty(String string) {
-        if (isEmpty(string))
-            return null;
+        return defaultString(string, null);
+    }
 
-        return string.trim();
+    public static String defaultString(String string, String defaultString) {
+        if (isEmpty(string))
+            return defaultString;
+
+        return string;
     }
 
     public static void sortAttendance(List<CourseRegistration> courseRegistrations) {

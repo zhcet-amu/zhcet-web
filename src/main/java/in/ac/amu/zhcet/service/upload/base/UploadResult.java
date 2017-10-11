@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.core.upload.base;
+package in.ac.amu.zhcet.service.upload.base;
 
 import lombok.Data;
 import lombok.NonNull;
