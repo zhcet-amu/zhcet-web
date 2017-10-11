@@ -101,9 +101,16 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void changeUserPassword(UserAuth userAuth, String password) {
         userAuth.setPassword(UserAuth.PASSWORD_ENCODER.encode(password));
         userAuth.setPasswordChanged(true);
+        userRepository.save(userAuth);
+    }
+
+    @Transactional
+    public void unsubscribeEmail(UserAuth userAuth, boolean unsubscribe) {
+        userAuth.setEmailUnsubscribed(unsubscribe);
         userRepository.save(userAuth);
     }
 }

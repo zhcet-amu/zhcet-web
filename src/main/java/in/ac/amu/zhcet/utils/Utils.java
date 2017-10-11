@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.utils;
 
 import com.google.common.collect.ComparisonChain;
+import com.google.common.hash.Hashing;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import org.apache.commons.text.WordUtils;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -9,12 +10,15 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class Utils {
+
+    public static String SALT = "some_nice_salt";
 
     public static String getDefaultSessionCode(){
         LocalDate localDate = LocalDate.now();
@@ -104,5 +108,17 @@ public class Utils {
             errors.add("Passwords should be at least 6 characters long!");
 
         return errors;
+    }
+
+    public static String getHash(String email) {
+        return Hashing.sha256()
+                .newHasher()
+                .putString(SALT+email+SALT, Charset.defaultCharset())
+                .hash()
+                .toString();
+    }
+
+    public static boolean hashMatches(String email, String hash) {
+        return getHash(email).equals(hash);
     }
 }

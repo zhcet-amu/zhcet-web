@@ -7,6 +7,7 @@ import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.core.ConfigurationService;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.StudentService;
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -37,8 +38,8 @@ public class EmailNotificationService {
     @Async
     public void sendNotificationsForAttendance(String id, List<AttendanceUpload> uploadList) {
         String url = configurationService.getBaseUrl() + "/attendance";
-        log.info("Email Attendance Notification : " + id);
-        log.info("URL : " + url);
+        log.info("Email Attendance Notification : {}", id);
+        log.info("URL : {}", url);
         FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(id);
 
         if (floatedCourse == null) {
@@ -59,25 +60,26 @@ public class EmailNotificationService {
             log.warn("No activated subscribed student found for emailing...");
         }
 
-        String recipient = emails.get(0);
-        log.info("Sending email to " + recipient);
-        String[] bcc = null;
-        if (emails.size() > 1) {
-            List<String> others = emails.subList(1, emails.size());
-            log.info("BCC : " + others.toString());
-            bcc = others.toArray(new String[others.size()]);
+        for (String recipient : emails) {
+            log.info("Sending email to " + recipient);
+
+            String unsubscribeUrl = configurationService.getBaseUrl() + "/login/unsubscribe?email="
+                    + recipient + "&conf=" + Utils.getHash(recipient);
+
+            log.info("Unsubscribe Link {}", unsubscribeUrl);
+            String html = getHtml(id, floatedCourse.getCourse().getTitle(), url, unsubscribeUrl);
+            emailService.sendHtmlMail(recipient, "ZHCET Course " + id + " Attendance Updated", html, null);
         }
-        String html = getHtml(id, floatedCourse.getCourse().getTitle(), url);
-        emailService.sendHtmlMail(recipient, "ZHCET Course " + id + " Attendance Updated", html, bcc);
     }
 
-    private String getHtml(String courseId, String courseName, String url) {
+    private String getHtml(String courseId, String courseName, String url, String unsubcribeUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put("title", "Attendance Update");
         map.put("link", url);
         map.put("link_text", "View Attendance");
         map.put("pre_message", "Your attendance for course <strong>" + courseId + " : " + courseName + "</strong> has just been updated." +
                 "<br>Please click the button below to view your attendance");
+        map.put("unsubscribe_link", unsubcribeUrl);
 
         return emailService.render("html/link", map);
     }

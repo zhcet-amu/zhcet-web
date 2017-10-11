@@ -64,8 +64,7 @@ public class ConfigurationService {
         return Utils.getSessionName(getSession());
     }
 
-    public static String getBase(String urlString) {
-
+    private static String getBase(String urlString) {
         if(urlString == null) {
             return null;
         }

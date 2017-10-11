@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collections;
@@ -67,6 +68,16 @@ public class ProfileController {
             log.error("Error saving profile", exc);
             redirectAttributes.addFlashAttribute("errors", Collections.singletonList(exc.getMessage()));
         }
+
+        return "redirect:/profile";
+    }
+
+    @GetMapping("/profile/email")
+    public String unsubscribeEmail(@RequestParam(required = false) Boolean unsubscribe) {
+        if (unsubscribe == null)
+            return "redirect:/profile/email?unsubscribe=false";
+
+        userService.unsubscribeEmail(userService.getLoggedInUser(), unsubscribe);
 
         return "redirect:/profile";
     }

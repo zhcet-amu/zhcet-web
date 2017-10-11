@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.configuration;
 
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +26,10 @@ public class EmailConfiguration {
     private String email;
     @Value("${email.password}")
     private String password;
+    @Value("${salt}")
+    private String salt;
 
-    public static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
+    private static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
 
     @Bean
     @Primary
@@ -35,6 +38,8 @@ public class EmailConfiguration {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
+        if (!Utils.isEmpty(salt))
+            Utils.SALT = salt;
         mailSender.setUsername(email);
         mailSender.setPassword(password);
 
