@@ -8,10 +8,10 @@ import in.ac.amu.zhcet.utils.UpdateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -19,13 +19,13 @@ import java.util.List;
 public class CourseManagementService {
 
     private final FloatedCourseRepository floatedCourseRepository;
-    private final StudentService studentService;
+    private final FacultyService facultyService;
     private final CourseRepository courseRepository;
 
     @Autowired
-    public CourseManagementService(FloatedCourseRepository floatedCourseRepository, StudentService studentService, CourseRepository courseRepository) {
+    public CourseManagementService(FloatedCourseRepository floatedCourseRepository, FacultyService facultyService, CourseRepository courseRepository) {
         this.floatedCourseRepository = floatedCourseRepository;
-        this.studentService = studentService;
+        this.facultyService = facultyService;
         this.courseRepository = courseRepository;
     }
 
@@ -69,35 +69,18 @@ public class CourseManagementService {
         courseRepository.save(managed);
     }
 
+    public FloatedCourse verifyAndGetCourse(String courseId) {
+        FloatedCourse floatedCourse = getFloatedCourseByCode(courseId);
+        if (floatedCourse == null || !floatedCourse.getCourse().getDepartment().equals(facultyService.getFacultyDepartment()))
+            throw new AccessDeniedException("403");
+
+        return floatedCourse;
+    }
+
     @Transactional
     public void floatCourse(Course course) {
         Course stored = courseRepository.findOne(course.getCode());
         floatedCourseRepository.save(new FloatedCourse(ConfigurationService.getDefaultSessionCode(), stored));
-    }
-
-    @Transactional
-    public void registerStudents(String courseId, List<String> studentIds, List<String> modes) {
-        if (studentIds.size() != modes.size())
-            return;
-
-        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseId);
-
-        List<Student> students = studentService.getByIds(studentIds);
-        List<CourseRegistration> registrations = new ArrayList<>();
-
-        for (int i = 0; i < students.size(); i++) {
-            CourseRegistration registration = new CourseRegistration();
-
-            registration.setStudent(students.get(i));
-            registration.setFloatedCourse(stored);
-            registration.setMode(modes.get(i).charAt(0));
-            registration.getAttendance().setId(registration.generateId());
-            registrations.add(registration);
-        }
-
-        stored.getCourseRegistrations().addAll(registrations);
-
-        floatedCourseRepository.save(stored);
     }
 
     public FloatedCourse getFloatedCourseByCode(String courseId){

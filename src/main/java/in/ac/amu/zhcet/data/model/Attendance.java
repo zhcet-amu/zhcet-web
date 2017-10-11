@@ -34,7 +34,8 @@ public class Attendance extends BaseEntity {
 
     @Override
     public String toString() {
-
+        if (courseRegistration == null)
+            return "";
         return "Attendance{" +
                 "student=" + courseRegistration.getStudent() +
                 ", course=" + courseRegistration.getFloatedCourse() +

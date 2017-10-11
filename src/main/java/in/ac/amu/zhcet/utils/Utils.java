@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -74,7 +73,7 @@ public class Utils {
     public static void sortAttendance(List<CourseRegistration> courseRegistrations) {
         courseRegistrations.sort((att1, att2) ->
                 ComparisonChain.start()
-                        .compare(att1.getStudent().getSection(), att2.getStudent().getSection(), Comparator.reverseOrder())
+                        .compare(att1.getStudent().getSection(), att2.getStudent().getSection())
                         .compare(att1.getStudent().getFacultyNumber().substring(5), att2.getStudent().getFacultyNumber().substring(5))
                         .result()
             );

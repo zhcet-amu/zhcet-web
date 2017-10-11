@@ -69,7 +69,8 @@ public class AbstractUploadService<T, U, V> {
 
                 return message;
             }).collect(Collectors.toList());
-            log.warn(String.format("CSV Parsing Errors %s", file.getOriginalFilename()), errors.toString());
+            if (!errors.isEmpty())
+                log.warn(String.format("CSV Parsing Errors %s %s", file.getOriginalFilename(), errors.toString()));
             uploadResult.getErrors().addAll(errors);
         } catch (ParseException e) {
             log.error(String.format("Error Parsing file %s", file.getOriginalFilename()), e);

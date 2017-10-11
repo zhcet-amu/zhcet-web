@@ -43,11 +43,8 @@ table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd {
     background-color: #ede7f6;
 }
 
-@media (min-width: 768px) {
-    .modal-xl {
-        width: 90%;
-        max-width:1200px;
-    }
+.modal-lg {
+    max-width: 1200px;
 }
 
 .bg-orange {

@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.upload.RegistrationUpload;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
+import in.ac.amu.zhcet.service.core.CourseRegistrationService;
 import in.ac.amu.zhcet.service.core.StudentService;
 import in.ac.amu.zhcet.service.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.upload.base.AbstractUploadService;
@@ -28,12 +29,14 @@ public class RegistrationUploadService {
 
     private final StudentService studentService;
     private final CourseManagementService courseManagementService;
-    private final AbstractUploadService<RegistrationUpload, Student, String> uploadService;
+    private final CourseRegistrationService courseRegistrationService;
+    private final AbstractUploadService<RegistrationUpload, CourseRegistration, String> uploadService;
 
     @Autowired
-    public RegistrationUploadService(StudentService studentService, CourseManagementService courseManagementService, AbstractUploadService<RegistrationUpload, Student, String> uploadService) {
+    public RegistrationUploadService(StudentService studentService, CourseManagementService courseManagementService, CourseRegistrationService courseRegistrationService, AbstractUploadService<RegistrationUpload, CourseRegistration, String> uploadService) {
         this.studentService = studentService;
         this.courseManagementService = courseManagementService;
+        this.courseRegistrationService = courseRegistrationService;
         this.uploadService = uploadService;
     }
 
@@ -41,14 +44,17 @@ public class RegistrationUploadService {
         return uploadService.handleUpload(RegistrationUpload.class, file);
     }
 
-    private Student fromRegistrationUpload(RegistrationUpload upload) {
+    private CourseRegistration fromRegistrationUpload(RegistrationUpload upload) {
         Student student = studentService.getByFacultyNumber(capitalizeAll(upload.getFacultyNo()));
 
         if (student == null)
-            return Student.builder().facultyNumber(upload.getFacultyNo()).build();
+            student = Student.builder().facultyNumber(upload.getFacultyNo()).build();
 
-        student.setMeta(String.valueOf(upload.getMode()));
-        return student;
+        CourseRegistration courseRegistration = new CourseRegistration();
+        courseRegistration.setMode(upload.getMode());
+        courseRegistration.setStudent(student);
+
+        return courseRegistration;
     }
 
     private String getMappedValue(Student student, String courseId, List<CourseRegistration> registrations) {
@@ -67,16 +73,16 @@ public class RegistrationUploadService {
         }
     }
 
-    public Confirmation<Student, String> confirmUpload(String courseId, UploadResult<RegistrationUpload> uploadResult) {
+    public Confirmation<CourseRegistration, String> confirmUpload(String courseId, UploadResult<RegistrationUpload> uploadResult) {
         invalidEnrolment = false;
         alreadyEnrolled = false;
 
         List<CourseRegistration> registrations = courseManagementService.getFloatedCourseByCode(courseId).getCourseRegistrations();
 
-        Confirmation<Student, String> registrationConfirmation = uploadService.confirmUpload(
+        Confirmation<CourseRegistration, String> registrationConfirmation = uploadService.confirmUpload(
                 uploadResult,
                 this::fromRegistrationUpload,
-                student -> getMappedValue(student, courseId, registrations)
+                courseRegistration -> getMappedValue(courseRegistration.getStudent(), courseId, registrations)
         );
 
         if (invalidEnrolment)
@@ -88,8 +94,8 @@ public class RegistrationUploadService {
     }
 
     @Transactional
-    public void registerStudents(String courseId, List<String> studentIds, List<String> modes) {
-        courseManagementService.registerStudents(courseId, studentIds, modes);
+    public void registerStudents(String courseId, Confirmation<CourseRegistration, String> confirmation) {
+        courseRegistrationService.registerStudents(courseId, confirmation.getData().keySet());
     }
 
 }

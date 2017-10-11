@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -55,5 +57,21 @@ public class CourseRegistrationService {
     @Transactional
     public List<Attendance> getAttendanceByStudent(String studentId) {
         return attendanceRepository.getByCourseRegistration_Student_EnrolmentNumberAndCourseRegistration_FloatedCourse_Session(studentId, ConfigurationService.getDefaultSessionCode());
+    }
+
+    @Transactional
+    public void registerStudents(String courseId, Set<CourseRegistration> courseRegistrations) {
+        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseId);
+
+        List<CourseRegistration> registrations = new ArrayList<>();
+
+        for (CourseRegistration registration : courseRegistrations) {
+            registration.setFloatedCourse(stored);
+            registration.getAttendance().setId(registration.generateId());
+            registrations.add(registration);
+        }
+
+        stored.getCourseRegistrations().addAll(registrations);
+        floatedCourseRepository.save(stored);
     }
 }
