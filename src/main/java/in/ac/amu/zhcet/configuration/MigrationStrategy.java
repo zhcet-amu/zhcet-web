@@ -16,8 +16,7 @@ public class MigrationStrategy implements FlywayMigrationStrategy {
         try {
             flyway.migrate();
         } catch (FlywayException f) {
-            f.printStackTrace();
-            log.info("Attempting Repair...");
+            log.error("Attempting Repair...", f);
             flyway.repair();
         }
     }

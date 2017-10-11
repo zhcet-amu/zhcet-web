@@ -3,12 +3,14 @@ package in.ac.amu.zhcet.service.core;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.dto.datatables.FacultyEditModel;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+@Slf4j
 @Service
 public class FacultyEditService {
 
@@ -32,12 +34,17 @@ public class FacultyEditService {
     public void saveFacultyMember(String id, FacultyEditModel facultyEditModel) {
         FacultyMember facultyMember = facultyService.getById(id);
 
-        if (facultyMember == null)
+        if (facultyMember == null) {
+            log.error("Tried saving inexistent faculty member %s", id);
             throw new UsernameNotFoundException("Invalid Request");
+        }
 
-        Department department = departmentService.findByName(facultyEditModel.getUserDepartmentName());
-        if (department == null)
-            throw new RuntimeException("No such department :" + facultyEditModel.getUserDepartmentName());
+        String departmentName = facultyEditModel.getUserDepartmentName();
+        Department department = departmentService.findByName(departmentName);
+        if (department == null) {
+            log.error("Tried saving faculty with inexistent department %s %s", id, departmentName);
+            throw new RuntimeException("No such department : " + departmentName);
+        }
 
         if (userService.throwDuplicateEmail(facultyEditModel.getUserEmail(), facultyMember.getUser()))
             facultyEditModel.setUserEmail(null);

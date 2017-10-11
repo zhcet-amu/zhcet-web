@@ -32,13 +32,15 @@ public class AbstractUploadService<T, U, V> {
         try {
             systemStorageService.store(file);
         } catch (StorageException storageException) {
-            logAndError(uploadResult, storageException.getMessage());
+            uploadResult.getErrors().add(storageException.getMessage());
+            log.error(String.format("Error storing file %s", file.getOriginalFilename()), storageException);
         }
     }
 
     private boolean validateType(MultipartFile file, UploadResult<T> uploadResult) {
         if (!file.getContentType().equals("text/csv")) {
-            logAndError(uploadResult, "Uploaded file is not of CSV format");
+            uploadResult.getErrors().add("Uploaded file is not of CSV format");
+            log.warn("Uploaded file is not of CSV format %s %s", file.getOriginalFilename(), file.getContentType());
             return false;
         }
 
@@ -58,19 +60,20 @@ public class AbstractUploadService<T, U, V> {
                 uploadResult.getUploads().addAll(uploads);
             }
 
-            uploadResult.getErrors().addAll(
-                    parseErrors.stream().map(parseError -> {
-                        String message = parseError.getMessage().replace("suppled", "supplied") +
-                                "<br>Line Number: " + parseError.getLineNumber() + " Position: " + parseError.getLinePos();
+            List<String> errors = parseErrors.stream().map(parseError -> {
+                String message = parseError.getMessage().replace("suppled", "supplied") +
+                        "<br>Line Number: " + parseError.getLineNumber() + " Position: " + parseError.getLinePos();
 
-                        if (parseError.getLine() != null)
-                            message += "<br>Line: " + parseError.getLine();
+                if (parseError.getLine() != null)
+                    message += "<br>Line: " + parseError.getLine();
 
-                        return message;
-                    }).collect(Collectors.toList()));
+                return message;
+            }).collect(Collectors.toList());
+            log.warn(String.format("CSV Parsing Errors %s", file.getOriginalFilename()), errors.toString());
+            uploadResult.getErrors().addAll(errors);
         } catch (ParseException e) {
-            e.printStackTrace();
-            logAndError(uploadResult, e.getMessage());
+            log.error(String.format("Error Parsing file %s", file.getOriginalFilename()), e);
+            uploadResult.getErrors().add(e.getMessage());
         }
     }
 
@@ -95,11 +98,5 @@ public class AbstractUploadService<T, U, V> {
 
         return confirmation;
     }
-
-    private void logAndError(UploadResult<T> uploadResult, String error) {
-        log.error(error);
-        uploadResult.getErrors().add(error);
-    }
-
 
 }

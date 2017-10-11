@@ -73,7 +73,7 @@ public class StudentEditController {
                 studentEditService.saveStudent(id, studentEditModel);
                 redirectAttributes.addFlashAttribute("success", Collections.singletonList("Student successfully updated"));
             } catch (RuntimeException re) {
-                re.printStackTrace();
+                log.error("Error saving student", re);
 
                 errors.add(re.getMessage());
                 redirectAttributes.addFlashAttribute("errors", errors);

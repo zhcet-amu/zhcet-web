@@ -57,6 +57,7 @@ public class AvatarService {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 
         if (file.getSize() > 2*1024*1024) {
+            log.warn("Image larger than 2 MB : %s", file.getOriginalFilename());
             redirectAttributes.addFlashAttribute("avatar_errors", Collections.singletonList("File should be smaller than 2 MB"));
             return redirectUrl;
         }
@@ -64,12 +65,13 @@ public class AvatarService {
         try {
             BufferedImage image = Utils.readImage(file);
             if (image == null || !verifyType(file.getOriginalFilename(), false) || !verifyType(file.getContentType(), true)) {
+                log.warn("Image should be of valid type : %s", file.getOriginalFilename());
                 redirectAttributes.addFlashAttribute("avatar_errors", Collections.singletonList("File type must be image"));
                 return redirectUrl;
             }
 
-            log.info("Uploading photo " + file.getOriginalFilename() + " for " + user.getUserId());
-            log.info(String.format("Original Image Size : %s", Utils.humanReadableByteCount(file.getSize(), true)));
+            log.warn("Uploading photo " + file.getOriginalFilename() + " for " + user.getUserId());
+            log.warn(String.format("Original Image Size : %s", Utils.humanReadableByteCount(file.getSize(), true)));
             InputStream resizedImage = ImageUtils.generateThumbnail(image, extension, 1000);
             if (resizedImage == null) // File is appropriate, hence no thumbnail generated
                 resizedImage = file.getInputStream();
@@ -77,7 +79,7 @@ public class AvatarService {
             userDetailService.updateAvatar(user, link);
             redirectAttributes.addFlashAttribute("avatar_success", Collections.singletonList("Profile Picture Updated"));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Avatar Error", e);
             redirectAttributes.addFlashAttribute("avatar_errors", Collections.singletonList("Unknown Error"));
         }
 

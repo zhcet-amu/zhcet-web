@@ -35,8 +35,8 @@ public class FirebaseService {
         try {
             FirebaseApp.initializeApp(options);
             log.info("Firebase Initialized");
-        } catch (RuntimeException i) {
-            log.info("Firebase already Initialized");
+        } catch (IllegalStateException ise) {
+            log.warn("Firebase already initialized");
         }
     }
 
@@ -45,11 +45,11 @@ public class FirebaseService {
         try {
             InputStream is = getClass().getResourceAsStream("/" + fileName);
             if (is == null) {
-                log.info("service-account.json not found in class resources. Maybe debug build? Trying to load another way");
+                log.warn("service-account.json not found in class resources. Maybe debug build? Trying to load another way");
                 URL url = getClass().getClassLoader().getResource(fileName);
 
                 if (url == null) {
-                    log.info(fileName + " not found in class loader resource as well... Using last resort...");
+                    log.warn(fileName + " not found in class loader resource as well... Using last resort...");
                     throw new FileNotFoundException();
                 }
 
@@ -57,7 +57,7 @@ public class FirebaseService {
             }
             return is;
         } catch (FileNotFoundException e) {
-            log.info("service-account.json not found in file system... Attempting to load from environment...");
+            log.warn("service-account.json not found in file system... Attempting to load from environment...");
             return new ByteArrayInputStream(System.getenv("FIREBASE_JSON").getBytes());
         }
     }

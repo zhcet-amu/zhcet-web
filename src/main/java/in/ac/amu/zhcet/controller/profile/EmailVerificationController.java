@@ -36,15 +36,17 @@ public class EmailVerificationController {
             emailVerificationService.sendMail(token);
             redirectAttributes.addFlashAttribute("link_sent", "Verification link sent to '" + email + "'!");
         } catch (DuplicateEmailException de) {
+            log.warn("Duplicate Email", de);
             redirectAttributes.addFlashAttribute("duplicate_email", de.getMessage());
         }
     }
 
     @PostMapping("/profile/register_email")
-    public String registerEmail(RedirectAttributes redirectAttributes, @RequestParam String email, HttpServletRequest request) {
+    public String registerEmail(RedirectAttributes redirectAttributes, @RequestParam String email) {
         if (Utils.isValidEmail(email)) {
             sendVerificationLink(email, redirectAttributes);
         } else {
+            log.warn("Invalid Email", email);
             redirectAttributes.addFlashAttribute("email", email);
             redirectAttributes.addFlashAttribute("invalid_email", "The provided email is invalid!");
         }
@@ -60,6 +62,7 @@ public class EmailVerificationController {
         if (Utils.isValidEmail(user.getEmail())) {
             sendVerificationLink(email, redirectAttributes);
         } else {
+            log.warn("Invalid Email", email);
             redirectAttributes.addFlashAttribute("invalid_email", "The provided email is invalid!");
         }
 
@@ -70,6 +73,7 @@ public class EmailVerificationController {
     public String resetPassword(Model model, @RequestParam("token") String token){
         String result = emailVerificationService.validate(token);
         if (result != null) {
+            log.warn("Email Verification Error", result);
             model.addAttribute("error", result);
         } else {
             emailVerificationService.confirmEmail(token);

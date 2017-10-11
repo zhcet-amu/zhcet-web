@@ -32,6 +32,7 @@ public class PasswordChangeController {
         String renderUrl = "user/change_password";
         UserAuth userAuth = userService.getLoggedInUser();
         if (!userAuth.isActive()) {
+            log.warn("User not verified and tried to change the password!");
             model.addAttribute("error", "The user is not verified, and hence can't change the password");
             return renderUrl;
         }
@@ -46,11 +47,13 @@ public class PasswordChangeController {
 
         UserAuth userAuth = userService.getLoggedInUser();
         if (!userAuth.isActive()) {
+            log.warn("!!POST!! User not verified and tried to change the password!");
             redirectAttributes.addFlashAttribute("error", "The user is not verified, and hence can't change the password");
             return redirectUrl;
         }
 
         if (!UserAuth.PASSWORD_ENCODER.matches(passwordChange.getOldPassword(), userAuth.getPassword())) {
+            log.warn("Current password does not match");
             redirectAttributes.addFlashAttribute("pass_errors", "Current password does not match provided password");
             return redirectUrl;
         }

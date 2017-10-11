@@ -104,10 +104,12 @@ public class FloatedCourseController {
     public String addInCharge(RedirectAttributes redirectAttributes, @PathVariable String id, @RequestParam(required = false) List<String> facultyId, @RequestParam(required = false) List<String> section) {
         verifyAndGetCourse(id);
 
-        if (facultyId == null)
+        if (facultyId == null) {
+            log.warn("Removed all course in charges : Course-%s Sections-%s", id, section);
             courseInChargeService.setInCharge(id, Collections.emptyList());
-        else
+        } else {
             courseInChargeService.setInCharge(id, merge(facultyId, section));
+        }
 
         redirectAttributes.addFlashAttribute("incharge_success", "Course In-Charge saved successfully");
         return "redirect:/department/floated/{id}";
@@ -127,7 +129,7 @@ public class FloatedCourseController {
                 attributes.addFlashAttribute("confirmRegistration", confirmation);
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            log.error("Error registering students", ioe);
         }
 
         return "redirect:/department/floated/{id}";
@@ -140,7 +142,7 @@ public class FloatedCourseController {
             registrationUploadService.registerStudents(id, studentId, mode);
             attributes.addFlashAttribute("registered", true);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error confirming student registrations", e);
             attributes.addFlashAttribute("unknown_error", true);
         }
 

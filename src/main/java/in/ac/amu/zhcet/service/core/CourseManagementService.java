@@ -57,11 +57,13 @@ public class CourseManagementService {
     }
 
     @Transactional
-    public void saveCourse(Course course) {
+    public void saveCourse(String original, Course course) {
         Course managed = courseRepository.findByCode(course.getCode());
 
-        if (managed == null)
+        if (managed == null || !managed.getCode().equals(original)) {
+            log.warn("Attempt to change course code: %s to %s", original, course.getCode());
             throw new UpdateException("Course Code");
+        }
 
         BeanUtils.copyProperties(course, managed);
         courseRepository.save(managed);
@@ -107,7 +109,6 @@ public class CourseManagementService {
     }
 
     public void unfloatCourse(FloatedCourse floatedCourse) {
-        log.info(floatedCourse.getId());
         floatedCourseRepository.delete(floatedCourse.getId());
     }
 }

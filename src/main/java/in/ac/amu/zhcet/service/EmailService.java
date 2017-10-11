@@ -58,7 +58,7 @@ public class EmailService{
         try {
             sender.send(constructHtmlEmail(email, subject, html, null));
         } catch (MessagingException e) {
-            e.printStackTrace();
+            log.error("Error sending mail", e);
         }
     }
 
@@ -66,7 +66,7 @@ public class EmailService{
         try {
             sender.send(constructHtmlEmail(email, subject, html, bcc));
         } catch (MessagingException e) {
-            e.printStackTrace();
+            log.error("Error sending mail", e);
         }
     }
 

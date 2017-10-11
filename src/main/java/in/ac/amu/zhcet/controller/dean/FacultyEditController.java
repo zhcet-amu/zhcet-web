@@ -50,7 +50,7 @@ public class FacultyEditController {
         model.addAttribute("page_description", "Change faculty specific details");
         model.addAttribute("faculty", facultyMember);
         model.addAttribute("departments", departmentService.findAll());
-        if (facultyMember != null && !model.containsAttribute("studentModel")) {
+        if (facultyMember != null && !model.containsAttribute("facultyModel")) {
             model.addAttribute("page_subtitle", "Edit details of " + facultyMember.getUser().getName());
             model.addAttribute("facultyModel", facultyEditService.fromFaculty(facultyMember));
         }
@@ -70,7 +70,7 @@ public class FacultyEditController {
                 facultyEditService.saveFacultyMember(id, facultyEditModel);
                 redirectAttributes.addFlashAttribute("success", Collections.singletonList("Faculty successfully updated"));
             } catch (RuntimeException re) {
-                re.printStackTrace();
+                log.error("Error saving faculty", re);
                 errors.add(re.getMessage());
                 redirectAttributes.addFlashAttribute("errors", errors);
                 redirectAttributes.addFlashAttribute("facultyModel", facultyEditModel);

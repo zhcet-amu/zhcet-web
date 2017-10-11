@@ -37,7 +37,6 @@ public class DeanController {
         model.addAttribute("page_subtitle", "Dean Administration Panel");
         model.addAttribute("page_description", "Register Students and Faculty, manage roles and users");
 
-
         model.addAttribute("users", userService.getAll());
         if (!model.containsAttribute("department"))
             model.addAttribute("department", new Department());
@@ -57,6 +56,7 @@ public class DeanController {
                 departmentService.addDepartment(department);
                 redirectAttributes.addFlashAttribute("dept_success", true);
             } catch (DuplicateException de) {
+                log.warn("Duplicate Department", de);
                 List<String> errors = new ArrayList<>();
                 errors.add(de.getMessage());
 

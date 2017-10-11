@@ -64,6 +64,7 @@ public class CourseCreationController {
 
                 return "redirect:/department/courses?active=true";
             } catch (DuplicateException e) {
+                log.warn("Duplicate Course", e);
                 redirectAttributes.addFlashAttribute("course", course);
                 redirectAttributes.addFlashAttribute("course_errors", e.getMessage());
             }

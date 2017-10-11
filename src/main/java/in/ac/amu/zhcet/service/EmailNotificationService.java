@@ -42,7 +42,7 @@ public class EmailNotificationService {
         FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(id);
 
         if (floatedCourse == null) {
-            log.warn("Email request for invalid course " + id);
+            log.warn("Email request for invalid course %s", id);
             return;
         }
 
@@ -56,7 +56,7 @@ public class EmailNotificationService {
                 .collect(Collectors.toList());
 
         if (emails.isEmpty()) {
-            log.info("No activated subscribed student found for emailing...");
+            log.warn("No activated subscribed student found for emailing...");
         }
 
         String recipient = emails.get(0);

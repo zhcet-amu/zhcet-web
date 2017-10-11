@@ -18,17 +18,17 @@ public class ConfigurationComponent {
         Configuration configuration = configurationRepository.findFirstByOrderByIdDesc();
 
         if (configuration == null) {
-            log.info("Default configuration absent... Building new config");
+            log.warn("Default configuration absent... Building new config");
             Configuration defaultConfiguration = new Configuration();
             defaultConfiguration.getConfig().setUrl(env.getProperty("base.url"));
             configurationRepository.save(defaultConfiguration);
-            log.info("Saved default configuration : " + defaultConfiguration);
+            log.warn("Saved default configuration : " + defaultConfiguration);
         } else if(configuration.getConfig().getVersion() < ConfigurationModel.VERSION) {
-            log.info("Outdated configuration schema... Updating");
+            log.warn("Outdated configuration schema... Updating");
             configuration.setId(null);
             configuration.getConfig().setVersion(ConfigurationModel.VERSION);
             configurationRepository.save(configuration);
-            log.info("Updated configuration : " + configuration);
+            log.warn("Updated configuration : " + configuration);
         } else {
             log.info("Configuration already present : " + configuration);
         }

@@ -7,6 +7,8 @@ import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.FacultyService;
+import in.ac.amu.zhcet.utils.UpdateException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+@Slf4j
 @Controller
 public class CourseEditController {
 
@@ -75,11 +78,12 @@ public class CourseEditController {
         } else {
             try {
                 course.setDepartment(facultyService.getFacultyDepartment());
-                courseManagementService.saveCourse(course);
+                courseManagementService.saveCourse(id, course);
                 redirectAttributes.addFlashAttribute("course_success", "Course saved successfully!");
 
                 return "redirect:/department/courses/{id}/edit";
-            } catch (Exception e) {
+            } catch (UpdateException e) {
+                log.warn("Course Save Error", e);
                 course.setCode(id);
                 redirectAttributes.addFlashAttribute("course", course);
                 redirectAttributes.addFlashAttribute("course_errors", e.getMessage());
@@ -94,6 +98,7 @@ public class CourseEditController {
         Course course = verifyAndGetCourse(id);
 
         if (course == null) {
+            log.warn("Course not deletable %s", id);
             redirectAttributes.addFlashAttribute("course_error", "No such course exists");
         } else {
             courseManagementService.deleteCourse(id);

@@ -46,14 +46,15 @@ public class FileSystemStorageService implements StorageService {
             }
 
             if (filename.contains("..")) {
+                String message = "Cannot store file with relative path outside current directory " + filename;
                 // This is a security check
-                throw new StorageException(
-                        "Cannot store file with relative path outside current directory "
-                                + filename);
+                log.warn(message);
+                throw new StorageException(message);
             }
             Files.copy(inputStream, this.rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
             log.info("Saved file " + filename);
         } catch (IOException e) {
+            log.error(String.format("Failed storing file %s", filename), e);
             throw new StorageException("Failed to store file " + filename, e);
         }
     }
@@ -63,6 +64,7 @@ public class FileSystemStorageService implements StorageService {
         try {
             storeAbstract(file.getName(), file.length() == 0, new FileInputStream(file));
         } catch (FileNotFoundException e) {
+            log.error(String.format("Failed storing file %s", file.getName()), e);
             throw new StorageException("Failed to store file " + file.getName(), e);
         }
     }
@@ -72,6 +74,7 @@ public class FileSystemStorageService implements StorageService {
         try {
             storeAbstract(file.getOriginalFilename(), file.isEmpty(), file.getInputStream());
         } catch (IOException e) {
+            log.error(String.format("Failed storing file %s", file.getName()), e);
             throw new StorageException("Failed to store file " + file.getName(), e);
         }
     }
@@ -84,6 +87,7 @@ public class FileSystemStorageService implements StorageService {
                     .map(this.rootLocation::relativize);
         }
         catch (IOException e) {
+            log.error("Failed to read files", e);
             throw new StorageException("Failed to read stored files", e);
         }
 
@@ -101,13 +105,13 @@ public class FileSystemStorageService implements StorageService {
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
-            }
-            else {
-                throw new StorageFileNotFoundException(
-                        "Could not read file: " + filename);
+            } else {
+                log.error("Failed to read file %s", filename);
+                throw new StorageFileNotFoundException("Could not read file: " + filename);
             }
         }
         catch (MalformedURLException e) {
+            log.error(String.format("Failed to read file %s", filename), e);
             throw new StorageFileNotFoundException("Could not read file: " + filename, e);
         }
     }
@@ -121,8 +125,8 @@ public class FileSystemStorageService implements StorageService {
     public void init() {
         try {
             Files.createDirectories(rootLocation);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
+            log.error("Could not initialize storage", e);
             throw new StorageException("Could not initialize storage", e);
         }
     }

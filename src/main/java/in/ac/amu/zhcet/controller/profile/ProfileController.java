@@ -64,7 +64,7 @@ public class ProfileController {
             userDetailService.updateDetails(userService.getLoggedInUser(), userDetail);
             redirectAttributes.addFlashAttribute("success", true);
         } catch (Exception exc) {
-            exc.printStackTrace();
+            log.error("Error saving profile", exc);
             redirectAttributes.addFlashAttribute("errors", Collections.singletonList(exc.getMessage()));
         }
 

@@ -9,6 +9,7 @@ import in.ac.amu.zhcet.service.core.upload.FacultyUploadService;
 import in.ac.amu.zhcet.service.core.upload.StudentUploadService;
 import in.ac.amu.zhcet.service.core.upload.base.Confirmation;
 import in.ac.amu.zhcet.service.core.upload.base.UploadResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @Controller
 public class RegistrationController {
 
@@ -55,7 +57,7 @@ public class RegistrationController {
                 session.setAttribute("confirmStudentRegistration", confirmation);
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            log.error("Error registering students", ioe);
         }
 
         return "redirect:/dean";
@@ -90,7 +92,7 @@ public class RegistrationController {
                 session.setAttribute("confirmFacultyRegistration", confirmation);
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            log.error("Error registering faculty", ioe);
         }
 
         return "redirect:/dean";
@@ -108,10 +110,10 @@ public class RegistrationController {
                 attributes.addFlashAttribute("file_saved", filename);
                 attributes.addFlashAttribute("faculty_registered", true);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error registering faculty", e);
                 attributes.addFlashAttribute("file_error", true);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Error registering faculty", e);
                 attributes.addFlashAttribute("unknown_error", true);
             }
 

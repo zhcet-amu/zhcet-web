@@ -57,12 +57,16 @@ public class CourseInChargeService {
 
     private void addInCharge(FloatedCourse stored, String facultyId, String section) {
         FacultyMember facultyMember = facultyService.getById(facultyId);
-        if (facultyMember == null)
+        if (facultyMember == null) {
+            log.error("No such faculty member : %s", facultyId);
             return;
+        }
 
         CourseInCharge inCharge = courseInChargeRepository.findByFloatedCourseAndFacultyMemberAndSection(stored, facultyMember, section);
-        if (inCharge != null)
+        if (inCharge != null) {
+            log.error("No such in charge : %s %s %s", stored.getCourse().getCode(), facultyMember.getFacultyId(), section);
             return;
+        }
 
         CourseInCharge courseInCharge = new CourseInCharge();
         courseInCharge.setFacultyMember(facultyMember);
@@ -84,8 +88,10 @@ public class CourseInChargeService {
 
     public CourseInCharge getCourseInChargeAndVerify(String floatedCourseCode, String section) {
         CourseInCharge courseInCharge = getCourseInCharge(floatedCourseCode, section);
-        if (courseInCharge == null)
+        if (courseInCharge == null) {
+            log.error("Forced Access of Course In Charge %s %s", floatedCourseCode, section);
             throw new AccessDeniedException("403");
+        }
 
         return courseInCharge;
     }

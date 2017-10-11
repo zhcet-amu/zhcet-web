@@ -54,11 +54,13 @@ public class RegistrationUploadService {
     private String getMappedValue(Student student, String courseId, List<CourseRegistration> registrations) {
         if (student.getEnrolmentNumber() == null) {
             invalidEnrolment = true;
+            log.warn("Course Registration : Invalid Faculty Number %s %s", courseId, student.getFacultyNumber());
             return  "No such student found";
         } else if(registrations.stream()
                 .map(CourseRegistration::getStudent)
                 .anyMatch(oldStudent -> oldStudent.equals(student))) {
             alreadyEnrolled = true;
+            log.warn("Student already enrolled in course : %s %s", courseId, student.getEnrolmentNumber());
             return "Already enrolled in " + courseId;
         } else {
             return null;

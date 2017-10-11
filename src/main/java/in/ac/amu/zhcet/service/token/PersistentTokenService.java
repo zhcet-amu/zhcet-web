@@ -2,6 +2,7 @@ package in.ac.amu.zhcet.service.token;
 
 import in.ac.amu.zhcet.data.model.token.PersistentLogin;
 import in.ac.amu.zhcet.data.repository.PersistentLoginRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
@@ -11,6 +12,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.Date;
 
+@Slf4j
 @Service
 public class PersistentTokenService implements PersistentTokenRepository {
 
@@ -41,7 +43,7 @@ public class PersistentTokenService implements PersistentTokenRepository {
         try {
             return getTokenFromLogin(persistentLoginRepository.getOne(seriesId));
         } catch (EntityNotFoundException e) {
-            e.printStackTrace();
+            log.error("Can't retrieve token", e);
             return null;
         }
     }

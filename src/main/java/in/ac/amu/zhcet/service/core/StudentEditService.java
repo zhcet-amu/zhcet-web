@@ -39,25 +39,36 @@ public class StudentEditService {
     public void saveStudent(String id, StudentEditModel studentEditModel) {
         Student student = studentService.getByEnrolmentNumber(id);
 
-        if (student == null)
+        if (student == null) {
+            log.error("Tried saving inexistent student %s", id);
             throw new UsernameNotFoundException("Invalid Request");
+        }
 
-        Department department = departmentService.findByName(studentEditModel.getUserDepartmentName());
-        if (department == null)
-            throw new RuntimeException("No such department :" + studentEditModel.getUserDepartmentName());
+        String departmentName = studentEditModel.getUserDepartmentName();
+        Department department = departmentService.findByName(departmentName);
+        if (department == null) {
+            log.error("Tried saving student with inexistent department %s %s", id, departmentName);
+            throw new RuntimeException("No such department : " + departmentName);
+        }
 
         Student checkDuplicate = studentService.getByFacultyNumber(studentEditModel.getFacultyNumber());
-        if (checkDuplicate != null && !checkDuplicate.getUser().getUserId().equals(student.getUser().getUserId()))
+        if (checkDuplicate != null && !checkDuplicate.getUser().getUserId().equals(student.getUser().getUserId())) {
+            log.error("Tried to save student with duplicate faculty number %s %s", id, studentEditModel.getFacultyNumber());
             throw new DuplicateException("Student", "Faculty Number", studentEditModel.getFacultyNumber(), studentEditModel);
+        }
 
         if (userService.throwDuplicateEmail(studentEditModel.getUserEmail(), student.getUser()))
             studentEditModel.setUserEmail(null);
 
-        if (!Utils.isEmpty(studentEditModel.getHallCode()) && !EnumUtils.isValidEnum(HallCode.class, studentEditModel.getHallCode()))
+        if (!Utils.isEmpty(studentEditModel.getHallCode()) && !EnumUtils.isValidEnum(HallCode.class, studentEditModel.getHallCode())) {
+            log.error("Tried to save student with invalid hall code %s %s", id, studentEditModel.getHallCode());
             throw new RuntimeException("Invalid Hall : " + studentEditModel.getHallCode() + ". Must be within " + EnumUtils.getEnumMap(HallCode.class).keySet());
+        }
 
-        if (studentEditModel.getStatus() != null && !EnumUtils.isValidEnum(StudentStatus.class, studentEditModel.getStatus()+""))
-            throw new RuntimeException("Invalid Hall : " + studentEditModel.getStatus() + ". Must be within " + EnumUtils.getEnumMap(StudentStatus.class).keySet());
+        if (studentEditModel.getStatus() != null && !EnumUtils.isValidEnum(StudentStatus.class, studentEditModel.getStatus()+"")) {
+            log.error("Tried to save student with invalid status %s %s", id, studentEditModel.getStatus());
+            throw new RuntimeException("Invalid Status : " + studentEditModel.getStatus() + ". Must be within " + EnumUtils.getEnumMap(StudentStatus.class).keySet());
+        }
 
         student.getUser().setDepartment(department);
         modelMapper.map(studentEditModel, student);

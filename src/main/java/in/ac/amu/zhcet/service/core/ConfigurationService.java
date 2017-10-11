@@ -74,6 +74,7 @@ public class ConfigurationService {
             URL url = new URL(urlString);
             return url.getProtocol() + "://" + url.getAuthority() + "/";
         } catch (Exception e) {
+            log.error("Can't parse URL", e);
             return null;
         }
     }

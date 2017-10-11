@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Slf4j
 @Controller
 public class ForgotPasswordController {
@@ -36,6 +34,7 @@ public class ForgotPasswordController {
             passwordResetService.sendMail(token);
             redirectAttributes.addFlashAttribute("reset_link_sent", true);
         } catch(UsernameNotFoundException e){
+            log.warn("User not found : Password Forgot : %s", e);
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/login/forgot_password";
         }
