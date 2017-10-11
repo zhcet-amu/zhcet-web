@@ -20,7 +20,7 @@ public class AttendanceController {
         this.courseRegistrationService = courseRegistrationService;
     }
 
-    @GetMapping("/attendance")
+    @GetMapping("/student/attendance")
     public String attendance(Model model) {
         Student student = studentService.getLoggedInStudent();
         model.addAttribute("page_title", "Attendance");

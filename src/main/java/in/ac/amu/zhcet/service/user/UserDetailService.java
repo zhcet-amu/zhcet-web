@@ -36,6 +36,9 @@ public class UserDetailService implements UserDetailsService {
         UserAuth user = userService.findById(username);
 
         if (user == null)
+            user = userService.getUserByEmail(username);
+
+        if (user == null)
             throw new UsernameNotFoundException(username);
 
         return new CustomUser(user.getUserId(), user.getPassword(), getAuthorities(user.getRoles()))

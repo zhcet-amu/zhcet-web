@@ -29,7 +29,7 @@ public class RoleWiseSuccessHandler implements AuthenticationSuccessHandler {
         else if (authorities.contains(Roles.FACULTY))
             return "/faculty/courses";
         else if (authorities.contains(Roles.STUDENT))
-            return "/attendance";
+            return "/student/attendance";
         else
             return "/login";
     }

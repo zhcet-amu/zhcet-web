@@ -37,7 +37,7 @@ public class EmailNotificationService {
 
     @Async
     public void sendNotificationsForAttendance(String id, List<AttendanceUpload> uploadList) {
-        String url = configurationService.getBaseUrl() + "/attendance";
+        String url = configurationService.getBaseUrl() + "/student/attendance";
         log.info("Email Attendance Notification : {}", id);
         log.info("URL : {}", url);
         FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(id);

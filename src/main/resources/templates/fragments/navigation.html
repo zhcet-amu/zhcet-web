@@ -11,7 +11,7 @@
     <div class="main-menu-content">
         <ul id="main-menu-navigation" data-menu="menu-navigation" class="navigation navigation-main">
             <li th:class="|nav-item ${pageId == 'student_attendance' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_STUDENT')">
-                <a th:href="@{/attendance}" href="attendance.html">
+                <a th:href="@{/student/attendance}" href="attendance.html">
                     <i class="icon-calendar"></i>
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Attendance</span>
                 </a>
