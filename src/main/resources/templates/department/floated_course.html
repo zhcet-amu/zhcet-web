@@ -24,6 +24,21 @@
     <div class="row">
         <div class="col-xs-12 col-xl-5">
             <div th:replace="department/fragments/add_in_charge"></div>
+            <div class="card">
+                <a th:href="|/department/floated/${floatedCourse.course.code}/attendance/download|" target="_blank">
+                    <div class="card-body">
+                        <div class="media">
+                            <div class="p-2 text-xs-center bg-cyan bg-darken-2 media-left media-middle" style="background-color: #0097A7">
+                                <i class="icon-user1 font-large-2 text-white"></i>
+                            </div>
+                            <div class="p-2 bg-cyan text-white media-body" th:if="${courseRegistrations != null}" style="background-color: #00BCD4">
+                                <h5>Download Attendance</h5>
+                                <h5 class="text-bold-400" th:text="|${courseRegistrations.size()} Students|"></h5>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
             <div th:replace="department/fragments/register_students"></div>
         </div>
         <div class="col-xs-12 col-xl-7">

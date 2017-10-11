@@ -2,6 +2,7 @@ package in.ac.amu.zhcet.controller.department;
 
 import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.model.dto.upload.RegistrationUpload;
+import in.ac.amu.zhcet.service.AttendanceDownloadService;
 import in.ac.amu.zhcet.service.core.CourseInChargeService;
 import in.ac.amu.zhcet.service.core.CourseManagementService;
 import in.ac.amu.zhcet.service.core.FacultyService;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,13 +36,15 @@ public class FloatedCourseController {
     private final CourseInChargeService courseInChargeService;
     private final CourseManagementService courseManagementService;
     private final RegistrationUploadService registrationUploadService;
+    private final AttendanceDownloadService attendanceDownloadService;
 
     @Autowired
-    public FloatedCourseController(FacultyService facultyService, CourseInChargeService courseInChargeService, CourseManagementService courseManagementService, RegistrationUploadService registrationUploadService) {
+    public FloatedCourseController(FacultyService facultyService, CourseInChargeService courseInChargeService, CourseManagementService courseManagementService, RegistrationUploadService registrationUploadService, AttendanceDownloadService attendanceDownloadService) {
         this.facultyService = facultyService;
         this.courseInChargeService = courseInChargeService;
         this.courseManagementService = courseManagementService;
         this.registrationUploadService = registrationUploadService;
+        this.attendanceDownloadService = attendanceDownloadService;
     }
 
     private FloatedCourse verifyAndGetCourse(String courseId) {
@@ -113,6 +117,24 @@ public class FloatedCourseController {
 
         redirectAttributes.addFlashAttribute("incharge_success", "Course In-Charge saved successfully");
         return "redirect:/department/floated/{id}";
+    }
+
+    @GetMapping("department/floated/{id}/attendance/download")
+    public void getStudents(HttpServletResponse response, @PathVariable String id) throws IOException {
+        FloatedCourse floatedCourse = verifyAndGetCourse(id);
+
+        List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
+        Utils.sortAttendance(courseRegistrations);
+
+        response.setContentType("text/csv");
+        response.setHeader("Content-disposition", "attachment;filename=attendance_" + id + ".csv");
+
+        List<String> lines = attendanceDownloadService.attendanceCsv("department", id, courseRegistrations);
+        for (String line : lines) {
+            response.getOutputStream().println(line);
+        }
+
+        response.getOutputStream().flush();
     }
 
     @PostMapping("department/floated/{id}/register")
