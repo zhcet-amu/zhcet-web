@@ -57,6 +57,6 @@ function fileUploaded(event) {
         return;
     }
 
-    toastr.error('The type of file must be either of ' + types);
+    toastr.error('The type of file must be either of ' + types + '. Was ' + file.type);
     fileName.addClass('bg-danger');
 }
