@@ -2,11 +2,11 @@ package in.ac.amu.zhcet.controller.department;
 
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.dto.upload.RegistrationUpload;
-import in.ac.amu.zhcet.service.core.CourseManagementService;
-import in.ac.amu.zhcet.service.core.CourseRegistrationService;
-import in.ac.amu.zhcet.service.upload.RegistrationUploadService;
-import in.ac.amu.zhcet.service.upload.base.Confirmation;
-import in.ac.amu.zhcet.service.upload.base.UploadResult;
+import in.ac.amu.zhcet.service.CourseManagementService;
+import in.ac.amu.zhcet.service.CourseRegistrationService;
+import in.ac.amu.zhcet.service.csv.RegistrationUploadService;
+import in.ac.amu.zhcet.service.csv.base.Confirmation;
+import in.ac.amu.zhcet.service.csv.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +34,7 @@ public class CourseRegistrationController {
     }
 
     @PostMapping("department/floated/{id}/register")
-    public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("file") MultipartFile file, HttpSession session) {
+    public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("storage") MultipartFile file, HttpSession session) {
         courseManagementService.verifyAndGetCourse(id);
         try {
             UploadResult<RegistrationUpload> result = registrationUploadService.handleUpload(file);

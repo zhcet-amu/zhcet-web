@@ -3,9 +3,9 @@ package in.ac.amu.zhcet.controller.faculty;
 import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.service.AttendanceDownloadService;
-import in.ac.amu.zhcet.service.core.CourseInChargeService;
-import in.ac.amu.zhcet.service.core.FacultyService;
+import in.ac.amu.zhcet.service.misc.AttendanceDownloadService;
+import in.ac.amu.zhcet.service.CourseInChargeService;
+import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class FacultyCourseController {
     public String facultyCourses(Model model) {
         model.addAttribute("page_title", "Course Management");
         model.addAttribute("page_subtitle", "Faculty Floated Course Management");
-        model.addAttribute("page_description", "Manage and upload attendance for currently floated courses");
+        model.addAttribute("page_description", "Manage and csv attendance for currently floated courses");
 
         FacultyMember facultyMember = facultyService.getLoggedInMember();
         List<CourseInCharge> courseInCharges = courseInChargeService.getCourseByFaculty(facultyMember);

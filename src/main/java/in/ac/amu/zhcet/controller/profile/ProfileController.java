@@ -5,10 +5,9 @@ import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.user.Type;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.model.user.UserDetail;
-import in.ac.amu.zhcet.service.core.FacultyService;
-import in.ac.amu.zhcet.service.core.StudentService;
-import in.ac.amu.zhcet.service.core.UserService;
-import in.ac.amu.zhcet.service.user.UserDetailService;
+import in.ac.amu.zhcet.service.FacultyService;
+import in.ac.amu.zhcet.service.StudentService;
+import in.ac.amu.zhcet.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,14 +27,12 @@ public class ProfileController {
     private final UserService userService;
     private final StudentService studentService;
     private final FacultyService facultyService;
-    private final UserDetailService userDetailService;
 
     @Autowired
-    public ProfileController(UserService userService, StudentService studentService, FacultyService facultyService, UserDetailService userDetailService) {
+    public ProfileController(UserService userService, StudentService studentService, FacultyService facultyService) {
         this.userService = userService;
         this.studentService = studentService;
         this.facultyService = facultyService;
-        this.userDetailService = userDetailService;
     }
 
     @GetMapping("/profile")
@@ -62,7 +59,7 @@ public class ProfileController {
     @PostMapping("/profile/details")
     public String saveProfile(@ModelAttribute UserDetail userDetail, final RedirectAttributes redirectAttributes) {
         try {
-            userDetailService.updateDetails(userService.getLoggedInUser(), userDetail);
+            userService.updateDetails(userService.getLoggedInUser(), userDetail);
             redirectAttributes.addFlashAttribute("success", true);
         } catch (Exception exc) {
             log.error("Error saving profile", exc);

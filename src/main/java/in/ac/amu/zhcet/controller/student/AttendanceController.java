@@ -1,8 +1,8 @@
 package in.ac.amu.zhcet.controller.student;
 
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.service.core.CourseRegistrationService;
-import in.ac.amu.zhcet.service.core.StudentService;
+import in.ac.amu.zhcet.service.CourseRegistrationService;
+import in.ac.amu.zhcet.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

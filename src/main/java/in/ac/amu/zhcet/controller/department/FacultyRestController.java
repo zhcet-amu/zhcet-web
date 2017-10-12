@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.controller.department;
 
 import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.service.core.FacultyService;
+import in.ac.amu.zhcet.service.FacultyService;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

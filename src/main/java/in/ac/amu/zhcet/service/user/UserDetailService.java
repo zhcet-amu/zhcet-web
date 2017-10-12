@@ -1,8 +1,7 @@
 package in.ac.amu.zhcet.service.user;
 
 import in.ac.amu.zhcet.data.model.user.UserAuth;
-import in.ac.amu.zhcet.data.model.user.UserDetail;
-import in.ac.amu.zhcet.service.core.UserService;
+import in.ac.amu.zhcet.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -57,7 +57,7 @@ public class UserDetailService implements UserDetailsService {
         return grantedAuthorities;
     }
 
-    public void updatePrincipal(UserAuth userAuth) {
+    private void updatePrincipal(UserAuth userAuth) {
         // Update the principal for use throughout the app
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 loadUserByUsername(userAuth.getUserId()), userAuth.getPassword(), UserDetailService.getAuthorities(userAuth.getRoles())
@@ -66,21 +66,14 @@ public class UserDetailService implements UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    @Transactional
-    public void updateDetails(UserAuth user, UserDetail userDetail) {
-        UserDetail details = user.getDetails();
-        details.setDescription(userDetail.getDescription());
-        details.setAddressLine1(userDetail.getAddressLine1());
-        details.setAddressLine2(userDetail.getAddressLine2());
-        details.setCity(userDetail.getCity());
-        details.setState(userDetail.getState());
-
-        userService.save(user);
+    public UserAuth getLoggedInUser() {
+        return userService.getLoggedInUser();
     }
 
     @Transactional
     public void updateAvatar(UserAuth user, String avatarUrl) {
         user.getDetails().setAvatarUrl(avatarUrl);
+        user.getDetails().setAvatarUpdated(ZonedDateTime.now());
         userService.save(user);
         updatePrincipal(user);
     }

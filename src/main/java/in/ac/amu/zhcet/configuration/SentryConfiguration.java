@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.configuration;
 
 import in.ac.amu.zhcet.data.model.user.UserAuth;
-import in.ac.amu.zhcet.service.core.UserService;
+import in.ac.amu.zhcet.service.UserService;
 import io.sentry.Sentry;
 import io.sentry.event.helper.EventBuilderHelper;
 import lombok.Data;

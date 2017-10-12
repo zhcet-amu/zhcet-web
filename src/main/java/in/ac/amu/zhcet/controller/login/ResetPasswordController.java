@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.controller.login;
 
 
 import in.ac.amu.zhcet.data.model.dto.PasswordReset;
-import in.ac.amu.zhcet.service.token.PasswordResetService;
+import in.ac.amu.zhcet.service.user.auth.PasswordResetService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,7 @@ public class ResetPasswordController {
     }
 
     @GetMapping("/login/reset_password")
-    public String resetPassword(Model model, @RequestParam("id") String id, @RequestParam("token") String token){
+    public String resetPassword(Model model, @RequestParam("id") String id, @RequestParam("auth") String token){
         String result = passwordResetService.validate(id, token);
         if (result != null) {
             log.warn("Token Verification : Password Reset : {}", result);
@@ -42,7 +42,7 @@ public class ResetPasswordController {
 
     @PostMapping("/login/reset_password")
     public String savePassword(@Valid PasswordReset passwordReset, RedirectAttributes redirectAttributes) {
-        String redirectUrl = "redirect:/login/reset_password?id="+passwordReset.getId()+"&token="+passwordReset.getToken();
+        String redirectUrl = "redirect:/login/reset_password?id="+passwordReset.getId()+"&auth="+passwordReset.getToken();
 
         String result = passwordResetService.validate(passwordReset.getId(), passwordReset.getToken());
         if (result != null) {

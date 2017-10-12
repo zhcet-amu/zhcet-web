@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.controller.login;
 
 import in.ac.amu.zhcet.data.model.user.UserAuth;
-import in.ac.amu.zhcet.service.core.UserService;
+import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

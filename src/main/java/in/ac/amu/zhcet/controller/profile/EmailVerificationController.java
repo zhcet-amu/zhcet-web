@@ -2,9 +2,9 @@ package in.ac.amu.zhcet.controller.profile;
 
 import in.ac.amu.zhcet.data.model.token.VerificationToken;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
-import in.ac.amu.zhcet.service.core.UserService;
-import in.ac.amu.zhcet.service.token.DuplicateEmailException;
-import in.ac.amu.zhcet.service.token.EmailVerificationService;
+import in.ac.amu.zhcet.service.UserService;
+import in.ac.amu.zhcet.service.user.auth.DuplicateEmailException;
+import in.ac.amu.zhcet.service.user.auth.EmailVerificationService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +70,7 @@ public class EmailVerificationController {
     }
 
     @GetMapping("/login/verify")
-    public String resetPassword(Model model, @RequestParam("token") String token){
+    public String resetPassword(Model model, @RequestParam("auth") String token){
         String result = emailVerificationService.validate(token);
         if (result != null) {
             log.warn("Email Verification Error", result);

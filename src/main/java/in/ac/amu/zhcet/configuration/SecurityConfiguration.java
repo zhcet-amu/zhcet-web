@@ -3,7 +3,7 @@ package in.ac.amu.zhcet.configuration;
 import in.ac.amu.zhcet.configuration.security.RoleWiseSuccessHandler;
 import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
-import in.ac.amu.zhcet.service.token.PersistentTokenService;
+import in.ac.amu.zhcet.service.user.auth.PersistentTokenService;
 import in.ac.amu.zhcet.service.user.UserDetailService;
 import in.ac.amu.zhcet.service.user.Auditor;
 import org.springframework.beans.factory.annotation.Autowired;

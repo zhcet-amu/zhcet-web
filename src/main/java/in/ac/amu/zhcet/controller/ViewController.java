@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.controller;
 
 import in.ac.amu.zhcet.configuration.security.RoleWiseSuccessHandler;
-import in.ac.amu.zhcet.service.core.UserService;
+import in.ac.amu.zhcet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;

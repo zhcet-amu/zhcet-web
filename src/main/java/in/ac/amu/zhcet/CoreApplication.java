@@ -2,8 +2,8 @@ package in.ac.amu.zhcet;
 
 import com.j256.simplecsv.processor.CsvProcessor;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
-import in.ac.amu.zhcet.service.file.StorageProperties;
-import in.ac.amu.zhcet.service.file.StorageService;
+import in.ac.amu.zhcet.service.storage.StorageProperties;
+import in.ac.amu.zhcet.service.storage.StorageService;
 import io.sentry.Sentry;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

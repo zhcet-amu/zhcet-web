@@ -4,11 +4,11 @@ import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.upload.FacultyUpload;
 import in.ac.amu.zhcet.data.model.dto.upload.StudentUpload;
-import in.ac.amu.zhcet.service.file.FileSystemStorageService;
-import in.ac.amu.zhcet.service.upload.FacultyUploadService;
-import in.ac.amu.zhcet.service.upload.StudentUploadService;
-import in.ac.amu.zhcet.service.upload.base.Confirmation;
-import in.ac.amu.zhcet.service.upload.base.UploadResult;
+import in.ac.amu.zhcet.service.storage.FileSystemStorageService;
+import in.ac.amu.zhcet.service.csv.FacultyUploadService;
+import in.ac.amu.zhcet.service.csv.StudentUploadService;
+import in.ac.amu.zhcet.service.csv.base.Confirmation;
+import in.ac.amu.zhcet.service.csv.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,7 +43,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/dean/register_students")
-    public String uploadFile(RedirectAttributes attributes, @RequestParam("file") MultipartFile file, HttpSession session, WebRequest webRequest) {
+    public String uploadFile(RedirectAttributes attributes, @RequestParam("storage") MultipartFile file, HttpSession session, WebRequest webRequest) {
         try {
             UploadResult<StudentUpload> result = studentUploadService.handleUpload(file);
 
@@ -79,7 +79,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/dean/register_faculty")
-    public String uploadFacultyFile(RedirectAttributes attributes, @RequestParam("file") MultipartFile file, HttpSession session, WebRequest webRequest) throws IOException {
+    public String uploadFacultyFile(RedirectAttributes attributes, @RequestParam("storage") MultipartFile file, HttpSession session, WebRequest webRequest) throws IOException {
         try {
             UploadResult<FacultyUpload> result = facultyUploadService.handleUpload(file);
 

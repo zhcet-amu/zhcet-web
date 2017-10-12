@@ -1,8 +1,8 @@
 package in.ac.amu.zhcet.controller.department;
 
 import in.ac.amu.zhcet.data.model.FloatedCourse;
-import in.ac.amu.zhcet.service.core.CourseManagementService;
-import in.ac.amu.zhcet.service.core.FacultyService;
+import in.ac.amu.zhcet.service.CourseManagementService;
+import in.ac.amu.zhcet.service.FacultyService;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

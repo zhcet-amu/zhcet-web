@@ -1,11 +1,11 @@
 package in.ac.amu.zhcet.controller.faculty;
 
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
-import in.ac.amu.zhcet.service.EmailNotificationService;
-import in.ac.amu.zhcet.service.core.CourseInChargeService;
-import in.ac.amu.zhcet.service.upload.AttendanceUploadService;
-import in.ac.amu.zhcet.service.upload.base.Confirmation;
-import in.ac.amu.zhcet.service.upload.base.UploadResult;
+import in.ac.amu.zhcet.service.misc.EmailNotificationService;
+import in.ac.amu.zhcet.service.CourseInChargeService;
+import in.ac.amu.zhcet.service.csv.AttendanceUploadService;
+import in.ac.amu.zhcet.service.csv.base.Confirmation;
+import in.ac.amu.zhcet.service.csv.base.UploadResult;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

@@ -2,9 +2,9 @@ package in.ac.amu.zhcet.controller.dean;
 
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.dto.datatables.FacultyEditModel;
-import in.ac.amu.zhcet.service.core.DepartmentService;
-import in.ac.amu.zhcet.service.core.FacultyEditService;
-import in.ac.amu.zhcet.service.core.FacultyService;
+import in.ac.amu.zhcet.service.DepartmentService;
+import in.ac.amu.zhcet.service.FacultyEditService;
+import in.ac.amu.zhcet.service.FacultyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

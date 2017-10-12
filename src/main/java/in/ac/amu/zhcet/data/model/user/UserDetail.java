@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import java.time.ZonedDateTime;
 
 @Data
 @Entity
@@ -32,6 +33,8 @@ public class UserDetail extends BaseEntity {
     private String addressLine2;
     private String city;
     private String state;
+
+    private ZonedDateTime avatarUpdated;
 
     private String phoneNumbers;
 
