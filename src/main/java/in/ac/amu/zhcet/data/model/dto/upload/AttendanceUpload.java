@@ -17,4 +17,8 @@ public class AttendanceUpload {
     private int attended;
     @CsvColumn(mustNotBeBlank = true)
     private int delivered;
+    @CsvColumn(mustBeSupplied = false)
+    private float percentage;
+    @CsvColumn(mustBeSupplied = false)
+    private String remark;
 }
