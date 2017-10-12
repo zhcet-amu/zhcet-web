@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.utils;
 
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Ordering;
 import com.google.common.hash.Hashing;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import org.apache.commons.text.WordUtils;
@@ -77,7 +78,7 @@ public class Utils {
     public static void sortAttendance(List<CourseRegistration> courseRegistrations) {
         courseRegistrations.sort((att1, att2) ->
                 ComparisonChain.start()
-                        .compare(att1.getStudent().getSection(), att2.getStudent().getSection())
+                        .compare(att1.getStudent().getSection(), att2.getStudent().getSection(), Ordering.natural().nullsFirst())
                         .compare(att1.getStudent().getFacultyNumber().substring(5), att2.getStudent().getFacultyNumber().substring(5))
                         .result()
             );
