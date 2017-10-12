@@ -109,11 +109,10 @@ public class FloatedCourseController {
     }
 
     @GetMapping("department/floated/{id}/attendance/download")
-    public void getStudents(HttpServletResponse response, @PathVariable String id) throws IOException {
+    public void downloadAttendance(HttpServletResponse response, @PathVariable String id) throws IOException {
         FloatedCourse floatedCourse = courseManagementService.verifyAndGetCourse(id);
 
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-        Utils.sortAttendance(courseRegistrations);
 
         response.setContentType("text/csv");
         response.setHeader("Content-disposition", "attachment;filename=attendance_" + id + ".csv");

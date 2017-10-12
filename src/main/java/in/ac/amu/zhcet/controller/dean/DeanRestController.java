@@ -2,11 +2,16 @@ package in.ac.amu.zhcet.controller.dean;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import in.ac.amu.zhcet.data.model.FacultyMember;
+import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.datatables.FacultyView;
+import in.ac.amu.zhcet.data.model.dto.datatables.FloatedCourseView;
 import in.ac.amu.zhcet.data.model.dto.datatables.StudentView;
 import in.ac.amu.zhcet.data.repository.FacultyRepository;
+import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
+import in.ac.amu.zhcet.service.CourseInChargeService;
+import in.ac.amu.zhcet.service.misc.ConfigurationService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +30,16 @@ public class DeanRestController {
     private final ModelMapper modelMapper;
     private final FacultyRepository facultyRepository;
     private final StudentRepository studentRepository;
+    private final FloatedCourseRepository floatedCourseRepository;
+    private final CourseInChargeService courseInChargeService;
 
     @Autowired
-    public DeanRestController(ModelMapper modelMapper, FacultyRepository facultyRepository, StudentRepository studentRepository) {
+    public DeanRestController(ModelMapper modelMapper, FacultyRepository facultyRepository, StudentRepository studentRepository, FloatedCourseRepository floatedCourseRepository, CourseInChargeService courseInChargeService) {
         this.modelMapper = modelMapper;
         this.facultyRepository = facultyRepository;
         this.studentRepository = studentRepository;
+        this.floatedCourseRepository = floatedCourseRepository;
+        this.courseInChargeService = courseInChargeService;
     }
 
     @JsonView(DataTablesOutput.View.class)
@@ -47,6 +56,16 @@ public class DeanRestController {
         return facultyRepository.findAll(input, this::fromFaculty);
     }
 
+    @JsonView(DataTablesOutput.View.class)
+    @PostMapping(value = "/dean/api/floated")
+    public DataTablesOutput<FloatedCourseView> getFloatedCourses(@Valid @RequestBody DataTablesInput input) {
+        convertInput(input);
+
+        return floatedCourseRepository.findAll(input, (root, query, cb) ->
+                cb.equal(root.get("session"), ConfigurationService.getDefaultSessionCode()),
+                null, this::fromFloatedCourse);
+    }
+
     private static void convertInput(DataTablesInput input) {
         input.getColumns().replaceAll(column -> {
             column.setData(column.getData().replace('_', '.'));
@@ -60,6 +79,14 @@ public class DeanRestController {
 
     private FacultyView fromFaculty(FacultyMember facultyMember) {
         return modelMapper.map(facultyMember, FacultyView.class);
+    }
+
+    private FloatedCourseView fromFloatedCourse(FloatedCourse floatedCourse) {
+        FloatedCourseView floatedCourseView = modelMapper.map(floatedCourse, FloatedCourseView.class);
+        floatedCourseView.setNumStudents(floatedCourse.getCourseRegistrations().size());
+        floatedCourseView.setSections(courseInChargeService.getSections(floatedCourse).toString());
+
+        return floatedCourseView;
     }
 
 }

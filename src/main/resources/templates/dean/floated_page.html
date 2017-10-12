@@ -2,18 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en" data-textdirection="ltr" class="loading">
 <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-<head th:replace="fragments/layout :: head">
-</head>
+<head th:replace="fragments/layout :: head"></head>
+<style>
+    .type {
+        background-color: #E1BEE7;
+        font-weight:100;
+    }
+</style>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
-<div th:replace="fragments/navigation :: navigation(pageId = 'dean', subPage = 'faculty_page')"></div>
+<div th:replace="fragments/navigation :: navigation(pageId = 'dean', subPage = 'floated_page')"></div>
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="row">
         <div class="col-xs-12">
             <div th:replace="fragments/layout :: toolbar"></div>
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Faculty Members</h4>
+                    <h4 class="card-title">Floated Courses</h4>
                     <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -25,29 +30,33 @@
                 </div>
                 <div class="card-body collapse in">
                     <div class="card-block card-dashboard">
-                        <table id="facultyTable" class="table display table-striped table-bordered">
+                        <table id="floatedCourseTable" class="table display table-striped table-bordered">
                             <!-- Header Table -->
                             <thead>
                             <tr>
-                                <th></th>
-                                <th>Faculty ID</th>
-                                <th>Name</th>
-                                <th>Designation</th>
+                                <th>Code</th>
+                                <th>Title</th>
                                 <th>Department</th>
-                                <th>Working</th>
-                                <th>Email</th>
+                                <th class="small-th" data-toggle="tooltip" data-original-title="Number of Students in Course">Reg.</th>
+                                <th class="small-th" data-toggle="tooltip" data-original-title="Semester">Sem.</th>
+                                <th class="small-th" data-toggle="tooltip" data-original-title="Credits">Cred.</th>
+                                <th class="small-th" data-toggle="tooltip" data-original-title="Course Category">Cat.</th>
+                                <th>Branch</th>
+                                <th>Type</th>
                             </tr>
                             </thead>
                             <!-- Footer Table -->
                             <tfoot>
                             <tr>
-                                <th></th>
-                                <th>Faculty ID</th>
-                                <th>Name</th>
-                                <th>Designation</th>
+                                <th>Code</th>
+                                <th>Title</th>
                                 <th>Department</th>
-                                <th>Working</th>
-                                <th>Email</th>
+                                <th class="small-th" data-toggle="tooltip" data-original-title="Number of Students in Course">Reg.</th>
+                                <th class="small-th" data-toggle="tooltip" data-original-title="Semester">Sem.</th>
+                                <th class="small-th" data-toggle="tooltip" data-original-title="Credits">Cred.</th>
+                                <th class="small-th" data-toggle="tooltip" data-original-title="Course Category">Cat.</th>
+                                <th>Branch</th>
+                                <th>Type</th>
                             </tr>
                             </tfoot>
                         </table>
@@ -58,36 +67,40 @@
         </div>
     </div>
 
-    <div id="facultyModal" class="modal fade" role="dialog">
+    <div id="floatedCourseModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Faculty Info</h4>
+                    <h4 class="modal-title">Floated Course Info</h4>
                 </div>
                 <div class="modal-body text-xs-center">
-                    <img id="avatar" src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg" class="rounded-circle height-150" alt="Card image"/>
-                    <br><br>
-                    <h4 id="name" class="card-subtitle">Areeb Jamal</h4>
+                    <h4 id="title" class="card-subtitle">Theory of Computation</h4>
                     <br>
-                    <h5>
-                        <span id="faculty_id">14PEB049</span><br>
-                        <span id="designation">Faculty Member</span>
-                    </h5>
+                    <h5><span id="code">CO313</span></h5>
                     <h5 id="department" class="capsule">Computer</h5>
+                    <br>
                     <div style="text-align: center">
-                        <div id="working" class="capsule bg-success" style="width: 120px;display: inline-block">Active</div>
+                        <span class="capsule type"><i id="type_icon" class="icon-book"></i>&nbsp;<span id="type">Theory</span></span>
                     </div>
                     <br>
-                    <span id="email" style="margin-left: 20px;">jamal.areeb@gmail.com</span><span id="verified" style="margin-left: 5px;"><i class="icon-check2"></i></span>
+                    <div>
+                        <span class="capsule bg-success" id="category">DE</span>&nbsp;
+                        <span class="capsule bg-orange text-white" id="branch">PE</span>&nbsp;
+                        <span class="capsule">Semester : <span id="semester">3</span></span>&nbsp;
+                        <span class="capsule">Credits : <span id="credits">3</span></span>&nbsp;
+                    </div>
                     <br>
-                    <span>Registered at : </span><span id="registered-at">2014-09-08T08:02:17-05:00</span>
+                    <p id="description">This course is great!</p>
+                    <div>Sections : <span id="sections">[A4PE]</span></div>
+                    <span>Floated at : </span><span id="floated-at">2014-09-08T08:02:17-05:00</span>
                     <br>
-                    <span>Registered by : </span><span id="registered-by">Dean</span>
+                    <span>Floated by : </span><span id="floated-by">Dean</span>
                     <br>
 
-                    <a id="link"><button class="mui-btn mui-btn--fab mui-btn--primary"><i class="material-icons md-24 md-light">edit</i></button></a>
+                    <a id="link" target="_blank"><button class="mui-btn mui-btn--fab mui-btn--primary bg-primary"><i class="material-icons md-24 md-light">file_download</i></button></a>
+                    <div>Download Attendance : <span id="num">60</span> students</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -111,5 +124,5 @@
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://zhcet-web-amu.firebaseapp.com/static/js/throttle.min.js"></script>
-<script th:src="@{/js/faculty-datatable.js}"></script>
+<script th:src="@{/js/floated-datatable.js}"></script>
 </html>

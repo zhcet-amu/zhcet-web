@@ -2,8 +2,8 @@ function fixDate(date) {
     return date.split('[')[0];
 }
 
-function showStudent(data) {
-    var modal = $('#studentModal');
+function showFaculty(data) {
+    var modal = $('#facultyModal');
     modal.modal();
 
     modal.find('#name').html(data['user_name']);
@@ -44,9 +44,9 @@ $(document).ready(function () {
     var header = $("meta[name='_csrf_header']").attr("content");
     var token = $("meta[name='_csrf']").attr("content");
 
-    var studentTable = $('#studentTable');
+    var facultyTable = $('#facultyTable');
 
-    var table = studentTable.DataTable({
+    var table = facultyTable.DataTable({
         scrollY:        true,
         scrollCollapse: true,
         'ajax': {
@@ -98,7 +98,7 @@ $(document).ready(function () {
         }
     });
 
-    studentTable.find('tbody').on( 'click', 'tr', function () {
-        showStudent(table.row(this).data());
+    facultyTable.find('tbody').on( 'click', 'tr', function () {
+        showFaculty(table.row(this).data());
     } );
 });

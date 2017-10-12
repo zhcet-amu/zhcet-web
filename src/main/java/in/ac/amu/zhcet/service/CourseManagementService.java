@@ -1,6 +1,8 @@
 package in.ac.amu.zhcet.service;
 
-import in.ac.amu.zhcet.data.model.*;
+import in.ac.amu.zhcet.data.model.Course;
+import in.ac.amu.zhcet.data.model.Department;
+import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.service.misc.ConfigurationService;

@@ -2,14 +2,16 @@ package in.ac.amu.zhcet.data.repository;
 
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 
 import java.util.List;
 
-public interface FloatedCourseRepository extends JpaRepository<FloatedCourse, String> {
+public interface FloatedCourseRepository extends DataTablesRepository<FloatedCourse, String> {
 
     FloatedCourse getBySessionAndCourse_Code(String session, String courseCode);
 
     List<FloatedCourse> getBySessionAndCourse_Department(String session, Department department);
+
+    List<FloatedCourse> getBySession(String session);
 
 }

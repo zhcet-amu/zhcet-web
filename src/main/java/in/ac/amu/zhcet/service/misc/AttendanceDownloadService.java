@@ -5,6 +5,7 @@ import com.j256.simplecsv.processor.CsvProcessor;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.service.storage.FileSystemStorageService;
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class AttendanceDownloadService {
     }
 
     public List<String> attendanceCsv(String authority, String meta, List<CourseRegistration> courseRegistrations) throws IOException {
+        Utils.sortAttendance(courseRegistrations);
         String fileName = fileSystemStorageService.generateFileName(authority + "_" + meta + ".csv");
 
         log.info("Writing CSV to a file : {}", fileName);
