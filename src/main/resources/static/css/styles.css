@@ -10,6 +10,12 @@ table td {
     color: #eee;
 }
 
+.brand-logo {
+    height: 40px;
+    padding-bottom: 5px;
+    margin: 0;
+}
+
 .capsule {
     margin-left: 5px;
     padding: 7px;
