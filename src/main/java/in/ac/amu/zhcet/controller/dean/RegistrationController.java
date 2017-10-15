@@ -43,7 +43,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/dean/register_students")
-    public String uploadFile(RedirectAttributes attributes, @RequestParam("storage") MultipartFile file, HttpSession session, WebRequest webRequest) {
+    public String uploadFile(RedirectAttributes attributes, @RequestParam MultipartFile file, HttpSession session, WebRequest webRequest) {
         try {
             UploadResult<StudentUpload> result = studentUploadService.handleUpload(file);
 
@@ -79,7 +79,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/dean/register_faculty")
-    public String uploadFacultyFile(RedirectAttributes attributes, @RequestParam("storage") MultipartFile file, HttpSession session, WebRequest webRequest) throws IOException {
+    public String uploadFacultyFile(RedirectAttributes attributes, @RequestParam MultipartFile file, HttpSession session, WebRequest webRequest) throws IOException {
         try {
             UploadResult<FacultyUpload> result = facultyUploadService.handleUpload(file);
 
