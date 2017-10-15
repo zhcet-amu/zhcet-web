@@ -57,8 +57,13 @@ public class StudentEditService {
             throw new DuplicateException("Student", "Faculty Number", studentEditModel.getFacultyNumber(), studentEditModel);
         }
 
-        if (userService.throwDuplicateEmail(studentEditModel.getUserEmail(), student.getUser()))
-            studentEditModel.setUserEmail(null);
+        if (!studentEditModel.getUserEmail().equals(student.getUser().getEmail())) {
+            if (userService.throwDuplicateEmail(studentEditModel.getUserEmail(), student.getUser()))
+                studentEditModel.setUserEmail(null);
+            else {
+                student.getUser().setActive(false);
+            }
+        }
 
         if (!Utils.isEmpty(studentEditModel.getHallCode()) && !EnumUtils.isValidEnum(HallCode.class, studentEditModel.getHallCode())) {
             log.error("Tried to save student with invalid hall code {} {}", id, studentEditModel.getHallCode());

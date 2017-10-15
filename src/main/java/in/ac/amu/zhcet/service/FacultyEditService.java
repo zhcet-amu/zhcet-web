@@ -46,8 +46,13 @@ public class FacultyEditService {
             throw new RuntimeException("No such department : " + departmentName);
         }
 
-        if (userService.throwDuplicateEmail(facultyEditModel.getUserEmail(), facultyMember.getUser()))
-            facultyEditModel.setUserEmail(null);
+        if (!facultyEditModel.getUserEmail().equals(facultyMember.getUser().getEmail())) {
+            if (userService.throwDuplicateEmail(facultyEditModel.getUserEmail(), facultyMember.getUser())) {
+                facultyEditModel.setUserEmail(null);
+            } else  {
+                facultyMember.getUser().setActive(false);
+            }
+        }
 
         facultyMember.getUser().setDepartment(department);
         modelMapper.map(facultyEditModel, facultyMember);
