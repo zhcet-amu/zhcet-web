@@ -55,7 +55,7 @@ public class FacultyCourseController {
         model.addAttribute("page_description", "Upload attendance for the floated course");
 
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-        Utils.sortAttendance(courseRegistrations);
+        Utils.sortCourseAttendance(courseRegistrations);
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("course_id", id);
 
@@ -67,7 +67,7 @@ public class FacultyCourseController {
         CourseInCharge courseInCharge = courseInChargeService.getCourseInChargeAndVerify(id, section);
 
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-        Utils.sortAttendance(courseRegistrations);
+        Utils.sortCourseAttendance(courseRegistrations);
 
         response.setContentType("text/csv");
         response.setHeader("Content-disposition", "attachment;filename=attendance_" + id + "_" + Utils.defaultString(section, "all") + ".csv");

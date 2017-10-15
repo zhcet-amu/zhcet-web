@@ -53,7 +53,7 @@ public class FloatedCourseController {
         model.addAttribute("page_description", "Register Students and add Faculty In-Charge for the course");
 
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-        Utils.sortAttendance(courseRegistrations);
+        Utils.sortCourseAttendance(courseRegistrations);
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("floatedCourse", floatedCourse);
         model.addAttribute("sections", courseInChargeService.getSections(floatedCourse));
