@@ -10,6 +10,7 @@ public class FacultyEditModel {
     private String userEmail;
     @NotBlank
     private String userDepartmentName;
+    private String userDetailsPhoneNumbers;
     private boolean working;
     private String designation;
 }

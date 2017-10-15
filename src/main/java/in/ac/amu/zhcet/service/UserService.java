@@ -99,10 +99,10 @@ public class UserService {
     public void updateDetails(UserAuth user, UserDetail userDetail) {
         UserDetail details = user.getDetails();
         details.setDescription(userDetail.getDescription());
-        details.setAddressLine1(userDetail.getAddressLine1());
-        details.setAddressLine2(userDetail.getAddressLine2());
+        details.setAddress(userDetail.getAddress());
         details.setCity(userDetail.getCity());
         details.setState(userDetail.getState());
+        details.setPhoneNumbers(userDetail.getPhoneNumbers());
 
         save(user);
     }

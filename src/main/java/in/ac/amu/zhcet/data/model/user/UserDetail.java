@@ -29,8 +29,7 @@ public class UserDetail extends BaseEntity {
     private String avatarUrl;
     @org.hibernate.annotations.Type(type = "text")
     private String description;
-    private String addressLine1;
-    private String addressLine2;
+    private String address;
     private String city;
     private String state;
 
@@ -38,11 +37,11 @@ public class UserDetail extends BaseEntity {
 
     private String phoneNumbers;
 
-    public void setPhoneNumbers(String[] phoneNumbers) {
+    public void setPhoneNumberList(String[] phoneNumbers) {
         this.phoneNumbers = String.join(",", phoneNumbers);
     }
 
-    public String[] getPhoneNumbers() {
+    public String[] getPhoneNumberList() {
         if (phoneNumbers != null)
             return phoneNumbers.split(",");
 
