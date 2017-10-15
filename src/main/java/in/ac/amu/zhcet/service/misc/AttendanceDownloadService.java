@@ -62,7 +62,7 @@ public class AttendanceDownloadService {
     }
 
     public List<String> attendanceCsv(String authority, String meta, List<CourseRegistration> courseRegistrations) throws IOException {
-        Utils.sortAttendance(courseRegistrations);
+        Utils.sortCourseAttendance(courseRegistrations);
         String fileName = fileSystemStorageService.generateFileName(authority + "_" + meta + ".csv");
 
         log.info("Writing CSV to a file : {}", fileName);
