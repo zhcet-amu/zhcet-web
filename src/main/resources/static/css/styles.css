@@ -17,7 +17,6 @@ table td {
 }
 
 .capsule {
-    margin-left: 5px;
     padding: 7px;
     background-color: #ddd;
     border-radius: 30px;
@@ -44,10 +43,6 @@ table td {
 /* Rules for using icons as white on a dark background. */
 .material-icons.md-light { color: rgba(255, 255, 255, 0.95); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
-
-table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd {
-    background-color: #ede7f6;
-}
 
 .modal-lg {
     max-width: 1200px;

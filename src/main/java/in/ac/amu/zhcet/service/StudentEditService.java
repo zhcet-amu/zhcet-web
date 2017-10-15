@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -80,4 +81,15 @@ public class StudentEditService {
         studentService.save(student);
     }
 
+    @Transactional
+    public void changeSections(List<String> enrolments, String section) {
+        if (enrolments.size() > 100)
+            throw new IllegalStateException("Cannot update more than 100 students at a time");
+
+        for (String enrolment : enrolments) {
+            Student student = studentService.getByEnrolmentNumber(enrolment);
+            student.setSection(section);
+            studentService.save(student);
+        }
+    }
 }

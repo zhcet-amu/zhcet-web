@@ -34,7 +34,7 @@ public class CourseRegistrationController {
     }
 
     @PostMapping("department/floated/{id}/register")
-    public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam("storage") MultipartFile file, HttpSession session) {
+    public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam MultipartFile file, HttpSession session) {
         courseManagementService.verifyAndGetCourse(id);
         try {
             UploadResult<RegistrationUpload> result = registrationUploadService.handleUpload(file);

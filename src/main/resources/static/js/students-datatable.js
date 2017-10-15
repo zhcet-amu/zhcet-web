@@ -62,15 +62,25 @@ $(document).ready(function () {
         "processing": true,
         "serverSide": true,
         searchDelay: 750,
+        columnDefs: [{
+            orderable: false,
+            className: "select-checkbox",
+            targets: 0
+        }],
         columns: [{
+            defaultContent: '',
+            searchable: false,
+            orderable: false
+        },
+        {
             data: 'avatar-url',
             searchable: false,
             orderable: false,
             defaultContent: 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg',
             render: function (data, type, row) {
                 if (data && data !== '')
-                    return '<img class="rounded-circle" src="' + data + '" height="48px" />';
-                return '<img class="rounded-circle" src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg" />';
+                    return '<img class="rounded-circle" style="background-color: white" src="' + data + '" height="48px" />';
+                return '<img class="rounded-circle" style="background-color: white" src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg" />';
             }
         }, {
             data: 'facultyNumber'
@@ -89,6 +99,36 @@ $(document).ready(function () {
         }, {
             data: 'user_email'
         }],
+        dom: 'lBfrtip',
+        rowId: 'enrolmentNumber',
+        stateSave: true,
+        select: {
+            style: 'os',
+            selector: 'td:first-child'
+        },
+        buttons: [
+            'selectAll',
+            'selectNone',
+            {
+                enabled: false,
+                text: 'Change Section',
+                action: function () {
+                    var data = table.rows( { selected: true } ).data();
+
+                    if (data.count() <= 0) {
+                        toastr.error('No student(s) selected');
+                        return;
+                    }
+
+                    var enrolments = $('#enrolments');
+
+                    for (i = 0; i < data.count(); i++)
+                        enrolments.append('<input name="enrolments" value="' + data[i].enrolmentNumber + '" />')
+
+                    $('#section-modal').modal('show');
+                }
+            }
+        ],
         "initComplete": function () {
             var $searchInput = $('div.dataTables_filter input');
 
@@ -100,7 +140,19 @@ $(document).ready(function () {
         }
     });
 
-    studentTable.find('tbody').on( 'click', 'tr', function () {
+    table.on( 'select', function () {
+        var selectedRows = table.rows( { selected: true } ).count();
+        table.button( 2 ).enable( selectedRows > 0 );
+    } );
+
+    table.on( 'deselect', function () {
+        var selectedRows = table.rows( { selected: true } ).count();
+        table.button( 2 ).enable( selectedRows > 0 );
+    } );
+
+    studentTable.find('tbody').on( 'click', 'tr', function (el) {
+        if ($(el.target).is('.select-checkbox'))
+            return
         showStudent(table.row(this).data());
     } );
 });

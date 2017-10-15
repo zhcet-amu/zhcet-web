@@ -2,8 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en" data-textdirection="ltr" class="loading">
 <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-<head th:replace="fragments/layout :: head">
-</head>
+<head th:replace="fragments/layout :: head"></head>
+<link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.3/css/select.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.bootstrap4.min.css">
+<style>
+    .select-info {
+        margin-left: 10px;
+        padding: 7px;
+        background-color: #ddd;
+        border-radius: 30px;
+    }
+
+    table.dataTable tbody td.select-checkbox:before, table.dataTable tbody th.select-checkbox:before {
+        margin-top: 10px;
+    }
+
+    table.dataTable tr.selected td.select-checkbox:after, table.dataTable tr.selected th.select-checkbox:after {
+        margin-top: 2px;
+    }
+
+    table.dataTable.stripe tbody>tr.odd.selected,table.dataTable.stripe tbody>tr.odd>.selected,table.dataTable.display tbody>tr.odd.selected,table.dataTable.display tbody>tr.odd>.selected {
+        background-color: #967ADC;
+    }
+
+    table.dataTable.display tbody>tr.even.selected>.sorting_1, table.dataTable.order-column.stripe tbody>tr.even.selected>.sorting_1 {
+        background-color: #967ADC;
+    }
+
+    table.dataTable.display tbody>tr.odd.selected>.sorting_1, table.dataTable.order-column.stripe tbody>tr.odd.selected>.sorting_1 {
+        background-color: #967ADC;
+    }
+
+    table.dataTable.hover tbody>tr.selected:hover, table.dataTable.hover tbody>tr>.selected:hover, table.dataTable.display tbody>tr.selected:hover, table.dataTable.display tbody>tr>.selected:hover {
+        background-color: #673AB7;
+    }
+
+    table.dataTable.display tbody>tr.selected:hover>.sorting_1, table.dataTable.order-column.hover tbody>tr.selected:hover>.sorting_1 {
+        background-color: #673AB7;
+    }
+</style>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation(pageId = 'dean', subPage = 'students_page')"></div>
@@ -11,6 +49,8 @@
     <div class="row">
         <div class="col-xs-12">
             <div th:replace="fragments/layout :: toolbar"></div>
+            <div th:replace="fragments/layout :: success(condition = ${section_success}, message = ${section_success})"></div>
+            <div th:replace="fragments/layout :: error(condition = ${section_error}, error = ${section_error})"></div>
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Students</h4>
@@ -30,6 +70,7 @@
                             <thead>
                             <tr>
                                 <th></th>
+                                <th></th>
                                 <th>Faculty No.</th>
                                 <th>Enrolment No.</th>
                                 <th>Name</th>
@@ -43,6 +84,7 @@
                             <!-- Footer Table -->
                             <tfoot>
                             <tr>
+                                <th></th>
                                 <th></th>
                                 <th>Faculty No.</th>
                                 <th>Enrolment No.</th>
@@ -61,7 +103,6 @@
             </div>
         </div>
     </div>
-
     <div id="studentModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -95,7 +136,33 @@
             </div>
         </div>
     </div>
-
+    <div class="modal fade text-xs-left" id="section-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" aria-hidden="true">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Change Section</h4>
+                </div>
+                <form th:action="@{/dean/student/section}" method="post">
+                <div class="modal-body">
+                    <p>This will change the section of selected students to the chosen value</p>
+                        <div id="enrolments" hidden></div>
+                        <fieldset class="form-group floating-label-form-group">
+                            <label for="section">New Section</label>
+                            <input type="text" class="form-control" id="section" name="section" placeholder="A4PE" >
+                        </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-outline-primary" value="Save changes">
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
     <div th:replace="fragments/layout :: scripts"></div>
 </div>
 </body>
@@ -111,5 +178,9 @@
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://zhcet-web-amu.firebaseapp.com/static/js/throttle.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.2.3/js/dataTables.select.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.bootstrap4.min.js"></script>
 <script th:src="@{/js/students-datatable.js}"></script>
 </html>

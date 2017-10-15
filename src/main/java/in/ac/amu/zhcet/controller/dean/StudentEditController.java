@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -82,6 +83,18 @@ public class StudentEditController {
         }
 
         return "redirect:/dean/students/{id}";
+    }
+
+    @PostMapping("/dean/student/section") // We use 'student' instead of 'students' so that it does not clash with 'studentPost' method above
+    public String studentSection(RedirectAttributes redirectAttributes, @RequestParam List<String> enrolments, @RequestParam String section) {
+        try {
+            studentEditService.changeSections(enrolments, section);
+            redirectAttributes.addFlashAttribute("section_success", "Sections changed successfully");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("section_error", "Unknown error while changing sections");
+        }
+
+        return "redirect:/dean/students";
     }
 
 }
