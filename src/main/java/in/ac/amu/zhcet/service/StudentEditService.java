@@ -83,12 +83,24 @@ public class StudentEditService {
 
     @Transactional
     public void changeSections(List<String> enrolments, String section) {
-        if (enrolments.size() > 100)
-            throw new IllegalStateException("Cannot update more than 100 students at a time");
+        if (enrolments.size() > 200)
+            throw new IllegalStateException("Cannot update more than 200 students at a time");
 
         for (String enrolment : enrolments) {
             Student student = studentService.getByEnrolmentNumber(enrolment);
             student.setSection(section);
+            studentService.save(student);
+        }
+    }
+
+    @Transactional
+    public void changeStatuses(List<String> enrolments, String status) {
+        if (enrolments.size() > 200)
+            throw new IllegalStateException("Cannot update more than 200 students at a time");
+
+        for (String enrolment : enrolments) {
+            Student student = studentService.getByEnrolmentNumber(enrolment);
+            student.setStatus(status.charAt(0));
             studentService.save(student);
         }
     }

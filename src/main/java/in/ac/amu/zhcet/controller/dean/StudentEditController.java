@@ -7,6 +7,7 @@ import in.ac.amu.zhcet.data.model.dto.datatables.StudentEditModel;
 import in.ac.amu.zhcet.service.DepartmentService;
 import in.ac.amu.zhcet.service.StudentEditService;
 import in.ac.amu.zhcet.service.StudentService;
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Controller;
@@ -87,11 +88,33 @@ public class StudentEditController {
 
     @PostMapping("/dean/student/section") // We use 'student' instead of 'students' so that it does not clash with 'studentPost' method above
     public String studentSection(RedirectAttributes redirectAttributes, @RequestParam List<String> enrolments, @RequestParam String section) {
+        if (Utils.isEmpty(section)) {
+            redirectAttributes.addFlashAttribute("section_error", "Section must not be empty");
+            return "redirect:/dean/students";
+        }
+
         try {
             studentEditService.changeSections(enrolments, section);
             redirectAttributes.addFlashAttribute("section_success", "Sections changed successfully");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("section_error", "Unknown error while changing sections");
+        }
+
+        return "redirect:/dean/students";
+    }
+
+    @PostMapping("/dean/student/status") // We use 'student' instead of 'students' so that it does not clash with 'studentPost' method above
+    public String studentStatus(RedirectAttributes redirectAttributes, @RequestParam List<String> enrolments, @RequestParam String status) {
+        if (Utils.isEmpty(status)) {
+            redirectAttributes.addFlashAttribute("section_error", "Status was unchanged");
+            return "redirect:/dean/students";
+        }
+
+        try {
+            studentEditService.changeStatuses(enrolments, status);
+            redirectAttributes.addFlashAttribute("section_success", "Statuses changed successfully");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("section_error", "Unknown error while changing statuses");
         }
 
         return "redirect:/dean/students";

@@ -38,9 +38,52 @@ function showStudent(data) {
         modal.find('#registered-by').html('No Record');
 }
 
+function setSelectInput(context, selected) {
+    var values = ['A', 'G', 'N'];
+    var statuses = ['Active : A', 'Graduated : G', 'Inactive : N'];
+
+    context.api().columns(8).every( function () {
+        var column = this;
+        var select = $('<select id="stat"><option value="">All</option></select>')
+            .appendTo( $('#statuses') )
+            .on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex(
+                    $(this).val()
+                );
+
+                if (val !== column.search()) {
+                    column.search(val).draw();
+                }
+            } );
+
+        $.each(values, function ( d, j ) {
+            select.append( '<option value="'+j+'">'+statuses[d]+'</option>' )
+        } );
+    } );
+
+    if (selected === '')
+        return;
+
+    $('#statuses').find('option[value=' + selected + ']').prop('selected', true);
+}
+
+function enableButton(table) {
+    return function () {
+        var selectedRows = table.rows( { selected: true } ).count();
+        table.button( 2 ).enable( selectedRows > 0 );
+    }
+}
+
 $(document).ready(function () {
     var header = $("meta[name='_csrf_header']").attr("content");
     var token = $("meta[name='_csrf']").attr("content");
+
+    var key = 'DataTables_studentTable_/dean/students';
+    var selected = 'A';
+    if (key in localStorage) {
+        var data = JSON.parse(localStorage.getItem(key));
+        selected = data['columns'][8]['search'].search;
+    }
 
     var studentTable = $('#studentTable');
 
@@ -111,7 +154,7 @@ $(document).ready(function () {
             'selectNone',
             {
                 enabled: false,
-                text: 'Change Section',
+                text: 'Change Section/Status',
                 action: function () {
                     var data = table.rows( { selected: true } ).data();
 
@@ -120,11 +163,13 @@ $(document).ready(function () {
                         return;
                     }
 
-                    var enrolments = $('#enrolments');
+                    // Setting enrolment numbers to be changed
+                    var enrolments = $('.enrolments');
+                    for (var i = 0; i < data.count(); i++)
+                        enrolments.append('<input name="enrolments" value="' + data[i].enrolmentNumber + '" />');
 
-                    for (i = 0; i < data.count(); i++)
-                        enrolments.append('<input name="enrolments" value="' + data[i].enrolmentNumber + '" />')
-
+                    // Set the student count
+                    $('.count').html(data.count());
                     $('#section-modal').modal('show');
                 }
             }
@@ -133,26 +178,20 @@ $(document).ready(function () {
             var $searchInput = $('div.dataTables_filter input');
 
             $searchInput.unbind();
-
             $searchInput.bind('keyup', $.debounce(1000, function(e) {
                 table.search(this.value).draw();
             }));
+
+            setSelectInput(this, selected);
         }
     });
 
-    table.on( 'select', function () {
-        var selectedRows = table.rows( { selected: true } ).count();
-        table.button( 2 ).enable( selectedRows > 0 );
-    } );
-
-    table.on( 'deselect', function () {
-        var selectedRows = table.rows( { selected: true } ).count();
-        table.button( 2 ).enable( selectedRows > 0 );
-    } );
+    table.on('select', enableButton(table));
+    table.on('deselect', enableButton(table));
 
     studentTable.find('tbody').on( 'click', 'tr', function (el) {
         if ($(el.target).is('.select-checkbox'))
-            return
+            return;
         showStudent(table.row(this).data());
     } );
 });
