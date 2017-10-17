@@ -21,6 +21,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Slf4j
 @ComponentScan
 @EnableAsync
@@ -34,6 +37,11 @@ public class CoreApplication {
     public static void main(String[] args) {
         Sentry.init();
         SpringApplication.run(CoreApplication.class, args);
+    }
+
+    @Bean("allowedCsvTypes")
+    public List<String> allowedCsvTypes() {
+        return Arrays.asList("text/csv", "application/vnd.ms-excel", "text/comma-separated-values");
     }
 
     @Bean

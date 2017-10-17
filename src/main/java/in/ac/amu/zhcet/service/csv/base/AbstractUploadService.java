@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.inject.Named;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
@@ -22,10 +23,12 @@ import java.util.stream.Collectors;
 public class AbstractUploadService<T, U, V> {
 
     private final FileSystemStorageService systemStorageService;
+    private final List<String> allowedCsvTypes;
 
     @Autowired
-    public AbstractUploadService(FileSystemStorageService systemStorageService) {
+    public AbstractUploadService(@Named("allowedCsvTypes") List<String> allowedCsvTypes, FileSystemStorageService systemStorageService) {
         this.systemStorageService = systemStorageService;
+        this.allowedCsvTypes = allowedCsvTypes;
     }
 
     private void storeFile(UploadResult<T> uploadResult, MultipartFile file) {
@@ -38,7 +41,7 @@ public class AbstractUploadService<T, U, V> {
     }
 
     private boolean validateType(MultipartFile file, UploadResult<T> uploadResult) {
-        if (!file.getContentType().equals("text/csv")) {
+        if (!allowedCsvTypes.contains(file.getContentType())) {
             uploadResult.getErrors().add("Uploaded file is not of CSV format");
             log.warn("Uploaded file is not of CSV format {} {}", file.getOriginalFilename(), file.getContentType());
             return false;

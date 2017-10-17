@@ -29,7 +29,7 @@
                             <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
                         </div>
                         <div th:replace="fragments/layout :: success(condition = ${dept_success}, success_title = 'Uploaded!', message = 'Department was added successfully!')"></div>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary float-xs-right">
                             <i class="icon-check2"></i> Add
                         </button>
                     </div>

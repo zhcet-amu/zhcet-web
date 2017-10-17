@@ -84,13 +84,15 @@
 <div th:replace="fragments/layout :: scripts"></div>
 <script src="https://zhcet-web-amu.firebaseapp.com/static/js/list.min.js"></script>
 <script>
-    var options = {
-        valueNames: [ 'faculty-id', 'name' ],
-        page: 30,
-        pagination: true
-    };
+    (function () {
+        var options = {
+            valueNames: [ 'faculty-id', 'name' ],
+            page: 30,
+            pagination: true
+        };
 
-    new List('payload', options);
+        new List('payload', options);
+    })();
 </script>
 </body>
 </html>

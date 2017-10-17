@@ -14,8 +14,17 @@
     </div>
     <div class="text-xs-center">
         <div class="card-block">
+            <h4 th:text="${user.name}">Name</h4>
+            <ul class="list-inline list-inline-pipe" sec:authorize="hasRole('STUDENT')">
+                <li th:text="${student.facultyNumber}">FacultyNumber</li>
+                <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
+            </ul>
+            <ul class="list-inline list-inline-pipe" sec:authorize="hasRole('FACULTY')">
+                <li th:text="${faculty.facultyId}">FacultyNumber</li>
+            </ul>
+            <span th:text="${user.email}"></span><span th:if="${user.active}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
             <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
-                 th:src="${#strings.defaultString(user.details.avatarUrl, 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg')}"
+                 th:src="${@viewService.getAvatarUrl(user.details.avatarUrl)}"
                  class="rounded-circle height-150" alt="Card image"/>
             <form th:action="@{/profile/picture}" enctype="multipart/form-data" method="post" class="pt-2">
                 <div th:replace="fragments/layout :: uploader(id = 'avatar_upload', btn_choose = 'Change Avatar', upload_types = 'image/*')"></div>
@@ -28,18 +37,6 @@
                     <div th:utext="${error}">Fix this and try and try again</div>
                 </div>
             </form>
-        </div>
-        <div class="card-block">
-            <h6 class="card-subtitle text-muted" th:text="${user.name}">Name</h6>
-            <ul class="list-inline list-inline-pipe" sec:authorize="hasRole('STUDENT')">
-                <li th:text="${student.facultyNumber}">FacultyNumber</li>
-                <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
-            </ul>
-            <ul class="list-inline list-inline-pipe" sec:authorize="hasRole('FACULTY')">
-                <li th:text="${faculty.facultyId}">FacultyNumber</li>
-            </ul>
-            <span th:text="${user.email}"></span><span th:if="${user.active}" style="margin-left: 5px;"><i
-                class="icon-check2"></i></span>
         </div>
     </div>
     <!--/*@thymesVar id="user_details" type="in.ac.amu.zhcet.data.model.user.UserDetail"*/-->

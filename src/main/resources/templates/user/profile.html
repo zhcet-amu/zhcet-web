@@ -30,8 +30,14 @@
 <div th:replace="fragments/layout :: scripts"></div>
 <script th:src="@{/js/file-uploader.js}" type="text/javascript"></script>
 <script>
-    setTypes('avatar_upload', 'image/png,image/jpeg,image/jpg,image/bmp,image/gif');
-    setMaxSize('avatar_upload', 2*1024*1024);
+    (function () {
+        $('.file-uploader').initUpload({
+            fileTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'],
+            error: function (message) {
+                toastr.error(message);
+            }
+        });
+    })();
 </script>
 </body>
 </html>

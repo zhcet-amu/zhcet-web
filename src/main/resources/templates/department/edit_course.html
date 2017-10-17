@@ -87,14 +87,16 @@
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
 <script>
-    $(document).ready(function () {
-        var deleteCode = $('#delete-code');
-        var deleteButton = $('#delete-button');
-        var code = $('#course-code').val();
-        deleteCode.on('keyup', function () {
-            deleteButton.prop('disabled', deleteCode.val() !== code);
-        })
-    });
+    (function () {
+        $(document).ready(function () {
+            var deleteCode = $('#delete-code');
+            var deleteButton = $('#delete-button');
+            var code = $('#course-code').val();
+            deleteCode.on('keyup', function () {
+                deleteButton.prop('disabled', deleteCode.val() !== code);
+            })
+        });
+    })();
 </script>
 </body>
 </html>

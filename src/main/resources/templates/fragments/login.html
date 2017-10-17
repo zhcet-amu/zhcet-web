@@ -38,24 +38,21 @@
 <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
 <script th:src="@{/js/firebase.js}" type="text/javascript"></script>
 <script>
-    // Default Slide Images
-    var slides = [
-        'https://images.unsplash.com/photo-1483347756197-71ef80e95f73?dpr=1&auto=format&fit=crop&w=2000&h=1000&q=80&cs=tinysrgb&crop=',
-        'https://scontent-sit4-1.xx.fbcdn.net/v/t1.0-9/12871499_764731370296513_2651072566326610603_n.png?oh=3b6a469060318c74a05f81feea1aae7f&oe=5A5F7855'
-    ];
+    (function () {
+        // Default Slide Images
+        var slides = [];
 
-    function updateSlides(slides) {
-        $.backstretch(slides, { duration: 2000, fade: 750 });
-    }
+        function updateSlides(slides) {
+            $.backstretch(slides, { duration: 2000, fade: 750 });
+        }
 
-    $(document).ready(function() {
-        updateSlides(slides);
+        $(document).ready(function() {
+            var database = firebase.database();
+            database.ref('login/slides').on('value', function (snapshot) {
+                updateSlides(snapshot.val())
+            })
 
-        var database = firebase.database();
-        database.ref('login/slides').on('value', function (snapshot) {
-            updateSlides(snapshot.val())
-        })
-
-    });
+        });
+    })();
 </script>
 </html>

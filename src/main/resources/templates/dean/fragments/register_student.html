@@ -110,12 +110,14 @@
         </div>
     </div>
     <script th:fragment="script">
-        $(window).load(function () {
-            $('#registration-modal').modal('show');
-            $('#studentTable').dataTable({
-                scrollY:        true,
-                scrollCollapse: true
+        (function () {
+            $(window).load(function () {
+                $('#registration-modal').modal('show');
+                $('#studentTable').dataTable({
+                    scrollY:        true,
+                    scrollCollapse: true
+                });
             });
-        });
+        })();
     </script>
 </div>

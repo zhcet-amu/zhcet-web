@@ -111,13 +111,15 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
     <script th:fragment="script">
-        var clipboard = new Clipboard('.btn');
-        clipboard.on('success', function (e) {
-            toastr.success('Link copied!', null, {timeOut: 2000})
-        });
-        $(window).load(function () {
-            $('#faculty-registration-modal').modal('show');
-        });
+        (function () {
+            var clipboard = new Clipboard('.btn');
+            clipboard.on('success', function (e) {
+                toastr.success('Link copied!', null, {timeOut: 2000})
+            });
+            $(window).load(function () {
+                $('#faculty-registration-modal').modal('show');
+            });
+        })();
     </script>
 </div>
 
