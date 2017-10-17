@@ -41,7 +41,7 @@
                     <form th:action="|/dean/roles/${department.id}|" method="post" th:each="member : ${facultyMembers}">
                         <tr>
                             <td width="50" style="padding: 0;">
-                                <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
+                                <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
                                      th:src="${@viewService.getAvatarUrl(member.user.details.avatarUrl)}"
                                      class="rounded-circle" width="70" alt="Card image"/>
                             </td>
@@ -82,7 +82,7 @@
     </div>
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
-<script src="https://zhcet-web-amu.firebaseapp.com/static/js/list.min.js"></script>
+<script src="https://zhcet-backend.firebaseapp.com/static/js/list.min.js"></script>
 <script>
     (function () {
         var options = {

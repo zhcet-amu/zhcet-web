@@ -14,9 +14,9 @@
                     <a th:href="@{/}" href="../home.html" class="navbar-brand nav-link">
                         <img
                                 alt="branding logo"
-                                src="https://zhcet-web-amu.firebaseapp.com/static/img/logo-big.png"
-                                data-expand="https://zhcet-web-amu.firebaseapp.com/static/img/logo-big.png"
-                                data-collapse="https://zhcet-web-amu.firebaseapp.com/static/img/icon.png"
+                                src="https://zhcet-backend.firebaseapp.com/static/img/logo-big.png"
+                                data-expand="https://zhcet-backend.firebaseapp.com/static/img/logo-big.png"
+                                data-collapse="https://zhcet-backend.firebaseapp.com/static/img/icon.png"
                                 class="brand-logo"/>
                     </a>
                 </li>
@@ -37,7 +37,7 @@
                     <li class="dropdown dropdown-user nav-item">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link dropdown-user-link">
                             <span class="avatar avatar-online">
-                                <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg" th:src="${#strings.defaultString(#authentication.principal.avatar, 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg')}" alt="avatar"/>
+                                <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg" th:src="${#strings.defaultString(#authentication.principal.avatar, 'https://zhcet-backend.firebaseapp.com/static/img/account.svg')}" alt="avatar"/>
                                 <i></i>
                             </span>
                             <span class="user-name" sec:authentication="principal.name">John Smith</span>

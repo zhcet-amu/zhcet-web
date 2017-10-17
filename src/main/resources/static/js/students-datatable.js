@@ -16,7 +16,7 @@
         if (data['avatar-url'] && data['avatar-url'] !== '')
             modal.find('#avatar').attr('src', data['avatar-url']);
         else
-            modal.find('#avatar').attr('src', 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg');
+            modal.find('#avatar').attr('src', 'https://zhcet-backend.firebaseapp.com/static/img/account.svg');
 
         if (data['user_email'] && data['user_email'] !== '')
             modal.find('#email').html(data['user_email']);
@@ -120,11 +120,11 @@
                     data: 'avatar-url',
                     searchable: false,
                     orderable: false,
-                    defaultContent: 'https://zhcet-web-amu.firebaseapp.com/static/img/account.svg',
+                    defaultContent: 'https://zhcet-backend.firebaseapp.com/static/img/account.svg',
                     render: function (data, type, row) {
                         if (data && data !== '')
                             return '<img class="rounded-circle" style="background-color: white" src="' + data + '" height="48px" />';
-                        return '<img class="rounded-circle" style="background-color: white" src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg" />';
+                        return '<img class="rounded-circle" style="background-color: white" src="https://zhcet-backend.firebaseapp.com/static/img/account.svg" />';
                     }
                 }, {
                     data: 'facultyNumber'

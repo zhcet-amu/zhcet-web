@@ -23,7 +23,7 @@
                 <li th:text="${faculty.facultyId}">FacultyNumber</li>
             </ul>
             <span th:text="${user.email}"></span><span th:if="${user.active}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
-            <img src="https://zhcet-web-amu.firebaseapp.com/static/img/account.svg"
+            <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
                  th:src="${@viewService.getAvatarUrl(user.details.avatarUrl)}"
                  class="rounded-circle height-150" alt="Card image"/>
             <form th:action="@{/profile/picture}" enctype="multipart/form-data" method="post" class="pt-2">
