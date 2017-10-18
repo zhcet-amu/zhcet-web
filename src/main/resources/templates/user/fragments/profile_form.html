@@ -46,6 +46,9 @@
     <form class="form" th:action="@{/profile/details}" method="post" th:object="${user_details}">
         <div class="row">
             <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
+                <div th:each="error : ${#fields.detailedErrors('*')}">
+                    <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                </div>
                 <div class="form-body">
                     <div th:if="${success}" class="alert alert-dismissible alert-success">
                         <button type="button" class="close" data-dismiss="alert">&times;</button>

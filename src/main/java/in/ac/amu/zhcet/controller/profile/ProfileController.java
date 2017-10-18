@@ -12,13 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Collections;
+import javax.validation.Valid;
 
 @Slf4j
 @Controller
@@ -39,7 +40,9 @@ public class ProfileController {
     public String profile(Model model) {
         UserAuth userAuth = userService.getLoggedInUser();
         model.addAttribute("user", userAuth);
-        model.addAttribute("user_details", userAuth.getDetails());
+
+        if (!model.containsAttribute("user_details"))
+            model.addAttribute("user_details", userAuth.getDetails());
 
         model.addAttribute("page_title", "Profile");
         model.addAttribute("page_subtitle", "Profile Settings for " + userAuth.getName());
@@ -57,13 +60,13 @@ public class ProfileController {
     }
 
     @PostMapping("/profile/details")
-    public String saveProfile(@ModelAttribute UserDetail userDetail, final RedirectAttributes redirectAttributes) {
-        try {
+    public String saveProfile(@ModelAttribute @Valid UserDetail userDetail, BindingResult result, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user_details", result);
+            redirectAttributes.addFlashAttribute("user_details", userDetail);
+        } else {
             userService.updateDetails(userService.getLoggedInUser(), userDetail);
             redirectAttributes.addFlashAttribute("success", true);
-        } catch (Exception exc) {
-            log.error("Error saving profile", exc);
-            redirectAttributes.addFlashAttribute("errors", Collections.singletonList(exc.getMessage()));
         }
 
         return "redirect:/profile";

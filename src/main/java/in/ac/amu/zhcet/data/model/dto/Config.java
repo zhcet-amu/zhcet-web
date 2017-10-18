@@ -4,9 +4,11 @@ import in.ac.amu.zhcet.utils.Utils;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Data
 public class Config {
+    @Size(max = 255)
     private String siteUrl;
     private int threshold;
     @NotNull

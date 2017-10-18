@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Data
@@ -17,8 +18,10 @@ public class Course extends BaseEntity {
 
     @Id
     @NotBlank
+    @Size(max = 255)
     private String code;
     @NotBlank
+    @Size(max = 255)
     private String title;
     private boolean active = true;
 
@@ -26,12 +29,14 @@ public class Course extends BaseEntity {
     @NotNull
     private Department department;
 
+    @Size(max = 255)
     private String category;
     private Boolean compulsory = true;
     private Integer semester;
     private Integer startYear;
     private Integer finishYear;
     private Float credits;
+    @Size(max = 255)
     private String branch;
     @Enumerated(EnumType.STRING)
     private CourseType type;

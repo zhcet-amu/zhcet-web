@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 
 @Data
@@ -30,12 +31,16 @@ public class UserDetail extends BaseEntity {
     private String originalAvatarUrl;
     @org.hibernate.annotations.Type(type = "text")
     private String description;
+    @Size(max = 500)
     private String address;
+    @Size(max = 255)
     private String city;
+    @Size(max = 255)
     private String state;
 
     private ZonedDateTime avatarUpdated;
 
+    @Size(max = 255)
     private String phoneNumbers;
 
     public void setPhoneNumberList(String[] phoneNumbers) {
