@@ -86,6 +86,7 @@ public class StudentEditService {
         if (enrolments.size() > 200)
             throw new IllegalStateException("Cannot update more than 200 students at a time");
 
+        log.info("Changing sections of {} to {}", enrolments, section);
         for (String enrolment : enrolments) {
             Student student = studentService.getByEnrolmentNumber(enrolment);
             student.setSection(section);
@@ -98,6 +99,7 @@ public class StudentEditService {
         if (enrolments.size() > 200)
             throw new IllegalStateException("Cannot update more than 200 students at a time");
 
+        log.info("Changing statuses of {} to {}", enrolments, status);
         for (String enrolment : enrolments) {
             Student student = studentService.getByEnrolmentNumber(enrolment);
             student.setStatus(status.charAt(0));

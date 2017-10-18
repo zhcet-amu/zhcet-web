@@ -97,6 +97,7 @@ public class StudentEditController {
             studentEditService.changeSections(enrolments, section);
             redirectAttributes.addFlashAttribute("section_success", "Sections changed successfully");
         } catch (Exception e) {
+            log.error("Error changing sections", e);
             redirectAttributes.addFlashAttribute("section_error", "Unknown error while changing sections");
         }
 
@@ -114,6 +115,7 @@ public class StudentEditController {
             studentEditService.changeStatuses(enrolments, status);
             redirectAttributes.addFlashAttribute("section_success", "Statuses changed successfully");
         } catch (Exception e) {
+            log.error("Error changing statuses", e);
             redirectAttributes.addFlashAttribute("section_error", "Unknown error while changing statuses");
         }
 
