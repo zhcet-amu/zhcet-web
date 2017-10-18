@@ -15,6 +15,7 @@ plugins {
 }
 
 apply plugin: 'java'
+apply plugin: 'war'
 apply plugin: 'org.springframework.boot'
 
 group 'in.ac.amu'
@@ -56,4 +57,5 @@ dependencies {
     compile 'io.sentry:sentry-logback:1.5.4'
     compileOnly "org.projectlombok:lombok:1.16.18"
     compileOnly 'org.mapstruct:mapstruct-processor:1.1.0.Final'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 }
