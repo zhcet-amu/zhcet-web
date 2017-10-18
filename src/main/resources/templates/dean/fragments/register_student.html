@@ -56,7 +56,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!--/*@thymesidr id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
+                                        <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
                                         <th:block th:each="confirm: ${confirmRegistration.data}">
                                             <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
                                                 <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
@@ -118,6 +118,6 @@
                     scrollCollapse: true
                 });
             });
-        })();
+        }());
     </script>
 </div>

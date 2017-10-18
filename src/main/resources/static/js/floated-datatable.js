@@ -92,4 +92,4 @@
             showCourse(table.row(this).data());
         } );
     });
-})();
+}());

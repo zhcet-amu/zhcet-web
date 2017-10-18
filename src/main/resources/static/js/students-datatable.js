@@ -196,4 +196,4 @@
             showStudent(table.row(this).data());
         } );
     });
-})();
+}());

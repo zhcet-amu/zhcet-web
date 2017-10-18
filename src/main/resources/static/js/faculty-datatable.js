@@ -105,4 +105,4 @@
             showFaculty(table.row(this).data());
         } );
     });
-})();
+}());

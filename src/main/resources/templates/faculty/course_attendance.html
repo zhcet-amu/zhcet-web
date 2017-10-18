@@ -14,7 +14,7 @@
         <div class="col-xs-12">
             <div th:replace="fragments/layout :: toolbar"></div>
         </div>
-        <div class="col-xs-12 col-xl-8">
+        <div class="col-xs-12 col-xl-9">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Course Attendance</h4>
@@ -32,26 +32,29 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="table-responsive">
-                                <table class="table">
-                                    <thead class="thead-inverse">
+                                <table id="attendance_table" class="table">
+                                    <thead>
                                     <tr>
-                                        <th class="text-xs-center">F. No.</th>
-                                        <th class="text-xs-center">Name</th>
-                                        <th class="text-xs-center">Section</th>
-                                        <th class="text-xs-center">Att./Del.</th>
-                                        <th class="text-xs-center">%</th>
-                                        <th class="text-xs-center">Updated</th>
+                                        <th></th>
+                                        <th data-original-title="Faculty Number" data-toggle="tooltip">F. No.</th>
+                                        <th>Name</th>
+                                        <th>Section</th>
+                                        <th data-original-title="Attended/Delivered" data-toggle="tooltip">Att./Del.</th>
+                                        <th>%</th>
+                                        <th>Updated</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <th:block th:each="registration: ${courseRegistrations}">
+                                        <!--/*@thymesVar id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
                                         <tr th:with="percent=${registration.attendance.attended*100.0/registration.attendance.delivered}" th:class="(${percent &lt; @configurationService.getThreshold()} ? 'bg-danger white':'')">
-                                            <td class="text-xs-center" th:text="${registration.student.facultyNumber}"></td>
-                                            <td class="text-xs-center" th:text="${registration.student.user.name}"></td>
-                                            <td class="text-xs-center" th:text="${registration.student.section}"></td>
-                                            <td class="text-xs-center" th:with="attended = ${registration.attendance.attended}, delivered = ${registration.attendance.delivered}" th:text="|${attended}/${delivered}|"></td>
-                                            <td class="text-xs-center" th:text="${registration.attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent,0,2)}+'%'"></td>
-                                            <td class="text-xs-center" th:text="${registration.attendance.updatedAt != null ? #temporals.format(registration.attendance.updatedAt, 'EEE, MMM d, yy hh:mm a') : ''}"></td>
+                                            <td><img class="rounded-circle height-50" style="background-color: white" src="" th:src="${@viewService.getAvatarUrl(registration.student.user.details.avatarUrl)}"></td>
+                                            <td th:text="${registration.student.facultyNumber}"></td>
+                                            <td th:text="${registration.student.user.name}"></td>
+                                            <td th:text="${registration.student.section}"></td>
+                                            <td th:with="attended = ${registration.attendance.attended}, delivered = ${registration.attendance.delivered}" th:text="|${attended}/${delivered}|"></td>
+                                            <td th:text="${registration.attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent,0,2)}+'%'"></td>
+                                            <td th:text="${registration.attendance.updatedAt != null ? #temporals.format(registration.attendance.updatedAt, 'hh:mm a | EEE, MMM d, yy') : ''}"></td>
                                         </tr>
                                     </th:block>
                                     </tbody>
@@ -62,7 +65,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-xl-4">
+        <div class="col-xs-12 col-xl-3">
             <div class="card">
                 <a th:href="|/faculty/courses/${course_id}/attendance/download?section=${param.section}|" target="_blank">
                     <div class="card-body">
@@ -134,20 +137,18 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="table-responsive">
-                                <table class="table">
-                                    <thead class="thead-inverse">
+                                <table class="table" id="error_table">
+                                    <thead>
                                     <tr>
-                                        <th class="text-xs-center">ID</th>
-                                        <th class="text-xs-center">ATTENDED</th>
-                                        <th class="text-xs-center">DELIVERED</th>
+                                        <th class="text-xs-center" data-original-title="Enrolment Number" data-toggle="tooltip">ID</th>
+                                        <th class="text-xs-center" data-original-title="Attended/Delivered" data-toggle="tooltip">Att./Del.</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <th:block th:each="confirm: ${confirmAttendanceErrors.data}">
                                         <tr th:class="(${confirm.value} ? '':'bg-danger white')">
                                             <td class="text-xs-center" th:text="${confirm.key.enrolment_no}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.key.attended}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.key.delivered}"></td>
+                                            <td class="text-xs-center" th:text="|${confirm.key.attended}/${confirm.key.delivered}|"></td>
                                         </tr>
                                     </th:block>
                                     </tbody>
@@ -227,36 +228,39 @@
     </div>
 </div>
 <script th:inline="javascript">
+    function update(node) {
+        var cell = $(node);
+
+        var attended = cell.find('.attended').val();
+        var delivered = cell.find('.delivered').val();
+        var percent = attended/delivered*100;
+
+        /*<![CDATA[*/
+        if (percent < /*[[${@configurationService.getThreshold()}]]*/ 75)
+            cell.addClass('bg-danger');
+        else
+            cell.removeClass('bg-danger');
+        /*]]>*/
+
+        cell.find('.percent').text(truncateDecimals(percent, 2) + '%')
+    }
+
+    var truncateDecimals = function (number, digits) {
+        var multiplier = Math.pow(10, digits),
+            adjustedNum = number * multiplier,
+            truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
+
+        return truncatedNum / multiplier;
+    };
+
     (function () {
-        var truncateDecimals = function (number, digits) {
-            var multiplier = Math.pow(10, digits),
-                adjustedNum = number * multiplier,
-                truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
-
-            return truncatedNum / multiplier;
-        };
-
-        function update(node) {
-            var cell = $(node);
-
-            var attended = cell.find('.attended').val();
-            var delivered = cell.find('.delivered').val();
-            var percent = attended/delivered*100;
-
-            /*<![CDATA[*/
-            if (percent < /*[[${@configurationService.getThreshold()}]]*/ 75)
-                cell.addClass('bg-danger');
-            else
-                cell.removeClass('bg-danger');
-            /*]]>*/
-
-            cell.find('.percent').text(truncateDecimals(percent, 2) + '%')
-        }
-
         $(document).ready(function () {
+            $('#attendance_table').DataTable({
+                "order": []
+            });
             $("#upload_modal").modal('show');
         });
-    })();
+    }());
 </script>
 </body>
 </html>

@@ -4,4 +4,4 @@
             toastr.error(message);
         }
     });
-})();
+}());

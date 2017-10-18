@@ -24,8 +24,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!--/*@thymesidr id="user" type="in.ac.amu.zhcet.data.model.user.UserAuth"*/-->
-                <!--/*@thymesidr id="users" type="List<UserAuth>"*/-->
+                <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.user.UserAuth"*/-->
+                <!--/*@thymesVar id="users" type="List<UserAuth>"*/-->
                 <th:block th:each="user : ${users}">
                     <tr>
                         <td th:text="${user.name}"></td>

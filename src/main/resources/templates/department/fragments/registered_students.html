@@ -20,21 +20,23 @@
                     <table id="registrationTable" class="table">
                         <thead>
                         <tr>
-                            <th class="text-xs-center">FACULTY NO</th>
-                            <th class="text-xs-center">ENROLMENT NO</th>
-                            <th class="text-xs-center">NAME</th>
-                            <th class="text-xs-center">SECTION</th>
-                            <th class="text-xs-center">MODE</th>
+                            <th></th>
+                            <th data-toggle="tooltip" data-original-title="Faculty Number">F. No</th>
+                            <th data-toggle="tooltip" data-original-title="Enrolment Number">En. No</th>
+                            <th>Name</th>
+                            <th>Section</th>
+                            <th>Mode</th>
                         </tr>
                         </thead>
                         <tbody>
                         <th:block th:each="registration: ${courseRegistrations}">
                             <tr>
-                                <td class="text-xs-center" th:text="${registration.student.facultyNumber}"></td>
-                                <td class="text-xs-center" th:text="${registration.student.enrolmentNumber}"></td>
-                                <td class="text-xs-center" th:text="${registration.student.user.name}"></td>
-                                <td class="text-xs-center" th:text="${registration.student.section}"></td>
-                                <td class="text-xs-center" th:text="${registration.mode}"></td>
+                                <td><img class="rounded-circle" style="background-color: white; max-width: 50px;" src="" alt="Profile Picture" th:src="${@viewService.getAvatarUrl(registration.student.user.details.avatarUrl)}"></td>
+                                <td th:text="${registration.student.facultyNumber}"></td>
+                                <td th:text="${registration.student.enrolmentNumber}"></td>
+                                <td th:text="${registration.student.user.name}"></td>
+                                <td th:text="${registration.student.section}"></td>
+                                <td th:text="${registration.mode}"></td>
                             </tr>
                         </th:block>
                         </tbody>

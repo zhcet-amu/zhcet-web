@@ -3,9 +3,9 @@ package in.ac.amu.zhcet.controller.faculty;
 import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.service.misc.AttendanceDownloadService;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.FacultyService;
+import in.ac.amu.zhcet.service.misc.AttendanceDownloadService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -42,6 +43,10 @@ public class FacultyCourseController {
 
         FacultyMember facultyMember = facultyService.getLoggedInMember();
         List<CourseInCharge> courseInCharges = courseInChargeService.getCourseByFaculty(facultyMember);
+        courseInCharges.sort(Comparator.comparing(o -> {
+            Integer compared = o.getFloatedCourse().getCourse().getSemester();
+            return compared != null ? compared : 0;
+        }));
         model.addAttribute("courseInCharges", courseInCharges);
         return "faculty/courses";
     }

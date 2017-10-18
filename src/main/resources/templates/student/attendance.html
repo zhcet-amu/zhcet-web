@@ -29,32 +29,28 @@
                 <div class="card-block">
                     <div class="row">
                         <div class="table-responsive">
-                            <table class="table">
-                                <thead class="thead-inverse">
+                            <table class="table" id="attendance_table">
+                                <thead>
                                 <tr>
-                                    <th class="text-xs-center">COURSE CODE</th>
-                                    <th class="text-xs-center">COURSE NAME</th>
-                                    <th class="text-xs-center">ATTENDED</th>
-                                    <th class="text-xs-center">DELIVERED</th>
-                                    <th class="text-xs-center">PERCENTAGE</th>
-                                    <th class="text-xs-center">LAST UPDATED</th>
+                                    <th>Code</th>
+                                    <th>Title</th>
+                                    <th data-toggle="tooltip" data-original-title="Attended">Att.</th>
+                                    <th data-toggle="tooltip" data-original-title="Delivered">Del.</th>
+                                    <th>%</th>
+                                    <th>Updated</th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
-                                <!--/*@thymesidr id="attendance" type="in.ac.amu.zhcet.data.model.Attendance"*/-->
                                 <th:block th:each="attendance: ${attendances}">
-                                    <tr th:with="percent=${attendance.attended*100.0/attendance.delivered}"
-                                        th:class="(${percent &lt; @configurationService.getThreshold()} ? 'bg-danger white':'')">
-                                        <td class="text-xs-center" th:text="${attendance.courseRegistration.floatedCourse.course.code}"></td>
-                                        <td class="text-xs-center" th:text="${attendance.courseRegistration.floatedCourse.course.title}"></td>
-                                        <td class="text-xs-center" th:with="attended = ${attendance.attended}"
-                                            th:text="${attended}"></td>
-
-                                        <td class="text-xs-center" th:with="delivered = ${attendance.delivered}"
-                                            th:text="${delivered}"></td>
-                                        <td class="text-xs-center" th:text="${#numbers.formatDecimal(percent,0,2)}+'%'"></td>
-                                        <td class="text-xs-center" th:text="${attendance.updatedAt != null ? #temporals.format(attendance.updatedAt, 'hh:mm a | EEE, MMM d, yy') : ''}"></td>
+                                    <!--/*@thymesVar id="attendance" type="in.ac.amu.zhcet.data.model.Attendance"*/-->
+                                    <tr th:with="percent=${attendance.attended*100.0/attendance.delivered}" th:class="(${percent &lt; @configurationService.threshold} ? 'bg-danger white':'')">
+                                        <td th:text="${attendance.courseRegistration.floatedCourse.course.code}"></td>
+                                        <td th:text="${attendance.courseRegistration.floatedCourse.course.title}"></td>
+                                        <td th:with="attended = ${attendance.attended}" th:text="${attended}"></td>
+                                        <td th:with="delivered = ${attendance.delivered}" th:text="${delivered}"></td>
+                                        <td th:text="${#numbers.formatDecimal(percent, 0, 2)}+'%'"></td>
+                                        <td th:text="${attendance.updatedAt != null ? #temporals.format(attendance.updatedAt, 'hh:mm a | EEE, MMM d, yy') : ''}"></td>
                                     </tr>
                                 </th:block>
                                 </tbody>
@@ -65,8 +61,12 @@
             </div>
         </div>
     </div>
-    <div th:if="${error}" th:text="${error}"></div>
-    <div th:replace="fragments/layout :: scripts"></div>
 </div>
+<div th:replace="fragments/layout :: scripts"></div>
+<script>
+    (function () {
+        $('#attendance_table').DataTable();
+    }());
+</script>
 </body>
 </html>

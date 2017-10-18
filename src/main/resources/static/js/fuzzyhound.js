@@ -17,4 +17,4 @@ var fuzzyhound = (function () {
         },
         setSource: setSource
     }
-})();
+}());

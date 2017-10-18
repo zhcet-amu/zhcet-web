@@ -78,7 +78,7 @@
                         </div>
                         <div th:each="error : ${confirmRegistration.errors}"
                              class="alert alert-dismissible alert-danger">
-                            <!--/*@thymesidr id="error" type="String"*/-->
+                            <!--/*@thymesVar id="error" type="String"*/-->
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <strong>Something went wrong!</strong>
                             <div th:utext="${error}">Fix this and try and try again</div>
