@@ -38,8 +38,8 @@
                 <table class="table">
                     <tbody class="list">
                     <!--/*@thymesVar id="member" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
-                    <form th:action="|/dean/roles/${department.id}|" method="post" th:each="member : ${facultyMembers}">
-                        <tr>
+                    <tr th:each="member : ${facultyMembers}">
+                        <form th:action="|/dean/roles/${department.id}|" method="post">
                             <td width="50" style="padding: 0;">
                                 <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
                                      th:src="${@viewService.getAvatarUrl(member.user.details.avatarUrl)}"
@@ -70,8 +70,8 @@
                                 <input type="hidden" name="facultyId" th:value="${member.facultyId}">
                                 <button class="mui-btn mui-btn--primary mui-btn--small mui-btn--fab bg-primary"><i class=" icon-check2"></i></button>
                             </td>
-                        </tr>
-                    </form>
+                        </form>
+                    </tr>
                     </tbody>
                 </table>
                 </div>
