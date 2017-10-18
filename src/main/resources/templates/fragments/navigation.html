@@ -1,12 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en">
-<head>
-    <link href="http://res.cloudinary.com/djbajaxrf/raw/upload/v1499765301/zhcet-web/resources/static/css/bootstrap.css" type="text/css" rel="stylesheet"/>
-    <link href="http://res.cloudinary.com/djbajaxrf/raw/upload/v1499765297/zhcet-web/resources/static/css/bootstrap-extended.min.css" type="text/css" rel="stylesheet"/>
-    <link href="http://res.cloudinary.com/djbajaxrf/raw/upload/v1499765297/zhcet-web/resources/static/css/app.css" type="text/css" rel="stylesheet"/>
-    <link href="http://res.cloudinary.com/djbajaxrf/raw/upload/v1499765300/zhcet-web/resources/static/css/icomoon.css" type="text/css" rel="stylesheet"/>
-</head>
-<body>
 <div data-scroll-to-active="true" class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" th:fragment="navigation">
     <div class="main-menu-content">
         <ul id="main-menu-navigation" data-menu="menu-navigation" class="navigation navigation-main">
@@ -18,7 +11,7 @@
             </li>
             <li th:class="|nav-item ${pageId == 'dean' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
                 <a th:href="@{/dean}" href="dean.html">
-                    <i class="icon-cog"></i>
+                    <i class="icon-cog3"></i>
                     <span data-i18n="nav.project.main" class="menu-title">Dean Panel</span>
                 </a>
                 <ul class="menu-content">
@@ -31,7 +24,7 @@
             </li>
             <li th:class="|nav-item ${pageId == 'department' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
                 <a th:href="@{/department}" href="department.html">
-                    <i class="icon-cog"></i>
+                    <i class="icon-archive3"></i>
                     <span data-i18n="nav.project.main" class="menu-title">Department Panel</span>
                 </a>
                 <ul class="menu-content">
@@ -47,18 +40,17 @@
             </li>
             <li th:class="|nav-item ${pageId == 'faculty_courses' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_FACULTY')">
                 <a th:href="@{/faculty/courses}" href="floatedCourse.html">
-                    <i class="icon-stack-2"></i>
+                    <i class="icon-layers"></i>
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Course Management</span>
                 </a>
             </li>
             <li th:class="|nav-item ${pageId == 'profile' ? 'active' : ''} |" sec:authorize="isAuthenticated()">
                 <a th:href="@{/profile}" href="profile.html">
-                    <i class="icon-profile"></i>
+                    <i class="icon-head"></i>
                     <span data-i18n="nav.project.main" class="menu-title">Profile</span>
                 </a>
             </li>
         </ul>
     </div>
 </div>
-</body>
 </html>

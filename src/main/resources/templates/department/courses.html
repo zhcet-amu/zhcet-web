@@ -29,98 +29,116 @@
         color: #304FFE;
     }
 </style>
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
-      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation(pageId = 'department', subPage = 'courses')"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
-    <div class="row">
-        <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
-            <div th:replace="fragments/layout :: toolbar"></div>
-            <a th:href="@{/department/course/add}">
-                <button class="btn btn-outline-default btn-round">New Course</button>
-            </a>
-            <a th:href="@{/department/course/float}">
-                <button class="btn btn-info btn-round text-white">Float Course</button>
-            </a>
-            <a th:with="toggle = ${!param.active}" th:href="@{/department/courses(active=${toggle})}">
-                <button th:class="|btn btn-round btn-${toggle ? 'primary' : 'danger'}|" th:text="${toggle ? 'Active Courses' : 'All Courses'}"></button>
-            </a>
-            <button id="toggle-floated" class="btn btn-secondary btn-round">Floated Course</button>
-            <hr>
-            <div th:replace="fragments/layout :: success(condition = ${course_success}, message = ${course_success})"></div>
-            <div th:replace="fragments/layout :: error(condition = ${course_error}, error = ${course_error})"></div>
-            <div id="courses">
-                <input class="fuzzy-search form-control round mb-1" placeholder="Search" />
-                <div class="row">
-                    <div class="col-md-4">
-                        <button class="sort btn btn-block btn-outline-default btn-round mb-2" data-sort="code">Sort by code</button>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
+                <div th:replace="fragments/layout :: toolbar"></div>
+                <div class="card" style="background-color:#f5f5f5;">
+                    <div class="card-header">
+                        <h4 class="card-title">Department Courses</h4>
+                        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                        These are the courses maintained by this department
+                        <div class="heading-elements">
+                            <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <button class="sort btn btn-block btn-outline-primary btn-round mb-2" data-sort="title">Sort by title</button>
-                    </div>
-                    <div class="col-md-4">
-                        <button class="sort btn btn-block btn-outline-success btn-round mb-2" data-sort="semester">Sort by semester</button>
+                    <div class="card-body collapse in collapse in">
+                        <div class="card-block">
+                            <a th:href="@{/department/course/add}">
+                                <button class="btn btn-outline-primary btn-round">New Course</button>
+                            </a>
+                            <a th:href="@{/department/course/float}">
+                                <button class="btn btn-info btn-round text-white">Float Course</button>
+                            </a>
+                            <a th:with="toggle = ${!param.active}" th:href="@{/department/courses(active=${toggle})}">
+                                <button th:class="|btn btn-round btn-${toggle ? 'primary' : 'danger'}|" th:text="${toggle ? 'Active Courses' : 'All Courses'}"></button>
+                            </a>
+                            <button id="toggle-floated" class="btn btn-secondary btn-round">Floated Course</button>
+                            <hr>
+                            <div th:replace="fragments/layout :: success(condition = ${course_success}, message = ${course_success})"></div>
+                            <div th:replace="fragments/layout :: error(condition = ${course_error}, error = ${course_error})"></div>
+                            <div id="courses">
+                                <input class="fuzzy-search form-control round mb-1" placeholder="Search" />
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <button class="sort btn btn-block btn-outline-info btn-round mb-2" data-sort="code">Sort by code</button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button class="sort btn btn-block btn-outline-primary btn-round mb-2" data-sort="title">Sort by title</button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button class="sort btn btn-block btn-outline-success btn-round mb-2" data-sort="semester">Sort by semester</button>
+                                    </div>
+                                </div>
+                                <ul class="list-group list">
+                                    <li th:each="course : ${courses}" class="mb-2">
+                                        <a th:href="|/department/courses/${course.code}/edit|" style="color: inherit">
+                                            <div class="card">
+                                                <div th:class="|card-header ${course.meta != null ? 'floated-title' : ''} ${course.active ? '' : 'inactive-title'}|">
+                                                    <h4 class="course-title card-title" id="heading-icon">
+                                                        <strong><span th:class="|code tag tag-pill tag-glow ${@viewService.getClassForCourse(course)}|" th:text="${course.code}"></span></strong> :
+                                                        <span class="title" th:text="${course.title}"></span>
+                                                    </h4>
+                                                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                                                    <div class="heading-elements">
+                                                        <ul class="list-inline mb-0">
+                                                            <li th:if="${course.meta}"><a th:href="|/department/floated/${course.code}|" data-toggle="tooltip" data-placement="top" data-original-title="Manage Course"><i class="icon-paper"></i></a></li>
+                                                            <li th:unless="${course.meta}"><a th:href="|/department/courses/${course.code}/float|" data-toggle="tooltip" data-placement="top" data-original-title="Float Course"><i class="icon-layers"></i></a></li>
+                                                            <li><a th:href="|/department/courses/${course.code}/edit|" data-toggle="tooltip" data-placement="top" data-original-title="Edit Course"><i class="icon-cog3"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body collapse in" style="padding:0">
+                                                    <div class="card-block">
+                                                        <h5 class="card-title">
+                                                            <span class="category capsule" th:text="${course.category}"></span>&nbsp;
+                                                            <span class="capsule type" th:if="${course.type != null}"><i th:class="${course.type.name() == 'T' ? 'icon-book' : 'icon-lab'}"></i>&nbsp;<span th:text="${course.type}"></span></span>&nbsp;
+                                                            <span th:class="|capsule ${(course.compulsory != null && course.compulsory) ? 'bg-primary' : 'bg-info'} text-white|" th:text="${(course.compulsory != null && course.compulsory) ? 'Compulsory' : 'Optional'}"></span>
+                                                        </h5>
+                                                        <p class="card-text" th:text="${course.description}"></p>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="pad col-xs-6 col-sm-3 col-lg-2 col-xl-3">
+                                                                <span class="capsule"><span>Semester : </span><span class="semester" th:text="${course.semester}"></span></span>
+                                                            </div>
+                                                            <div class="pad col-xs-6 col-sm-3 col-lg-2 col-xl-3">
+                                                                <span class="capsule"><span>Credits : </span><span class="credits" th:text="${course.credits}"></span></span>
+                                                            </div>
+                                                            <div class="pad col-xs-6 col-sm-3 col-lg-2 col-xl-3">
+                                                                <span class="capsule"><span>Branch : </span><span class="branch" th:text="${course.branch}"></span></span>
+                                                            </div>
+                                                            <div class="pad col-xs-6 col-sm-3 col-lg-2 col-xl-3" th:if="${!course.active}">
+                                                                <span class="capsule bg-danger">Deactivated</span>
+                                                            </div>
+                                                            <div class="pad col-xs-6 col-sm-3 col-lg-2" th:hidden="${course.meta == null}">
+                                                                <span class="floated capsule bg-success text-white" th:text="${course.meta}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul class="pagination pagination-separate pagination-flat"></ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <ul class="list-group list">
-                    <li th:each="course : ${courses}" class="mb-2">
-                        <a th:href="|/department/courses/${course.code}/edit|" style="color: inherit">
-                            <div class="card">
-                                <div th:class="|card-header ${course.meta != null ? 'floated-title' : ''} ${course.active ? '' : 'inactive-title'}|">
-                                    <h4 class="course-title card-title" id="heading-icon">
-                                        <strong><span th:class="|code tag tag-pill tag-glow ${@viewService.getClassForCourse(course)}|" th:text="${course.code}"></span></strong> :
-                                        <span class="title" th:text="${course.title}"></span>
-                                    </h4>
-                                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                                    <div class="heading-elements">
-                                        <ul class="list-inline mb-0">
-                                            <li th:if="${course.meta}"><a th:href="|/department/floated/${course.code}|" data-toggle="tooltip" data-placement="top" data-original-title="Manage Course"><i class="icon-paper"></i></a></li>
-                                            <li th:unless="${course.meta}"><a th:href="|/department/courses/${course.code}/float|" data-toggle="tooltip" data-placement="top" data-original-title="Float Course"><i class="icon-layers"></i></a></li>
-                                            <li><a th:href="|/department/courses/${course.code}/edit|" data-toggle="tooltip" data-placement="top" data-original-title="Edit Course"><i class="icon-cog3"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="card-body collapse in" style="padding:0">
-                                    <div class="card-block">
-                                        <h5 class="card-title">
-                                            <span class="category capsule" th:text="${course.category}"></span>&nbsp;
-                                            <span class="capsule type" th:if="${course.type != null}"><i th:class="${course.type.name() == 'T' ? 'icon-book' : 'icon-lab'}"></i>&nbsp;<span th:text="${course.type}"></span></span>&nbsp;
-                                            <span th:class="|capsule ${(course.compulsory != null && course.compulsory) ? 'bg-primary' : 'bg-info'} text-white|" th:text="${(course.compulsory != null && course.compulsory) ? 'Compulsory' : 'Optional'}"></span>
-                                        </h5>
-                                        <p class="card-text" th:text="${course.description}"></p>
-                                        <br>
-                                        <div class="row">
-                                            <div class="pad col-xs-6 col-sm-3 col-lg-2">
-                                                <span class="capsule"><span>Semester : </span><span class="semester" th:text="${course.semester}"></span></span>
-                                            </div>
-                                            <div class="pad col-xs-6 col-sm-3 col-lg-2">
-                                                <span class="capsule"><span>Credits : </span><span class="credits" th:text="${course.credits}"></span></span>
-                                            </div>
-                                            <div class="pad col-xs-6 col-sm-3 col-lg-2">
-                                                <span class="capsule"><span>Branch : </span><span class="branch" th:text="${course.branch}"></span></span>
-                                            </div>
-                                            <div class="pad col-xs-6 col-sm-3 col-lg-2" th:if="${!course.active}">
-                                                <span class="capsule bg-danger">Deactivated</span>
-                                            </div>
-                                            <div class="pad col-xs-6 col-sm-3 col-lg-2" th:hidden="${course.meta == null}">
-                                                <span class="floated capsule bg-success text-white" th:text="${course.meta}"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-                <ul class="pagination pagination-separate pagination-flat"></ul>
             </div>
         </div>
     </div>
 </div>
-
 
 <div th:replace="fragments/layout :: scripts"></div>
 <script src="https://zhcet-backend.firebaseapp.com/static/js/list.min.js"></script>

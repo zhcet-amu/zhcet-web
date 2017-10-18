@@ -38,7 +38,7 @@ public class FacultyCourseController {
     public String facultyCourses(Model model) {
         model.addAttribute("page_title", "Course Management");
         model.addAttribute("page_subtitle", "Faculty Floated Course Management");
-        model.addAttribute("page_description", "Manage and csv attendance for currently floated courses");
+        model.addAttribute("page_description", "Manage and upload attendance for currently floated courses");
 
         FacultyMember facultyMember = facultyService.getLoggedInMember();
         List<CourseInCharge> courseInCharges = courseInChargeService.getCourseByFaculty(facultyMember);
