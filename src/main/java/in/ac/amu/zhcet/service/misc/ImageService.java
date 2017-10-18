@@ -1,6 +1,9 @@
 package in.ac.amu.zhcet.service.misc;
 
 import in.ac.amu.zhcet.utils.Utils;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.imgscalr.Scalr;
@@ -20,8 +23,18 @@ import java.io.InputStream;
 public class ImageService {
 
     private static final int MAX_FILE_SIZE = 2*1024*1024;
+    private static final int ORIGINAL_AVATAR_SIZE = 1000;
+    private static final int AVATAR_SIZE = 86;
 
     private final FirebaseService firebaseService;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Avatar {
+        private String avatarUrl;
+        private String originalAvatarUrl;
+    }
 
     @Autowired
     public ImageService(FirebaseService firebaseService) {
@@ -59,8 +72,6 @@ public class ImageService {
     }
 
     public InputStream generateThumbnail(BufferedImage image, String format, int pixels) throws IOException {
-        if (image == null) throw new RuntimeException("Error opening image");
-
         log.info("Original Image Resolution : %dx%d", image.getHeight(), image.getWidth());
 
         BufferedImage newImage = null;
@@ -83,7 +94,7 @@ public class ImageService {
         return new ByteArrayInputStream(os.toByteArray());
     }
 
-    public String upload(String pathWithoutExtension, MultipartFile file) {
+    public String upload(String pathWithoutExtension, MultipartFile file, Integer size) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 
         if (file.getSize() > MAX_FILE_SIZE) {
@@ -99,16 +110,30 @@ public class ImageService {
             }
 
             log.warn(String.format("Original Image Size : %s", Utils.humanReadableByteCount(file.getSize(), true)));
-            InputStream resizedImage = generateThumbnail(image, extension, 1000);
 
-            if (resizedImage == null) // File is appropriate, hence no thumbnail generated
-                resizedImage = file.getInputStream();
+            InputStream toUpload = file.getInputStream();
+            if (size != null) {
+                log.warn("Resizing image to size : {}", size);
+                InputStream resizedImage = generateThumbnail(image, extension, size);
 
-            return firebaseService.uploadFile(pathWithoutExtension + "." + extension, file.getContentType(), resizedImage);
+                if (resizedImage != null)
+                    toUpload = resizedImage;
+            } else {
+                log.warn("Not resizing image");
+            }
+
+            return firebaseService.uploadFile(pathWithoutExtension + "." + extension, file.getContentType(), toUpload);
         } catch (IOException e) {
             log.error("Avatar Error", e);
             throw new ImageUploadException(e.getMessage());
         }
+    }
+
+    public Avatar uploadAvatar(String pathWithoutExtension, MultipartFile file) {
+        String originalAvatarLink = upload(pathWithoutExtension, file, ORIGINAL_AVATAR_SIZE);
+        String avatarLink = upload(pathWithoutExtension + "_thumb", file, AVATAR_SIZE);
+
+        return new Avatar(avatarLink, originalAvatarLink);
     }
 
 }

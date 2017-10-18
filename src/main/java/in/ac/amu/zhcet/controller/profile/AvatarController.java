@@ -57,8 +57,7 @@ public class AvatarController {
 
         try {
             log.warn("Uploading photo " + file.getOriginalFilename() + " for " + user.getUserId());
-            String link = imageService.upload("profile/" + user.getUserId() + "/profile", file);
-            userDetailService.updateAvatar(user, link);
+            userDetailService.updateAvatar(user, imageService.uploadAvatar("profile/" + user.getUserId() + "/profile", file));
             redirectAttributes.addFlashAttribute("avatar_success", Collections.singletonList("Profile Picture Updated"));
         } catch (ImageUploadException ex) {
             redirectAttributes.addFlashAttribute("avatar_errors", Collections.singletonList(ex.getMessage()));

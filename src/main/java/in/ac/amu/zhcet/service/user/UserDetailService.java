@@ -2,6 +2,7 @@ package in.ac.amu.zhcet.service.user;
 
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.UserService;
+import in.ac.amu.zhcet.service.misc.ImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -71,8 +72,9 @@ public class UserDetailService implements UserDetailsService {
     }
 
     @Transactional
-    public void updateAvatar(UserAuth user, String avatarUrl) {
-        user.getDetails().setAvatarUrl(avatarUrl);
+    public void updateAvatar(UserAuth user, ImageService.Avatar avatar) {
+        user.getDetails().setAvatarUrl(avatar.getAvatarUrl());
+        user.getDetails().setOriginalAvatarUrl(avatar.getOriginalAvatarUrl());
         user.getDetails().setAvatarUpdated(ZonedDateTime.now());
         userService.save(user);
         updatePrincipal(user);

@@ -15,8 +15,9 @@
         modal.find('#working').attr('class', 'capsule ' + (data['working'] ? 'bg-success' : 'bg-danger'));
         modal.find('#link').attr('href', '/dean/faculty/' + data['facultyId']);
 
-        if (data['avatar-url'] && data['avatar-url'] !== '')
-            modal.find('#avatar').attr('src', data['avatar-url']);
+        console.log(data)
+        if (data['avatar-url'] && data['original-avatar-url'] !== '')
+            modal.find('#avatar').attr('src', data['original-avatar-url']);
         else
             modal.find('#avatar').attr('src', 'https://zhcet-backend.firebaseapp.com/static/img/account.svg');
 

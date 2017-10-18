@@ -24,6 +24,9 @@ public class FacultyView {
     @JsonProperty("avatar-url")
     private String userDetailsAvatarUrl;
     @JsonView(DataTablesOutput.View.class)
+    @JsonProperty("original-avatar-url")
+    private String userDetailsOriginalAvatarUrl;
+    @JsonView(DataTablesOutput.View.class)
     @JsonProperty("user_department_name")
     private String userDepartmentName;
     @JsonView(DataTablesOutput.View.class)

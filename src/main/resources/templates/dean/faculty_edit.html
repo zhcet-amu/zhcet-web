@@ -30,8 +30,8 @@
             <div class="text-xs-center">
                 <div class="card-block">
                     <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
-                         th:src="${@viewService.getAvatarUrl(faculty.user.details.avatarUrl)}"
-                         class="rounded-circle height-150" alt="Card image"/>
+                         th:src="${@viewService.getAvatarUrl(faculty.user.details.originalAvatarUrl)}"
+                         class="rounded-circle height-200" alt="Profile Picture"/>
                 </div>
                 <div class="card-block">
                     <h4 class="card-subtitle" th:text="${faculty.user.name}">Name</h4>

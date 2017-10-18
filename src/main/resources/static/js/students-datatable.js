@@ -13,8 +13,8 @@
         modal.find('#department').html(data['user_department_name']);
         modal.find('#link').attr('href', '/dean/students/' + data['enrolmentNumber']);
 
-        if (data['avatar-url'] && data['avatar-url'] !== '')
-            modal.find('#avatar').attr('src', data['avatar-url']);
+        if (data['avatar-url'] && data['original-avatar-url'] !== '')
+            modal.find('#avatar').attr('src', data['original-avatar-url']);
         else
             modal.find('#avatar').attr('src', 'https://zhcet-backend.firebaseapp.com/static/img/account.svg');
 

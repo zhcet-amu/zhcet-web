@@ -79,11 +79,11 @@ public class FirebaseService {
     }
 
     public String uploadFile(String path, String contentType, InputStream fileStream) throws UnsupportedEncodingException {
-        log.info(String.format("Uploading storage '%s' of type %s...", path, contentType));
+        log.warn("Uploading storage '{}' of type {}...", path, contentType);
         Bucket bucket = getBucket();
-        log.info("Bucket used : " + bucket.getName());
+        log.warn("Bucket used : " + bucket.getName());
         String uuid = UUID.randomUUID().toString();
-        log.info("Firebase Download Token : " + uuid);
+        log.warn("Firebase Download Token : {}", uuid);
         Map<String, String> map = new HashMap<>();
         map.put("firebaseStorageDownloadTokens", uuid);
 
@@ -94,13 +94,13 @@ public class FirebaseService {
                 .build();
         BlobInfo uploaded = bucket.getStorage().create(uploadContent, fileStream);
 
-        log.info("File Uploaded");
-        log.info("Media Link : " + uploaded.getMediaLink());
-        log.info("Metadata : " + uploaded.getMetadata().toString());
+        log.warn("File Uploaded");
+        log.warn("Media Link : {}", uploaded.getMediaLink());
+        log.warn("Metadata : {}", uploaded.getMetadata().toString());
 
         String link = String.format("https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media&auth=%s",
                 uploaded.getBucket(), URLEncoder.encode(uploaded.getName(), "UTF-8"), uuid);
-        log.info("Firebase Link : " + link);
+        log.warn("Firebase Link : {}", link);
 
         return link;
     }

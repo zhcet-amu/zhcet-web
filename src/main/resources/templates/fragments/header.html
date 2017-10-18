@@ -20,9 +20,11 @@
                                 class="brand-logo"/>
                     </a>
                 </li>
-                <li class="nav-item hidden-md-up float-xs-right"><a data-toggle="collapse" data-target="#navbar-mobile"
-                                                                    class="nav-link open-navbar-container"><i
-                        class="icon-ellipsis pe-2x icon-icon-rotate-right-right"></i></a></li>
+                <li class="nav-item hidden-md-up float-xs-right">
+                    <a data-toggle="collapse" data-target="#navbar-mobile" class="nav-link open-navbar-container">
+                        <i class="icon-ellipsis pe-2x icon-icon-rotate-right-right"></i>
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="navbar-container content container-fluid">
@@ -37,7 +39,7 @@
                     <li class="dropdown dropdown-user nav-item">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link dropdown-user-link">
                             <span class="avatar avatar-online">
-                                <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg" th:src="${#strings.defaultString(#authentication.principal.avatar, 'https://zhcet-backend.firebaseapp.com/static/img/account.svg')}" alt="avatar"/>
+                                <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg" th:src="${@viewService.getAvatarUrl(#authentication.principal.avatar)}" alt="avatar"/>
                                 <i></i>
                             </span>
                             <span class="user-name" sec:authentication="principal.name">John Smith</span>
