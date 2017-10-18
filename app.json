@@ -1,0 +1,69 @@
+{
+  "name": "zhcet-web",
+  "scripts": {
+  },
+  "env": {
+    "AUTHOR": {
+      "required": true
+    },
+    "C_DB_PASSWORD": {
+      "required": true
+    },
+    "C_DB_URL": {
+      "required": true
+    },
+    "C_DB_USERNAME": {
+      "required": true
+    },
+    "CLEARDB_DATABASE_URL": {
+      "required": true
+    },
+    "DB_PASSWORD": {
+      "required": true
+    },
+    "DB_URL": {
+      "required": true
+    },
+    "DB_USERNAME": {
+      "required": true
+    },
+    "FIREBASE_JSON": {
+      "required": true
+    },
+    "SENTRY_DSN": {
+      "required": true
+    },
+    "TZ": {
+      "required": true
+    },
+    "ZHCET_EMAIL_ADDRESS": {
+      "required": true
+    },
+    "ZHCET_EMAIL_PASSWORD": {
+      "required": true
+    },
+    "ZHCET_FIREBASE_DATABASE_URL": {
+      "required": true
+    },
+    "ZHCET_FIREBASE_STORAGE_BUCKET": {
+      "required": true
+    },
+    "ZHCET_SALT": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "addons": [
+    "cleardb",
+    "jawsdb"
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/exec-buildpack"
+    },
+    {
+      "url": "heroku/gradle"
+    }
+  ]
+}
