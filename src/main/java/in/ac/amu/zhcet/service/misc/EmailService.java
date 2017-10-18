@@ -1,9 +1,9 @@
 package in.ac.amu.zhcet.service.misc;
 
+import in.ac.amu.zhcet.configuration.ApplicationProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -20,14 +20,13 @@ import java.util.Map;
 public class EmailService{
     private final JavaMailSender sender;
     private final TemplateEngine htmlTemplateEngine;
-
-    @Value("${email}")
     private String senderEmail;
 
     @Autowired
-    public EmailService(JavaMailSender sender, @Qualifier("emailEngine") TemplateEngine htmlTemplateEngine) {
+    public EmailService(JavaMailSender sender, ApplicationProperties applicationProperties, @Qualifier("emailEngine") TemplateEngine htmlTemplateEngine) {
         this.sender = sender;
         this.htmlTemplateEngine = htmlTemplateEngine;
+        this.senderEmail = applicationProperties.getEmail().getAddress();
     }
 
     private static void setBasicInfo(MimeMessageHelper mailMessage, String from, String to, String subject, String[] bcc) throws MessagingException {
@@ -74,7 +73,7 @@ public class EmailService{
         try {
             sender.send(constructEmail(email, subject, message, null));
         } catch (MessagingException e) {
-            e.printStackTrace();
+            log.error("Error sending mail", e);
         }
     }
 

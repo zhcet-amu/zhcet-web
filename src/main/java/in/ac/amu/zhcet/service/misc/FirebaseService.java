@@ -7,7 +7,9 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseCredentials;
 import com.google.firebase.cloud.StorageClient;
+import in.ac.amu.zhcet.configuration.ApplicationProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -22,14 +24,21 @@ import java.util.UUID;
 @Service
 public class FirebaseService {
 
-    public FirebaseService() throws IOException {
+    @Autowired
+    public FirebaseService(ApplicationProperties applicationProperties) throws IOException {
         log.info("Initializing Firebase");
+        ApplicationProperties.Firebase firebase = applicationProperties.getFirebase();
         InputStream serviceAccount = getServiceAccountJson();
+
+        if (serviceAccount == null) {
+            log.error("Firebase Service Account JSON not found anywhere. Any Firebase interaction will throw exception");
+            return;
+        }
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredential(FirebaseCredentials.fromCertificate(serviceAccount))
-                .setDatabaseUrl("https://zhcet-web-amu.firebaseio.com/")
-                .setStorageBucket("zhcet-web-amu.appspot.com")
+                .setDatabaseUrl(firebase.getDatabaseUrl())
+                .setStorageBucket(firebase.getStorageBucket())
                 .build();
 
         try {
@@ -58,6 +67,9 @@ public class FirebaseService {
             return is;
         } catch (FileNotFoundException e) {
             log.warn("service-account.json not found in storage system... Attempting to load from environment...");
+            String property = System.getenv("FIREBASE_JSON");
+            if (property == null)
+                return null;
             return new ByteArrayInputStream(System.getenv("FIREBASE_JSON").getBytes());
         }
     }

@@ -2,7 +2,6 @@ package in.ac.amu.zhcet.configuration;
 
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -22,26 +21,24 @@ import java.util.Properties;
 @Configuration
 public class EmailConfiguration {
 
-    @Value("${email}")
-    private String email;
-    @Value("${email.password}")
-    private String password;
-    @Value("${salt}")
-    private String salt;
-
     private static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
 
     @Bean
     @Primary
-    public JavaMailSender getJavaMailSender() {
+    public JavaMailSender getJavaMailSender(ApplicationProperties applicationProperties) {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        if (!Utils.isEmpty(salt))
-            Utils.SALT = salt;
-        mailSender.setUsername(email);
-        mailSender.setPassword(password);
+        if (!Utils.isEmpty(applicationProperties.getSalt()) && !applicationProperties.getSalt().equals(Utils.SALT)) {
+            Utils.SALT = applicationProperties.getSalt();
+            log.info("Applied salt to application");
+        } else {
+            log.error("Using default salt for app, this is dangerous and can lead to hacking into system");
+        }
+
+        mailSender.setUsername(applicationProperties.getEmail().getAddress());
+        mailSender.setPassword(applicationProperties.getEmail().getPassword());
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
