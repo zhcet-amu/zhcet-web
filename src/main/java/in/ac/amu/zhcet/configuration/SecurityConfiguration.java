@@ -56,21 +56,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/department/**").hasAuthority(Roles.DEPARTMENT_ADMIN)
                 .antMatchers("/faculty/**").hasAuthority(Roles.FACULTY)
                 .and()
-                .formLogin().loginPage("/login").permitAll()
-                .failureUrl("/login?error")
-                .usernameParameter("username").passwordParameter("password")
-                .successHandler(roleWiseSuccessHandler())
+                    .formLogin().loginPage("/login").permitAll()
+                    .failureUrl("/login?error")
+                    .usernameParameter("username").passwordParameter("password")
+                    .successHandler(roleWiseSuccessHandler())
                 .and()
-                .logout().logoutSuccessUrl("/")
+                    .logout().logoutSuccessUrl("/login?logout").permitAll()
                 .and()
-                .rememberMe()
+                    .rememberMe()
                     .rememberMeCookieName("zhcet-remember-me")
                     .tokenValiditySeconds(24*60*60)
-                    .tokenRepository(persistentTokenService)
-                .and()
-                .csrf().ignoringAntMatchers("/console/**")
-                .and()
-                .headers().frameOptions().disable();
+                    .tokenRepository(persistentTokenService);
     }
 
 }

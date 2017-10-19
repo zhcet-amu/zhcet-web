@@ -16,16 +16,16 @@
         ].join("");
     }
 
-    function addItem(template, item) {
-        item.userDetailsAvatarUrl = getImageUrl(item.userDetailsAvatarUrl);
-        $('.in-charge-container').append(tmpl(template, item));
-        attachRemove();
-    }
-
     function attachRemove() {
         $('.remove').click(function (event) {
             $(event.target).closest('.in-charge').remove();
         });
+    }
+
+    function addItem(template, item) {
+        item.userDetailsAvatarUrl = getImageUrl(item.userDetailsAvatarUrl);
+        $('.in-charge-container').append(tmpl(template, item));
+        attachRemove();
     }
 
     var all = false;

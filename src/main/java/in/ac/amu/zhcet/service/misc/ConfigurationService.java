@@ -63,7 +63,6 @@ public class ConfigurationService {
     }
 
     public String getSessionName() {
-        log.info(getConfigCache().toString());
         return Utils.getSessionName(getSession());
     }
 

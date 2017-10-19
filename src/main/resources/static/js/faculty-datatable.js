@@ -15,7 +15,6 @@
         modal.find('#working').attr('class', 'capsule ' + (data['working'] ? 'bg-success' : 'bg-danger'));
         modal.find('#link').attr('href', '/dean/faculty/' + data['facultyId']);
 
-        console.log(data)
         if (data['avatar-url'] && data['original-avatar-url'] !== '')
             modal.find('#avatar').attr('src', data['original-avatar-url']);
         else
