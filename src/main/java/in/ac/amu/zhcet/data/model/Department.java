@@ -2,6 +2,7 @@ package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import lombok.*;
+import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @Entity
+@Audited
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

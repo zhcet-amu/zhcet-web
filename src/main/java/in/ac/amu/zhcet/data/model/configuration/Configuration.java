@@ -5,11 +5,13 @@ import in.ac.amu.zhcet.utils.Utils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
 
 @Data
 @Entity
+@Audited
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Configuration extends BaseIdEntity {

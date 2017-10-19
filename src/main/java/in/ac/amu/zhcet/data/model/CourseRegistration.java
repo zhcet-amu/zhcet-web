@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
+@Audited
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true, exclude="attendance")
 public class CourseRegistration extends BaseEntity {

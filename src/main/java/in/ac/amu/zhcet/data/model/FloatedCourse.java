@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import in.ac.amu.zhcet.service.misc.ConfigurationService;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Data
 @Entity
+@Audited
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = {"courseRegistrations", "inCharge"})
@@ -30,7 +32,7 @@ public class FloatedCourse extends BaseEntity implements Serializable {
     @NaturalId
     private String session;
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "floatedCourse")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "floatedCourse")
     private List<CourseInCharge> inCharge;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "floatedCourse")

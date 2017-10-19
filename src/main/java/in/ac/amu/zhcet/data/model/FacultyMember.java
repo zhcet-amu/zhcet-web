@@ -3,6 +3,7 @@ package in.ac.amu.zhcet.data.model;
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import lombok.*;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Entity
 @Builder
+@Audited
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -23,10 +25,12 @@ public class FacultyMember extends BaseEntity {
 
     @Valid
     @NotNull
+    @Builder.Default
     @PrimaryKeyJoinColumn
     @OneToOne(cascade = CascadeType.ALL)
     private UserAuth user = new UserAuth();
 
+    @Builder.Default
     private boolean working = true;
     private String designation;
 

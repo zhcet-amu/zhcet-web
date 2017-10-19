@@ -3,6 +3,7 @@ package in.ac.amu.zhcet.data.model;
 import in.ac.amu.zhcet.data.model.base.BaseIdEntity;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Slf4j
 @Entity
+@Audited
 public class CourseInCharge extends BaseIdEntity {
 
     @NotNull

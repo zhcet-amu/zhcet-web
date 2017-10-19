@@ -6,8 +6,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 
 public class Auditor implements AuditorAware<String> {
-    @Override
-    public String getCurrentAuditor() {
+
+    public static String getLoggedInUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !(authentication.getPrincipal() instanceof User))
             return "UNAUTHENTICATED";
@@ -15,5 +15,10 @@ public class Auditor implements AuditorAware<String> {
         String username = ((User) authentication.getPrincipal()).getUsername();
 
         return username == null ? "UNAUTHENTICATED" : username;
+    }
+
+    @Override
+    public String getCurrentAuditor() {
+        return getLoggedInUsername();
     }
 }

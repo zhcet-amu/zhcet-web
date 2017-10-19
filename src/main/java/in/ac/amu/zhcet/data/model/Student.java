@@ -3,6 +3,7 @@ package in.ac.amu.zhcet.data.model;
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import lombok.*;
+import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @Entity
+@Audited
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,10 +33,12 @@ public class Student extends BaseEntity {
     private String hallCode;
     private String section;
     private Integer registrationYear = getYear();
+    @Builder.Default
     private Character status = 'A';
 
     @Valid
     @NotNull
+    @Builder.Default
     @PrimaryKeyJoinColumn
     @OneToOne(cascade = CascadeType.ALL)
     private UserAuth user = new UserAuth();

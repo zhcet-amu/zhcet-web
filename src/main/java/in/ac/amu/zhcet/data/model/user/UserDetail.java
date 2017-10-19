@@ -3,6 +3,7 @@ package in.ac.amu.zhcet.data.model.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import lombok.*;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,6 +14,7 @@ import java.time.ZonedDateTime;
 
 @Data
 @Entity
+@Audited
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

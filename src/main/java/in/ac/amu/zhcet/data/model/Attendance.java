@@ -4,11 +4,13 @@ import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 
-@Entity
 @Data
+@Entity
+@Audited
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Attendance extends BaseEntity {
