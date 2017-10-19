@@ -34,6 +34,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-devtools")
     compile("org.springframework.boot:spring-boot-starter-mail")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
     // Force Thymeleaf 3 for full HTML support
     compile("org.thymeleaf:thymeleaf:3.0.8.RELEASE")
     compile("org.thymeleaf:thymeleaf-spring4:3.0.8.RELEASE")

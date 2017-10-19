@@ -52,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/profile/**").authenticated()
                 .antMatchers("/student/**").hasAuthority(Roles.STUDENT)
-                .antMatchers("/dean/**").hasAuthority(Roles.DEAN_ADMIN)
+                .antMatchers("/dean/**").hasAnyAuthority(Roles.DEAN_ADMIN, Roles.SUPER_ADMIN)
                 .antMatchers("/department/**").hasAuthority(Roles.DEPARTMENT_ADMIN)
                 .antMatchers("/faculty/**").hasAuthority(Roles.FACULTY)
                 .and()

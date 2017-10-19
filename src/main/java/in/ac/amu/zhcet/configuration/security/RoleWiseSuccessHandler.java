@@ -15,8 +15,11 @@ public class RoleWiseSuccessHandler extends SavedRequestAwareAuthenticationSucce
     public static String determineTargetUrl(Authentication authentication) {
         Set<String> authorities = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
-        if (authorities.contains(Roles.DEAN_ADMIN))
+
+        if (authorities.contains(Roles.DEAN_ADMIN)||authorities.contains(Roles.SUPER_ADMIN))
             return "/dean";
+        else if (authorities.contains(Roles.MANAGEMENT_ADMIN))
+            return "/actuator/health";
         else if (authorities.contains(Roles.DEPARTMENT_ADMIN))
             return "/department";
         else if (authorities.contains(Roles.FACULTY))
