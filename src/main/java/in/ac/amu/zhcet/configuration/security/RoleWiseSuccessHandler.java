@@ -1,24 +1,17 @@
 package in.ac.amu.zhcet.configuration.security;
 
 import in.ac.amu.zhcet.data.Roles;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Set;
 
-public class RoleWiseSuccessHandler implements AuthenticationSuccessHandler {
+@Slf4j
+public class RoleWiseSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        new DefaultRedirectStrategy().sendRedirect(request, response, determineTargetUrl(authentication));
-    }
-
+    // Used indirectly in redirection from login and home controller
     public static String determineTargetUrl(Authentication authentication) {
         Set<String> authorities = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
