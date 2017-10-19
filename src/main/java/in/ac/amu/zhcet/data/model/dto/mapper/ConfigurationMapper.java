@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.data.model.dto.mapper;
 
-import in.ac.amu.zhcet.data.model.configuration.ConfigurationModel;
+import in.ac.amu.zhcet.data.model.configuration.Configuration;
 import in.ac.amu.zhcet.data.model.dto.Config;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -14,9 +14,9 @@ public interface ConfigurationMapper {
 
     @Mapping(source = "attendanceThreshold", target = "threshold")
     @Mapping(source = "url", target = "siteUrl")
-    Config toConfig(ConfigurationModel configModel);
+    Config toConfig(Configuration configModel);
 
     @InheritInverseConfiguration
-    ConfigurationModel fromConfig(Config config);
+    Configuration fromConfig(Config config);
 
 }

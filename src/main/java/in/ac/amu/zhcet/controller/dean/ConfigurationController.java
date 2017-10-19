@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.controller.dean;
 
-import in.ac.amu.zhcet.data.model.configuration.ConfigurationModel;
+import in.ac.amu.zhcet.data.model.configuration.Configuration;
 import in.ac.amu.zhcet.data.model.dto.Config;
 import in.ac.amu.zhcet.data.model.dto.mapper.ConfigurationMapper;
 import in.ac.amu.zhcet.service.misc.ConfigurationService;
@@ -29,7 +29,7 @@ public class ConfigurationController {
         this.configurationService = configurationService;
     }
 
-    private Config toConfig(ConfigurationModel configurationModel) {
+    private Config toConfig(Configuration configurationModel) {
         Config config = ConfigurationMapper.MAPPER.toConfig(configurationModel);
         config.setTerm(configurationModel.getSession().charAt(0));
         config.setYear(2000 + Integer.parseInt(configurationModel.getSession().substring(1)));
@@ -37,8 +37,8 @@ public class ConfigurationController {
         return config;
     }
 
-    private ConfigurationModel toConfigModel(Config config) {
-        ConfigurationModel configurationModel = ConfigurationMapper.MAPPER.fromConfig(config);
+    private Configuration toConfigModel(Config config) {
+        Configuration configurationModel = ConfigurationMapper.MAPPER.fromConfig(config);
         configurationModel.setSession(config.getTerm() + String.valueOf(config.getYear() - 2000));
 
         return configurationModel;
@@ -51,7 +51,7 @@ public class ConfigurationController {
         model.addAttribute("page_description", "Manage site wide configurations and parameters");
 
         if (!model.containsAttribute("config"))
-            model.addAttribute("config", toConfig(configurationService.getConfig()));
+            model.addAttribute("config", toConfig(ConfigurationService.getConfiguration()));
         return "dean/configuration";
     }
 

@@ -1,13 +1,15 @@
 package in.ac.amu.zhcet.service.misc;
 
 import in.ac.amu.zhcet.data.model.configuration.Configuration;
-import in.ac.amu.zhcet.data.model.configuration.ConfigurationModel;
 import in.ac.amu.zhcet.data.repository.ConfigurationRepository;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,19 +17,20 @@ import java.net.URL;
 
 @Slf4j
 @Service
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ConfigurationService {
 
     private final ConfigurationRepository configurationRepository;
-    private static ConfigurationModel configuration;
+    private static Configuration configuration;
 
     @Autowired
-    public ConfigurationService(ConfigurationRepository configurationRepository) {
+    public ConfigurationService(ConfigurationRepository configurationRepository, ModelMapper modelMapper) {
         this.configurationRepository = configurationRepository;
-        updateConfiguration(configurationRepository.findFirstByOrderByIdDesc().getConfig());
-        log.info("Static Configuration Set : " + configuration.toString());
+        updateConfiguration(getConfigCache());
+        log.info("Static Configuration Set : {}", configuration);
     }
 
-    private void updateConfiguration(ConfigurationModel configurationModel) {
+    private void updateConfiguration(Configuration configurationModel) {
         configuration = configurationModel;
     }
 
@@ -35,25 +38,24 @@ public class ConfigurationService {
         return getSessionCode(configuration);
     }
 
-    private static String getSessionCode(ConfigurationModel config) {
+    private static String getSessionCode(Configuration config) {
         if (config.isAutomatic())
             return Utils.getDefaultSessionCode();
         else
             return config.getSession();
     }
 
-    public ConfigurationModel getConfig() {
-        return configurationRepository.findFirstByOrderByIdDesc().getConfig();
+    public static Configuration getConfiguration() {
+        return configuration;
     }
 
-    @Cacheable("config")
-    public ConfigurationModel getConfigCache() {
-        return configurationRepository.findFirstByOrderByIdDesc().getConfig();
+    @Cacheable("configuration")
+    public Configuration getConfigCache() {
+        return configurationRepository.findFirstByOrderByIdDesc();
     }
 
     public String getSession() {
-        ConfigurationModel config = getConfigCache();
-        return getSessionCode(config);
+        return getSessionCode(getConfigCache());
     }
 
     public int getThreshold() {
@@ -61,6 +63,7 @@ public class ConfigurationService {
     }
 
     public String getSessionName() {
+        log.info(getConfigCache().toString());
         return Utils.getSessionName(getSession());
     }
 
@@ -78,14 +81,13 @@ public class ConfigurationService {
         }
     }
 
-
     @Transactional
-    @CacheEvict("config")
-    public void save(ConfigurationModel config) {
-        Configuration configuration = new Configuration();
-        configuration.setConfig(config);
+    @CacheEvict("configuration")
+    public void save(Configuration configuration) {
+        log.info("Saving configuration: {}", configuration);
+        configuration.setId(null); // Set ID to null to save as new object
         configurationRepository.save(configuration);
-        updateConfiguration(config);
+        updateConfiguration(configuration);
     }
 
     public String getBaseUrl(String defaultUrl) {

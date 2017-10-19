@@ -1,7 +1,6 @@
 package in.ac.amu.zhcet.configuration;
 
 import in.ac.amu.zhcet.data.model.configuration.Configuration;
-import in.ac.amu.zhcet.data.model.configuration.ConfigurationModel;
 import in.ac.amu.zhcet.data.repository.ConfigurationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +18,9 @@ public class ConfigurationComponent {
         if (configuration == null) {
             log.warn("Default configuration absent... Building new config");
             Configuration defaultConfiguration = new Configuration();
-            defaultConfiguration.getConfig().setUrl(applicationProperties.getUrl());
+            defaultConfiguration.setUrl(applicationProperties.getUrl());
             configurationRepository.save(defaultConfiguration);
             log.warn("Saved default configuration : " + defaultConfiguration);
-        } else if(configuration.getConfig().getVersion() < ConfigurationModel.VERSION) {
-            log.warn("Outdated configuration schema... Updating");
-            configuration.setId(null);
-            configuration.getConfig().setVersion(ConfigurationModel.VERSION);
-            configurationRepository.save(configuration);
-            log.warn("Updated configuration : " + configuration);
         } else {
             log.info("Configuration already present : " + configuration);
         }
