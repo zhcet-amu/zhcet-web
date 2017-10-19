@@ -13,7 +13,7 @@
     <div class="card-body collapse in">
         <div class="card-block">
             <th:block th:each="department : ${departments}">
-                <a th:href="|/dean/roles/${department.id}|">
+                <a th:href="|/dean/roles/${department.code}|">
                     <button class="mui-btn mui-btn--flat" th:text="${department.name}"></button>
                     <div class="mui-divider"></div>
                 </a>

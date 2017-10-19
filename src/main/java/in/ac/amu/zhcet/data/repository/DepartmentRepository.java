@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface DepartmentRepository extends CrudRepository<Department, Long>{
+public interface DepartmentRepository extends CrudRepository<Department, String>{
     Department findByName(String name);
 
     List<Department> findAll();

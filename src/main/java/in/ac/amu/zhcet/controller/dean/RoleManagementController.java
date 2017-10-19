@@ -30,7 +30,7 @@ public class RoleManagementController {
     }
 
     @GetMapping("/dean/roles/{id}")
-    public String roleManagement(Model model, @PathVariable long id) {
+    public String roleManagement(Model model, @PathVariable String id) {
         Department department = departmentService.findOne(id);
 
         if (department != null) {

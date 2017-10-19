@@ -125,7 +125,7 @@ public class FacultyUploadService {
         facultyMember.setDesignation(Utils.capitalizeFirst(facultyUpload.getDesignation()));
         facultyMember.getUser().setName(Utils.capitalizeFirst(facultyUpload.getName()));
         facultyMember.getUser().setPassword(password);
-        facultyMember.getUser().setDepartment(new Department(Utils.capitalizeFirst(facultyUpload.getDepartment())));
+        facultyMember.getUser().setDepartment(Department.builder().name(Utils.capitalizeFirst(facultyUpload.getDepartment())).build());
 
         return facultyMember;
     }

@@ -39,7 +39,8 @@
                     <tbody class="list">
                     <!--/*@thymesVar id="member" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
                     <tr th:each="member : ${facultyMembers}">
-                        <form th:action="|/dean/roles/${department.id}|" method="post">
+                        <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
+                        <form th:action="|/dean/roles/${department.code}|" method="post">
                             <td width="50" style="padding: 0;">
                                 <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
                                      th:src="${@viewService.getAvatarUrl(member.user.details.avatarUrl)}"

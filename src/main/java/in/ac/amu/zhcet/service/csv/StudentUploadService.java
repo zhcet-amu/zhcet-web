@@ -50,7 +50,7 @@ public class StudentUploadService {
         student.setEnrolmentNumber(capitalizeAll(studentUpload.getEnrolmentNo()));
         student.setFacultyNumber(capitalizeAll(studentUpload.getFacultyNo()));
         student.getUser().setName(capitalizeFirst(studentUpload.getName()));
-        student.getUser().setDepartment(new Department(capitalizeFirst(studentUpload.getDepartment())));
+        student.getUser().setDepartment(Department.builder().name(capitalizeFirst(studentUpload.getDepartment())).build());
         student.setSection(capitalizeAll(studentUpload.getSection()));
         student.setHallCode(capitalizeAll(studentUpload.getHall()));
         student.setRegistrationYear(studentUpload.getRegistrationYear());
