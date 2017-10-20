@@ -17,7 +17,7 @@ ALTER TABLE course
 
 ALTER TABLE user_auth ADD department_code VARCHAR(2);
 
-UPDATE zhcet.user_auth SET user_auth.department_code =
+UPDATE user_auth SET user_auth.department_code =
   (SELECT department.code FROM department WHERE department.id = user_auth.department_id);
 
 ALTER TABLE user_auth
