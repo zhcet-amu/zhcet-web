@@ -58,7 +58,6 @@ public class UserAuth extends BaseEntity {
 
     @Valid
     @NotNull
-    @Builder.Default
     @PrimaryKeyJoinColumn
     @OneToOne(cascade = CascadeType.ALL)
     private UserDetail details = new UserDetail();

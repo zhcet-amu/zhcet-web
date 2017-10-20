@@ -41,7 +41,7 @@ public class StudentService {
     }
 
     public List<StudentRepository.Identifier> getAllIdentifiers() {
-        return studentRepository.findAllIdentifiers();
+        return studentRepository.findAllProjectedBy();
     }
 
     public List<Student> getAll() {

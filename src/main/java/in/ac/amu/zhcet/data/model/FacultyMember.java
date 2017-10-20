@@ -25,12 +25,10 @@ public class FacultyMember extends BaseEntity {
 
     @Valid
     @NotNull
-    @Builder.Default
     @PrimaryKeyJoinColumn
     @OneToOne(cascade = CascadeType.ALL)
     private UserAuth user = new UserAuth();
 
-    @Builder.Default
     private boolean working = true;
     private String designation;
 
