@@ -1,11 +1,31 @@
 package in.ac.amu.zhcet.service.misc;
 
 import in.ac.amu.zhcet.data.model.Course;
+import in.ac.amu.zhcet.service.user.CustomUser;
 import in.ac.amu.zhcet.utils.Utils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ViewService {
+
+    private final SessionRegistry sessionRegistry;
+
+    @Autowired
+    public ViewService(SessionRegistry sessionRegistry) {
+        this.sessionRegistry = sessionRegistry;
+    }
+
+    public List<CustomUser> getUsersFromSessionRegistry() {
+        return sessionRegistry.getAllPrincipals().stream()
+                .filter(u -> !sessionRegistry.getAllSessions(u, false).isEmpty())
+                .map(object -> ((CustomUser) object))
+                .collect(Collectors.toList());
+    }
 
     public String getClassForCourse(Course course) {
         if (course.getSemester() == null)

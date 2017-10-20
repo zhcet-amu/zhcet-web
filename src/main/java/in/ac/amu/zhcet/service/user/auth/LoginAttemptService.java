@@ -5,6 +5,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import in.ac.amu.zhcet.configuration.security.ExposeAttemptedPathAuthorizationAuditListener;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,8 +16,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -125,5 +129,21 @@ public class LoginAttemptService {
         } catch (ExecutionException e) {
             return MAX_ATTEMPTS;
         }
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class BlockedIp {
+        private String ip;
+        private int attempts;
+    }
+
+    public List<BlockedIp> getBlockedIps() {
+        return attemptsCache.asMap()
+                .entrySet()
+                .stream()
+                .filter(stringIntegerEntry -> stringIntegerEntry.getValue() >= MAX_ATTEMPTS)
+                .map(entry -> new BlockedIp(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
     }
 }

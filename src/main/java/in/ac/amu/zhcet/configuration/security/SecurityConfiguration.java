@@ -16,6 +16,8 @@ import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +51,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     AuditorAware<String> auditorAware() {
         return new Auditor();
+    }
+
+    @Bean
+    SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     // To enable reverse proxied servers to get actual user IP
@@ -98,7 +105,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .rememberMe()
                     .rememberMeCookieName("zhcet-remember-me")
                     .tokenValiditySeconds(24*60*60)
-                    .tokenRepository(persistentTokenService);
+                    .tokenRepository(persistentTokenService)
+                .and()
+                    .sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());
     }
 
 }
