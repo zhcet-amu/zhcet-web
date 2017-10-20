@@ -1,38 +1,71 @@
 <!DOCTYPE html>
 <html lang="en" th:fragment="login" data-textdirection="ltr" class="loading" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/layout :: head">
+<head th:fragment="head">
+    <title th:text="${page_title}">Home</title>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-touch-fullscreen" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106215806-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments)}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-106215806-1');
+    </script>
+
+    <link rel="shortcut icon" href="https://zhcet-backend.firebaseapp.com/static/img/icon.png" />
+
+    <link href="https://zhcet-backend.firebaseapp.com/static/css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+    <link href="https://zhcet-backend.firebaseapp.com/static/css/bootstrap-extended.min.css" type="text/css" rel="stylesheet"/>
+    <link href="https://zhcet-backend.firebaseapp.com/static/css/app.min.css" type="text/css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" type="text/css" rel="stylesheet"/>
+    <style>
+        .transparent {  background-color: transparent;  }
+        .translucent {  background-color: rgba(255, 255, 255, 0.9);  }
+        .pattern-bg {
+            background: #f1f2f3 url("https://zhcet-backend.firebaseapp.com/static/img/zhcet-pattern.png");
+            background-size: 340px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -2;
+            opacity: .6;
+        }
+    </style>
 </head>
 <body data-open="click" data-menu="vertical-menu" data-col="1-column" class="vertical-layout vertical-menu 1-column  blank-page blank-page">
 <div class="app-content content container-fluid">
+    <div class="pattern-bg"></div>
     <div class="content-wrapper">
-        <div class="content-body"><section class="flexbox-container">
-            <div class="col-md-4 offset-md-4 col-xs-10 offset-xs-1  box-shadow-2 p-0">
-                <div class="translucent card border-grey border-lighten-3 m-0">
-                    <div class="transparent card-header no-border">
-                        <div class="card-title text-xs-center">
-                            <div class="p-1"><img src="https://zhcet-backend.firebaseapp.com/static/img/logo-big-dark.png" class="brand-logo" alt="branding logo" /></div>
+        <div class="content-body">
+            <section class="flexbox-container">
+                <div class="col-md-4 offset-md-4 col-xs-10 offset-xs-1  box-shadow-2 p-0">
+                    <div class="translucent card border-grey border-lighten-3 m-0">
+                        <div class="transparent card-header no-border">
+                            <div class="card-title text-xs-center">
+                                <div class="p-1"><img src="https://zhcet-backend.firebaseapp.com/static/img/logo-big-dark.png" class="brand-logo" alt="branding logo" /></div>
+                            </div>
+                            <h6 class="line-on-side transparent text-muted text-xs-center font-small-3 pt-2"><span th:text="${message}"></span></h6>
                         </div>
-                        <h6 class="line-on-side transparent text-muted text-xs-center font-small-3 pt-2"><span th:text="${message}"></span></h6>
+                        <div th:include="this :: container"></div>
                     </div>
-                    <div th:include="this :: container"></div>
                 </div>
-            </div>
-        </section>
-
+            </section>
         </div>
     </div>
 </div>
-<div th:replace="fragments/layout :: scripts"></div>
-</body>
-<style>
-    .transparent {
-        background-color: transparent;
-    }
-
-    .translucent {
-        background-color: rgba(255, 255, 255, 0.9);
-    }
-</style>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
+<script src="https://zhcet-backend.firebaseapp.com/static/js/pace.min.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js" type="text/javascript"></script>
 <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
@@ -43,6 +76,7 @@
         var slides = [];
 
         function updateSlides(slides) {
+            $('.pattern-bg').hide();
             $.backstretch(slides, { duration: 2000, fade: 750 });
         }
 
@@ -55,4 +89,5 @@
         });
     }());
 </script>
+</body>
 </html>
