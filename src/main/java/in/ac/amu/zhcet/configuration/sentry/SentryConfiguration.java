@@ -1,13 +1,9 @@
-package in.ac.amu.zhcet.configuration;
+package in.ac.amu.zhcet.configuration.sentry;
 
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.UserService;
 import io.sentry.Sentry;
-import io.sentry.SentryClient;
-import io.sentry.event.helper.ContextBuilderHelper;
 import io.sentry.event.helper.EventBuilderHelper;
-import io.sentry.event.helper.ForwardedAddressResolver;
-import io.sentry.event.helper.HttpEventBuilderHelper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -40,10 +36,7 @@ public class SentryConfiguration {
             }
         };
 
-        SentryClient sentryClient = Sentry.getStoredClient();
-        sentryClient.addBuilderHelper(myEventBuilderHelper);
-        sentryClient.addBuilderHelper(new HttpEventBuilderHelper(new ForwardedAddressResolver()));
-        sentryClient.addBuilderHelper(new ContextBuilderHelper(sentryClient));
+        Sentry.getStoredClient().addBuilderHelper(myEventBuilderHelper);
     }
 
 }

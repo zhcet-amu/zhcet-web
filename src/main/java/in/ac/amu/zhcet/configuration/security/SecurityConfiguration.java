@@ -1,12 +1,11 @@
-package in.ac.amu.zhcet.configuration;
+package in.ac.amu.zhcet.configuration.security;
 
-import in.ac.amu.zhcet.configuration.security.RoleWiseSuccessHandler;
 import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.service.user.Auditor;
+import in.ac.amu.zhcet.service.user.UserDetailService;
 import in.ac.amu.zhcet.service.user.auth.LoginAttemptService;
 import in.ac.amu.zhcet.service.user.auth.PersistentTokenService;
-import in.ac.amu.zhcet.service.user.UserDetailService;
-import in.ac.amu.zhcet.service.user.Auditor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
