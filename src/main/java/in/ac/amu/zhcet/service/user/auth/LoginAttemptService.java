@@ -62,12 +62,12 @@ public class LoginAttemptService {
 
         String ip = LoginAttemptService.getClientIP(request);
         String coolDownPeriod = LoginAttemptService.BLOCK_DURATION + " " + LoginAttemptService.TIME_UNIT;
-        if (object instanceof BadCredentialsException) {
+        if(object instanceof LockedException || isBlocked(ip)) {
+            return "IP blocked for <strong>" + coolDownPeriod + "</strong> since last wrong login attempt";
+        } else if (object instanceof BadCredentialsException) {
             String tries = String.format("%d out of %d tries left!" , triesLeft(ip), LoginAttemptService.MAX_ATTEMPTS);
             String message = "IP will be blocked for " + coolDownPeriod + " after all tries are exhausted";
             return defaultMessage + "<br><strong>" + tries  + "</strong> " + message;
-        } else if(object instanceof LockedException && isBlocked(ip)) {
-            return "IP blocked for <strong>" + coolDownPeriod + "</strong> since last wrong login attempt";
         }
 
         return defaultMessage;

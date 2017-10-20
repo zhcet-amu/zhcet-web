@@ -3,18 +3,25 @@ package in.ac.amu.zhcet.configuration;
 import in.ac.amu.zhcet.configuration.security.RoleWiseSuccessHandler;
 import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.service.user.auth.LoginAttemptService;
 import in.ac.amu.zhcet.service.user.auth.PersistentTokenService;
 import in.ac.amu.zhcet.service.user.UserDetailService;
 import in.ac.amu.zhcet.service.user.Auditor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
+import javax.servlet.http.HttpServletRequest;
+
+@Slf4j
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -45,6 +52,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new Auditor();
     }
 
+    // To enable reverse proxied servers to get actual user IP
+    private static class CustomAuthenticationDetails extends WebAuthenticationDetails {
+        private String remoteAddress;
+
+        CustomAuthenticationDetails(HttpServletRequest request) {
+            super(request);
+            this.remoteAddress = LoginAttemptService.getClientIP(request);
+            if (!remoteAddress.equals(request.getRemoteAddr())) {
+                log.info("Received User IP : {}", request.getRemoteAddr());
+                log.info("Replaced User IP : {}", remoteAddress);
+            }
+        }
+
+        @Override
+        public String getRemoteAddress() {
+            return remoteAddress;
+        }
+    }
+
+    @Bean
+    AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource() {
+        return CustomAuthenticationDetails::new;
+    }
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -56,7 +87,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/department/**").hasAuthority(Roles.DEPARTMENT_ADMIN)
                 .antMatchers("/faculty/**").hasAuthority(Roles.FACULTY)
                 .and()
-                    .formLogin().loginPage("/login").permitAll()
+                    .formLogin()
+                    .authenticationDetailsSource(authenticationDetailsSource())
+                    .loginPage("/login").permitAll()
                     .failureUrl("/login?error")
                     .usernameParameter("username").passwordParameter("password")
                     .successHandler(roleWiseSuccessHandler())
