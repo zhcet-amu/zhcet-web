@@ -44,7 +44,7 @@ public class PasswordResetService {
 
         Calendar cal = Calendar.getInstance();
         if ((passwordResetToken.getExpiry().getTime() - cal.getTime().getTime()) <= 0) {
-            return "Token: "+token+" for User: "+id+" has expired";
+            return "Token: "+token+" for User: "+id+" has locked";
         }
         UserAuth user = passwordResetToken.getUserAuth();
         Authentication auth = new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));

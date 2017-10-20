@@ -61,7 +61,7 @@ public class EmailVerificationService {
 
         Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiry().getTime() - cal.getTime().getTime()) <= 0) {
-            return "Token: "+token+" has expired";
+            return "Token: "+token+" has locked";
         }
 
         return null;
