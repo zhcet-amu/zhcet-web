@@ -70,18 +70,7 @@ public class FacultyCourseController {
     @GetMapping("faculty/courses/{id}/attendance/download")
     public void getStudents(HttpServletResponse response, @PathVariable String id, @RequestParam(required = false) String section) throws IOException {
         CourseInCharge courseInCharge = courseInChargeService.getCourseInChargeAndVerify(id, section);
-
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-        Utils.sortCourseAttendance(courseRegistrations);
-
-        response.setContentType("text/csv");
-        response.setHeader("Content-disposition", "attachment;filename=attendance_" + id + "_" + Utils.defaultString(section, "all") + ".csv");
-
-        List<String> lines = attendanceDownloadService.attendanceCsv("faculty", id + "_" + section, courseRegistrations);
-        for (String line : lines) {
-            response.getOutputStream().println(line);
-        }
-
-        response.getOutputStream().flush();
+        attendanceDownloadService.download(id + "_" + Utils.defaultString(section, "all"), "faculty", courseRegistrations, response);
     }
 }

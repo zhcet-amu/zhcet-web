@@ -5,10 +5,9 @@
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
 
-<link rel="stylesheet" th:href="@{/css/floated-course.css}">
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
-<div th:replace="fragments/navigation :: navigation(pageId = 'department_admin', subPage = 'courses')"></div>
+<div th:replace="fragments/navigation :: navigation(pageId = 'dean_admin', subPage = 'floated_page')"></div>
 
 <!--/*@thymesVar id="floatedCourse" type="in.ac.amu.zhcet.data.model.FloatedCourse"*/-->
 <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.CourseInCharge"*/-->
@@ -20,12 +19,10 @@
         <strong>Unknown Error!</strong>
         <div>This can only happen if you tried to POST invalid data by force!</div>
     </div>
-    <div th:replace="department/fragments/unfloat_course"></div>
     <div class="row">
         <div class="col-xs-12 col-xl-4">
-            <div th:replace="department/fragments/add_in_charge"></div>
             <div class="card">
-                <a th:href="|/department/floated/${floatedCourse.course.code}/attendance/download|" target="_blank">
+                <a th:href="|/dean/floated/${floatedCourse.course.code}/attendance/download|" target="_blank">
                     <div class="card-body">
                         <div class="media">
                             <div class="p-2 text-xs-center bg-cyan bg-darken-2 media-left media-middle" style="background-color: #0097A7">
@@ -47,20 +44,19 @@
 
     </div>
 </div>
-<script id="sections" type="text/plain">
-    <span id="sections" class="mui-select section-select mx-1" hidden>
-        <label for="section">Section</label>
-        <select id="section" name="section">
-            <option th:each="section : ${sections}" th:value="${section}"
-                    th:text="${section}"></option>
-        </select>
-    </span>
-</script>
 <div th:replace="fragments/layout :: scripts"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.jquery.min.js"></script>
-<script src="https://zhcet-backend.firebaseapp.com/static/js/FuzzySearch.min.js"></script>
-<script src="https://zhcet-backend.firebaseapp.com/static/js/tmpl.min.js"></script>
-<script th:src="@{/js/fuzzyhound.js}"></script>
-<script th:src="@{/js/floated-course.js}"></script>
+<script>
+    $('#registration-modal').modal('show');
+    $('#registrationTable').dataTable({
+        scrollY:        true,
+        scrollCollapse: true,
+        "order": []
+    });
+    $('#confirmRegistrationTable').dataTable({
+        scrollY:        true,
+        scrollCollapse: true,
+        "order": []
+    });
+</script>
 </body>
 </html>

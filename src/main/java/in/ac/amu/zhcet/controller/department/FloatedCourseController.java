@@ -4,9 +4,10 @@ import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
-import in.ac.amu.zhcet.service.misc.AttendanceDownloadService;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseManagementService;
+import in.ac.amu.zhcet.service.csv.RegistrationUploadService;
+import in.ac.amu.zhcet.service.misc.AttendanceDownloadService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,12 +36,14 @@ public class FloatedCourseController {
     private final CourseInChargeService courseInChargeService;
     private final CourseManagementService courseManagementService;
     private final AttendanceDownloadService attendanceDownloadService;
+    private final RegistrationUploadService registrationUploadService;
 
     @Autowired
-    public FloatedCourseController(CourseInChargeService courseInChargeService, CourseManagementService courseManagementService, AttendanceDownloadService attendanceDownloadService) {
+    public FloatedCourseController(CourseInChargeService courseInChargeService, CourseManagementService courseManagementService, AttendanceDownloadService attendanceDownloadService, RegistrationUploadService registrationUploadService) {
         this.courseInChargeService = courseInChargeService;
         this.courseManagementService = courseManagementService;
         this.attendanceDownloadService = attendanceDownloadService;
+        this.registrationUploadService = registrationUploadService;
     }
 
     @GetMapping("department/floated/{id}")
@@ -67,6 +72,22 @@ public class FloatedCourseController {
         redirectAttributes.addFlashAttribute("course_success", "Course " + id + " unfloated successfully!");
 
         return "redirect:/department/courses?active=true";
+    }
+
+    @PostMapping("department/floated/{id}/register")
+    public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam MultipartFile file, HttpSession session) {
+        courseManagementService.verifyAndGetCourse(id);
+        registrationUploadService.upload(id, file, attributes, session);
+
+        return "redirect:/department/floated/{id}";
+    }
+
+    @PostMapping("department/floated/{id}/register/confirm")
+    public String confirmRegistration(RedirectAttributes attributes, @PathVariable String id, HttpSession session) {
+        courseManagementService.verifyAndGetCourse(id);
+        registrationUploadService.register(id, attributes, session);
+
+        return "redirect:/department/floated/{id}";
     }
 
     private CourseInCharge create(String facultyId, String section) {
@@ -111,18 +132,7 @@ public class FloatedCourseController {
     @GetMapping("department/floated/{id}/attendance/download")
     public void downloadAttendance(HttpServletResponse response, @PathVariable String id) throws IOException {
         FloatedCourse floatedCourse = courseManagementService.verifyAndGetCourse(id);
-
-        List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-
-        response.setContentType("text/csv");
-        response.setHeader("Content-disposition", "attachment;filename=attendance_" + id + ".csv");
-
-        List<String> lines = attendanceDownloadService.attendanceCsv("department", id, courseRegistrations);
-        for (String line : lines) {
-            response.getOutputStream().println(line);
-        }
-
-        response.getOutputStream().flush();
+        attendanceDownloadService.download(id, "department", floatedCourse.getCourseRegistrations(), response);
     }
 
 }

@@ -20,6 +20,7 @@
         modal.find('#sections').html(data['sections']);
         modal.find('#type_icon').attr('class', (data['course_type'] === 'Theory' ? 'icon-book' : 'icon-lab'));
         modal.find('#link').attr('href', '/dean/floated/' + data['course_code'] + '/attendance/download');
+        modal.find('#register').attr('href', '/dean/floated/' + data['course_code']);
 
         if (data['createdAt'] && data['createdAt'] !== '')
             modal.find('#floated-at').html(moment(fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));

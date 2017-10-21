@@ -1,7 +1,9 @@
 package in.ac.amu.zhcet.service;
 
+import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
+import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
@@ -15,6 +17,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -72,9 +75,16 @@ public class CourseManagementService {
         courseRepository.save(managed);
     }
 
+    private boolean isMemberPermitted(FacultyMember facultyMember, FloatedCourse floatedCourse) {
+        List<String> roles = Arrays.asList(facultyMember.getUser().getRoles());
+        boolean isPrivileged = roles.contains(Roles.DEAN_ADMIN) || roles.contains(Roles.SUPER_ADMIN);
+        return isPrivileged || floatedCourse.getCourse().getDepartment().equals(FacultyService.getDepartment(facultyMember));
+    }
+
     public FloatedCourse verifyAndGetCourse(String courseId) {
         FloatedCourse floatedCourse = getFloatedCourseByCode(courseId);
-        if (floatedCourse == null || !floatedCourse.getCourse().getDepartment().equals(facultyService.getFacultyDepartment()))
+        FacultyMember facultyMember = facultyService.getLoggedInMember();
+        if (floatedCourse == null || !isMemberPermitted(facultyMember, floatedCourse))
             throw new AccessDeniedException("403");
 
         return floatedCourse;
