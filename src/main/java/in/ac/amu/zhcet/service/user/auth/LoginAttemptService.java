@@ -65,7 +65,6 @@ public class LoginAttemptService {
         if (object == null)
             return defaultMessage;
 
-        log.info(object.toString());
         String ip = LoginAttemptService.getClientIP(request);
         String coolDownPeriod = LoginAttemptService.BLOCK_DURATION + " " + LoginAttemptService.TIME_UNIT;
         if(object instanceof LockedException || isBlocked(ip)) {
@@ -91,7 +90,7 @@ public class LoginAttemptService {
         log.info("Login Attempt for Principal : {}", auditEvent.getPrincipal());;
         if (auditEvent.getType().equals(ExposeAttemptedPathAuthorizationAuditListener.FAILURE)) {
             Object type = auditEvent.getData().get("type");
-            if (type instanceof BadCredentialsException) {
+            if (type != null && type.toString().equals(BadCredentialsException.class.getName())) {
                 log.info("Login Failed. Incrementing Attempts");
                 loginFailed(details.getRemoteAddress());
             } else if(type != null) {
