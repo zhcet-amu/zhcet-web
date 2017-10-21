@@ -42,15 +42,15 @@ public class UserAuth extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private Department department;
 
-    private boolean active;
+    private boolean enabled;
     private boolean passwordChanged;
+    private boolean emailVerified;
     private boolean emailUnsubscribed;
 
     @NotNull
     @JsonIgnore
     @Size(min = 4, max = 100)
     private String password;
-    @NotBlank
     private String roles;
     @NotNull
     @Enumerated(EnumType.STRING)

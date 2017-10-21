@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.data.model.dto.mapper;
 
-import in.ac.amu.zhcet.data.model.configuration.Configuration;
+import in.ac.amu.zhcet.data.model.Configuration;
 import in.ac.amu.zhcet.data.model.dto.Config;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;

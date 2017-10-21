@@ -50,7 +50,7 @@ public class FacultyEditService {
             if (userService.throwDuplicateEmail(facultyEditModel.getUserEmail(), facultyMember.getUser())) {
                 facultyEditModel.setUserEmail(null);
             } else  {
-                facultyMember.getUser().setActive(false);
+                facultyMember.getUser().setEmailVerified(false);
             }
         }
 

@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
@@ -64,6 +65,7 @@ public class LoginAttemptService {
         if (object == null)
             return defaultMessage;
 
+        log.info(object.toString());
         String ip = LoginAttemptService.getClientIP(request);
         String coolDownPeriod = LoginAttemptService.BLOCK_DURATION + " " + LoginAttemptService.TIME_UNIT;
         if(object instanceof LockedException || isBlocked(ip)) {
@@ -72,6 +74,8 @@ public class LoginAttemptService {
             String tries = String.format("%d out of %d tries left!" , triesLeft(ip), LoginAttemptService.MAX_ATTEMPTS);
             String message = "IP will be blocked for " + coolDownPeriod + " after all tries are exhausted";
             return defaultMessage + "<br><strong>" + tries  + "</strong> " + message;
+        } else if (object instanceof DisabledException) {
+            return "User is disabled from site";
         }
 
         return defaultMessage;
@@ -84,10 +88,15 @@ public class LoginAttemptService {
             return;
         }
 
-        log.info("Login Attempt for Principal : {}", auditEvent.getPrincipal());
+        log.info("Login Attempt for Principal : {}", auditEvent.getPrincipal());;
         if (auditEvent.getType().equals(ExposeAttemptedPathAuthorizationAuditListener.FAILURE)) {
-            log.info("Login Failed. Incrementing Attempts");
-            loginFailed(details.getRemoteAddress());
+            Object type = auditEvent.getData().get("type");
+            if (type instanceof BadCredentialsException) {
+                log.info("Login Failed. Incrementing Attempts");
+                loginFailed(details.getRemoteAddress());
+            } else if(type != null) {
+                log.info("Login Failed due to {}", type.toString());
+            }
         } else if (auditEvent.getType().equals(ExposeAttemptedPathAuthorizationAuditListener.SUCCESS)) {
             log.info("Login Succeeded. Invalidating");
             loginSucceeded(details.getRemoteAddress());

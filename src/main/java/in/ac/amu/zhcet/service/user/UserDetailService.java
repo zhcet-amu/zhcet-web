@@ -51,7 +51,7 @@ public class UserDetailService implements UserDetailsService {
         if (user == null)
             throw new UsernameNotFoundException(username);
 
-        return new CustomUser(user.getUserId(), user.getPassword(), loginAttemptService.isBlocked(ip), getAuthorities(user.getRoles()))
+        return new CustomUser(user.getUserId(), user.getPassword(), user.isEnabled(), loginAttemptService.isBlocked(ip), getAuthorities(user.getRoles()))
                 .name(user.getName())
                 .avatar(user.getDetails().getAvatarUrl())
                 .type(user.getType())

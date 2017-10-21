@@ -31,7 +31,7 @@ public class PasswordChangeController {
     public String changePassword(Model model) {
         String renderUrl = "user/change_password";
         UserAuth userAuth = userService.getLoggedInUser();
-        if (!userAuth.isActive()) {
+        if (!userAuth.isEmailVerified()) {
             log.warn("User not verified and tried to change the password!");
             model.addAttribute("error", "The user is not verified, and hence can't change the password");
             return renderUrl;
@@ -46,7 +46,7 @@ public class PasswordChangeController {
         String redirectUrl = "redirect:/profile/change_password";
 
         UserAuth userAuth = userService.getLoggedInUser();
-        if (!userAuth.isActive()) {
+        if (!userAuth.isEmailVerified()) {
             log.warn("!!POST!! User not verified and tried to change the password!");
             redirectAttributes.addFlashAttribute("error", "The user is not verified, and hence can't change the password");
             return redirectUrl;

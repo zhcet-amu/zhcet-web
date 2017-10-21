@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.data.model.configuration;
+package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.BaseIdEntity;
 import in.ac.amu.zhcet.utils.Utils;

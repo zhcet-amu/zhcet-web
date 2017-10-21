@@ -116,7 +116,6 @@ public class UserService {
 
     @Transactional
     public void changeUserPassword(UserAuth userAuth, String password) {
-        log.info(UserAuth.PASSWORD_ENCODER.encode(password));
         userAuth.setPassword(UserAuth.PASSWORD_ENCODER.encode(password));
         userAuth.setPasswordChanged(true);
         userRepository.save(userAuth);

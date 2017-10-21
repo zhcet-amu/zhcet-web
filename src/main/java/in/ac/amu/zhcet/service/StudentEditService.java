@@ -62,7 +62,7 @@ public class StudentEditService {
             if (userService.throwDuplicateEmail(studentEditModel.getUserEmail(), student.getUser()))
                 studentEditModel.setUserEmail(null);
             else {
-                student.getUser().setActive(false);
+                student.getUser().setEmailVerified(false);
             }
         }
 

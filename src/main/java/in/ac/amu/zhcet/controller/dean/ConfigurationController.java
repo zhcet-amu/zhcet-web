@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.controller.dean;
 
-import in.ac.amu.zhcet.data.model.configuration.Configuration;
+import in.ac.amu.zhcet.data.model.Configuration;
 import in.ac.amu.zhcet.data.model.dto.Config;
 import in.ac.amu.zhcet.data.model.dto.mapper.ConfigurationMapper;
 import in.ac.amu.zhcet.service.misc.ConfigurationService;

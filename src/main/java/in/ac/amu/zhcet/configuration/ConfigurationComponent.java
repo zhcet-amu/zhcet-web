@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.configuration;
 
-import in.ac.amu.zhcet.data.model.configuration.Configuration;
+import in.ac.amu.zhcet.data.model.Configuration;
 import in.ac.amu.zhcet.data.repository.ConfigurationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

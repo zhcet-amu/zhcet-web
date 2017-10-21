@@ -51,7 +51,7 @@ public class EmailNotificationService {
                 .map(AttendanceUpload::getEnrolment_no)
                 .map(studentService::getByEnrolmentNumber)
                 .map(Student::getUser)
-                .filter(userAuth -> userAuth.isActive() && !userAuth.isEmailUnsubscribed())
+                .filter(userAuth -> userAuth.isEmailVerified() && !userAuth.isEmailUnsubscribed())
                 .map(UserAuth::getEmail)
                 .collect(Collectors.toList());
 

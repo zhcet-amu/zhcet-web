@@ -74,7 +74,7 @@ public class EmailVerificationService {
 
         UserAuth userAuth = verificationToken.getUser();
         userAuth.setEmail(verificationToken.getEmail());
-        userAuth.setActive(true);
+        userAuth.setEmailVerified(true);
         userService.save(userAuth);
     }
 

@@ -18,8 +18,8 @@ public class CustomUser extends User {
     private Type type;
     private Department department;
 
-    public CustomUser(String username, String password, boolean blocked, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, true, true, true, !blocked, authorities);
+    CustomUser(String username, String password,boolean enabled, boolean blocked, Collection<? extends GrantedAuthority> authorities) {
+        super(username, password, enabled, true, true, !blocked, authorities);
     }
 
     public CustomUser name(String name) {
