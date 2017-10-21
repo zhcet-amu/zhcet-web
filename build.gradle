@@ -10,11 +10,6 @@ buildscript {
     }
 }
 
-plugins {
-    id 'net.ltgt.apt' version '0.8'
-    id "com.gorylenko.gradle-git-properties" version "1.4.17"
-}
-
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'org.springframework.boot'
