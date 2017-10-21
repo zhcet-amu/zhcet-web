@@ -1,6 +1,6 @@
 <div xmlns:th="http://www.thymeleaf.org">
     <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.user.UserAuth"*/-->
-    <div class="text-xs-right" th:if="${user.active}">
+    <div class="text-xs-right" th:if="${user.emailVerified}">
         <button th:class="|btn btn-round btn-${user.emailUnsubscribed ? 'success' : 'danger'} mb-2|"
                 data-toggle="modal" data-target="#unsubscribe" th:text="${user.emailUnsubscribed ? 'Subscribe Email' : 'Unsubscribe Email'}"></button>
     </div>

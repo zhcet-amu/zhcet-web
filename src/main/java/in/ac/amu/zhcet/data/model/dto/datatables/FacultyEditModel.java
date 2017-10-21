@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.data.model.dto.datatables;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
@@ -10,6 +11,7 @@ public class FacultyEditModel {
     @NotBlank
     @Size(max = 255)
     private String userName;
+    @Email
     @Size(max = 255)
     private String userEmail;
     @NotBlank

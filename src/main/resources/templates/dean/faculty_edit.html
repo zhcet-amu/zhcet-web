@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div th:class="|capsule ${faculty.working ? 'bg-success' : 'bg-danger'}|" style="width: 120px;display: inline-block" th:text="${faculty.working ? 'Active' : 'Inactive'}">Active</div>
-                    <span th:text="${faculty.user.email}"></span><span th:if="${faculty.user.active}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
+                    <span th:text="${faculty.user.email}"></span><span th:if="${faculty.user.emailVerified}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
                     <br>
                 </div>
             </div>

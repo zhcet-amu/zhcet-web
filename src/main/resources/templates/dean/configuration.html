@@ -29,23 +29,24 @@
                         </div>
                     </div>
                     <div class="card-block">
-                        <div th:each="message : ${success}" class="alert alert-dismissible alert-success">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <span th:text="${message}"></span>
-                        </div>
-                        <div th:each="error : ${#fields.detailedErrors('*')}">
-                            <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
-                        </div>
-                        <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <div th:utext="${error}">Fix this and try and try again</div>
-                        </div>
+                        <!--/*@thymesVar id="config" type="in.ac.amu.zhcet.data.model.dto.Config"*/-->
                         <form class="form form-horizontal" th:action="@{/dean/configuration}" method="post" th:object="${config}">
+                            <div th:each="message : ${success}" class="alert alert-dismissible alert-success">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <span th:text="${message}"></span>
+                            </div>
+                            <div th:each="error : ${#fields.detailedErrors('*')}">
+                                <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                            </div>
+                            <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <div th:utext="${error}">Fix this and try and try again</div>
+                            </div>
                             <div class="form-body">
                                 <div class="form-group row" style="vertical-align: middle">
                                     <label class="col-md-3 label-control" for="site">Site URL</label>
                                     <div class="col-md-9">
-                                        <input type="text" id="site" class="form-control" th:field="*{siteUrl}">
+                                        <input type="text" id="site" class="form-control" th:field="*{url}">
                                     </div>
                                 </div>
                                 <div class="form-group row" style="vertical-align: middle">
@@ -53,7 +54,7 @@
                                     <div class="col-md-3">
                                         <div class="input-group">
                                             <input type="number" id="threshold" class="form-control"
-                                                   placeholder="Threshold Percentage" th:field="*{threshold}">
+                                                   placeholder="Threshold Percentage" th:field="*{attendanceThreshold}">
                                             <span class="input-group-addon">%</span>
                                         </div>
                                     </div>

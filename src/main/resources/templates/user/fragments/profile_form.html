@@ -23,7 +23,7 @@
                 <li th:text="${faculty.facultyId}">FacultyNumber</li>
             </ul>
             <div>
-                <span th:text="${user.email}"></span><span th:if="${user.active}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
+                <span th:text="${user.email}"></span><span th:if="${user.emailVerified}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
                 <br><br>
             </div>
             <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"

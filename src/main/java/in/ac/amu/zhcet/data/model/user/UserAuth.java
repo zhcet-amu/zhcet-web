@@ -6,6 +6,7 @@ import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.envers.Audited;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +33,7 @@ public class UserAuth extends BaseEntity {
     @NotBlank
     private String userId;
 
+    @Email
     @Column(unique = true)
     private String email;
 

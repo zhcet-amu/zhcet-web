@@ -29,7 +29,7 @@ public class StudentView {
     private String userDepartmentName;
     @JsonView(DataTablesOutput.View.class)
     @JsonProperty("is-verified")
-    private boolean userActive;
+    private boolean userEmailVerified;
     @JsonView(DataTablesOutput.View.class)
     private String hallCode;
     @JsonView(DataTablesOutput.View.class)

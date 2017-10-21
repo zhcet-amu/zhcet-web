@@ -45,7 +45,7 @@
                             <span>Registration Year : </span><span th:text="${student.registrationYear}"></span></span>
                         </div>
                     </div>
-                    <span th:text="${student.user.email}"></span><span th:if="${student.user.active}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
+                    <span th:text="${student.user.email}"></span><span th:if="${student.user.emailVerified}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
                     <br>
                 </div>
             </div>

@@ -54,7 +54,6 @@ dependencies {
     compile 'com.google.firebase:firebase-admin:5.3.1'
     compile 'commons-io:commons-io:2.5'
     compile 'org.imgscalr:imgscalr-lib:4.2'
-    compile 'org.mapstruct:mapstruct-jdk8:1.1.0.Final'
     compile 'io.sentry:sentry-spring:1.5.4'
     compile 'io.sentry:sentry-logback:1.5.4'
     compileOnly "org.projectlombok:lombok:1.16.18"

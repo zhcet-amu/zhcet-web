@@ -2,9 +2,9 @@ package in.ac.amu.zhcet.controller.dean;
 
 import in.ac.amu.zhcet.data.model.Configuration;
 import in.ac.amu.zhcet.data.model.dto.Config;
-import in.ac.amu.zhcet.data.model.dto.mapper.ConfigurationMapper;
 import in.ac.amu.zhcet.service.misc.ConfigurationService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,26 +22,28 @@ import java.util.List;
 @Controller
 public class ConfigurationController {
 
+    private final ModelMapper modelMapper;
     private final ConfigurationService configurationService;
 
     @Autowired
-    public ConfigurationController(ConfigurationService configurationService) {
+    public ConfigurationController(ModelMapper modelMapper, ConfigurationService configurationService) {
+        this.modelMapper = modelMapper;
         this.configurationService = configurationService;
     }
 
-    private Config toConfig(Configuration configurationModel) {
-        Config config = ConfigurationMapper.MAPPER.toConfig(configurationModel);
-        config.setTerm(configurationModel.getSession().charAt(0));
-        config.setYear(2000 + Integer.parseInt(configurationModel.getSession().substring(1)));
+    private Config toConfig(Configuration configuration) {
+        Config config = modelMapper.map(configuration, Config.class);
+        config.setTerm(configuration.getSession().charAt(0));
+        config.setYear(2000 + Integer.parseInt(configuration.getSession().substring(1)));
 
         return config;
     }
 
     private Configuration toConfigModel(Config config) {
-        Configuration configurationModel = ConfigurationMapper.MAPPER.fromConfig(config);
-        configurationModel.setSession(config.getTerm() + String.valueOf(config.getYear() - 2000));
+        Configuration configuration = modelMapper.map(config, Configuration.class);
+        configuration.setSession(config.getTerm() + String.valueOf(config.getYear() - 2000));
 
-        return configurationModel;
+        return configuration;
     }
 
     @GetMapping("/dean/configuration")
@@ -66,10 +68,6 @@ public class ConfigurationController {
         }
 
         List<String> errors = new ArrayList<>();
-        if (config.getThreshold() < 50 || config.getThreshold() > 100)
-            errors.add("Threshold should be 50% and 100%");
-        if (config.getYear() < 2000)
-            errors.add("Year should be greater than 2000");
         if (config.getTerm() != 'A' && config.getTerm() != 'W')
             errors.add("Term can only be Autumn or Winter");
 

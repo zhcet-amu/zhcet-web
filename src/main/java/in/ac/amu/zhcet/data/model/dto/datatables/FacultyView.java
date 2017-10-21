@@ -31,7 +31,7 @@ public class FacultyView {
     private String userDepartmentName;
     @JsonView(DataTablesOutput.View.class)
     @JsonProperty("is-verified")
-    private boolean userActive;
+    private boolean userEmailVerified;
     @JsonView(DataTablesOutput.View.class)
     private String createdAt;
     @JsonView(DataTablesOutput.View.class)
