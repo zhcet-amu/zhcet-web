@@ -60,12 +60,12 @@ Once you have verified the install by running `javac -version` and `java -versio
 
 **Note:** If you already have existing JDK8 installation or want to install it through any other means, feel free to do so. Just confirm that `java` and `javac` commands are on path and correspond to version 8. 
 
-> For windows users, you may find Windows speific download instructions [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+> For windows users, you may find Windows specific download instructions [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 
 #### MySQL
 
 [![MySQL 5.6](https://img.shields.io/badge/MySQL-5.6-orange.svg)]()  
-Last version of MySQL known to work on the project was `5.7` but any recent version or 5.6 should work as the project only relies on very basic and stable featureset of MySQL. It doesn't matter how you install MySQL and there are countless of tutorials out there for specific Operating Systems, and if you have any MAMP, LAMP or XAMP installation, there is great chance you have it configured already. Verify it by running `mysql --version`
+Last version of MySQL known to work on the project was `5.7` but any recent version or 5.6 should work as the project only relies on very basic and stable feature set of MySQL. It doesn't matter how you install MySQL and there are countless of tutorials out there for specific Operating Systems, and if you have any MAMP, LAMP or XAMP installation, there is great chance you have it configured already. Verify it by running `mysql --version`
 
 If you don't have it installed, you can follow any of these great guides:
 - [MySQL Installation tutorial by DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-16-04)
@@ -75,17 +75,17 @@ I have provided 2 guides so you can educate yourself by studying the common bits
 
 The steps to complete the MySQL setup for the project(refer to above guides for specific instructions) are:
 
-- **Install MySQL Server** - `sudo apt-get upgrade` is **NOT** required but recommended if you have hige amount of data to spare
+- **Install MySQL Server** - `sudo apt-get upgrade` is **NOT** required but recommended if you have huge amount of data to spare
 - **Secure Installation** - This step is optional
 - **Create Database** - Create database for the project, for instance, named `zhcet`
 - **Create User** - Create a MySQL user for the project, for instance, named `zhcetuser` protected by a password. It is **NOT**  recommended to use root user for the project
 - **Grant Privileges** - Grant privileges to this user on database you had created in one of the previous step. For this example, the command would look like - 
 
 ```
-grant all privileges on zhcet.* to 'springuser'@'localhost';
+grant all privileges on zhcet.* to 'zhcetuser'@'localhost';
 ``` 
 
-***IMPORTANT:*** **DO NOT FORGET** to customize atleast the username and password of the user you create from this tutorial's example for security purposes. Even if you only deploy the project locally, it is recommended to use different parameters from what is used here.
+***IMPORTANT:*** **DO NOT FORGET** to customize at least the username and password of the user you create from this tutorial's example for security purposes. Even if you only deploy the project locally, it is recommended to use different parameters from what is used here.
 
 Once you have performed these steps, verify your user permissions by logging in as the created user and creating and dropping a table. If any of the step was not clear, please revisited the two guides above, as they feature all specific instructions of these steps.
 
@@ -124,7 +124,7 @@ Their documentation is pretty extensive and there are various resources how to o
 
 ## Configuration
 
-There are various configuration options for Spring Boot Applications, but here I'll demonstrate 2 most popular ones. You can make the same confuguration using any of the methods listed [here](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
+There are various configuration options for Spring Boot Applications, but here I'll demonstrate 2 most popular ones. You can make the same configuration using any of the methods listed [here](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
 
 Simplest way to configure all options for the app would be create a file named `application-secrets.properties` in `src/main/resources` directory with this content:
 
@@ -214,7 +214,7 @@ dsn=<your_dsn>
 factory=in.ac.amu.zhcet.configuration.sentry.SentryFactory
 ```
 
-**IMPORTANT** - Do not forget to configure this factory as it extracts the actual user IP from `X-FORWARDED-FOR` header where it is masked by reverse proxies. Not using this may result in fitering of Sentry Event in case reverse proxy masks user IP as `localhost` and obviouslt the reports about the origin of error will be wrong
+**IMPORTANT** - Do not forget to configure this factory as it extracts the actual user IP from `X-FORWARDED-FOR` header where it is masked by reverse proxies. Not using this may result in filtering of Sentry Event in case reverse proxy masks user IP as `localhost` and obviouslt the reports about the origin of error will be wrong
 
 
 ## Running
