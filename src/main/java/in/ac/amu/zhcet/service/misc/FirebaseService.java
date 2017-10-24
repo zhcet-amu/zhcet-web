@@ -79,7 +79,7 @@ public class FirebaseService {
     }
 
     public String uploadFile(String path, String contentType, InputStream fileStream) throws UnsupportedEncodingException {
-        log.warn("Uploading storage '{}' of type {}...", path, contentType);
+        log.warn("Uploading file '{}' of type {}...", path, contentType);
         Bucket bucket = getBucket();
         log.warn("Bucket used : " + bucket.getName());
         String uuid = UUID.randomUUID().toString();

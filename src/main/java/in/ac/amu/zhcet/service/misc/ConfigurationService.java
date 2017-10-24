@@ -4,7 +4,6 @@ import in.ac.amu.zhcet.data.model.Configuration;
 import in.ac.amu.zhcet.data.repository.ConfigurationRepository;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,7 +23,7 @@ public class ConfigurationService {
     private static Configuration configuration;
 
     @Autowired
-    public ConfigurationService(ConfigurationRepository configurationRepository, ModelMapper modelMapper) {
+    public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
         updateConfiguration(getConfigCache());
         log.info("Static Configuration Set : {}", configuration);

@@ -87,7 +87,7 @@ public class LoginAttemptService {
             return;
         }
 
-        log.info("Login Attempt for Principal : {}", auditEvent.getPrincipal());;
+        log.info("Login Attempt for Principal : {}", auditEvent.getPrincipal());
         if (auditEvent.getType().equals(ExposeAttemptedPathAuthorizationAuditListener.FAILURE)) {
             Object type = auditEvent.getData().get("type");
             if (type != null && type.toString().equals(BadCredentialsException.class.getName())) {
