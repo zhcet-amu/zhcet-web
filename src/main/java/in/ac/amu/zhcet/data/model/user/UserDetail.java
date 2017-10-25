@@ -5,10 +5,13 @@ import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import in.ac.amu.zhcet.data.type.Gender;
 import lombok.*;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Data
 @Entity
@@ -39,6 +42,9 @@ public class UserDetail extends BaseEntity {
     private String state;
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @Past
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date dob;
 
     private ZonedDateTime avatarUpdated;
 

@@ -113,6 +113,7 @@ public class UserService {
         details.setCity(userDetail.getCity());
         details.setState(userDetail.getState());
         details.setPhoneNumbers(userDetail.getPhoneNumbers());
+        details.setDob(userDetail.getDob());
 
         save(user);
     }
