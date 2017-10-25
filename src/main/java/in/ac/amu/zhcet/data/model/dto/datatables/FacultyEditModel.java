@@ -1,23 +1,13 @@
 package in.ac.amu.zhcet.data.model.dto.datatables;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Size;
 
 @Data
-public class FacultyEditModel {
-    @NotBlank
-    @Size(max = 255)
-    private String userName;
-    @Email
-    @Size(max = 255)
-    private String userEmail;
-    @NotBlank
-    private String userDepartmentName;
-    @Size(max = 255)
-    private String userDetailsPhoneNumbers;
+@EqualsAndHashCode(callSuper = false)
+public class FacultyEditModel extends UserEditModel {
     private boolean working;
     @Size(max = 255)
     private String designation;

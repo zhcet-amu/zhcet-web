@@ -5,6 +5,7 @@ import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.user.Type;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.model.user.UserDetail;
+import in.ac.amu.zhcet.data.type.Gender;
 import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.service.StudentService;
 import in.ac.amu.zhcet.service.UserService;
@@ -47,6 +48,7 @@ public class ProfileController {
         model.addAttribute("page_title", "Profile");
         model.addAttribute("page_subtitle", "Profile Settings for " + userAuth.getName());
         model.addAttribute("page_description", "Manage Profile Details and Information");
+        model.addAttribute("genders", Gender.values());
 
         if (userAuth.getType().equals(Type.STUDENT)) {
             Student student = studentService.getLoggedInStudent();

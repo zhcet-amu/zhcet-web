@@ -22,6 +22,10 @@
             <ul class="list-inline list-inline-pipe" sec:authorize="hasRole('FACULTY')">
                 <li th:text="${faculty.facultyId}">FacultyNumber</li>
             </ul>
+            <div id="gender-container" class="mt-1" th:with="gender = ${user.details.gender}" th:if="${faculty.user.details.gender}">
+                <span id="gender" th:text="${gender}"  th:class="|capsule ${@viewService.getClassForGender(gender)}|">Male</span>
+                <br><br>
+            </div>
             <div>
                 <span th:text="${user.email}"></span><span th:if="${user.emailVerified}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
                 <br><br>
@@ -54,7 +58,20 @@
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                         <strong>Updated!</strong> Your profile was updated successfully!
                     </div>
+                    <div class="mui-form">
+                        <div class="mui-select">
+                            <label for="type">Gender</label>
+                            <select id="type" th:field="*{gender}" disabled>
+                                <option value="">Unspecified</option>
+                                <option th:each="type : ${genders}"
+                                        th:value="${type.name()}"
+                                        th:text="${type}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="row">
+
                         <input type="hidden" th:field="*{avatarUrl}">
 
                         <div class="form-group col-xs-12 mb-2">

@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.service.misc;
 
 import in.ac.amu.zhcet.data.model.Course;
+import in.ac.amu.zhcet.data.type.Gender;
 import in.ac.amu.zhcet.service.user.CustomUser;
 import in.ac.amu.zhcet.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,11 @@ public class ViewService {
             default:
                 return "tag-default";
         }
+    }
+
+    public String getClassForGender(Gender gender) {
+        if (gender == null) return "";
+        return gender.equals(Gender.M) ? "blue-dark" : "pink-dark";
     }
 
     public String getAvatarUrl(String url) {
