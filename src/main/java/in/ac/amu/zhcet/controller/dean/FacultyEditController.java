@@ -2,6 +2,7 @@ package in.ac.amu.zhcet.controller.dean;
 
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.dto.datatables.FacultyEditModel;
+import in.ac.amu.zhcet.data.type.Gender;
 import in.ac.amu.zhcet.service.DepartmentService;
 import in.ac.amu.zhcet.service.FacultyEditService;
 import in.ac.amu.zhcet.service.FacultyService;
@@ -50,6 +51,7 @@ public class FacultyEditController {
         model.addAttribute("page_description", "Change faculty specific details");
         model.addAttribute("faculty", facultyMember);
         model.addAttribute("departments", departmentService.findAll());
+        model.addAttribute("genders", Gender.values());
         if (facultyMember != null && !model.containsAttribute("facultyModel")) {
             model.addAttribute("page_subtitle", "Edit details of " + facultyMember.getUser().getName());
             model.addAttribute("facultyModel", facultyEditService.fromFaculty(facultyMember));

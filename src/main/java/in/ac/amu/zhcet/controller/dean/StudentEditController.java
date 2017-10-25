@@ -1,9 +1,10 @@
 package in.ac.amu.zhcet.controller.dean;
 
-import in.ac.amu.zhcet.data.type.HallCode;
-import in.ac.amu.zhcet.data.type.StudentStatus;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.datatables.StudentEditModel;
+import in.ac.amu.zhcet.data.type.Gender;
+import in.ac.amu.zhcet.data.type.HallCode;
+import in.ac.amu.zhcet.data.type.StudentStatus;
 import in.ac.amu.zhcet.service.DepartmentService;
 import in.ac.amu.zhcet.service.StudentEditService;
 import in.ac.amu.zhcet.service.StudentService;
@@ -55,6 +56,7 @@ public class StudentEditController {
         model.addAttribute("departments", departmentService.findAll());
         model.addAttribute("hallCodes", EnumUtils.getEnumMap(HallCode.class).keySet());
         model.addAttribute("statuses", EnumUtils.getEnumMap(StudentStatus.class).keySet());
+        model.addAttribute("genders", Gender.values());
         if (student != null && !model.containsAttribute("studentModel")) {
             model.addAttribute("page_subtitle", "Edit details of " + student.getUser().getName());
             model.addAttribute("studentModel", studentEditService.fromStudent(student));

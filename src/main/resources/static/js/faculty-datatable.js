@@ -20,6 +20,15 @@
         else
             modal.find('#avatar').attr('src', 'https://zhcet-backend.firebaseapp.com/static/img/account.svg');
 
+        if (data['user_details_gender'] && data['user_details_gender'] !== '') {
+            var genderSpan = modal.find('#gender');
+            var gender = data['user_details_gender'];
+            genderSpan.html(gender);
+            genderSpan.attr('class', 'capsule ' + (gender === 'Male' ? 'blue' : 'pink') + '-dark');
+        } else {
+            modal.find('#gender-container').hide();
+        }
+
         if (data['user_email'] && data['user_email'] !== '')
             modal.find('#email').html(data['user_email']);
         else
@@ -80,6 +89,8 @@
                 data: 'facultyId'
             }, {
                 data: 'user_name'
+            }, {
+                data: 'user_details_gender'
             }, {
                 data: 'designation'
             }, {

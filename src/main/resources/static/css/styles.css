@@ -107,3 +107,13 @@ td.avatar-cell {
 td.date-cell {
     font-size: 13px;
 }
+
+.blue-dark {
+    background-color: #304FFE;
+    color: white;
+}
+
+.pink-dark {
+    background-color: #E91E63;
+    color: white;
+}

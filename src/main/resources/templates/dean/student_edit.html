@@ -39,6 +39,10 @@
                         <li th:text="${student.facultyNumber}">FacultyNumber</li>
                         <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
                     </ul>
+                    <div id="gender-container" class="mt-1" th:with="gender = ${student.user.details.gender}" th:if="${student.user.details.gender}">
+                        <span id="gender" th:text="${gender}"  th:class="|capsule ${@viewService.getClassForGender(gender)}|">Male</span>
+                        <br><br>
+                    </div>
                     <div class="row">
                         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
                             <h5 th:text="${student.user.department.name}" class="capsule"></h5>
@@ -73,6 +77,17 @@
                                                 th:value="${department.name}"
                                                 th:text="${department.name}"
                                                 class="my-dropdown">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mui-select">
+                                    <label for="type">Gender</label>
+                                    <select id="type" th:field="*{userDetailsGender}">
+                                        <option value="">Unspecified</option>
+                                        <option th:each="type : ${genders}"
+                                                th:value="${type.name()}"
+                                                th:text="${type}">
                                         </option>
                                     </select>
                                 </div>
