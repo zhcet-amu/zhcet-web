@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.data;
+package in.ac.amu.zhcet.data.type;
 
 public enum HallCode {
     NR, // NRSC

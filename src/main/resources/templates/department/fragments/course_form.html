@@ -7,7 +7,7 @@
     </style>
     <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
     <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
-    <!--/*@thymesVar id="type" type="in.ac.amu.zhcet.data.CourseType"*/-->
+    <!--/*@thymesVar id="type" type="in.ac.amu.zhcet.data.type.CourseType"*/-->
     <div th:each="error : ${#fields.detailedErrors('*')}">
         <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
     </div>

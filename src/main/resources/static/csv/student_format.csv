@@ -1,2 +1,2 @@
-faculty_no,enrolment_no,section,name,hall,status,registration_year,department
-14PEB049,GF1032,A4PE,Areeb Jamal,NR,A,2014,Computer
+faculty_no,enrolment_no,section,name,gender,hall,status,registration_year,department
+14PEB049,GF1032,A4PE,Areeb Jamal,M,NR,A,2014,Computer

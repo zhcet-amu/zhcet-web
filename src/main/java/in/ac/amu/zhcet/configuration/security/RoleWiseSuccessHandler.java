@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.configuration.security;
 
-import in.ac.amu.zhcet.data.Roles;
+import in.ac.amu.zhcet.data.type.Roles;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;

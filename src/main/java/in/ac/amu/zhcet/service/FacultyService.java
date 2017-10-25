@@ -1,11 +1,12 @@
 package in.ac.amu.zhcet.service;
 
-import in.ac.amu.zhcet.data.Roles;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.user.Type;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.FacultyRepository;
+import in.ac.amu.zhcet.data.type.Roles;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +14,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class FacultyService {
 
@@ -61,7 +65,7 @@ public class FacultyService {
         return getById(userName);
     }
 
-    private static void initializeFaculty(FacultyMember facultyMember) {
+    private static FacultyMember initializeFaculty(FacultyMember facultyMember) {
         facultyMember.getUser().setType(Type.FACULTY);
 
         if (facultyMember.getUser().getUserId() == null)
@@ -70,6 +74,7 @@ public class FacultyService {
             facultyMember.getUser().setRoles(new String[]{ Roles.FACULTY });
 
         facultyMember.getUser().setPassword(UserAuth.PASSWORD_ENCODER.encode(facultyMember.getUser().getPassword()));
+        return facultyMember;
     }
 
     @Transactional
@@ -77,6 +82,19 @@ public class FacultyService {
         initializeFaculty(facultyMember);
         userService.save(facultyMember.getUser());
         facultyRepository.save(facultyMember);
+    }
+
+    @Transactional
+    public void register(Set<FacultyMember> facultyMembers) {
+        List<FacultyMember> memberList = facultyMembers.parallelStream()
+                .map(FacultyService::initializeFaculty)
+                .collect(Collectors.toList());
+        List<UserAuth> userAuths = memberList.parallelStream()
+                .map(FacultyMember::getUser)
+                .collect(Collectors.toList());
+        userService.save(userAuths);
+        facultyRepository.save(memberList);
+        log.info("Saved Faculty Members");
     }
 
     @Transactional

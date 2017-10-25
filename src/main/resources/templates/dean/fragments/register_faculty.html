@@ -27,7 +27,7 @@
                             <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
                         </div>
                         <div th:replace="fragments/layout :: error(condition = ${file_error}, success_title = 'Error saving password file!', error = 'Registration wasn\'t successful! Please contact site admin')"></div>
-                        <div th:replace="fragments/layout :: error(condition = ${unknown_error}, error_title = 'Unknown Error!', error = 'We don\'t know what happened. Please contact site admin')"></div>
+                        <div th:replace="fragments/layout :: error(condition = ${faculty_unknown_error}, error_title = 'Unknown Error!', error = 'We don\'t know what happened. Please contact site admin')"></div>
                         <div th:replace="fragments/layout :: success(condition = ${file_saved}, success_title = 'Saved!', message = 'Password file was successfully saved! Click button below to download the file')"></div>
                         <div th:if="${file_saved}" class="row">
                             <div class="col-xs-12 col-md-3">
@@ -60,27 +60,29 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="table-responsive">
-                                    <table class="table">
-                                        <thead class="thead-inverse">
+                                    <table id="facultyTable" class="table">
+                                        <thead>
                                         <tr>
-                                            <th class="text-xs-center">Faculty ID</th>
-                                            <th class="text-xs-center">Name</th>
-                                            <th class="text-xs-center">Designation</th>
-                                            <th class="text-xs-center">Department</th>
-                                            <th class="text-xs-center">Password</th>
-                                            <th class="text-xs-center">Error</th>
+                                            <th>Faculty ID</th>
+                                            <th>Name</th>
+                                            <th>Gender</th>
+                                            <th>Designation</th>
+                                            <th>Department</th>
+                                            <th>Password</th>
+                                            <th>Error</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.FacultyMember, String>"*/-->
                                         <th:block th:each="confirm: ${confirmRegistration.data}">
                                             <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
-                                                <td class="text-xs-center" th:text="${confirm.key.facultyId}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.user.name}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.designation}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.user.department?.name}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.user.password}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.value}"></td>
+                                                <td th:text="${confirm.key.facultyId}"></td>
+                                                <td th:text="${confirm.key.user.name}"></td>
+                                                <td th:text="${confirm.key.user.details.gender}"></td>
+                                                <td th:text="${confirm.key.designation}"></td>
+                                                <td th:text="${confirm.key.user.department?.name}"></td>
+                                                <td th:text="${confirm.key.user.password}"></td>
+                                                <td th:text="${confirm.value}"></td>
                                             </tr>
                                         </th:block>
                                         </tbody>
@@ -118,6 +120,10 @@
             });
             $(window).load(function () {
                 $('#faculty-registration-modal').modal('show');
+                $('#facultyTable').dataTable({
+                    scrollY:        true,
+                    scrollCollapse: true
+                });
             });
         }());
     </script>

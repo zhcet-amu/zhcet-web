@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.service;
 
-import in.ac.amu.zhcet.data.Roles;
+import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;

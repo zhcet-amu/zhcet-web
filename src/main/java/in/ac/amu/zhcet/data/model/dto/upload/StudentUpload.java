@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.data.model.dto.upload;
 
 import com.j256.simplecsv.common.CsvColumn;
+import in.ac.amu.zhcet.data.type.Gender;
 import lombok.Data;
 
 @Data
@@ -13,6 +14,8 @@ public class StudentUpload {
     private String section;
     @CsvColumn(mustNotBeBlank = true)
     private String name;
+    @CsvColumn(mustBeSupplied = false)
+    private Gender gender;
     @CsvColumn(mustBeSupplied = false)
     private String hall;
     @CsvColumn(mustBeSupplied = false)
