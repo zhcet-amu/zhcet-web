@@ -70,9 +70,15 @@ public class RegistrationController {
         if (confirmation == null || !confirmation.getErrors().isEmpty()) {
             attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));
         } else {
-            studentUploadService.registerStudents(confirmation);
+            try {
+                studentUploadService.registerStudents(confirmation);
+                attributes.addFlashAttribute("students_registered", true);
+            } catch (Exception e) {
+                log.error("Error registering students", e);
+                attributes.addFlashAttribute("student_unknown_error", true);
+            }
+
             webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
-            attributes.addFlashAttribute("students_registered", true);
         }
 
         return "redirect:/dean";
@@ -114,7 +120,7 @@ public class RegistrationController {
                 attributes.addFlashAttribute("file_error", true);
             } catch (Exception e) {
                 log.error("Error registering faculty", e);
-                attributes.addFlashAttribute("unknown_error", true);
+                attributes.addFlashAttribute("faculty_unknown_error", true);
             }
 
             webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);

@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.data.model;
 
-import in.ac.amu.zhcet.data.CourseType;
+import in.ac.amu.zhcet.data.type.CourseType;
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

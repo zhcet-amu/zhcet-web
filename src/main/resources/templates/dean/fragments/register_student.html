@@ -22,6 +22,7 @@
                         <div th:replace="fragments/layout :: uploader(id = 'student_upload')"></div>
                         <div th:replace="fragments/layout :: success(condition = ${students_registered}, success_title = 'Registered!', message = 'Students were successfully registered')"></div>
                         <div th:replace="fragments/layout :: success(condition = ${students_success}, success_title = 'Uploaded!', message = 'Your file was correctly uploaded. Now, confirm the prompt to register the students')"></div>
+                        <div th:replace="fragments/layout :: error(condition = ${student_unknown_error}, error_title = 'Unknown Error!', error = 'We don\'t know what happened. Please contact site admin')"></div>
                         <div th:each="error : ${students_errors}">
                             <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
                         </div>
@@ -44,15 +45,16 @@
                                     <table id="studentTable" class="table display table-striped table-bordered">
                                         <thead>
                                         <tr>
-                                            <th class="text-xs-center">Enrolment</th>
-                                            <th class="text-xs-center">Faculty</th>
-                                            <th class="text-xs-center">Student Name</th>
-                                            <th class="text-xs-center">Department</th>
-                                            <th class="text-xs-center">Section</th>
-                                            <th class="text-xs-center">Hall</th>
-                                            <th class="text-xs-center">Reg. Year</th>
-                                            <th class="text-xs-center"></th>
-                                            <th class="text-xs-center">Error</th>
+                                            <th>Enrolment #</th>
+                                            <th>Faculty #</th>
+                                            <th>Name</th>
+                                            <th>Gender</th>
+                                            <th>Department</th>
+                                            <th>Section</th>
+                                            <th>Hall</th>
+                                            <th>Reg. Year</th>
+                                            <th>Status</th>
+                                            <th>Error</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -60,29 +62,31 @@
                                         <th:block th:each="confirm: ${confirmRegistration.data}">
                                             <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
                                                 <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
-                                                <td class="text-xs-center" th:text="${confirm.key.enrolmentNumber}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.facultyNumber}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.user.name}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.user.department?.name}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.section}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.hallCode}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.registrationYear}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.key.status}"></td>
-                                                <td class="text-xs-center" th:text="${confirm.value}"></td>
+                                                <td th:text="${confirm.key.enrolmentNumber}"></td>
+                                                <td th:text="${confirm.key.facultyNumber}"></td>
+                                                <td th:text="${confirm.key.user.name}"></td>
+                                                <td th:text="${confirm.key.user.details.gender}"></td>
+                                                <td th:text="${confirm.key.user.department?.name}"></td>
+                                                <td th:text="${confirm.key.section}"></td>
+                                                <td th:text="${confirm.key.hallCode}"></td>
+                                                <td th:text="${confirm.key.registrationYear}"></td>
+                                                <td th:text="${confirm.key.status}"></td>
+                                                <td th:text="${confirm.value}"></td>
                                             </tr>
                                         </th:block>
                                         </tbody>
                                         <tfoot>
                                         <tr>
-                                            <th class="text-xs-center">Enrolment</th>
-                                            <th class="text-xs-center">Faculty</th>
-                                            <th class="text-xs-center">Student Name</th>
-                                            <th class="text-xs-center">Department</th>
-                                            <th class="text-xs-center">Section</th>
-                                            <th class="text-xs-center">Hall</th>
-                                            <th class="text-xs-center">Reg. Year</th>
-                                            <th class="text-xs-center"></th>
-                                            <th class="text-xs-center">Error</th>
+                                            <th>Enrolment #</th>
+                                            <th>Faculty #</th>
+                                            <th>Name</th>
+                                            <th>Gender</th>
+                                            <th>Department</th>
+                                            <th>Section</th>
+                                            <th>Hall</th>
+                                            <th>Reg. Year</th>
+                                            <th>Status</th>
+                                            <th>Error</th>
                                         </tr>
                                         </tfoot>
                                     </table>

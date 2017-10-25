@@ -6,17 +6,16 @@ import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.dto.upload.FacultyUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.service.FacultyService;
-import in.ac.amu.zhcet.service.csv.base.Confirmation;
-import in.ac.amu.zhcet.service.storage.FileSystemStorageService;
 import in.ac.amu.zhcet.service.csv.base.AbstractUploadService;
+import in.ac.amu.zhcet.service.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.csv.base.UploadResult;
+import in.ac.amu.zhcet.service.storage.FileSystemStorageService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -90,13 +89,9 @@ public class FacultyUploadService {
         return facultyConfirmation;
     }
 
-    @Transactional
     public String registerFaculty(Confirmation<FacultyMember, String> confirmation) throws IOException {
         String filename = saveFile(confirmation);
-
-        for (FacultyMember facultyMember : confirmation.getData().keySet()) {
-            facultyService.register(facultyMember);
-        }
+        facultyService.register(confirmation.getData().keySet());
 
         return filename;
     }
@@ -126,6 +121,7 @@ public class FacultyUploadService {
         facultyMember.getUser().setName(Utils.capitalizeFirst(facultyUpload.getName()));
         facultyMember.getUser().setPassword(password);
         facultyMember.getUser().setDepartment(Department.builder().name(Utils.capitalizeFirst(facultyUpload.getDepartment())).build());
+        facultyMember.getUser().getDetails().setGender(facultyUpload.getGender());
 
         return facultyMember;
     }

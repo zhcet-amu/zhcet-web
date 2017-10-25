@@ -44,7 +44,7 @@ public class UserAuth extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private Department department;
 
-    private boolean enabled;
+    private boolean enabled = true;
     private boolean passwordChanged;
     private boolean emailVerified;
     private boolean emailUnsubscribed;
@@ -63,6 +63,11 @@ public class UserAuth extends BaseEntity {
     @PrimaryKeyJoinColumn
     @OneToOne(cascade = CascadeType.ALL)
     private UserDetail details = new UserDetail();
+
+    public void setUserId(String id) {
+        this.userId = id;
+        details.setUserId(id);
+    }
 
     public void setRoles(String[] roles) {
         this.roles = String.join(",", roles);

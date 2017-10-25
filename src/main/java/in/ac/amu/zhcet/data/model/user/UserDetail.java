@@ -2,13 +2,11 @@ package in.ac.amu.zhcet.data.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
+import in.ac.amu.zhcet.data.type.Gender;
 import lombok.*;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 
@@ -39,6 +37,8 @@ public class UserDetail extends BaseEntity {
     private String city;
     @Size(max = 255)
     private String state;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     private ZonedDateTime avatarUpdated;
 

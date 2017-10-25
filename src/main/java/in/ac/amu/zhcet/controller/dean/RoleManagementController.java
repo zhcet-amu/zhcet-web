@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.controller.dean;
 
-import in.ac.amu.zhcet.data.Roles;
+import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.service.DepartmentService;

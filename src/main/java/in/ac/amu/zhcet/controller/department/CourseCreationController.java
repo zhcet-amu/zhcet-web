@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.controller.department;
 
-import in.ac.amu.zhcet.data.CourseType;
+import in.ac.amu.zhcet.data.type.CourseType;
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;

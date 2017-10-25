@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.service;
 
-import in.ac.amu.zhcet.data.Roles;
+import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.user.Type;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
@@ -81,19 +81,13 @@ public class StudentService {
 
     @Transactional
     public void register(Set<Student> students) {
-        log.info("Initializing Students");
         List<Student> studentList = students.parallelStream()
                 .map(StudentService::initializeStudent)
                 .collect(Collectors.toList());
-        log.info("Students Initialized");
-        log.info("Saving Users");
-        List<UserAuth> userAuths = students.parallelStream()
+        List<UserAuth> userAuths = studentList.parallelStream()
                 .map(Student::getUser)
                 .collect(Collectors.toList());
-        log.info("Extracted Users");
         userService.save(userAuths);
-        log.info("Saved Users");
-        log.info("Saving students");
         studentRepository.save(studentList);
         log.info("Saved Students");
     }

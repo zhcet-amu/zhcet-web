@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.configuration.security;
 
-import in.ac.amu.zhcet.data.Roles;
+import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.user.Auditor;
 import in.ac.amu.zhcet.service.user.UserDetailService;
