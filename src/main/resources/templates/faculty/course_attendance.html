@@ -48,13 +48,13 @@
                                     <th:block th:each="registration: ${courseRegistrations}">
                                         <!--/*@thymesVar id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
                                         <tr th:with="percent=${registration.attendance.attended*100.0/registration.attendance.delivered}" th:class="(${percent &lt; @configurationService.getThreshold()} ? 'bg-danger white':'')">
-                                            <td><img class="rounded-circle height-50" style="background-color: white" src="" th:src="${@viewService.getAvatarUrl(registration.student.user.details.avatarUrl)}"></td>
+                                            <td class="avatar-cell"><img class="rounded-circle height-50" style="background-color: white" src="" th:src="${@viewService.getAvatarUrl(registration.student.user.details.avatarUrl)}"></td>
                                             <td th:text="${registration.student.facultyNumber}"></td>
                                             <td th:text="${registration.student.user.name}"></td>
                                             <td th:text="${registration.student.section}"></td>
                                             <td th:with="attended = ${registration.attendance.attended}, delivered = ${registration.attendance.delivered}" th:text="|${attended}/${delivered}|"></td>
                                             <td th:text="${registration.attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent,0,2)}+'%'"></td>
-                                            <td th:text="${registration.attendance.updatedAt != null ? #temporals.format(registration.attendance.updatedAt, 'hh:mm a | EEE, MMM d, yy') : ''}"></td>
+                                            <td class="date-cell" th:text="${registration.attendance.updatedAt != null ? #temporals.format(registration.attendance.updatedAt, 'hh:mm a | EEE, MMM d, yy') : ''}"></td>
                                         </tr>
                                     </th:block>
                                     </tbody>

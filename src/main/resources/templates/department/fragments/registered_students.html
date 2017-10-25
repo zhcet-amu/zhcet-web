@@ -31,7 +31,7 @@
                         <tbody>
                         <th:block th:each="registration: ${courseRegistrations}">
                             <tr>
-                                <td><img class="rounded-circle" style="background-color: white; max-width: 50px;" src="" alt="Profile Picture" th:src="${@viewService.getAvatarUrl(registration.student.user.details.avatarUrl)}"></td>
+                                <td class="avatar-cell"><img class="rounded-circle" style="background-color: white; max-width: 50px;" src="" alt="Profile Picture" th:src="${@viewService.getAvatarUrl(registration.student.user.details.avatarUrl)}"></td>
                                 <td th:text="${registration.student.facultyNumber}"></td>
                                 <td th:text="${registration.student.enrolmentNumber}"></td>
                                 <td th:text="${registration.student.user.name}"></td>
