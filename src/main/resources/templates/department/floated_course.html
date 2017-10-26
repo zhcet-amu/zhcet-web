@@ -25,7 +25,7 @@
         <div class="col-xs-12 col-xl-4">
             <div th:replace="department/fragments/add_in_charge"></div>
             <div class="card">
-                <a th:href="|/department/floated/${floatedCourse.course.code}/attendance/download|" target="_blank">
+                <a th:href="@{|/department/${department.code}/floated/${floatedCourse.course.code}/attendance/download|}" target="_blank">
                     <div class="card-body">
                         <div class="media">
                             <div class="p-2 text-xs-center bg-cyan bg-darken-2 media-left media-middle" style="background-color: #0097A7">

@@ -10,6 +10,7 @@
 <div th:replace="fragments/navigation :: navigation(pageId = 'faculty_courses')"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_FACULTY')">
+    <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
     <div class="row">
         <div class="col-xs-12">
             <div th:replace="fragments/layout :: toolbar"></div>
@@ -67,7 +68,7 @@
         </div>
         <div class="col-xs-12 col-xl-3">
             <div class="card">
-                <a th:href="|/faculty/courses/${course_id}/attendance/download?section=${param.section}|" target="_blank">
+                <a th:href="|/faculty/courses/${course.code}/attendance/download?section=${param.section}|" target="_blank">
                     <div class="card-body">
                         <div class="media">
                             <div class="p-2 text-xs-center bg-cyan bg-darken-2 media-left media-middle" style="background-color: #0097A7">
@@ -96,7 +97,7 @@
                 </div>
                 <div class="card-body collapse in collapse in">
                     <div class="card-block">
-                        <form class="form" enctype="multipart/form-data" th:action="|/faculty/courses/${course_id}/attendance/edit|" method="post">
+                        <form class="form" enctype="multipart/form-data" th:action="|/faculty/courses/${course.code}/attendance/edit|" method="post">
                             <div>
                                 Download the <a th:href="@{/csv/attendance_format.csv}">attendance format</a>
                             </div>
@@ -171,7 +172,7 @@
                             <h4 class="modal-title">Course Attendance</h4>
                         </div>
                         <div class="modal-body">
-                            <form th:object="${attendanceModel}" th:action="|/faculty/courses/${course_id}/attendance/edit/confirm|" method="post" class="card-block">
+                            <form th:object="${attendanceModel}" th:action="|/faculty/courses/${course.code}/attendance/edit/confirm|" method="post" class="card-block">
                                 <input type="text" name="section" th:value="${param.section}" hidden>
                                 <div class="row">
                                     <div class="table-responsive">

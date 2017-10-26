@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.service;
 
 import in.ac.amu.zhcet.data.model.Attendance;
+import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
@@ -32,13 +33,13 @@ public class CourseRegistrationService {
         this.attendanceRepository = attendanceRepository;
     }
 
-    public CourseRegistration getByStudentAndCourse(String enrolment, String courseCode) {
-        FloatedCourse course = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseCode);
-        return courseRegistrationRepository.findByStudent_EnrolmentNumberAndFloatedCourse(enrolment, course);
+    private CourseRegistration getByStudentAndCourse(String enrolment, Course course) {
+        FloatedCourse floatedCourse = floatedCourseRepository.getBySessionAndCourse(ConfigurationService.getDefaultSessionCode(), course);
+        return courseRegistrationRepository.findByStudent_EnrolmentNumberAndFloatedCourse(enrolment, floatedCourse);
     }
 
     @Transactional
-    public void setAttendance(String course, AttendanceUpload attendanceUpload) {
+    public void setAttendance(Course course, AttendanceUpload attendanceUpload) {
         CourseRegistration registration = getByStudentAndCourse(attendanceUpload.getEnrolment_no(), course);
 
         Attendance storedAttendance = registration.getAttendance();
@@ -61,8 +62,8 @@ public class CourseRegistrationService {
     }
 
     @Transactional
-    public void registerStudents(String courseId, Set<CourseRegistration> courseRegistrations) {
-        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseId);
+    public void registerStudents(Course course, Set<CourseRegistration> courseRegistrations) {
+        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse(ConfigurationService.getDefaultSessionCode(), course);
 
         List<CourseRegistration> registrations = new ArrayList<>();
 

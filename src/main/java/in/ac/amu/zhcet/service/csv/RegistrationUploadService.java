@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.service.csv;
 
+import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.upload.RegistrationUpload;
@@ -42,7 +43,7 @@ public class RegistrationUploadService {
         this.uploadService = uploadService;
     }
 
-    public void upload(String courseId, MultipartFile file, RedirectAttributes attributes, HttpSession session) {
+    public void upload(Course course, MultipartFile file, RedirectAttributes attributes, HttpSession session) {
         try {
             UploadResult<RegistrationUpload> result = handleUpload(file);
 
@@ -50,7 +51,7 @@ public class RegistrationUploadService {
                 attributes.addFlashAttribute("errors", result.getErrors());
             } else {
                 attributes.addFlashAttribute("success", true);
-                Confirmation<CourseRegistration, String> confirmation = confirmUpload(courseId, result);
+                Confirmation<CourseRegistration, String> confirmation = confirmUpload(course, result);
                 session.setAttribute("confirmRegistration", confirmation);
             }
         } catch (IOException ioe) {
@@ -58,9 +59,9 @@ public class RegistrationUploadService {
         }
     }
 
-    public void register(String courseId, RedirectAttributes attributes, HttpSession session) {
+    public void register(Course course, RedirectAttributes attributes, HttpSession session) {
         try {
-            registerStudents(courseId, (Confirmation<CourseRegistration, String>) session.getAttribute("confirmRegistration"));
+            registerStudents(course, (Confirmation<CourseRegistration, String>) session.getAttribute("confirmRegistration"));
             attributes.addFlashAttribute("registered", true);
         } catch (Exception e) {
             log.error("Error confirming student registrations", e);
@@ -85,32 +86,32 @@ public class RegistrationUploadService {
         return courseRegistration;
     }
 
-    private String getMappedValue(Student student, String courseId, List<CourseRegistration> registrations) {
+    private String getMappedValue(Student student, Course course, List<CourseRegistration> registrations) {
         if (student.getEnrolmentNumber() == null) {
             invalidEnrolment = true;
-            log.warn("Course Registration : Invalid Faculty Number {} {}", courseId, student.getFacultyNumber());
+            log.warn("Course Registration : Invalid Faculty Number {} {}", course.getCode(), student.getFacultyNumber());
             return  "No such student found";
         } else if(registrations.stream()
                 .map(CourseRegistration::getStudent)
                 .anyMatch(oldStudent -> oldStudent.equals(student))) {
             alreadyEnrolled = true;
-            log.warn("Student already enrolled in course : {} {}", courseId, student.getEnrolmentNumber());
-            return "Already enrolled in " + courseId;
+            log.warn("Student already enrolled in course : {} {}", course.getCode(), student.getEnrolmentNumber());
+            return "Already enrolled in " + course.getCode();
         } else {
             return null;
         }
     }
 
-    private Confirmation<CourseRegistration, String> confirmUpload(String courseId, UploadResult<RegistrationUpload> uploadResult) {
+    private Confirmation<CourseRegistration, String> confirmUpload(Course course, UploadResult<RegistrationUpload> uploadResult) {
         invalidEnrolment = false;
         alreadyEnrolled = false;
 
-        List<CourseRegistration> registrations = courseManagementService.getFloatedCourseByCode(courseId).getCourseRegistrations();
+        List<CourseRegistration> registrations = courseManagementService.getFloatedCourseByCourse(course).getCourseRegistrations();
 
         Confirmation<CourseRegistration, String> registrationConfirmation = uploadService.confirmUpload(
                 uploadResult,
                 this::fromRegistrationUpload,
-                courseRegistration -> getMappedValue(courseRegistration.getStudent(), courseId, registrations)
+                courseRegistration -> getMappedValue(courseRegistration.getStudent(), course, registrations)
         );
 
         if (invalidEnrolment)
@@ -122,8 +123,8 @@ public class RegistrationUploadService {
     }
 
     @Transactional
-    private void registerStudents(String courseId, Confirmation<CourseRegistration, String> confirmation) {
-        courseRegistrationService.registerStudents(courseId, confirmation.getData().keySet());
+    private void registerStudents(Course course, Confirmation<CourseRegistration, String> confirmation) {
+        courseRegistrationService.registerStudents(course, confirmation.getData().keySet());
     }
 
 }

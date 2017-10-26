@@ -35,6 +35,7 @@
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
+    <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
@@ -54,13 +55,13 @@
                     </div>
                     <div class="card-body collapse in collapse in">
                         <div class="card-block">
-                            <a th:href="@{/department/course/add}">
+                            <a th:href="@{|/department/${department.code}/course/add|}">
                                 <button class="btn btn-outline-primary btn-round">New Course</button>
                             </a>
-                            <a th:href="@{/department/course/float}">
+                            <a th:href="@{|/department/${department.code}/course/float|}">
                                 <button class="btn btn-info btn-round text-white">Float Course</button>
                             </a>
-                            <a th:with="toggle = ${!param.active}" th:href="@{/department/courses(active=${toggle})}">
+                            <a th:with="toggle = ${!param.active}" th:href="@{|/department/${department.code}/courses|(active=${toggle})}">
                                 <button th:class="|btn btn-round btn-${toggle ? 'primary' : 'danger'}|" th:text="${toggle ? 'Active Courses' : 'All Courses'}"></button>
                             </a>
                             <button id="toggle-floated" class="btn btn-secondary btn-round">Floated Course</button>
@@ -82,7 +83,7 @@
                                 </div>
                                 <ul class="list-group list">
                                     <li th:each="course : ${courses}" class="mb-2">
-                                        <a th:href="|/department/courses/${course.code}/edit|" style="color: inherit">
+                                        <a th:href="|/department/${department.code}/courses/${course.code}/edit|" style="color: inherit">
                                             <div class="card">
                                                 <div th:class="|card-header ${course.meta != null ? 'floated-title' : ''} ${course.active ? '' : 'inactive-title'}|">
                                                     <h4 class="course-title card-title" id="heading-icon">
@@ -92,9 +93,9 @@
                                                     <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
                                                     <div class="heading-elements">
                                                         <ul class="list-inline mb-0">
-                                                            <li th:if="${course.meta}"><a th:href="|/department/floated/${course.code}|" data-toggle="tooltip" data-placement="top" data-original-title="Manage Course"><i class="icon-paper"></i></a></li>
-                                                            <li th:unless="${course.meta}"><a th:href="|/department/courses/${course.code}/float|" data-toggle="tooltip" data-placement="top" data-original-title="Float Course"><i class="icon-layers"></i></a></li>
-                                                            <li><a th:href="|/department/courses/${course.code}/edit|" data-toggle="tooltip" data-placement="top" data-original-title="Edit Course"><i class="icon-cog3"></i></a></li>
+                                                            <li th:if="${course.meta}"><a th:href="@{|/department/${department.code}/floated/${course.code}|}" data-toggle="tooltip" data-placement="top" data-original-title="Manage Course"><i class="icon-paper"></i></a></li>
+                                                            <li th:unless="${course.meta}"><a th:href="@{|/department/${department.code}/courses/${course.code}/float|}" data-toggle="tooltip" data-placement="top" data-original-title="Float Course"><i class="icon-layers"></i></a></li>
+                                                            <li><a th:href="@{|/department/${department.code}/courses/${course.code}/edit|}" data-toggle="tooltip" data-placement="top" data-original-title="Edit Course"><i class="icon-cog3"></i></a></li>
                                                         </ul>
                                                     </div>
                                                 </div>

@@ -2,15 +2,15 @@ package in.ac.amu.zhcet.controller.department;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
-import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.service.CourseManagementService;
-import in.ac.amu.zhcet.service.FacultyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Comparator;
@@ -21,23 +21,20 @@ import java.util.stream.Collectors;
 @Controller
 public class CoursesController {
 
-    private final FacultyService facultyService;
     private final CourseManagementService courseManagementService;
 
     @Autowired
-    public CoursesController(FacultyService facultyService, CourseManagementService courseManagementService) {
-        this.facultyService = facultyService;
+    public CoursesController(CourseManagementService courseManagementService) {
         this.courseManagementService = courseManagementService;
     }
 
-    @GetMapping("/department/courses")
-    public String getCourses(Model model, @RequestParam(value = "active", required = false) Boolean active) {
+    @PreAuthorize("isDepartment(#department)")
+    @GetMapping("/department/{department}/courses")
+    public String getCourses(Model model, @PathVariable Department department, @RequestParam(value = "active", required = false) Boolean active) {
         if (active == null)
-            return "redirect:/department/courses?active=true";
+            return "redirect:/department/{department}/courses?active=true";
 
         model.addAttribute("page_description", "View and manage courses for the Department");
-        FacultyMember facultyMember = facultyService.getLoggedInMember();
-        Department department = FacultyService.getDepartment(facultyMember);
         model.addAttribute("department", department);
         model.addAttribute("page_title", "Courses : " + department.getName() + " Department");
         model.addAttribute("page_subtitle", "Course Management");

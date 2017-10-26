@@ -10,7 +10,7 @@
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation(pageId = 'dean', subPage='faculty_page')"></div>
 
-<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasAnyRole('ROLE_DEAN_ADMIN', 'ROLE_SUPER_ADMIN')">
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
 
     <!--/*@thymesVar id="faculty" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
     <div th:if="${faculty}" class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">

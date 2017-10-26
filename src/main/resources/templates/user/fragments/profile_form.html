@@ -15,11 +15,11 @@
     <div class="text-xs-center">
         <div class="card-block">
             <h4 th:text="${user.name}">Name</h4>
-            <ul class="list-inline list-inline-pipe" sec:authorize="hasRole('STUDENT')">
+            <ul class="list-inline list-inline-pipe" th:if="${user.type == 'STUDENT'}">
                 <li th:text="${student.facultyNumber}">FacultyNumber</li>
                 <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
             </ul>
-            <ul class="list-inline list-inline-pipe" sec:authorize="hasRole('FACULTY')">
+            <ul class="list-inline list-inline-pipe" th:if="${user.type == 'FACULTY'}">
                 <li th:text="${faculty.facultyId}">FacultyNumber</li>
             </ul>
             <div id="gender-container" class="mt-1" th:with="gender = ${user.details.gender}" th:if="${faculty.user.details.gender}">

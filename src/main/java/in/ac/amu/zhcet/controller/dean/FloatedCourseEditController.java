@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.controller.dean;
 
+import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.service.CourseManagementService;
@@ -8,7 +9,6 @@ import in.ac.amu.zhcet.service.misc.AttendanceDownloadService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,16 +48,9 @@ public class FloatedCourseEditController {
         return "dean/floated_page";
     }
 
-    private FloatedCourse verifyAndGet(String id) {
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(id);
-        if (floatedCourse == null)
-            throw new AccessDeniedException("403");
-        return floatedCourse;
-    }
-
-    @GetMapping("dean/floated/{id}")
-    public String courseDetail(Model model, @PathVariable String id, WebRequest webRequest) {
-        FloatedCourse floatedCourse = verifyAndGet(id);
+    @GetMapping("dean/floated/{course}")
+    public String courseDetail(Model model, @PathVariable Course course, WebRequest webRequest) {
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
 
         if (!model.containsAttribute("success"))
             webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
@@ -75,26 +68,24 @@ public class FloatedCourseEditController {
         return "dean/floated_course";
     }
 
-    @PostMapping("dean/floated/{id}/register")
-    public String uploadFile(RedirectAttributes attributes, @PathVariable String id, @RequestParam MultipartFile file, HttpSession session) {
-        verifyAndGet(id);
-        registrationUploadService.upload(id, file, attributes, session);
+    @PostMapping("dean/floated/{course}/register")
+    public String uploadFile(RedirectAttributes attributes, @PathVariable Course course, @RequestParam MultipartFile file, HttpSession session) {
+        registrationUploadService.upload(course, file, attributes, session);
 
-        return "redirect:/dean/floated/{id}";
+        return "redirect:/dean/floated/{course}";
     }
 
-    @PostMapping("dean/floated/{id}/register/confirm")
-    public String confirmRegistration(RedirectAttributes attributes, @PathVariable String id, HttpSession session) {
-        verifyAndGet(id);
-        registrationUploadService.register(id, attributes, session);
+    @PostMapping("dean/floated/{course}/register/confirm")
+    public String confirmRegistration(RedirectAttributes attributes, @PathVariable Course course, HttpSession session) {
+        registrationUploadService.register(course, attributes, session);
 
-        return "redirect:/dean/floated/{id}";
+        return "redirect:/dean/floated/{course}";
     }
 
-    @GetMapping("dean/floated/{id}/attendance/download")
-    public void downloadAttendance(HttpServletResponse response, @PathVariable String id) throws IOException {
-        FloatedCourse floatedCourse = verifyAndGet(id);
-        attendanceDownloadService.download(id, "dean", floatedCourse.getCourseRegistrations(), response);
+    @GetMapping("dean/floated/{course}/attendance/download")
+    public void downloadAttendance(@PathVariable Course course, HttpServletResponse response) throws IOException {
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
+        attendanceDownloadService.download(course.getCode(), "dean", floatedCourse.getCourseRegistrations(), response);
     }
 
 }

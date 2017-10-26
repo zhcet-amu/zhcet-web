@@ -20,6 +20,7 @@
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <div class="row">
         <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
+        <div id="department" th:text="${department.code}" hidden></div>
         <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
             <div th:replace="fragments/layout :: toolbar"></div>
             <div class="row">
@@ -33,13 +34,17 @@
                     <div th:replace="fragments/layout :: error(condition = ${float_error}, error = ${float_error})"></div>
                     <input class="courses twitter-typeahead form-control round mb-1" autocomplete="off" placeholder="Search" />
 
-                    <form class="selected-courses-container" th:hidden="${courses == null ? true : false}" method="post" th:action="@{/department/course/float}">
+                    <form class="selected-courses-container" th:hidden="${courses == null ? true : false}"
+                          method="post" th:action="@{|/department/${department.code}/course/float|}">
                         <div class="selected-courses">
                             <div th:each="course : ${courses}" class="course card">
                                 <input type="text" class="chosen-code" name="code" th:value="${course.code}" hidden>
                                 <div class="card-body">
                                     <div class="card-block">
-                                        <h4 class="card-title"><strong th:text="${course.code}">CO304</strong> - <span th:text="${course.title}">Computer Architecture</span></h4>
+                                        <h4 class="card-title">
+                                            <strong th:text="${course.code}">CO304</strong> -
+                                            <span th:text="${course.title}">Computer Architecture</span>
+                                        </h4>
                                         <p class="card-text">
                                             <span class="capsule category" th:text="${course.category}">DC</span>
                                             <span class="semester" th:text="|Semester : ${course.semester}|">Semester : 3</span> -

@@ -16,7 +16,7 @@
     <div class="card-body collapse in collapse in">
         <div class="card-block">
             <form class="form" enctype="multipart/form-data"
-                  th:action="|/${#strings.defaultString(deanOverride, 'department')}/floated/${floatedCourse.course.code}/register|"
+                  th:action="@{|/${#strings.defaultString(deanOverride, 'department/' + department.code)}/floated/${floatedCourse.course.code}/register|}"
                   method="post">
                 <div>
                     Download the <a th:href="@{/csv/registration_format.csv}">registration format</a>
@@ -39,7 +39,7 @@
     <div th:with="confirmRegistration = ${#session.getAttribute('confirmRegistration')}">
         <div th:if="${confirmRegistration}" id="registration-modal" class="modal">
         <div class="modal-dialog modal-lg">
-            <form th:action="|/${#strings.defaultString(deanOverride, 'department')}/floated/${floatedCourse.course.code}/register/confirm|" method="post">
+            <form th:action="|/${#strings.defaultString(deanOverride, 'department/' + department.code)}/floated/${floatedCourse.course.code}/register/confirm|" method="post">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

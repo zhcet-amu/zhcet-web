@@ -1,10 +1,9 @@
 package in.ac.amu.zhcet.service.misc;
 
-import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
-import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.StudentService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,27 +23,19 @@ public class EmailNotificationService {
     private final ConfigurationService configurationService;
     private final EmailService emailService;
     private final StudentService studentService;
-    private final CourseManagementService courseManagementService;
 
     @Autowired
-    public EmailNotificationService(ConfigurationService configurationService, EmailService emailService, StudentService studentService, CourseManagementService courseManagementService) {
+    public EmailNotificationService(ConfigurationService configurationService, EmailService emailService, StudentService studentService) {
         this.configurationService = configurationService;
         this.emailService = emailService;
         this.studentService = studentService;
-        this.courseManagementService = courseManagementService;
     }
 
     @Async
-    public void sendNotificationsForAttendance(String id, List<AttendanceUpload> uploadList) {
+    public void sendNotificationsForAttendance(Course course, List<AttendanceUpload> uploadList) {
         String url = configurationService.getBaseUrl() + "/student/attendance";
-        log.info("Email Attendance Notification : {}", id);
+        log.info("Email Attendance Notification : {}", course.getCode());
         log.info("URL : {}", url);
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(id);
-
-        if (floatedCourse == null) {
-            log.warn("Email request for invalid course {}", id);
-            return;
-        }
 
         List<String> emails = uploadList
                 .parallelStream()
@@ -66,8 +57,8 @@ public class EmailNotificationService {
                     + recipient + "&conf=" + Utils.getHash(recipient);
 
             log.info("Unsubscribe Link {}", unsubscribeUrl);
-            String html = getHtml(id, floatedCourse.getCourse().getTitle(), url, unsubscribeUrl);
-            emailService.sendHtmlMail(recipient, "ZHCET Course " + id + " Attendance Updated", html, null);
+            String html = getHtml(course.getCode(), course.getTitle(), url, unsubscribeUrl);
+            emailService.sendHtmlMail(recipient, "ZHCET Course " + course.getCode() + " Attendance Updated", html, null);
         }
     }
 

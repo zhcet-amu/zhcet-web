@@ -11,7 +11,7 @@
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation(pageId = 'dean', subPage='config')"></div>
 
-<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasAnyRole('ROLE_DEAN_ADMIN', 'ROLE_SUPER_ADMIN')">
+<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-10 offset-md-1">

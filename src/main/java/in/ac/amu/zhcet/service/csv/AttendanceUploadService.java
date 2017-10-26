@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.service.csv;
 
+import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
@@ -51,7 +52,7 @@ public class AttendanceUploadService {
         return exists;
     }
 
-    public Confirmation<AttendanceUpload, Boolean> confirmUpload(String course, String section, UploadResult<AttendanceUpload> uploadResult) {
+    public Confirmation<AttendanceUpload, Boolean> confirmUpload(Course course, String section, UploadResult<AttendanceUpload> uploadResult) {
         CourseInCharge courseInCharge  = courseInChargeService.getCourseInCharge(course, section);
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
 
@@ -70,7 +71,7 @@ public class AttendanceUploadService {
     }
 
     @Transactional
-    public void updateAttendance(String course, String section, List<AttendanceUpload> uploadList) {
+    public void updateAttendance(Course course, String section, List<AttendanceUpload> uploadList) {
         CourseInCharge courseInCharge  = courseInChargeService.getCourseInCharge(course, section);
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
 

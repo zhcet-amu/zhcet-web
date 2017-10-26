@@ -66,7 +66,8 @@
         attachRemove();
     }
 
-    fuzzyhound.setSource("/department/api/courses", ["code", "title"]);
+    var department = $('#department').html();
+    fuzzyhound.setSource("/department/" + department + "/api/courses", ["code", "title"]);
 
     $(document).ready(function () {
         var searchBox = $('.courses');

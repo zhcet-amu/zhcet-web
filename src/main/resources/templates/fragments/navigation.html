@@ -9,7 +9,7 @@
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Attendance</span>
                 </a>
             </li>
-            <li th:class="|nav-item ${pageId == 'dean' ? 'active' : ''} |" sec:authorize="hasAnyRole('ROLE_DEAN_ADMIN', 'ROLE_SUPER_ADMIN')">
+            <li th:class="|nav-item ${pageId == 'dean' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
                 <a th:href="@{/dean}" href="dean.html">
                     <i class="icon-cog3"></i>
                     <span data-i18n="nav.project.main" class="menu-title">Dean Panel</span>
@@ -29,7 +29,7 @@
                 </a>
                 <ul class="menu-content">
                     <li th:class="${subPage == 'department_admin' ? 'active' : ''}" ><a th:href="@{/department}" class="menu-item">Admin Panel</a></li>
-                    <li th:class="${subPage == 'courses' ? 'active' : ''}" ><a th:href="@{/department/courses(active = true)}" class="menu-item">Courses</a></li>
+                    <li th:class="${subPage == 'courses' ? 'active' : ''}" ><a th:href="@{|/department/${#authentication.principal.department.code}/courses|(active = true)}" class="menu-item">Courses</a></li>
                 </ul>
             </li>
             <li class="nav-item" sec:authorize="!isAuthenticated()">

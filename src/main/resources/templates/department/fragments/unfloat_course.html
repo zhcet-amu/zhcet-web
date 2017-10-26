@@ -28,7 +28,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
-                    <a th:href="|/department/floated/${floatedCourse.course.code}/unfloat|">
+                    <a th:href="@{|/department/${department.code}/floated/${floatedCourse.course.code}/unfloat|}">
                         <button type="button" id="delete-button" class="btn btn-outline-danger" disabled>Unfloat Course</button>
                     </a>
                 </div>

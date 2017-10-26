@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.controller.faculty;
 
+import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FacultyMember;
@@ -51,9 +52,9 @@ public class FacultyCourseController {
         return "faculty/courses";
     }
 
-    @GetMapping("faculty/courses/{id}/attendance")
-    public String attendance(Model model, @PathVariable String id, @RequestParam(required = false) String section) {
-        CourseInCharge courseInCharge = courseInChargeService.getCourseInChargeAndVerify(id, section);
+    @GetMapping("faculty/courses/{course}/attendance")
+    public String attendance(Model model, @PathVariable Course course, @RequestParam(required = false) String section) {
+        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(course, section);
 
         model.addAttribute("page_title", courseInCharge.getFloatedCourse().getCourse().getTitle());
         model.addAttribute("page_subtitle", "Attendance management for " + courseInCharge.getFloatedCourse().getCourse().getCode());
@@ -62,15 +63,15 @@ public class FacultyCourseController {
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
         Utils.sortCourseAttendance(courseRegistrations);
         model.addAttribute("courseRegistrations", courseRegistrations);
-        model.addAttribute("course_id", id);
+        model.addAttribute("course", course);
 
         return "faculty/course_attendance";
     }
 
-    @GetMapping("faculty/courses/{id}/attendance/download")
-    public void getStudents(HttpServletResponse response, @PathVariable String id, @RequestParam(required = false) String section) throws IOException {
-        CourseInCharge courseInCharge = courseInChargeService.getCourseInChargeAndVerify(id, section);
+    @GetMapping("faculty/courses/{course}/attendance/download")
+    public void getStudents(HttpServletResponse response, @PathVariable Course course, @RequestParam(required = false) String section) throws IOException {
+        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(course, section);
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-        attendanceDownloadService.download(id + "_" + Utils.defaultString(section, "all"), "faculty", courseRegistrations, response);
+        attendanceDownloadService.download(course.getCode() + "_" + Utils.defaultString(section, "all"), "faculty", courseRegistrations, response);
     }
 }
