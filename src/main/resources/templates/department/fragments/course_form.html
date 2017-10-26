@@ -1,6 +1,6 @@
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="course_form" class="form-body" th:object="${course}">
     <style>
-        .grey {
+        i.gray {
             color: #777;
             margin-bottom: 4px;
         }
@@ -21,7 +21,7 @@
             <div class="position-relative has-icon-left">
                 <input type="text" id="code" class="form-control" placeholder="Course Code" th:field="*{code}" required>
                 <div class="form-control-position">
-                    <i class="material-icons grey">class</i>
+                    <i class="material-icons gray">class</i>
                 </div>
             </div>
         </div>
@@ -31,7 +31,7 @@
             <div class="position-relative has-icon-left">
                 <input type="text" id="title" class="form-control" placeholder="Course Title" th:field="*{title}" required>
                 <div class="form-control-position">
-                    <i class="material-icons grey">edit</i>
+                    <i class="material-icons gray">edit</i>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
             <div class="position-relative has-icon-left">
                 <input type="text" id="department" class="form-control" placeholder="Department" readonly th:value="${department.name}">
                 <div class="form-control-position">
-                    <i class="material-icons grey">account_balance</i>
+                    <i class="material-icons gray">account_balance</i>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
             <div class="position-relative has-icon-left">
                 <input type="text" id="category" class="form-control" placeholder="DC" th:field="*{category}">
                 <div class="form-control-position">
-                    <i class="material-icons grey">group_work</i>
+                    <i class="material-icons gray">group_work</i>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
             <div class="position-relative has-icon-left">
                 <input type="text" id="credits" class="form-control" placeholder="4" th:field="*{credits}">
                 <div class="form-control-position">
-                    <i class="material-icons grey">stars</i>
+                    <i class="material-icons gray">stars</i>
                 </div>
             </div>
         </div>
@@ -75,7 +75,7 @@
             <div class="position-relative has-icon-left">
                 <input type="text" id="semester" class="form-control" placeholder="7" th:field="*{semester}">
                 <div class="form-control-position">
-                    <i class="material-icons grey">hourglass_empty</i>
+                    <i class="material-icons gray">hourglass_empty</i>
                 </div>
             </div>
         </div>
@@ -85,7 +85,7 @@
             <div class="position-relative has-icon-left">
                 <input type="text" id="branch" class="form-control" placeholder="PE" th:field="*{branch}">
                 <div class="form-control-position">
-                    <i class="material-icons grey">call_split</i>
+                    <i class="material-icons gray">call_split</i>
                 </div>
             </div>
         </div>
@@ -129,7 +129,7 @@
             <div class="position-relative has-icon-left">
                 <input type="text" id="total" class="form-control" placeholder="100" th:field="*{totalMarks}">
                 <div class="form-control-position">
-                    <i class="material-icons grey">spellcheck</i>
+                    <i class="material-icons gray">spellcheck</i>
                 </div>
             </div>
         </div>
@@ -141,7 +141,7 @@
                     <div class="position-relative has-icon-left">
                         <input type="number" max="100" id="cw" class="form-control" placeholder="15" th:field="*{classWorkMarks}">
                         <div class="form-control-position">
-                            <i class="material-icons grey">assignment</i>
+                            <i class="material-icons gray">assignment</i>
                         </div>
                     </div>
                 </div>
@@ -152,7 +152,7 @@
                     <div class="position-relative has-icon-left">
                         <input type="number" max="100" id="mid-sem" class="form-control" placeholder="25" th:field="*{midSemMarks}">
                         <div class="form-control-position">
-                            <i class="material-icons grey">linear_scale</i>
+                            <i class="material-icons gray">linear_scale</i>
                         </div>
                     </div>
                 </div>
@@ -163,7 +163,7 @@
                     <div class="position-relative has-icon-left">
                         <input type="number" max="100" id="final" class="form-control" placeholder="60" th:field="*{finalMarks}">
                         <div class="form-control-position">
-                            <i class="material-icons grey">flag</i>
+                            <i class="material-icons gray">flag</i>
                         </div>
                     </div>
                 </div>
@@ -179,7 +179,7 @@
                     <div class="position-relative has-icon-left">
                         <input type="number" min="0" max="3" step="1" id="lecture" class="form-control" placeholder="3" th:field="*{lecturePart}">
                         <div class="form-control-position">
-                            <i class="material-icons grey">face</i>
+                            <i class="material-icons gray">face</i>
                         </div>
                     </div>
                 </div>
@@ -190,7 +190,7 @@
                     <div class="position-relative has-icon-left">
                         <input type="number" min="0" max="3" step="1" id="theory" class="form-control" placeholder="1" th:field="*{theoryPart}">
                         <div class="form-control-position">
-                            <i class="material-icons grey">receipt</i>
+                            <i class="material-icons gray">receipt</i>
                         </div>
                     </div>
                 </div>
@@ -201,7 +201,7 @@
                     <div class="position-relative has-icon-left">
                         <input type="number" min="0" max="3" step="1" id="practical" class="form-control" placeholder="0" th:field="*{practicalPart}">
                         <div class="form-control-position">
-                            <i class="material-icons grey">opacity</i>
+                            <i class="material-icons gray">opacity</i>
                         </div>
                     </div>
                 </div>
@@ -217,7 +217,7 @@
                     <div class="position-relative has-icon-left">
                         <input type="number" min="1900" max="2099" step="1" id="start_year" class="form-control" placeholder="2000" th:field="*{startYear}">
                         <div class="form-control-position">
-                            <i class="material-icons grey">timer</i>
+                            <i class="material-icons gray">timer</i>
                         </div>
                     </div>
                 </div>
@@ -228,7 +228,7 @@
                     <div class="position-relative has-icon-left">
                         <input type="number" min="1900" max="2099" step="1" id="finish_year" class="form-control" placeholder="2016" th:field="*{finishYear}">
                         <div class="form-control-position">
-                            <i class="material-icons grey">timer_off</i>
+                            <i class="material-icons gray">timer_off</i>
                         </div>
                     </div>
                 </div>
@@ -242,7 +242,7 @@
             <div class="position-relative has-icon-left">
                 <textarea id="timesheetinput7" rows="5" class="form-control" placeholder="Description about this course" th:field="*{description}"></textarea>
                 <div class="form-control-position">
-                    <i class="material-icons grey">description</i>
+                    <i class="material-icons gray">description</i>
                 </div>
             </div>
         </div>

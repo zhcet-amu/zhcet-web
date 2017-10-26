@@ -3,13 +3,12 @@ package in.ac.amu.zhcet.service.user;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.misc.ImageService;
+import in.ac.amu.zhcet.service.permission.PermissionManager;
 import in.ac.amu.zhcet.service.user.auth.LoginAttemptService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,9 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Arrays;
 
 @Slf4j
 @Service
@@ -51,26 +48,18 @@ public class UserDetailService implements UserDetailsService {
         if (user == null)
             throw new UsernameNotFoundException(username);
 
-        return new CustomUser(user.getUserId(), user.getPassword(), user.isEnabled(), loginAttemptService.isBlocked(ip), getAuthorities(user.getRoles()))
+        return new CustomUser(user.getUserId(), user.getPassword(), user.isEnabled(), loginAttemptService.isBlocked(ip),
+                PermissionManager.authorities(Arrays.asList(user.getRoles())))
                 .name(user.getName())
                 .avatar(user.getDetails().getAvatarUrl())
                 .type(user.getType())
                 .department(user.getDepartment());
     }
 
-    private static Collection<? extends GrantedAuthority> getAuthorities(String... roles) {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-
-        for (String role: roles)
-            grantedAuthorities.add(new SimpleGrantedAuthority(role));
-
-        return grantedAuthorities;
-    }
-
     private void updatePrincipal(UserAuth userAuth) {
         // Update the principal for use throughout the app
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                loadUserByUsername(userAuth.getUserId()), userAuth.getPassword(), UserDetailService.getAuthorities(userAuth.getRoles())
+                loadUserByUsername(userAuth.getUserId()), userAuth.getPassword(), PermissionManager.authorities(Arrays.asList(userAuth.getRoles()))
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);

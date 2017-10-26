@@ -1,16 +1,12 @@
 package in.ac.amu.zhcet.service;
 
-import in.ac.amu.zhcet.data.model.CourseInCharge;
-import in.ac.amu.zhcet.data.model.CourseRegistration;
-import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.repository.CourseInChargeRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.service.misc.ConfigurationService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -37,11 +33,11 @@ public class CourseInChargeService {
     }
 
     @Transactional
-    public void setInCharge(String courseId, List<CourseInCharge> courseInCharges) {
+    public void setInCharge(Course course, List<CourseInCharge> courseInCharges) {
         if (courseInCharges == null)
             return;
 
-        FloatedCourse stored = courseManagementService.getFloatedCourseByCode(courseId);
+        FloatedCourse stored = courseManagementService.getFloatedCourseByCourse(course);
         if (stored == null)
             return;
 
@@ -82,19 +78,10 @@ public class CourseInChargeService {
         return courseInChargeRepository.findByFacultyMemberAndFloatedCourse_Session(facultyMember, ConfigurationService.getDefaultSessionCode());
     }
 
-    public CourseInCharge getCourseInCharge(String floatedCourseCode, String section) {
-        return courseInChargeRepository.findByFacultyMemberAndFloatedCourse_Course_CodeAndSection
-                (facultyService.getLoggedInMember(), floatedCourseCode, Utils.nullIfEmpty(section));
-    }
-
-    public CourseInCharge getCourseInChargeAndVerify(String floatedCourseCode, String section) {
-        CourseInCharge courseInCharge = getCourseInCharge(floatedCourseCode, section);
-        if (courseInCharge == null) {
-            log.error("Forced Access of Course In Charge {} {}", floatedCourseCode, section);
-            throw new AccessDeniedException("403");
-        }
-
-        return courseInCharge;
+    public CourseInCharge getCourseInCharge(Course course, String section) {
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
+        return courseInChargeRepository.findByFloatedCourseAndFacultyMemberAndSection
+                (floatedCourse, facultyService.getLoggedInMember(), Utils.nullIfEmpty(section));
     }
 
     public List<CourseRegistration> getCourseRegistrations(CourseInCharge courseInCharge) {
@@ -115,18 +102,6 @@ public class CourseInChargeService {
         return floatedCourse.getCourseRegistrations().stream()
                 .map(courseRegistration -> courseRegistration.getStudent().getSection())
                 .collect(Collectors.toSet());
-    }
-
-    public Set<String> getSections(String courseId) {
-        return getSections(courseManagementService.getFloatedCourseByCode(courseId));
-    }
-
-    public boolean isInCharge(List<CourseInCharge> courseInCharges, FacultyMember member) {
-        return courseInCharges
-                .stream()
-                .map(CourseInCharge::getFacultyMember)
-                .collect(Collectors.toList())
-                .contains(member);
     }
 
 }

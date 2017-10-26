@@ -1,12 +1,14 @@
 package in.ac.amu.zhcet.controller.department;
 
+import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.service.CourseManagementService;
-import in.ac.amu.zhcet.service.FacultyService;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -16,13 +18,11 @@ import java.util.stream.Collectors;
 public class CoursesRestController {
 
     private final ModelMapper modelMapper;
-    private final FacultyService facultyService;
     private final CourseManagementService courseManagementService;
 
     @Autowired
-    public CoursesRestController(ModelMapper modelMapper, FacultyService facultyService, CourseManagementService courseManagementService) {
+    public CoursesRestController(ModelMapper modelMapper, CourseManagementService courseManagementService) {
         this.modelMapper = modelMapper;
-        this.facultyService = facultyService;
         this.courseManagementService = courseManagementService;
     }
 
@@ -41,10 +41,11 @@ public class CoursesRestController {
         return courseDto;
     }
 
-    @GetMapping("/department/api/courses")
-    public List<CourseDto> courses() {
-        List<FloatedCourse> floatedCourses = courseManagementService.getCurrentFloatedCourses(facultyService.getFacultyDepartment());
-        return courseManagementService.getAllActiveCourse(facultyService.getFacultyDepartment(), true)
+    @PreAuthorize("isDepartment(#department)")
+    @GetMapping("/department/{department}/api/courses")
+    public List<CourseDto> courses(@PathVariable Department department) {
+        List<FloatedCourse> floatedCourses = courseManagementService.getCurrentFloatedCourses(department);
+        return courseManagementService.getAllActiveCourse(department, true)
                 .stream()
                 .map(course -> modelMapper.map(course, CourseDto.class))
                 .map(courseDto -> attachStatus(courseDto, floatedCourses))

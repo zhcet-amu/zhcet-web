@@ -1,16 +1,13 @@
 package in.ac.amu.zhcet.controller.department;
 
-import in.ac.amu.zhcet.data.type.CourseType;
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
-import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.type.CourseType;
 import in.ac.amu.zhcet.service.CourseManagementService;
-import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.utils.UpdateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,32 +22,17 @@ import javax.validation.Valid;
 @Controller
 public class CourseEditController {
 
-    private final FacultyService facultyService;
     private final CourseManagementService courseManagementService;
 
     @Autowired
-    public CourseEditController(FacultyService facultyService, CourseManagementService courseManagementService) {
-        this.facultyService = facultyService;
+    public CourseEditController(CourseManagementService courseManagementService) {
         this.courseManagementService = courseManagementService;
     }
 
-    private Course verifyAndGetCourse(String courseId) {
-        Course course = courseManagementService.getCourseByCode(courseId);
-        verifyCourse(course);
-
-        return course;
-    }
-
-    private void verifyCourse(Course course) {
-        if (course == null || !course.getDepartment().equals(facultyService.getFacultyDepartment()))
-            throw new AccessDeniedException("403");
-    }
-
-    @GetMapping("/department/courses/{id}/edit")
-    public String addCourse(Model model, @PathVariable String id) {
+    @PreAuthorize("isOfDepartment(#department, #course)")
+    @GetMapping("/department/{department}/courses/{course}/edit")
+    public String addCourse(Model model, @PathVariable Department department, @PathVariable Course course) {
         model.addAttribute("page_description", "Edit course details and manage other settings");
-        FacultyMember facultyMember = facultyService.getLoggedInMember();
-        Department department = FacultyService.getDepartment(facultyMember);
         model.addAttribute("department", department);
         model.addAttribute("page_title", "Edit Course : " + department.getName() + " Department");
         model.addAttribute("page_subtitle", "Course Management");
@@ -58,53 +40,49 @@ public class CourseEditController {
         model.addAttribute("course_types", CourseType.values());
 
         if (!model.containsAttribute("course")) {
-            Course course = verifyAndGetCourse(id);
             model.addAttribute("course", course);
         }
 
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(id);
-        if (floatedCourse != null)
-            model.addAttribute("floated", true);
+        model.addAttribute("floated", courseManagementService.isFloated(course));
 
         return "department/edit_course";
     }
 
-    @PostMapping("/department/courses/{id}/edit")
-    public String postCourse(@Valid Course course, BindingResult result, RedirectAttributes redirectAttributes, @PathVariable String id) {
-        verifyCourse(course);
+    @PreAuthorize("isOfDepartment(#department, #course)")
+    @PostMapping("/department/{department}/courses/{course}/edit")
+    public String postCourse(@PathVariable Department department, @PathVariable Course course, @Valid Course courseEdit, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute("course", course);
+            redirectAttributes.addFlashAttribute("course", courseEdit);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.course", result);
         } else {
             try {
-                course.setDepartment(facultyService.getFacultyDepartment());
-                courseManagementService.saveCourse(id, course);
+                course.setDepartment(department);
+                courseManagementService.saveCourse(course, courseEdit);
                 redirectAttributes.addFlashAttribute("course_success", "Course saved successfully!");
 
-                return "redirect:/department/courses/{id}/edit";
+                return "redirect:/department/{department}/courses/{course}/edit";
             } catch (UpdateException e) {
                 log.warn("Course Save Error", e);
-                course.setCode(id);
-                redirectAttributes.addFlashAttribute("course", course);
+                courseEdit.setCode(course.getCode());
+                redirectAttributes.addFlashAttribute("course", courseEdit);
                 redirectAttributes.addFlashAttribute("course_errors", e.getMessage());
             }
         }
 
-        return "redirect:/department/courses/{id}/edit";
+        return "redirect:/department/{department}/courses/{course}/edit";
     }
 
-    @GetMapping("/department/courses/{id}/delete")
-    public String deleteCourse(RedirectAttributes redirectAttributes, @PathVariable String id) {
-        Course course = verifyAndGetCourse(id);
-
+    @PreAuthorize("isOfDepartment(#department, #course)")
+    @GetMapping("/department/{department}/courses/{course}/delete")
+    public String deleteCourse(@PathVariable Department department, @PathVariable Course course, RedirectAttributes redirectAttributes) {
         if (course == null) {
-            log.warn("Course not deletable {}", id);
+            log.warn("Course not deletable");
             redirectAttributes.addFlashAttribute("course_error", "No such course exists");
         } else {
-            courseManagementService.deleteCourse(id);
-            redirectAttributes.addFlashAttribute("course_success", "Course " + id + " deleted successfully!");
+            courseManagementService.deleteCourse(course);
+            redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " deleted successfully!");
         }
 
-        return "redirect:/department/courses?active=true";
+        return "redirect:/department/{department}/courses?active=true";
     }
 }

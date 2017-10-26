@@ -10,6 +10,7 @@
 <div th:replace="fragments/navigation :: navigation(pageId = 'department', subPage = 'department_admin')"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
+    <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
     <div class="row">
         <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
             <div th:replace="fragments/layout :: toolbar"></div>
@@ -21,7 +22,7 @@
                             <div class="card-block">
                                 <h4 class="card-title">View Courses</h4>
                                 <p class="card-text">View and manage all the courses in department.</p>
-                                <a th:href="@{/department/courses.html}" class="btn btn-outline-danger float-xs-right">All  Courses</a>
+                                <a th:href="@{|/department/${department.code}/courses|}" class="btn btn-outline-danger float-xs-right">All  Courses</a>
                             </div>
                         </div>
                     </div>
@@ -33,7 +34,7 @@
                             <div class="card-block">
                                 <h4 class="card-title">Float Course</h4>
                                 <p class="card-text">Float courses in the current session.</p>
-                                <a th:href="@{/department/course/float}" class="btn btn-outline-info float-xs-right">Float Course</a>
+                                <a th:href="@{|/department/${department.code}/course/float|}" class="btn btn-outline-info float-xs-right">Float Course</a>
                             </div>
                         </div>
                     </div>
@@ -45,7 +46,7 @@
                             <div class="card-block">
                                 <h4 class="card-title">Add Course</h4>
                                 <p class="card-text">Add a new course to the department. </p>
-                                <a th:href="@{/department/course/add}" class="btn btn-outline-success float-xs-right">New Course</a>
+                                <a th:href="@{|/department/${department.code}/course/add|}" class="btn btn-outline-success float-xs-right">New Course</a>
                             </div>
                         </div>
                     </div>

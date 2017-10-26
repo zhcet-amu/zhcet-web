@@ -2,13 +2,11 @@ package in.ac.amu.zhcet.controller.department;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
-import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.service.CourseManagementService;
-import in.ac.amu.zhcet.service.FacultyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,53 +23,32 @@ import java.util.stream.Collectors;
 @Controller
 public class FloatCourseController {
 
-    private final FacultyService facultyService;
     private final CourseManagementService courseManagementService;
 
     @Autowired
-    public FloatCourseController(FacultyService facultyService, CourseManagementService courseManagementService) {
-        this.facultyService = facultyService;
+    public FloatCourseController(CourseManagementService courseManagementService) {
         this.courseManagementService = courseManagementService;
     }
 
-    private void verifyCoursePermission(Course course, Department department) {
-        if (course == null || !course.getDepartment().equals(department))
-            throw new AccessDeniedException("403");
-    }
-
-    private void verifyCoursePermission(Course course) {
-        Department department = facultyService.getFacultyDepartment();
-        verifyCoursePermission(course, department);
-    }
-
-    private void verifyCoursePermission(List<Course> courses) {
-        Department department = facultyService.getFacultyDepartment();
-        for (Course course : courses)
-            verifyCoursePermission(course, department);
-    }
-
-    @GetMapping("department/courses/{id}/float")
-    public String floatCourse(RedirectAttributes redirectAttributes, @PathVariable String id) {
-        Course course = courseManagementService.getCourseByCode(id);
-        verifyCoursePermission(course);
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(id);
+    @PreAuthorize("isOfDepartment(#department, #course)")
+    @GetMapping("department/{department}/courses/{course}/float")
+    public String floatCourse(@PathVariable Department department, @PathVariable Course course, RedirectAttributes redirectAttributes) {
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
 
         if (floatedCourse != null) {
-            log.warn("Course is already floated {}", id);
+            log.warn("Course is already floated {}", course.getCode());
             redirectAttributes.addFlashAttribute("float_error", "Course is already floated");
         }  else {
             redirectAttributes.addFlashAttribute("courses", Collections.singletonList(course));
         }
 
-        return "redirect:/department/course/float";
+        return "redirect:/department/{department}/course/float";
     }
 
-    @GetMapping("/department/course/float")
-    public String floatCourse(Model model) {
-        FacultyMember facultyMember = facultyService.getLoggedInMember();
-        Department department = FacultyService.getDepartment(facultyMember);
-
-        model.addAttribute("page_title", "Float Course : " + facultyService.getFacultyDepartment().getName() + " Department");
+    @PreAuthorize("isDepartment(#department)")
+    @GetMapping("/department/{department}/course/float")
+    public String floatCourse(Model model, @PathVariable Department department) {
+        model.addAttribute("page_title", "Float Course : " + department.getName() + " Department");
         model.addAttribute("page_subtitle", "Floated Course Management");
         model.addAttribute("page_description", "Float and manage course and faculty in-charge for this session");
         model.addAttribute("department", department);
@@ -79,12 +56,11 @@ public class FloatCourseController {
         return "department/float_course";
     }
 
-    @PostMapping("/department/course/float")
-    public String floatCourses(RedirectAttributes redirectAttributes, @RequestParam("code") List<String> codes) {
-        String redirectLink = "redirect:/department/float";
-        List<Course> courses = courseManagementService.getAllActiveCourse(facultyService.getFacultyDepartment(), true);
-
-        verifyCoursePermission(courses);
+    @PreAuthorize("isDepartment(#department)")
+    @PostMapping("/department/{department}/course/float")
+    public String floatCourses(RedirectAttributes redirectAttributes, @PathVariable Department department, @RequestParam("code") List<String> codes) {
+        String redirectLink = "redirect:/department/{department}/course/float";
+        List<Course> courses = courseManagementService.getAllActiveCourse(department, true);
 
         if (!courses.stream().map(Course::getCode).collect(Collectors.toList()).containsAll(codes)) {
             log.warn("Has an invalid Course Codes : Floating {}", codes.toString());
@@ -92,7 +68,7 @@ public class FloatCourseController {
             return redirectLink;
         }
 
-        List<FloatedCourse> floatedCourses = courseManagementService.getCurrentFloatedCourses(facultyService.getFacultyDepartment());
+        List<FloatedCourse> floatedCourses = courseManagementService.getCurrentFloatedCourses(department);
 
         if (floatedCourses.stream().map(floatedCourse -> floatedCourse.getCourse().getCode()).anyMatch(codes::contains)) {
             log.warn("Some courses already floated : {}", codes.toString());
@@ -110,9 +86,9 @@ public class FloatCourseController {
         redirectAttributes.addFlashAttribute("float_success", "Courses floated successfully!");
 
         if (courseList.size() == 1)
-            return String.format("redirect:/department/floated/%s", courseList.get(0).getCode());
+            return String.format("redirect:/department/{department}/floated/%s", courseList.get(0).getCode());
 
-        return "redirect:/department/course/float";
+        return "redirect:/department/{department}/course/float";
     }
 
 }
