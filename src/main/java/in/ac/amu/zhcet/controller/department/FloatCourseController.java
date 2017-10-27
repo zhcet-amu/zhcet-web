@@ -4,6 +4,8 @@ import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.service.CourseManagementService;
+import in.ac.amu.zhcet.utils.page.Path;
+import in.ac.amu.zhcet.utils.page.PathChain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +32,13 @@ public class FloatCourseController {
         this.courseManagementService = courseManagementService;
     }
 
+    public static PathChain getPath(Department department) {
+        return CoursesController.getPath(department)
+                .add(Path.builder().title("Float")
+                        .link(String.format("/department/%s/course/float", department.getCode()))
+                        .build());
+    }
+
     @PreAuthorize("isOfDepartment(#department, #course)")
     @GetMapping("department/{department}/courses/{course}/float")
     public String floatCourse(@PathVariable Department department, @PathVariable Course course, RedirectAttributes redirectAttributes) {
@@ -52,6 +61,7 @@ public class FloatCourseController {
         model.addAttribute("page_subtitle", "Floated Course Management");
         model.addAttribute("page_description", "Float and manage course and faculty in-charge for this session");
         model.addAttribute("department", department);
+        model.addAttribute("page_path", getPath(department));
 
         return "department/float_course";
     }

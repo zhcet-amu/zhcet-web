@@ -6,6 +6,8 @@ import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.csv.RegistrationUploadService;
 import in.ac.amu.zhcet.service.misc.AttendanceDownloadService;
 import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.utils.page.Path;
+import in.ac.amu.zhcet.utils.page.PathChain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,6 +46,16 @@ public class FloatedCourseController {
         this.registrationUploadService = registrationUploadService;
     }
 
+    public static PathChain getPath(Department department, Course course) {
+        return CoursesController.getPath(department)
+                .add(Path.builder().title(course.getCode())
+                        .link(String.format("/department/%s/courses/%s/edit", department.getCode(), course.getCode()))
+                        .build())
+                .add(Path.builder().title("Manage")
+                        .link(String.format("/department/%s/floated/%s", department.getCode(), course.getCode()))
+                        .build());
+    }
+
     @PreAuthorize("isOfDepartment(#department, #course)")
     @GetMapping("department/{department}/floated/{course}")
     public String courseDetail(Model model, @PathVariable Department department, @PathVariable Course course, WebRequest webRequest) {
@@ -55,6 +67,7 @@ public class FloatedCourseController {
         model.addAttribute("page_title", floatedCourse.getCourse().getTitle());
         model.addAttribute("page_subtitle", "Course management for " + floatedCourse.getCourse().getCode());
         model.addAttribute("page_description", "Register Students and add Faculty In-Charge for the course");
+        model.addAttribute("page_path", getPath(department, course));
 
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
         Utils.sortCourseAttendance(courseRegistrations);

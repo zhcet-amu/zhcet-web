@@ -5,6 +5,8 @@ import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.type.CourseType;
 import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.utils.UpdateException;
+import in.ac.amu.zhcet.utils.page.Path;
+import in.ac.amu.zhcet.utils.page.PathChain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +31,15 @@ public class CourseEditController {
         this.courseManagementService = courseManagementService;
     }
 
+    public static PathChain getPath(Department department, Course course) {
+        return CoursesController.getPath(department)
+                .add(Path.builder().title(course.getCode())
+                        .build())
+                .add(Path.builder().title("Edit")
+                        .link(String.format("/department/%s/courses/%s/edit", department.getCode(), course.getCode()))
+                        .build());
+    }
+
     @PreAuthorize("isOfDepartment(#department, #course)")
     @GetMapping("/department/{department}/courses/{course}/edit")
     public String addCourse(Model model, @PathVariable Department department, @PathVariable Course course) {
@@ -36,6 +47,7 @@ public class CourseEditController {
         model.addAttribute("department", department);
         model.addAttribute("page_title", "Edit Course : " + department.getName() + " Department");
         model.addAttribute("page_subtitle", "Course Management");
+        model.addAttribute("page_path", getPath(department, course));
 
         model.addAttribute("course_types", CourseType.values());
 

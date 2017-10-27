@@ -4,6 +4,8 @@ import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.service.CourseManagementService;
+import in.ac.amu.zhcet.utils.page.Path;
+import in.ac.amu.zhcet.utils.page.PathChain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +30,13 @@ public class CoursesController {
         this.courseManagementService = courseManagementService;
     }
 
+    public static PathChain getPath(Department department) {
+        return DepartmentController.getPath(department)
+                .add(Path.builder().title("Courses")
+                    .link(String.format("/department/%s/courses", department.getCode()))
+                    .build());
+    }
+
     @PreAuthorize("isDepartment(#department)")
     @GetMapping("/department/{department}/courses")
     public String getCourses(Model model, @PathVariable Department department, @RequestParam(value = "active", required = false) Boolean active) {
@@ -38,6 +47,7 @@ public class CoursesController {
         model.addAttribute("department", department);
         model.addAttribute("page_title", "Courses : " + department.getName() + " Department");
         model.addAttribute("page_subtitle", "Course Management");
+        model.addAttribute("page_path", getPath(department));
 
         List<Course> courses = courseManagementService.getAllActiveCourse(department, active);
         courses.sort(Comparator.comparing(Course::getCode));

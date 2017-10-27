@@ -5,6 +5,8 @@ import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.type.CourseType;
 import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.utils.DuplicateException;
+import in.ac.amu.zhcet.utils.page.Path;
+import in.ac.amu.zhcet.utils.page.PathChain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +31,13 @@ public class CourseCreationController {
         this.courseManagementService = courseManagementService;
     }
 
+    public static PathChain getPath(Department department) {
+        return CoursesController.getPath(department)
+                .add(Path.builder().title("Create")
+                        .link(String.format("/department/%s/course/add", department.getCode()))
+                        .build());
+    }
+
     @PreAuthorize("isDepartment(#department)")
     @GetMapping("/department/{department}/course/add")
     public String addCourse(Model model, @PathVariable Department department) {
@@ -36,6 +45,7 @@ public class CourseCreationController {
         model.addAttribute("department", department);
         model.addAttribute("page_title", "Add Course : " + department.getName() + " Department");
         model.addAttribute("page_subtitle", "Course Management");
+        model.addAttribute("page_path", getPath(department));
 
         model.addAttribute("course_types", CourseType.values());
 
