@@ -29,8 +29,9 @@
     }
 
     var all = false;
+    var department = $('#department').html();
     var index = ["facultyId", "userName"];
-    var baseUrl = "/department/api/faculty";
+    var baseUrl = "/department/" + department + "/api/faculty";
     fuzzyhound.setSource(baseUrl, index);
 
     $(window).load(function () {
