@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.actuate.audit.listener.AuditApplicationEvent;
+import org.springframework.boot.actuate.security.AuthorizationAuditListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
@@ -32,11 +33,12 @@ public class LoginAttemptListener {
         loginAttemptService.loginAttempt(auditEvent, details);
 
         stringBuilder.append("\n  Remote IP address: ").append(details.getRemoteAddress());
-        stringBuilder.append("\n  Session Id: ").append(details.getSessionId());
+        stringBuilder.append("\n  Session ID: ").append(details.getSessionId());
         stringBuilder.append("\n  Request URL: ").append(auditEvent.getData().get("requestUrl"));
+        stringBuilder.append("\n  Source: ").append(auditEvent.getData().get("source"));
 
         String message = stringBuilder.toString();
-        if (auditEvent.getType().equals(ExposeAttemptedPathAuthorizationAuditListener.FAILURE)) {
+        if (auditEvent.getType().equals(AuthorizationAuditListener.AUTHORIZATION_FAILURE)) {
             log.warn(message);
         } else {
             log.info(message);
