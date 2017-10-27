@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.service.permission;
 
 import in.ac.amu.zhcet.data.model.Course;
+import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,12 @@ public class DomainPermissionExpression extends SecurityExpressionRoot implement
         if (floatedCourse == null)
             return false;
         return isOfDepartment(floatedCourse.getCourse().getDepartment(), floatedCourse.getCourse());
+    }
+
+    public boolean isCourseInCharge(CourseInCharge courseInCharge) {
+        if (courseInCharge == null)
+            return false;
+        return true;
     }
 
 

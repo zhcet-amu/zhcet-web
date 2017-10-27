@@ -7,6 +7,7 @@ import in.ac.amu.zhcet.service.misc.ConfigurationService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -78,6 +79,7 @@ public class CourseInChargeService {
         return courseInChargeRepository.findByFacultyMemberAndFloatedCourse_Session(facultyMember, ConfigurationService.getDefaultSessionCode());
     }
 
+    @PostAuthorize("isCourseInCharge(returnObject)")
     public CourseInCharge getCourseInCharge(Course course, String section) {
         FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
         return courseInChargeRepository.findByFloatedCourseAndFacultyMemberAndSection
