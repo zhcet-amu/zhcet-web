@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.configuration;
+package in.ac.amu.zhcet.configuration.security;
 
 import in.ac.amu.zhcet.service.permission.PermissionExpressionHandler;
 import org.springframework.context.annotation.Configuration;

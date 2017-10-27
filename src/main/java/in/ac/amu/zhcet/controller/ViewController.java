@@ -31,12 +31,10 @@ public class ViewController {
     @RequestMapping("/login")
     public String getLoginPage(Model model, @RequestParam(required = false) String error, HttpServletRequest request) {
         Authentication authentication = Auditor.getLoggedInAuthentication();
-        if (authentication != null && !loginAttemptService.isRememberMe(authentication))
-            return homePage();
-
-        if (loginAttemptService.isRememberMe(authentication)) {
+        if (loginAttemptService.isRememberMe(authentication))
             model.addAttribute("remember_error", "Please refresh your login");
-        }
+        else if (loginAttemptService.isFullyAuthenticated(authentication))
+            return homePage();
 
         if (error != null) {
             model.addAttribute("login_error", loginAttemptService.getErrorMessage(request));

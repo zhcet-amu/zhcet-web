@@ -5,16 +5,14 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import in.ac.amu.zhcet.configuration.security.PathAuthorizationAuditListener;
+import in.ac.amu.zhcet.service.misc.ConfigurationService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.audit.AuditEvent;
-import org.springframework.boot.actuate.security.AuthorizationAuditListener;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.authentication.RememberMeAuthenticationToken;
+import org.springframework.boot.actuate.security.AuthenticationAuditListener;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
@@ -30,14 +28,15 @@ import java.util.stream.Collectors;
 @Service
 public class LoginAttemptService {
 
-    public static final int MAX_ATTEMPTS = 5;
-    public static final int BLOCK_DURATION = 6;
     public static final TimeUnit TIME_UNIT = TimeUnit.HOURS;
 
     private final LoadingCache<String, Integer> attemptsCache;
+    private final ConfigurationService configurationService;
 
     @Autowired
-    public LoginAttemptService() {
+    public LoginAttemptService(ConfigurationService configurationService) {
+        this.configurationService = configurationService;
+
         RemovalListener<String, Integer> removalListener = removal ->
                 log.info("Key {} with value {} was removed because : {}",
                 removal.getKey(), removal.getValue(), removal.getCause());
@@ -46,13 +45,21 @@ public class LoginAttemptService {
                 .newBuilder()
                 .maximumSize(10000)
                 .removalListener(removalListener)
-                .expireAfterWrite(BLOCK_DURATION, TIME_UNIT)
+                .expireAfterWrite(getBlockDuration(), TIME_UNIT)
                 .build(new CacheLoader<String, Integer>() {
                     @Override
                     public Integer load(@Nonnull String key) throws Exception {
                         return 0;
                     }
                 });
+    }
+
+    private int getMaxRetries() {
+        return configurationService.getConfigCache().getMaxRetries();
+    }
+
+    private int getBlockDuration() {
+        return configurationService.getConfigCache().getBlockDuration();
     }
 
     public static String getClientIP(HttpServletRequest request) {
@@ -71,11 +78,11 @@ public class LoginAttemptService {
             return defaultMessage;
 
         String ip = LoginAttemptService.getClientIP(request);
-        String coolDownPeriod = LoginAttemptService.BLOCK_DURATION + " " + LoginAttemptService.TIME_UNIT;
+        String coolDownPeriod = getBlockDuration() + " " + LoginAttemptService.TIME_UNIT;
         if(object instanceof LockedException || isBlocked(ip)) {
             return "IP blocked for <strong>" + coolDownPeriod + "</strong> since last wrong login attempt";
         } else if (object instanceof BadCredentialsException) {
-            String tries = String.format("%d out of %d tries left!" , triesLeft(ip), LoginAttemptService.MAX_ATTEMPTS);
+            String tries = String.format("%d out of %d tries left!" , triesLeft(ip), getMaxRetries());
             String message = "IP will be blocked for " + coolDownPeriod + " after all tries are exhausted";
             return defaultMessage + "<br><strong>" + tries  + "</strong> " + message;
         } else if (object instanceof DisabledException) {
@@ -93,7 +100,7 @@ public class LoginAttemptService {
         }
 
         log.info("Login Attempt for Principal : {}", auditEvent.getPrincipal());
-        if (auditEvent.getType().equals(AuthorizationAuditListener.AUTHORIZATION_FAILURE)) {
+        if (auditEvent.getType().equals(AuthenticationAuditListener.AUTHENTICATION_FAILURE)) {
             Object type = auditEvent.getData().get("type");
             if (type != null && type.toString().equals(BadCredentialsException.class.getName())) {
                 log.info("Login Failed. Incrementing Attempts");
@@ -125,12 +132,12 @@ public class LoginAttemptService {
         }
         attempts++;
         attemptsCache.put(key, attempts);
-        log.info("Attempts : {}, Max Attempts : {}", attempts, MAX_ATTEMPTS);
+        log.info("Attempts : {}, Max Attempts : {}", attempts, getMaxRetries());
     }
 
     public boolean isBlocked(String key) {
         try {
-            return attemptsCache.get(key) >= MAX_ATTEMPTS;
+            return attemptsCache.get(key) >= getMaxRetries();
         } catch (ExecutionException e) {
             return false;
         }
@@ -138,15 +145,22 @@ public class LoginAttemptService {
 
     private int triesLeft(String key) {
         try {
-            return MAX_ATTEMPTS - attemptsCache.get(key);
+            return getMaxRetries() - attemptsCache.get(key);
         } catch (ExecutionException e) {
-            return MAX_ATTEMPTS;
+            return getMaxRetries();
         }
     }
 
     public boolean isRememberMe(Authentication authentication) {
         return authentication != null && authentication.getClass().isAssignableFrom(RememberMeAuthenticationToken.class);
+    }
 
+    public boolean isAnonymous(Authentication authentication) {
+        return authentication != null && authentication.getClass().isAssignableFrom(AnonymousAuthenticationToken.class);
+    }
+
+    public boolean isFullyAuthenticated(Authentication authentication) {
+        return !(isRememberMe(authentication) || isAnonymous(authentication));
     }
 
     @Data
@@ -160,7 +174,7 @@ public class LoginAttemptService {
         return attemptsCache.asMap()
                 .entrySet()
                 .stream()
-                .filter(stringIntegerEntry -> stringIntegerEntry.getValue() >= MAX_ATTEMPTS)
+                .filter(stringIntegerEntry -> stringIntegerEntry.getValue() >= getMaxRetries())
                 .map(entry -> new BlockedIp(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
