@@ -36,6 +36,10 @@
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 Logged out successfully
             </div>
+            <div th:if="${remember_error}" class="alert alert-dismissible alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <div th:utext="${remember_error}">Username and Password does not match any user</div>
+            </div>
             <div th:if="${reset_success}" class="alert alert-dismissible alert-success">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>Reset!</strong> Password successfully reset!<br/>

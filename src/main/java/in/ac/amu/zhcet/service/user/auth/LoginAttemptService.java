@@ -4,14 +4,18 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
-import in.ac.amu.zhcet.configuration.security.ExposeAttemptedPathAuthorizationAuditListener;
+import in.ac.amu.zhcet.configuration.security.PathAuthorizationAuditListener;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.audit.AuditEvent;
+import org.springframework.boot.actuate.security.AuthorizationAuditListener;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.RememberMeAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +36,7 @@ public class LoginAttemptService {
 
     private final LoadingCache<String, Integer> attemptsCache;
 
+    @Autowired
     public LoginAttemptService() {
         RemovalListener<String, Integer> removalListener = removal ->
                 log.info("Key {} with value {} was removed because : {}",
@@ -88,7 +93,7 @@ public class LoginAttemptService {
         }
 
         log.info("Login Attempt for Principal : {}", auditEvent.getPrincipal());
-        if (auditEvent.getType().equals(ExposeAttemptedPathAuthorizationAuditListener.FAILURE)) {
+        if (auditEvent.getType().equals(AuthorizationAuditListener.AUTHORIZATION_FAILURE)) {
             Object type = auditEvent.getData().get("type");
             if (type != null && type.toString().equals(BadCredentialsException.class.getName())) {
                 log.info("Login Failed. Incrementing Attempts");
@@ -96,7 +101,7 @@ public class LoginAttemptService {
             } else if(type != null) {
                 log.info("Login Failed due to {}", type.toString());
             }
-        } else if (auditEvent.getType().equals(ExposeAttemptedPathAuthorizationAuditListener.SUCCESS)) {
+        } else if (auditEvent.getType().equals(PathAuthorizationAuditListener.SUCCESS)) {
             log.info("Login Succeeded. Invalidating");
             loginSucceeded(details.getRemoteAddress());
         }
@@ -137,6 +142,11 @@ public class LoginAttemptService {
         } catch (ExecutionException e) {
             return MAX_ATTEMPTS;
         }
+    }
+
+    public boolean isRememberMe(Authentication authentication) {
+        return authentication != null && authentication.getClass().isAssignableFrom(RememberMeAuthenticationToken.class);
+
     }
 
     @Data

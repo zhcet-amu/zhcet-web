@@ -7,12 +7,16 @@ import org.springframework.security.core.userdetails.User;
 
 public class Auditor implements AuditorAware<String> {
 
+    public static Authentication getLoggedInAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
+
     public static CustomUser getLoggedInUser() {
-        return (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return (CustomUser) getLoggedInAuthentication().getPrincipal();
     }
 
     public static String getLoggedInUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = getLoggedInAuthentication();
         if (authentication == null || !(authentication.getPrincipal() instanceof User))
             return "UNAUTHENTICATED";
 

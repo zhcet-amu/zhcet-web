@@ -34,7 +34,6 @@ public class DomainPermissionExpression extends SecurityExpressionRoot implement
     }
 
     public boolean isFloated(FloatedCourse floatedCourse) {
-        log.info("FLOATED" + floatedCourse);
         if (floatedCourse == null)
             return false;
         return isOfDepartment(floatedCourse.getCourse().getDepartment(), floatedCourse.getCourse());
