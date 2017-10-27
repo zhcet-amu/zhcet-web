@@ -22,9 +22,8 @@
             <ul class="list-inline list-inline-pipe" th:if="${user.type == 'FACULTY'}">
                 <li th:text="${faculty.facultyId}">FacultyNumber</li>
             </ul>
-            <div id="gender-container" class="mt-1" th:with="gender = ${user.details.gender}" th:if="${faculty.user.details.gender}">
+            <div id="gender-container" class="mt-1" th:with="gender = ${user.details.gender}" th:if="${user.details.gender}">
                 <span id="gender" th:text="${gender}"  th:class="|capsule ${@viewService.getClassForGender(gender)}|">Male</span>
-                <br><br>
             </div>
             <div>
                 <span th:text="${user.email}"></span><span th:if="${user.emailVerified}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
