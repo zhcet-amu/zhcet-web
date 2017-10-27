@@ -55,11 +55,11 @@ public class LoginAttemptService {
     }
 
     private int getMaxRetries() {
-        return configurationService.getConfigCache().getMaxRetries();
+        return configurationService.getMaxRetries();
     }
 
     private int getBlockDuration() {
-        return configurationService.getConfigCache().getBlockDuration();
+        return configurationService.getBlockDuration();
     }
 
     public static String getClientIP(HttpServletRequest request) {

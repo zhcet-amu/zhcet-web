@@ -53,6 +53,14 @@ public class ConfigurationService {
         return configurationRepository.findFirstByOrderByIdDesc();
     }
 
+    public int getMaxRetries() {
+        return getConfigCache().getMaxRetries();
+    }
+
+    public int getBlockDuration() {
+        return getConfigCache().getBlockDuration();
+    }
+
     public String getSession() {
         return getSessionCode(getConfigCache());
     }

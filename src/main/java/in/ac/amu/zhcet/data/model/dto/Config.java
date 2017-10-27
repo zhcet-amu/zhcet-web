@@ -10,6 +10,9 @@ import javax.validation.constraints.Size;
 
 @Data
 public class Config {
+
+    private final String defaultSession = Utils.getDefaultSessionName();
+
     @Size(max = 255)
     private String url;
     @Min(50)
@@ -20,5 +23,10 @@ public class Config {
     @Min(2000)
     private int year;
     private boolean automatic;
-    private final String defaultSession = Utils.getDefaultSessionName();
+    @Min(3)
+    @Max(10)
+    private int maxRetries;
+    @Min(3)
+    @Max(24)
+    private int blockDuration;
 }
