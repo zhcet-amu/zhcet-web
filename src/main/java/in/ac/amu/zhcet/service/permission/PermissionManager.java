@@ -36,11 +36,16 @@ public class PermissionManager {
                 permissions.add(new SimpleGrantedAuthority(Roles.DEAN_ADMIN));
                 permissions.add(new SimpleGrantedAuthority(Roles.MANAGEMENT_ADMIN));
                 permissions.add(new SimpleGrantedAuthority(Roles.DEPARTMENT_SUPER_ADMIN));
+                permissions.add(new SimpleGrantedAuthority(Roles.DEPARTMENT_ADMIN));
                 permissions.add(new SimpleGrantedAuthority(Roles.SUPER_FACULTY));
+                permissions.add(new SimpleGrantedAuthority(Roles.FACULTY));
+                break;
             case Roles.DEPARTMENT_SUPER_ADMIN:
                 permissions.add(new SimpleGrantedAuthority(Roles.DEPARTMENT_ADMIN));
+                break;
             case Roles.SUPER_FACULTY:
                 permissions.add(new SimpleGrantedAuthority(Roles.FACULTY));
+                break;
         }
 
         return permissions;

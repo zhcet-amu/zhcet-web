@@ -15,6 +15,9 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -69,13 +72,13 @@ public class UserAuth extends BaseEntity {
         details.setUserId(id);
     }
 
-    public void setRoles(String[] roles) {
+    public void setRoles(Set<String> roles) {
         this.roles = String.join(",", roles);
     }
 
-    public String[] getRoles() {
+    public List<String> getRoles() {
         if (roles != null)
-            return roles.split(",");
+            return Arrays.asList(roles.split(","));
 
         return null;
     }

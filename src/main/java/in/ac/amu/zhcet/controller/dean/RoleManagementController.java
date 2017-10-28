@@ -1,11 +1,13 @@
 package in.ac.amu.zhcet.controller.dean;
 
-import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.service.DepartmentService;
+import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.FacultyService;
+import in.ac.amu.zhcet.service.user.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,24 +16,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class RoleManagementController {
 
-    private final DepartmentService departmentService;
+    private final UserDetailService userDetailService;
     private final FacultyService facultyService;
 
     @Autowired
-    public RoleManagementController(DepartmentService departmentService, FacultyService facultyService) {
-        this.departmentService = departmentService;
+    public RoleManagementController(UserDetailService userDetailService, FacultyService facultyService) {
+        this.userDetailService = userDetailService;
         this.facultyService = facultyService;
     }
 
-    @GetMapping("/dean/roles/{id}")
-    public String roleManagement(Model model, @PathVariable String id) {
-        Department department = departmentService.findOne(id);
+    @PreAuthorize("isDepartment(#department)")
+    @GetMapping("/dean/roles/{department}")
+    public String roleManagement(Model model, @PathVariable Department department) {
 
         if (department != null) {
             model.addAttribute("page_title", "Role Management");
@@ -45,17 +48,23 @@ public class RoleManagementController {
         return "dean/role_management";
     }
 
-    @PostMapping("/dean/roles/{id}")
-    public String saveRoles(RedirectAttributes redirectAttributes, @RequestParam String facultyId, @RequestParam(required = false) List<String> roles) {
+    @PreAuthorize("isDepartment(#department)")
+    @PostMapping("/dean/roles/{department}")
+    public String saveRoles(RedirectAttributes redirectAttributes, @PathVariable Department department, @RequestParam String facultyId, @RequestParam(required = false) List<String> roles) {
         FacultyMember facultyMember = facultyService.getById(facultyId);
 
-        List<String> newRoles = new ArrayList<>();
+        if (facultyMember == null || roles == null)
+            return "redirect:/dean/roles/{department}";
 
-        if (roles != null)
+        Set<String> newRoles = new HashSet<>();
+
         for (String role : roles) {
             switch (role) {
                 case "dean":
                     newRoles.add(Roles.DEAN_ADMIN);
+                    break;
+                case "department_super":
+                    newRoles.add(Roles.DEPARTMENT_SUPER_ADMIN);
                     break;
                 case "department":
                     newRoles.add(Roles.DEPARTMENT_ADMIN);
@@ -68,12 +77,16 @@ public class RoleManagementController {
             }
         }
 
-        facultyMember.getUser().setRoles(newRoles.toArray(new String[newRoles.size()]));
+        facultyMember.getUser().setRoles(newRoles);
         facultyService.save(facultyMember);
+
+        UserAuth loggedIn = userDetailService.getLoggedInUser();
+        if (facultyMember.getUser().getUserId().equals(loggedIn.getUserId()))
+            userDetailService.updatePrincipal(loggedIn);
 
         redirectAttributes.addFlashAttribute("saved", true);
 
-        return "redirect:/dean/roles/{id}";
+        return "redirect:/dean/roles/{department}";
     }
 
 }

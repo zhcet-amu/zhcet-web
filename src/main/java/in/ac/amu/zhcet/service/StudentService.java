@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -61,8 +62,8 @@ public class StudentService {
 
         if (student.getUser().getUserId() == null)
             student.getUser().setUserId(student.getEnrolmentNumber());
-        if (student.getUser().getRoles() == null || student.getUser().getRoles().length == 0)
-            student.getUser().setRoles(new String[] { Roles.STUDENT });
+        if (student.getUser().getRoles() == null || student.getUser().getRoles().isEmpty())
+            student.getUser().setRoles(Collections.singleton(Roles.STUDENT));
         if (student.getUser().getPassword() == null)
             student.getUser().setPassword(student.getFacultyNumber());
 

@@ -1,11 +1,11 @@
 package in.ac.amu.zhcet.service;
 
-import in.ac.amu.zhcet.data.repository.UserDetailRepository;
-import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.model.user.UserDetail;
+import in.ac.amu.zhcet.data.repository.UserDetailRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
+import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.utils.DuplicateException;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,10 +88,16 @@ public class UserService {
     }
 
     public String getType(UserAuth user) {
-        List<String> roles = Arrays.asList(user.getRoles());
+        List<String> roles = user.getRoles();
 
-        if (roles.contains(Roles.DEAN_ADMIN))
+        if (roles.contains(Roles.SUPER_ADMIN))
+            return "Super Admin";
+        else if (roles.contains(Roles.DEAN_ADMIN))
             return "Dean Admin";
+        else if (roles.contains(Roles.MANAGEMENT_ADMIN))
+            return "Management Admin";
+        else if (roles.contains(Roles.DEPARTMENT_SUPER_ADMIN))
+            return "Department Super Admin";
         else if (roles.contains(Roles.DEPARTMENT_ADMIN))
             return "Department Admin";
         else if (roles.contains(Roles.FACULTY))

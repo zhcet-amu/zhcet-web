@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,8 +63,8 @@ public class FacultyService {
 
         if (facultyMember.getUser().getUserId() == null)
             facultyMember.getUser().setUserId(facultyMember.getFacultyId());
-        if (facultyMember.getUser().getRoles() == null || facultyMember.getUser().getRoles().length == 0)
-            facultyMember.getUser().setRoles(new String[]{ Roles.FACULTY });
+        if (facultyMember.getUser().getRoles() == null || facultyMember.getUser().getRoles().isEmpty())
+            facultyMember.getUser().setRoles(Collections.singleton(Roles.FACULTY));
 
         facultyMember.getUser().setPassword(UserAuth.PASSWORD_ENCODER.encode(facultyMember.getUser().getPassword()));
         return facultyMember;

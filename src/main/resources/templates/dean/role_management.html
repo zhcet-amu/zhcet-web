@@ -54,15 +54,31 @@
                             <td>
                                 <table class="table table-column" style="background-color: white">
                                     <tr>
-                                        <td><label>Dean Admin</label></td>
+                                        <td><label>Dean Admin
+                                            <i class="material-icons helper" data-toggle="tooltip" data-original-title="Manages course and user registrations/roles">info_outline</i>
+                                        </label></td>
                                         <td><input type="checkbox" class="switchery" data-color="primary" name="roles" value="dean" th:checked="${#lists.contains(member.user.roles, 'ROLE_DEAN_ADMIN')}"></td>
                                     </tr>
                                     <tr>
-                                        <td><label>Department Admin&nbsp;</label></td>
+                                        <td><label>
+                                            Department Super Admin
+                                            <i class="material-icons helper" data-toggle="tooltip" data-original-title="Manages all department courses, floating, and incharges">info_outline</i>
+                                        </label></td>
+                                        <td><input type="checkbox" class="switchery" data-color="primary"  name="roles" value="department_super" th:checked="${#lists.contains(member.user.roles, 'ROLE_DEPARTMENT_SUPER_ADMIN')}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>
+                                            Department Admin
+                                            <i class="material-icons helper" data-toggle="tooltip" data-original-title="Manages one department courses, floating, and incharges">info_outline</i>
+                                        </label></td>
                                         <td><input type="checkbox" class="switchery" data-color="primary"  name="roles" value="department" th:checked="${#lists.contains(member.user.roles, 'ROLE_DEPARTMENT_ADMIN')}"></td>
                                     </tr>
                                     <tr>
-                                        <td><label>Faculty Member&nbsp;</label></td>
+                                        <td><label>
+                                            Faculty Member
+
+                                            <i class="material-icons helper" data-toggle="tooltip" data-original-title="Manages floated course attendance, results, etc">info_outline</i>
+                                        </label></td>
                                         <td><input type="checkbox" class="switchery" data-color="primary" name="roles" value="faculty" th:checked="${#lists.contains(member.user.roles, 'ROLE_FACULTY')}"></td>
                                     </tr>
                                 </table>
@@ -88,7 +104,7 @@
     (function () {
         var options = {
             valueNames: [ 'faculty-id', 'name' ],
-            page: 30,
+            page: 50,
             pagination: true
         };
 

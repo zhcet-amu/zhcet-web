@@ -117,3 +117,9 @@ td.date-cell {
     background-color: #E91E63;
     color: white;
 }
+
+i.helper {
+    margin-top: -4px;
+    font-size: 18px;
+    cursor: pointer;
+}

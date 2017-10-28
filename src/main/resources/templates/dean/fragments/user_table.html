@@ -31,7 +31,7 @@
                         <td th:text="${user.name}"></td>
                         <td th:text="${user.userId}"></td>
                         <td th:text="${user.createdAt != null ? user.createdAt : user.updatedAt }"></td>
-                        <td th:text="${@userService.getType(user)}"></td>
+                        <td th:text="${@userDetailService.getType(user)}"></td>
                     </tr>
                 </th:block>
                 </tbody>
