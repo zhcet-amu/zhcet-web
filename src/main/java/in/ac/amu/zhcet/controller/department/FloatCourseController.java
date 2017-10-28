@@ -42,9 +42,7 @@ public class FloatCourseController {
     @PreAuthorize("isOfDepartment(#department, #course)")
     @GetMapping("department/{department}/courses/{course}/float")
     public String floatCourse(@PathVariable Department department, @PathVariable Course course, RedirectAttributes redirectAttributes) {
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
-
-        if (floatedCourse != null) {
+        if (courseManagementService.isFloated(course)) {
             log.warn("Course is already floated {}", course.getCode());
             redirectAttributes.addFlashAttribute("float_error", "Course is already floated");
         }  else {

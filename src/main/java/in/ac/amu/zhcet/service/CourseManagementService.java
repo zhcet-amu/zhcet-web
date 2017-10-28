@@ -70,11 +70,21 @@ public class CourseManagementService {
         return getFloatedCourse(course) != null;
     }
 
+    /**
+     * Protected method for getting floated course, throws AccessDenied exception if floated course does not exist
+     * @param course Course
+     * @return FloatedCourse for the corresponding course
+     */
     @PostAuthorize("isFloated(returnObject)")
     public FloatedCourse getFloatedCourseByCourse(Course course){
         return getFloatedCourse(course);
     }
 
+    /**
+     * Unprotected method for getting the floated course, allows null return value
+     * @param course Course
+     * @return FloatedCourse for the corresponding course
+     */
     private FloatedCourse getFloatedCourse(Course course){
         return floatedCourseRepository.getBySessionAndCourse(ConfigurationService.getDefaultSessionCode(), course);
     }
