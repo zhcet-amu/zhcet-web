@@ -73,14 +73,6 @@ public class StudentService {
     }
 
     @Transactional
-    public void register(Student student) {
-        initializeStudent(student);
-
-        userService.save(student.getUser());
-        studentRepository.save(student);
-    }
-
-    @Transactional
     public void register(Set<Student> students) {
         List<Student> studentList = students.parallelStream()
                 .map(StudentService::initializeStudent)

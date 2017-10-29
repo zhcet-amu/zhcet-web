@@ -71,13 +71,6 @@ public class FacultyService {
     }
 
     @Transactional
-    public void register(FacultyMember facultyMember) {
-        initializeFaculty(facultyMember);
-        userService.save(facultyMember.getUser());
-        facultyRepository.save(facultyMember);
-    }
-
-    @Transactional
     public void register(Set<FacultyMember> facultyMembers) {
         List<FacultyMember> memberList = facultyMembers.parallelStream()
                 .map(FacultyService::initializeFaculty)
