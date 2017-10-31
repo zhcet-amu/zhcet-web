@@ -50,6 +50,13 @@ public class Course extends BaseEntity {
     private Integer tutorialPart;
     private Integer practicalPart;
 
+    private String books;
+    @Type(type = "text")
+    private String courseObjectives;
+    @Type(type = "text")
+    private String courseOutcomes;
+    @Type(type = "text")
+    private String syllabus;
     @Type(type = "text")
     private String description;
 }

@@ -21,7 +21,7 @@
             <div class="position-relative has-icon-left">
                 <input type="text" id="code" class="form-control" placeholder="Course Code" th:field="*{code}" required>
                 <div class="form-control-position">
-                    <i class="material-icons gray">class</i>
+                    <i class="material-icons gray">code</i>
                 </div>
             </div>
         </div>
@@ -89,7 +89,6 @@
                 </div>
             </div>
         </div>
-
     </div>
     <div class="col-md-6">
         <h4 class="form-section"><i class="icon-head"></i> Additional Info</h4>
@@ -235,16 +234,62 @@
             </div>
         </div>
 
-        <hr>
-
         <div class="form-group">
-            <label for="timesheetinput7">Description</label>
+            <label for="description">Description</label>
             <div class="position-relative has-icon-left">
-                <textarea id="timesheetinput7" rows="5" class="form-control" placeholder="Description about this course" th:field="*{description}"></textarea>
+                <textarea id="description" rows="5" class="form-control" placeholder="Description about this course" th:field="*{description}"></textarea>
                 <div class="form-control-position">
                     <i class="material-icons gray">description</i>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-xs-12">
+        <h4 class="form-section"><i class="icon-head"></i> Other Information</h4>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="syllabus">Syllabus</label>
+                <div class="position-relative has-icon-left">
+                    <textarea id="syllabus" rows="5" class="form-control" placeholder="Syllabus of this course" th:field="*{syllabus}"></textarea>
+                    <div class="form-control-position">
+                        <i class="material-icons gray">sort</i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="books">Books</label>
+                <div class="position-relative has-icon-left">
+                    <textarea id="books" rows="5" class="form-control" placeholder="Books" th:field="*{books}"></textarea>
+                    <div class="form-control-position">
+                        <i class="material-icons gray">book</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <label for="course-objectives">Course Objectives</label>
+                <div class="position-relative has-icon-left">
+                    <textarea id="course-objectives" rows="5" class="form-control" placeholder="Objectives of this course" th:field="*{courseObjectives}"></textarea>
+                    <div class="form-control-position">
+                        <i class="material-icons gray">subject</i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="course-outcomes">Course Outcomes</label>
+                <div class="position-relative has-icon-left">
+                    <textarea id="course-outcomes" rows="5" class="form-control" placeholder="Outcomes this course" th:field="*{courseOutcomes}"></textarea>
+                    <div class="form-control-position">
+                        <i class="material-icons gray">list</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
