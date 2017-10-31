@@ -2,7 +2,8 @@ package in.ac.amu.zhcet.data.type;
 
 public enum CourseType {
     T, // Theory
-    P  // Practical
+    P, // Practical
+    S  // Seminar
     ;
 
     @Override
@@ -12,6 +13,8 @@ public enum CourseType {
                 return "Theory";
             case P:
                 return "Practical";
+            case S:
+                return "Seminar";
             default:
                 return "Theory";
         }

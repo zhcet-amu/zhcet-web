@@ -47,7 +47,7 @@ public class Course extends BaseEntity {
     private Integer finalMarks;
     private Integer totalMarks;
     private Integer lecturePart;
-    private Integer theoryPart;
+    private Integer tutorialPart;
     private Integer practicalPart;
 
     @Type(type = "text")
