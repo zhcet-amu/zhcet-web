@@ -97,6 +97,8 @@
             }, {
                 data: 'user_email'
             }],
+            dom: 'lBfrtip',
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
             "initComplete": function () {
                 DataUtils.searchDelay(table);
                 DataUtils.restoreState(table, [{

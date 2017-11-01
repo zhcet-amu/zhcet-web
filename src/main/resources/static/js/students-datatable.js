@@ -146,8 +146,10 @@
                         $('.count').html(data.count());
                         $('#section-modal').modal('show');
                     }
-                }
+                },
+                'copy', 'csv', 'excel', 'pdf', 'print'
             ],
+            "lengthMenu": [[10, 25, 50, 100, 200], [10, 25, 50, 100, 200]],
             "initComplete": function () {
                 DataUtils.searchDelay(table);
                 DataUtils.restoreState(table, [{
