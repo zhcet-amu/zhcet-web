@@ -1,8 +1,4 @@
 (function () {
-    function fixDate(date) {
-        return date.split('[')[0];
-    }
-
     function showStudent(data) {
         var modal = $('#studentModal');
         modal.modal();
@@ -38,7 +34,7 @@
             modal.find('#verified i').removeClass('icon-check2');
 
         if (data['createdAt'] && data['createdAt'] !== '')
-            modal.find('#registered-at').html(moment(fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));
+            modal.find('#registered-at').html(moment(DataUtils.fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));
         else
             modal.find('#registered-at').html('No Record');
 
@@ -46,35 +42,6 @@
             modal.find('#registered-by').html(data['createdBy']);
         else
             modal.find('#registered-by').html('No Record');
-    }
-
-    function setSelectInput(context, selected) {
-        var values = ['A', 'G', 'N'];
-        var statuses = ['Active : A', 'Graduated : G', 'Inactive : N'];
-
-        context.api().columns(8).every( function () {
-            var column = this;
-            var select = $('<select id="stat"><option value="">All</option></select>')
-                .appendTo( $('#statuses') )
-                .on( 'change', function () {
-                    var val = $.fn.dataTable.util.escapeRegex(
-                        $(this).val()
-                    );
-
-                    if (val !== column.search()) {
-                        column.search(val).draw();
-                    }
-                } );
-
-            $.each(values, function ( d, j ) {
-                select.append( '<option value="'+j+'">'+statuses[d]+'</option>' )
-            } );
-        } );
-
-        if (selected === '')
-            return;
-
-        $('#statuses').find('option[value=' + selected + ']').prop('selected', true);
     }
 
     function enableButton(table) {
@@ -87,13 +54,6 @@
     $(document).ready(function () {
         var header = $("meta[name='_csrf_header']").attr("content");
         var token = $("meta[name='_csrf']").attr("content");
-
-        var key = 'DataTables_studentTable_/dean/students';
-        var selected = 'A';
-        if (key in localStorage) {
-            var data = JSON.parse(localStorage.getItem(key));
-            selected = data['columns'][8]['search'].search;
-        }
 
         var studentTable = $('#studentTable');
 
@@ -142,7 +102,8 @@
                 }, {
                     data: 'user_name'
                 }, {
-                    data: 'user_details_gender'
+                    data: 'user_details_gender',
+                    name: 'gender'
                 }, {
                     data: 'user_department_name'
                 }, {
@@ -150,7 +111,8 @@
                 }, {
                     data: 'section'
                 }, {
-                    data: 'status'
+                    data: 'status',
+                    name: 'status'
                 }, {
                     data: 'user_email'
                 }],
@@ -187,14 +149,15 @@
                 }
             ],
             "initComplete": function () {
-                var $searchInput = $('div.dataTables_filter input');
-
-                $searchInput.unbind();
-                $searchInput.bind('keyup', $.debounce(1000, function(e) {
-                    table.search(this.value).draw();
-                }));
-
-                setSelectInput(this, selected);
+                DataUtils.searchDelay(table);
+                DataUtils.restoreState(table, [{
+                    id: '#stat',
+                    defaultVal: 'A',
+                    columnName: 'status'
+                }, {
+                    id: '#gend',
+                    columnName: 'gender'
+                }]);
             }
         });
 

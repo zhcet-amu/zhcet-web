@@ -1,8 +1,4 @@
 (function () {
-    function fixDate(date) {
-        return date.split('[')[0];
-    }
-
     function showFaculty(data) {
         var modal = $('#facultyModal');
         modal.modal();
@@ -40,7 +36,7 @@
             modal.find('#verified i').removeClass('icon-check2');
 
         if (data['createdAt'] && data['createdAt'] !== '')
-            modal.find('#registered-at').html(moment(fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));
+            modal.find('#registered-at').html(moment(DataUtils.fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));
         else
             modal.find('#registered-at').html('No Record');
 
@@ -90,7 +86,8 @@
             }, {
                 data: 'user_name'
             }, {
-                data: 'user_details_gender'
+                data: 'user_details_gender',
+                name: 'gender'
             }, {
                 data: 'designation'
             }, {
@@ -101,13 +98,11 @@
                 data: 'user_email'
             }],
             "initComplete": function () {
-                var $searchInput = $('div.dataTables_filter input');
-
-                $searchInput.unbind();
-
-                $searchInput.bind('keyup', $.debounce(1000, function(e) {
-                    table.search(this.value).draw();
-                }));
+                DataUtils.searchDelay(table);
+                DataUtils.restoreState(table, [{
+                    id: '#gend',
+                    columnName: 'gender'
+                }]);
             }
         });
 

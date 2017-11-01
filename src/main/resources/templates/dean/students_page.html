@@ -66,10 +66,28 @@
                 <div class="card-body collapse in">
                     <div class="card-block card-dashboard">
                         <div class="row">
-                            <div class="col-xs-6 col-lg-4 offset-xs-3 offset-lg-4">
+                            <div class="col-xs-6 col-md-4 col-lg-3 col-xl-2">
                                 <div class="mui-form">
                                     <div class="p-1 mui-select" id="statuses">
-                                        <label>Student Status : </label>
+                                        <label for="stat">Status : </label>
+                                        <select id="stat">
+                                            <option value="">All</option>
+                                            <option value="A">Active</option>
+                                            <option value="G">Graduated</option>
+                                            <option value="N">Name Removed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-4 col-lg-3 col-xl-2">
+                                <div class="mui-form">
+                                    <div class="p-1 mui-select">
+                                        <label for="gend">Gender : </label>
+                                        <select id="gend">
+                                            <option value="">All</option>
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -212,5 +230,6 @@
 <script src="https://cdn.datatables.net/select/1.2.3/js/dataTables.select.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.bootstrap4.min.js"></script>
+<script th:src="@{/js/data-utils.js}"></script>
 <script th:src="@{/js/students-datatable.js}"></script>
 </html>

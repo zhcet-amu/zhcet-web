@@ -1,7 +1,4 @@
 (function () {
-    function fixDate(date) {
-        return date.split('[')[0];
-    }
 
     function showCourse(data) {
         var modal = $('#floatedCourseModal');
@@ -23,7 +20,7 @@
         modal.find('#register').attr('href', '/dean/floated/' + data['course_code']);
 
         if (data['createdAt'] && data['createdAt'] !== '')
-            modal.find('#floated-at').html(moment(fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));
+            modal.find('#floated-at').html(moment(DataUtils.fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));
         else
             modal.find('#floated-at').html('No Record');
 
@@ -84,13 +81,7 @@
             ],
             "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
             "initComplete": function () {
-                var $searchInput = $('div.dataTables_filter input');
-
-                $searchInput.unbind();
-
-                $searchInput.bind('keyup', $.debounce(1000, function(e) {
-                    table.search(this.value).draw();
-                }));
+                DataUtils.searchDelay(table);
             }
         });
 

@@ -25,6 +25,20 @@
                 </div>
                 <div class="card-body collapse in">
                     <div class="card-block card-dashboard">
+                        <div class="row">
+                            <div class="col-xs-6 col-md-4 col-lg-3 col-xl-2">
+                                <div class="mui-form">
+                                    <div class="p-1 mui-select">
+                                        <label for="gend">Gender : </label>
+                                        <select id="gend">
+                                            <option value="">All</option>
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <table id="facultyTable" class="table display table-striped table-bordered">
                             <!-- Header Table -->
                             <thead>
@@ -117,5 +131,6 @@
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://zhcet-backend.firebaseapp.com/static/js/throttle.min.js"></script>
+<script th:src="@{/js/data-utils.js}"></script>
 <script th:src="@{/js/faculty-datatable.js}"></script>
 </html>
