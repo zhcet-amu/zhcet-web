@@ -78,6 +78,11 @@
             }, {
                 data: 'course_type'
             }],
+            dom: 'lBfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
             "initComplete": function () {
                 var $searchInput = $('div.dataTables_filter input');
 
