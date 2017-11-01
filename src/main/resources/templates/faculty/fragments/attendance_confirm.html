@@ -1,0 +1,60 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="attendance_errors" th:if="${attendanceModel}" class="modal fade" role="dialog" id="upload_modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Course Attendance</h4>
+            </div>
+            <div class="modal-body">
+                <form th:object="${attendanceModel}" th:action="|/faculty/courses/${course.code}/attendance/edit/confirm|" method="post" class="card-block">
+                    <input type="text" name="section" th:value="${param.section}" hidden>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table" id="confirmation">
+                                <thead class="thead-inverse">
+                                <tr>
+                                    <th class="text-xs-center">Fac.</th>
+                                    <th class="text-xs-center">Name</th>
+                                    <th class="text-xs-center">Sec.</th>
+                                    <th class="text-xs-center">Att.</th>
+                                    <th class="text-xs-center">Del.</th>
+                                    <th class="text-xs-center">%</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--/*@thymesVar id="attendance" type="in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload"*/-->
+                                <tr th:each="attendance, rowStat: *{uploadList}" th:with="percent=${attendance.attended*100.0/attendance.delivered}" th:class="(${percent &lt; @configurationService.getThreshold()} ? 'bg-danger':'')">
+                                    <input type="hidden" th:field="*{uploadList[__${rowStat.index}__].enrolment_no}"/>
+                                    <td class="text-xs-center" th:text="${attendance.faculty_no}"></td>
+                                    <td class="text-xs-center" th:text="${attendance.name}"></td>
+                                    <td class="text-xs-center" th:text="${attendance.section}"></td>
+                                    <td class="text-xs-center">
+                                        <input type="number" class="attended" onkeyup="update(this.parentNode.parentNode)" onclick="update(this.parentNode.parentNode)" style="width: 70px; padding: 5px" th:field="*{uploadList[__${rowStat.index}__].attended}"/>
+                                    </td>
+                                    <td class="text-xs-center">
+                                        <input type="number" class="delivered" onkeyup="update(this.parentNode.parentNode)" onclick="update(this.parentNode.parentNode)" style="width: 70px; padding: 5px" th:field="*{uploadList[__${rowStat.index}__].delivered}"/>
+                                    </td>
+                                    <td class="text-xs-center percent" th:text="${attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent,0,2)}+'%'"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Unknown Error!</strong>
+                        <div>This can only happen if you forcibly POST items!</div>
+                    </div>
+                    <ul id="validation-messages" th:if="${#fields.hasErrors('*')}">
+                        <li class="text-danger" th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                    </ul>
+                    <div class="row">
+                        <button type="submit" class="btn btn-primary float-xs-right">
+                            <i class="icon-check2"></i> Confirm
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

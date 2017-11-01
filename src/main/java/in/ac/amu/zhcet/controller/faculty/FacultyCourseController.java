@@ -56,7 +56,7 @@ public class FacultyCourseController {
     public String attendance(Model model, @PathVariable Course course, @RequestParam(required = false) String section) {
         CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(course, section);
 
-        model.addAttribute("page_title", courseInCharge.getFloatedCourse().getCourse().getTitle());
+        model.addAttribute("page_title", course.getCode() + " - " + course.getTitle());
         model.addAttribute("page_subtitle", "Attendance management for " + courseInCharge.getFloatedCourse().getCourse().getCode());
         model.addAttribute("page_description", "Upload attendance for the floated course");
 

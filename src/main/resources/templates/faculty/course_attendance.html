@@ -4,7 +4,8 @@
       data-textdirection="ltr"
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
-
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.bootstrap4.min.css">
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation(pageId = 'faculty_courses')"></div>
@@ -16,55 +17,7 @@
             <div th:replace="fragments/layout :: toolbar"></div>
         </div>
         <div class="col-xs-12 col-xl-9">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Course Attendance</h4>
-                    <h6 th:text="|Threshold Percentage : ${@configurationService.getThreshold()}%|"></h6>
-                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                    <div class="heading-elements">
-                        <ul class="list-inline mb-0">
-                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-body collapse in collapse in">
-                    <div class="card-block">
-                        <div class="row">
-                            <div class="table-responsive">
-                                <table id="attendance_table" class="table">
-                                    <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th data-original-title="Faculty Number" data-toggle="tooltip">F. No.</th>
-                                        <th>Name</th>
-                                        <th>Section</th>
-                                        <th data-original-title="Attended/Delivered" data-toggle="tooltip">Att./Del.</th>
-                                        <th>%</th>
-                                        <th>Updated</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <th:block th:each="registration: ${courseRegistrations}">
-                                        <!--/*@thymesVar id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
-                                        <tr th:with="percent=${registration.attendance.attended*100.0/registration.attendance.delivered}" th:class="(${percent &lt; @configurationService.getThreshold()} ? 'bg-danger white':'')">
-                                            <td class="avatar-cell"><img class="rounded-circle height-50" style="background-color: white" src="" th:src="${@viewService.getAvatarUrl(registration.student.user.details.avatarUrl)}"></td>
-                                            <td th:text="${registration.student.facultyNumber}"></td>
-                                            <td th:text="${registration.student.user.name}"></td>
-                                            <td th:text="${registration.student.section}"></td>
-                                            <td th:with="attended = ${registration.attendance.attended}, delivered = ${registration.attendance.delivered}" th:text="|${attended}/${delivered}|"></td>
-                                            <td th:text="${registration.attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent,0,2)}+'%'"></td>
-                                            <td class="date-cell" th:text="${registration.attendance.updatedAt != null ? #temporals.format(registration.attendance.updatedAt, 'hh:mm a | EEE, MMM d, yy') : ''}"></td>
-                                        </tr>
-                                    </th:block>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div th:replace="faculty/fragments/attendance"></div>
         </div>
         <div class="col-xs-12 col-xl-3">
             <div class="card">
@@ -83,152 +36,20 @@
                     </div>
                 </a>
             </div>
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Upload Attendance</h4>
-                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                    <div class="heading-elements">
-                        <ul class="list-inline mb-0">
-                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-body collapse in collapse in">
-                    <div class="card-block">
-                        <form class="form" enctype="multipart/form-data" th:action="|/faculty/courses/${course.code}/attendance/edit|" method="post">
-                            <div>
-                                Download the <a th:href="@{/csv/attendance_format.csv}">attendance format</a>
-                            </div>
-                            <input type="text" name="section" th:value="${param.section}" hidden>
-                            <br/>
-                            <div th:replace="fragments/layout :: uploader(id = 'attendance_upload')"></div>
-                            <div th:if="${updated}" class="alert alert-dismissible alert-success">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong>Updated!</strong> Student attendance was successfully updated<br/>
-                            </div>
-                            <div th:if="${success}" class="alert alert-dismissible alert-success">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong>Uploaded!</strong> Your file was correctly uploaded. Now, confirm the prompt
-                                below to update the attendance
-                            </div>
-                            <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong>Something went wrong!</strong>
-                                <div th:utext="${error}">Fix this and try and try again</div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div th:if="${confirmAttendanceErrors}" class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Course Attendance</h4>
-                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-                    <div class="heading-elements">
-                        <ul class="list-inline mb-0">
-                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-body collapse in collapse in">
-                    <div class="card-block">
-                        <div class="row">
-                            <div class="table-responsive">
-                                <table class="table" id="error_table">
-                                    <thead>
-                                    <tr>
-                                        <th class="text-xs-center" data-original-title="Enrolment Number" data-toggle="tooltip">ID</th>
-                                        <th class="text-xs-center" data-original-title="Attended/Delivered" data-toggle="tooltip">Att./Del.</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <th:block th:each="confirm: ${confirmAttendanceErrors.data}">
-                                        <tr th:class="(${confirm.value} ? '':'bg-danger white')">
-                                            <td class="text-xs-center" th:text="${confirm.key.enrolment_no}"></td>
-                                            <td class="text-xs-center" th:text="|${confirm.key.attended}/${confirm.key.delivered}|"></td>
-                                        </tr>
-                                    </th:block>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div th:each="error : ${confirmAttendanceErrors.errors}" class="alert alert-dismissible alert-danger">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong>Something went wrong!</strong>
-                            <div th:utext="${error}">Fix this and try and try again</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div th:if="${attendanceModel}" class="modal fade" role="dialog" id="upload_modal">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Course Attendance</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form th:object="${attendanceModel}" th:action="|/faculty/courses/${course.code}/attendance/edit/confirm|" method="post" class="card-block">
-                                <input type="text" name="section" th:value="${param.section}" hidden>
-                                <div class="row">
-                                    <div class="table-responsive">
-                                        <table class="table" id="confirmation">
-                                            <thead class="thead-inverse">
-                                            <tr>
-                                                <th class="text-xs-center">Fac.</th>
-                                                <th class="text-xs-center">Name</th>
-                                                <th class="text-xs-center">Sec.</th>
-                                                <th class="text-xs-center">Att.</th>
-                                                <th class="text-xs-center">Del.</th>
-                                                <th class="text-xs-center">%</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <!--/*@thymesVar id="attendance" type="in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload"*/-->
-                                            <tr th:each="attendance, rowStat: *{uploadList}" th:with="percent=${attendance.attended*100.0/attendance.delivered}" th:class="(${percent &lt; @configurationService.getThreshold()} ? 'bg-danger':'')">
-                                                <input type="hidden" th:field="*{uploadList[__${rowStat.index}__].enrolment_no}"/>
-                                                <td class="text-xs-center" th:text="${attendance.faculty_no}"></td>
-                                                <td class="text-xs-center" th:text="${attendance.name}"></td>
-                                                <td class="text-xs-center" th:text="${attendance.section}"></td>
-                                                <td class="text-xs-center">
-                                                    <input type="number" class="attended" onkeyup="update(this.parentNode.parentNode)" onclick="update(this.parentNode.parentNode)" style="width: 70px; padding: 5px" th:field="*{uploadList[__${rowStat.index}__].attended}"/>
-                                                </td>
-                                                <td class="text-xs-center">
-                                                    <input type="number" class="delivered" onkeyup="update(this.parentNode.parentNode)" onclick="update(this.parentNode.parentNode)" style="width: 70px; padding: 5px" th:field="*{uploadList[__${rowStat.index}__].delivered}"/>
-                                                </td>
-                                                <td class="text-xs-center percent" th:text="${attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent,0,2)}+'%'"></td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>Unknown Error!</strong>
-                                    <div>This can only happen if you forcibly POST items!</div>
-                                </div>
-                                <ul id="validation-messages" th:if="${#fields.hasErrors('*')}">
-                                    <li class="text-danger" th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-                                </ul>
-                                <div class="row">
-                                    <button type="submit" class="btn btn-primary float-xs-right">
-                                        <i class="icon-check2"></i> Confirm
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div th:replace="faculty/fragments/attendance_upload"></div>
+            <div th:replace="faculty/fragments/attendance_errors"></div>
+            <div th:replace="faculty/fragments/attendance_confirm"></div>
         </div>
         <div th:replace="fragments/layout :: scripts"></div>
     </div>
 </div>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.bootstrap4.min.js"></script>
 <script th:inline="javascript">
+    /*<![CDATA[*/
+    var threshold = /*[[${@configurationService.getThreshold()}]]*/ 75;
+    /*]]>*/
+
     function update(node) {
         var cell = $(node);
 
@@ -236,12 +57,10 @@
         var delivered = cell.find('.delivered').val();
         var percent = attended/delivered*100;
 
-        /*<![CDATA[*/
-        if (percent < /*[[${@configurationService.getThreshold()}]]*/ 75)
+        if (percent < threshold)
             cell.addClass('bg-danger');
         else
             cell.removeClass('bg-danger');
-        /*]]>*/
 
         cell.find('.percent').text(truncateDecimals(percent, 2) + '%')
     }
@@ -253,15 +72,13 @@
 
         return truncatedNum / multiplier;
     };
-
-    (function () {
-        $(document).ready(function () {
-            $('#attendance_table').DataTable({
-                "order": []
-            });
-            $("#upload_modal").modal('show');
-        });
-    }());
 </script>
+<script th:src="@{/js/course-attendance.js}"></script>
+<script src="//cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script src="//cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
 </body>
 </html>

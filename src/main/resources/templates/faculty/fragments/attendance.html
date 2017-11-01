@@ -1,0 +1,75 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="attendance" class="card">
+    <div class="card-header">
+        <h4 class="card-title">Course Attendance</h4>
+        <h6 th:text="|Threshold Percentage : ${@configurationService.getThreshold()}%|"></h6>
+        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+        <div class="heading-elements">
+            <ul class="list-inline mb-0">
+                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="card-body collapse in collapse in">
+        <div class="card-block">
+            <div class="row">
+                <div class="col-xs-12" style="padding-left: 15px"><p style="font-size: medium">Attendance Range</p></div>
+                <div class="row px-1">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="position-relative has-icon-left">
+                                <input type="number" max="100" id="min" class="form-control" placeholder="Minimum">
+                                <div class="form-control-position">
+                                    <i class="material-icons gray">trending_down</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="position-relative has-icon-left">
+                                <input type="number" max="100" id="max" class="form-control" placeholder="Maximum">
+                                <div class="form-control-position">
+                                    <i class="material-icons gray">trending_up</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="attendance_table" class="table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Faculty #</th>
+                            <th>Name</th>
+                            <th>Section</th>
+                            <th>Attended</th>
+                            <th>Delivered</th>
+                            <th>%</th>
+                            <th>Updated</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="registration: ${courseRegistrations}">
+                            <!--/*@thymesVar id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
+                            <tr th:with="percent=${registration.attendance.attended*100.0/registration.attendance.delivered}" th:class="(${percent &lt; @configurationService.getThreshold()} ? 'bg-danger white':'')">
+                                <td class="avatar-cell"><img class="rounded-circle height-50" style="background-color: white" src="" th:src="${@viewService.getAvatarUrl(registration.student.user.details.avatarUrl)}"></td>
+                                <td th:text="${registration.student.facultyNumber}"></td>
+                                <td th:text="${registration.student.user.name}"></td>
+                                <td th:text="${registration.student.section}"></td>
+                                <td th:text="${registration.attendance.attended}"></td>
+                                <td th:text="${registration.attendance.delivered}"></td>
+                                <td th:text="${registration.attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent,0,2)}+'%'"></td>
+                                <td class="date-cell" th:text="${registration.attendance.updatedAt != null ? #temporals.format(registration.attendance.updatedAt, 'hh:mm a | EEE, MMM d, yy') : ''}"></td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
