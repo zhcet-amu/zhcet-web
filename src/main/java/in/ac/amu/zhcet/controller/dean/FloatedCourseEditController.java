@@ -55,8 +55,8 @@ public class FloatedCourseEditController {
         if (!model.containsAttribute("success"))
             webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
 
-        model.addAttribute("page_title", floatedCourse.getCourse().getTitle());
-        model.addAttribute("page_subtitle", "Course management for " + floatedCourse.getCourse().getCode());
+        model.addAttribute("page_title", course.getCode() + " - " + course.getTitle());
+        model.addAttribute("page_subtitle", "Course management for " + course.getCode());
         model.addAttribute("page_description", "Register Students for the Floated course");
 
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();

@@ -64,8 +64,8 @@ public class FloatedCourseController {
         if (!model.containsAttribute("success"))
             webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
 
-        model.addAttribute("page_title", floatedCourse.getCourse().getTitle());
-        model.addAttribute("page_subtitle", "Course management for " + floatedCourse.getCourse().getCode());
+        model.addAttribute("page_title", course.getCode() + " - " + course.getTitle());
+        model.addAttribute("page_subtitle", "Course management for " + course.getCode());
         model.addAttribute("page_description", "Register Students and add Faculty In-Charge for the course");
         model.addAttribute("page_path", getPath(department, course));
 

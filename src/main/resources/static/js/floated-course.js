@@ -40,7 +40,9 @@
         $('#registrationTable').dataTable({
             scrollY:        true,
             scrollCollapse: true,
-            "order": []
+            "order": [],
+            dom: 'lBfrtip',
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
         });
         $('#confirmRegistrationTable').dataTable({
             scrollY:        true,

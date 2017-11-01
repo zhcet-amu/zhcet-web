@@ -4,7 +4,8 @@
       data-textdirection="ltr"
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
-
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.bootstrap4.min.css">
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
 <div th:replace="fragments/navigation :: navigation(pageId = 'dean_admin', subPage = 'floated_page')"></div>
@@ -41,22 +42,35 @@
         <div class="col-xs-12 col-xl-8">
             <div th:replace="department/fragments/registered_students"></div>
         </div>
-
     </div>
 </div>
 <div th:replace="fragments/layout :: scripts"></div>
 <script>
-    $('#registration-modal').modal('show');
-    $('#registrationTable').dataTable({
-        scrollY:        true,
-        scrollCollapse: true,
-        "order": []
-    });
-    $('#confirmRegistrationTable').dataTable({
-        scrollY:        true,
-        scrollCollapse: true,
-        "order": []
-    });
+    (function () {
+        $(window).ready(function () {
+            $('#registration-modal').modal('show');
+            $('#registrationTable').dataTable({
+                scrollY:        true,
+                scrollCollapse: true,
+                "order": [],
+                dom: 'lBfrtip',
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+            });
+            $('#confirmRegistrationTable').dataTable({
+                scrollY:        true,
+                scrollCollapse: true,
+                "order": []
+            });
+        });
+    }());
 </script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.bootstrap4.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script src="//cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
 </body>
 </html>
