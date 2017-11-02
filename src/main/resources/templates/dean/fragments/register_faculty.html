@@ -118,7 +118,7 @@
             clipboard.on('success', function (e) {
                 toastr.success('Link copied!', null, {timeOut: 2000})
             });
-            $(window).load(function () {
+            $(document).ready(function () {
                 $('#faculty-registration-modal').modal('show');
                 $('#facultyTable').dataTable({
                     scrollY:        true,

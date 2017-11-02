@@ -34,7 +34,7 @@
     var baseUrl = "/department/" + department + "/api/faculty";
     fuzzyhound.setSource(baseUrl, index);
 
-    $(window).load(function () {
+    $(document).ready(function () {
         $('#faculty-modal').modal('show');
         $('#registration-modal').modal('show');
         $('#registrationTable').dataTable({

@@ -115,7 +115,7 @@
     </div>
     <script th:fragment="script">
         (function () {
-            $(window).load(function () {
+            $(document).ready(function () {
                 $('#registration-modal').modal('show');
                 $('#studentTable').dataTable({
                     scrollY:        true,

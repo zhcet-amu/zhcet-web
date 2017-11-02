@@ -47,7 +47,7 @@
 <div th:replace="fragments/layout :: scripts"></div>
 <script>
     (function () {
-        $(window).ready(function () {
+        $(document).ready(function () {
             $('#registration-modal').modal('show');
             $('#registrationTable').dataTable({
                 scrollY:        true,

@@ -124,3 +124,7 @@ i.helper {
     font-size: 18px;
     cursor: pointer;
 }
+
+.dt-button.buttons-columnVisibility.active {
+    color: black;
+}

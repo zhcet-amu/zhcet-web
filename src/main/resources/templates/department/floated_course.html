@@ -23,7 +23,7 @@
     </div>
     <div th:replace="department/fragments/unfloat_course"></div>
     <div class="row">
-        <div class="col-xs-12 col-xl-4">
+        <div class="col-xs-12 col-xl-5">
             <div th:replace="department/fragments/add_in_charge"></div>
             <div class="card">
                 <a th:href="@{|/department/${department.code}/floated/${floatedCourse.course.code}/attendance/download|}" target="_blank">
@@ -42,7 +42,7 @@
             </div>
             <div th:replace="department/fragments/register_students"></div>
         </div>
-        <div class="col-xs-12 col-xl-8">
+        <div class="col-xs-12 col-xl-7">
             <div th:replace="department/fragments/registered_students"></div>
         </div>
 
