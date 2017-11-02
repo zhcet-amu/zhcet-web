@@ -13,8 +13,16 @@
     <div class="card-body collapse in collapse in">
         <div class="card-block">
             <form class="form" enctype="multipart/form-data" th:action="|/faculty/courses/${course.code}/attendance/edit|" method="post">
-                <div>
+                <div hidden>
                     Download the <a th:href="@{/csv/attendance_format.csv}">attendance format</a>
+                </div>
+                <div class="bs-callout-primary callout-border-left p-1">
+                    <strong>Upload Instructions</strong><br>
+                    First, download the attendance CSV using the button above, then edit the file and upload it
+                </div>
+                <div class="bs-callout-danger callout-border-left p-1">
+                    <strong>Note</strong><br>
+                    Only attended and delivered columns of the file are editable, changes in other fields are ignored
                 </div>
                 <input type="text" name="section" th:value="${param.section}" hidden>
                 <br/>
