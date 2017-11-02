@@ -1,0 +1,1 @@
+UPDATE department SET department.name = 'Petroleum Studies' WHERE department.code = 'PK';
