@@ -2,9 +2,12 @@
     $(document).ready(function () {
         $.fn.dataTable.ext.search.push(
             function( settings, data, dataIndex ) {
+                var percentIndex = 6; // Index of percentage column in table
+
                 var min = parseInt( $('#min').val(), 10 );
                 var max = parseInt( $('#max').val(), 10 );
-                var perc = parseFloat( data[5] ) || 0; // use data for the age column
+                var perc = parseFloat( data[percentIndex] ) || 0; // use data for the % column
+                console.log(perc);
 
                 return ( isNaN(min) && isNaN(max) ) ||
                     ( isNaN(min) && perc <= max ) ||
@@ -24,7 +27,7 @@
 
         $('#min, #max').keyup( function() {
             table.draw();
-        } );
+        });
 
         $("#upload_modal").modal('show');
     });
