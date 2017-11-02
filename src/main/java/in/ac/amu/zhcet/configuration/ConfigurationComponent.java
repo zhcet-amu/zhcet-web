@@ -10,8 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConfigurationComponent {
 
+    private final ConfigurationRepository configurationRepository;
+
     @Autowired
     public ConfigurationComponent(ConfigurationRepository configurationRepository, ApplicationProperties applicationProperties) {
+        this.configurationRepository = configurationRepository;
         log.info("Checking default configuration of application");
         Configuration configuration = configurationRepository.findFirstByOrderByIdDesc();
 
@@ -26,4 +29,7 @@ public class ConfigurationComponent {
         }
     }
 
+    public ConfigurationRepository getConfigurationRepository() {
+        return configurationRepository;
+    }
 }

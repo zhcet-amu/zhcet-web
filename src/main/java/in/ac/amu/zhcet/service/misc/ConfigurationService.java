@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.service.misc;
 
+import in.ac.amu.zhcet.configuration.ConfigurationComponent;
 import in.ac.amu.zhcet.data.model.Configuration;
 import in.ac.amu.zhcet.data.repository.ConfigurationRepository;
 import in.ac.amu.zhcet.utils.Utils;
@@ -23,8 +24,8 @@ public class ConfigurationService {
     private static Configuration configuration;
 
     @Autowired
-    public ConfigurationService(ConfigurationRepository configurationRepository) {
-        this.configurationRepository = configurationRepository;
+    public ConfigurationService(ConfigurationComponent configurationComponent) {
+        this.configurationRepository = configurationComponent.getConfigurationRepository();
         updateConfiguration(getConfigCache());
         log.info("Static Configuration Set : {}", configuration);
     }

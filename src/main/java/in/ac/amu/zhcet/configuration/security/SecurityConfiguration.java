@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.configuration.security;
 
-import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.user.Auditor;
 import in.ac.amu.zhcet.service.user.UserDetailService;
 import in.ac.amu.zhcet.service.user.auth.LoginAttemptService;
@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.AuditorAware;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,14 +24,13 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Configuration
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailService userDetailsService;
     private final PersistentTokenService persistentTokenService;
 
     @Autowired
-    public SecurityConfiguration(UserDetailService userDetailsService, PersistentTokenService persistentTokenService) {
+    public SecurityConfiguration(@Lazy UserDetailService userDetailsService, PersistentTokenService persistentTokenService) {
         this.userDetailsService = userDetailsService;
         this.persistentTokenService = persistentTokenService;
     }
