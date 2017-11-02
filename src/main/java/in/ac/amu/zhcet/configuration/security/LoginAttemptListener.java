@@ -32,8 +32,10 @@ public class LoginAttemptListener {
 
         loginAttemptService.loginAttempt(auditEvent, details);
 
-        stringBuilder.append("\n  Remote IP address: ").append(details.getRemoteAddress());
-        stringBuilder.append("\n  Session ID: ").append(details.getSessionId());
+        if (details != null) {
+            stringBuilder.append("\n  Remote IP address: ").append(details.getRemoteAddress());
+            stringBuilder.append("\n  Session ID: ").append(details.getSessionId());
+        }
         stringBuilder.append("\n  Request URL: ").append(auditEvent.getData().get("requestUrl"));
         stringBuilder.append("\n  Source: ").append(auditEvent.getData().get("source"));
 

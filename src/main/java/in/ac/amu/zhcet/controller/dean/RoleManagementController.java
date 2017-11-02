@@ -6,6 +6,7 @@ import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.service.user.UserDetailService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Controller
 public class RoleManagementController {
 
@@ -53,11 +55,12 @@ public class RoleManagementController {
     public String saveRoles(RedirectAttributes redirectAttributes, @PathVariable Department department, @RequestParam String facultyId, @RequestParam(required = false) List<String> roles) {
         FacultyMember facultyMember = facultyService.getById(facultyId);
 
-        if (facultyMember == null || roles == null)
+        if (facultyMember == null)
             return "redirect:/dean/roles/{department}";
 
         Set<String> newRoles = new HashSet<>();
 
+        if (roles != null)
         for (String role : roles) {
             switch (role) {
                 case "dean":
