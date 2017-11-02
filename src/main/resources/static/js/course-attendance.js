@@ -7,7 +7,6 @@
                 var min = parseInt( $('#min').val(), 10 );
                 var max = parseInt( $('#max').val(), 10 );
                 var perc = parseFloat( data[percentIndex] ) || 0; // use data for the % column
-                console.log(perc);
 
                 return ( isNaN(min) && isNaN(max) ) ||
                     ( isNaN(min) && perc <= max ) ||

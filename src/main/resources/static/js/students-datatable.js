@@ -139,6 +139,7 @@
 
                         // Setting enrolment numbers to be changed
                         var enrolments = $('.enrolments');
+                        enrolments.html(''); // Clear previous values
                         for (var i = 0; i < data.count(); i++)
                             enrolments.append('<input name="enrolments" value="' + data[i].enrolmentNumber + '" />');
 
@@ -149,7 +150,7 @@
                 },
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ],
-            "lengthMenu": [[10, 25, 50, 100, 200], [10, 25, 50, 100, 200]],
+            "lengthMenu": [[10, 25, 50, 100, 200, 500], [10, 25, 50, 100, 200, 500]],
             "initComplete": function () {
                 DataUtils.searchDelay(table);
                 DataUtils.restoreState(table, [{
