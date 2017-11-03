@@ -8,7 +8,7 @@ import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.service.user.UserDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,25 +34,26 @@ public class RoleManagementController {
         this.facultyService = facultyService;
     }
 
-    @PreAuthorize("isDepartment(#department)")
     @GetMapping("/dean/roles/{department}")
     public String roleManagement(Model model, @PathVariable Department department) {
+        if (department == null)
+            throw new AccessDeniedException("403");
 
-        if (department != null) {
-            model.addAttribute("page_title", "Role Management");
-            model.addAttribute("page_subtitle", "Role Management Panel for " + department.getName() + " Department");
-            model.addAttribute("page_description", "Manage Faculty Roles and Permissions");
+        model.addAttribute("page_title", "Role Management");
+        model.addAttribute("page_subtitle", "Role Management Panel for " + department.getName() + " Department");
+        model.addAttribute("page_description", "Manage Faculty Roles and Permissions");
 
-            model.addAttribute("department", department);
-            model.addAttribute("facultyMembers", facultyService.getAllByDepartment(department));
-        }
+        model.addAttribute("department", department);
+        model.addAttribute("facultyMembers", facultyService.getAllByDepartment(department));
 
         return "dean/role_management";
     }
 
-    @PreAuthorize("isDepartment(#department)")
     @PostMapping("/dean/roles/{department}")
     public String saveRoles(RedirectAttributes redirectAttributes, @PathVariable Department department, @RequestParam String facultyId, @RequestParam(required = false) List<String> roles) {
+        if (department == null)
+            throw new AccessDeniedException("403");
+
         FacultyMember facultyMember = facultyService.getById(facultyId);
 
         if (facultyMember == null)
