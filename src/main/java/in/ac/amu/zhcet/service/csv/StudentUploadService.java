@@ -31,10 +31,10 @@ public class StudentUploadService {
 
     private final DepartmentRepository departmentRepository;
     private final StudentService studentService;
-    private final AbstractUploadService<StudentUpload, Student, String> uploadService;
+    private final AbstractUploadService<StudentUpload, Student> uploadService;
 
     @Autowired
-    public StudentUploadService(DepartmentRepository departmentRepository, StudentService studentService, AbstractUploadService<StudentUpload, Student, String> uploadService) {
+    public StudentUploadService(DepartmentRepository departmentRepository, StudentService studentService, AbstractUploadService<StudentUpload, Student> uploadService) {
         this.departmentRepository = departmentRepository;
         this.studentService = studentService;
         this.uploadService = uploadService;
@@ -88,7 +88,7 @@ public class StudentUploadService {
         }
     }
 
-    public Confirmation<Student, String> confirmUpload(UploadResult<StudentUpload> uploadResult) {
+    public Confirmation<Student> confirmUpload(UploadResult<StudentUpload> uploadResult) {
         invalidDepartment = false;
         duplicateFacultyNo = false;
         duplicateEnrolmentNo = false;
@@ -97,7 +97,7 @@ public class StudentUploadService {
         List<Department> departments = departmentRepository.findAll();
         List<StudentRepository.Identifier> identifiers = studentService.getAllIdentifiers();
 
-        Confirmation<Student, String> studentConfirmation = uploadService.confirmUpload(
+        Confirmation<Student> studentConfirmation = uploadService.confirmUpload(
                 uploadResult,
                 StudentUploadService::fromStudentUpload,
                 student -> getMappedValue(student, departments, identifiers)
@@ -120,9 +120,9 @@ public class StudentUploadService {
         return studentConfirmation;
     }
 
-    public void registerStudents(Confirmation<Student, String> confirmation) {
+    public void registerStudents(Confirmation<Student> confirmation) {
         long start = System.currentTimeMillis();
-        studentService.register(confirmation.getData().keySet());
+        studentService.register(confirmation.getData());
         log.warn("Saved {} students in {} ms", confirmation.getData().size(), System.currentTimeMillis() - start);
     }
 }

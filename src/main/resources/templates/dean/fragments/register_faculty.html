@@ -73,16 +73,16 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.FacultyMember, String>"*/-->
+                                        <!--/*@thymesVar id="confirm" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
                                         <th:block th:each="confirm: ${confirmRegistration.data}">
-                                            <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
-                                                <td th:text="${confirm.key.facultyId}"></td>
-                                                <td th:text="${confirm.key.user.name}"></td>
-                                                <td th:text="${confirm.key.user.details.gender}"></td>
-                                                <td th:text="${confirm.key.designation}"></td>
-                                                <td th:text="${confirm.key.user.department?.name}"></td>
-                                                <td th:text="${confirm.key.user.password}"></td>
-                                                <td th:text="${confirm.value}"></td>
+                                            <tr th:class="(${confirm.meta} ? 'bg-danger white':'')">
+                                                <td th:text="${confirm.facultyId}"></td>
+                                                <td th:text="${confirm.user.name}"></td>
+                                                <td th:text="${confirm.user.details.gender}"></td>
+                                                <td th:text="${confirm.designation}"></td>
+                                                <td th:text="${confirm.user.department?.name}"></td>
+                                                <td th:text="${confirm.user.password}"></td>
+                                                <td th:text="${confirm.meta}"></td>
                                             </tr>
                                         </th:block>
                                         </tbody>

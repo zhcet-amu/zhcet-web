@@ -2,6 +2,7 @@ package in.ac.amu.zhcet.service.csv.base;
 
 import com.j256.simplecsv.processor.CsvProcessor;
 import com.j256.simplecsv.processor.ParseError;
+import in.ac.amu.zhcet.data.model.base.Meta;
 import in.ac.amu.zhcet.service.storage.FileSystemStorageService;
 import in.ac.amu.zhcet.service.storage.StorageException;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class AbstractUploadService<T, U, V> {
+public class AbstractUploadService<T, U extends Meta> {
 
     private final FileSystemStorageService systemStorageService;
     private final List<String> allowedCsvTypes;
@@ -91,14 +92,17 @@ public class AbstractUploadService<T, U, V> {
         return uploadResult;
     }
 
-    public Confirmation<U, V> confirmUpload(UploadResult<T> uploadResult, Function<T, U> converter, Function<U, V> infer) {
-        Confirmation<U, V> confirmation = new Confirmation<>();
+    public Confirmation<U> confirmUpload(UploadResult<T> uploadResult, Function<T, U> converter, Function<U, String> infer) {
+        Confirmation<U> confirmation = new Confirmation<>();
 
         uploadResult
                 .getUploads()
                 .stream()
                 .map(converter)
-                .forEach(item -> confirmation.getData().put(item, infer.apply(item)));
+                .forEach(item -> {
+                    item.setMeta(infer.apply(item));
+                    confirmation.getData().add(item);
+                });
 
         return confirmation;
     }

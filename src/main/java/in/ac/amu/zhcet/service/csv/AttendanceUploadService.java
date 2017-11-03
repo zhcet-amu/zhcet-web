@@ -24,12 +24,12 @@ public class AttendanceUploadService {
 
     private boolean existsError;
 
-    private final AbstractUploadService<AttendanceUpload, AttendanceUpload, Boolean> uploadService;
+    private final AbstractUploadService<AttendanceUpload, AttendanceUpload> uploadService;
     private final CourseInChargeService courseInChargeService;
     private final CourseRegistrationService courseRegistrationService;
 
     @Autowired
-    public AttendanceUploadService(AbstractUploadService<AttendanceUpload, AttendanceUpload, Boolean> uploadService, CourseInChargeService courseInChargeService, CourseRegistrationService courseRegistrationService) {
+    public AttendanceUploadService(AbstractUploadService<AttendanceUpload, AttendanceUpload> uploadService, CourseInChargeService courseInChargeService, CourseRegistrationService courseRegistrationService) {
         this.uploadService = uploadService;
         this.courseInChargeService = courseInChargeService;
         this.courseRegistrationService = courseRegistrationService;
@@ -39,33 +39,35 @@ public class AttendanceUploadService {
         return uploadService.handleUpload(AttendanceUpload.class, file);
     }
 
-    private boolean studentExists(AttendanceUpload upload, List<CourseRegistration> registrations) {
+    private String studentExists(AttendanceUpload upload, List<CourseRegistration> registrations) {
         boolean exists = registrations.stream()
                 .map(registration -> registration.getStudent().getEnrolmentNumber())
                 .anyMatch(enrolment -> enrolment.equals(upload.getEnrolment_no()));
 
         if (!exists) {
-            log.warn("Student does not exist for course in-charge {}", upload.getEnrolment_no());
+            log.info("Student does not exist for course in-charge {}", upload.getEnrolment_no());
             existsError = true;
         }
 
-        return exists;
+        return exists ? "exists" : null;
     }
 
-    public Confirmation<AttendanceUpload, Boolean> confirmUpload(Course course, String section, UploadResult<AttendanceUpload> uploadResult) {
+    public Confirmation<AttendanceUpload> confirmUpload(Course course, String section, UploadResult<AttendanceUpload> uploadResult) {
         CourseInCharge courseInCharge  = courseInChargeService.getCourseInCharge(course, section);
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
 
         existsError = false;
 
-        Confirmation<AttendanceUpload, Boolean> attendanceConfirmation = uploadService.confirmUpload(
+        Confirmation<AttendanceUpload> attendanceConfirmation = uploadService.confirmUpload(
                 uploadResult,
                 item -> item,
                 upload -> studentExists(upload, courseRegistrations)
         );
 
-        if (existsError)
+        if (existsError) {
+            log.warn(attendanceConfirmation.getData().toString());
             attendanceConfirmation.getErrors().add("The students highlighted in red are not registered for this course");
+        }
 
         return attendanceConfirmation;
     }
@@ -76,7 +78,7 @@ public class AttendanceUploadService {
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
 
         for (AttendanceUpload attendanceUpload : uploadList) {
-            if (!studentExists(attendanceUpload, courseRegistrations)) {
+            if (studentExists(attendanceUpload, courseRegistrations) == null) {
                 log.error("Force updating attendance of invalid student {} {} {}", course, section, attendanceUpload.getEnrolment_no());
                 throw new RuntimeException("Invalid Data : " + attendanceUpload);
             }

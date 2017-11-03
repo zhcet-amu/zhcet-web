@@ -32,12 +32,12 @@ public class FacultyUploadService {
 
     private final DepartmentRepository departmentRepository;
     private final FacultyService facultyService;
-    private final AbstractUploadService<FacultyUpload, FacultyMember, String> uploadService;
+    private final AbstractUploadService<FacultyUpload, FacultyMember> uploadService;
     private final FileSystemStorageService systemStorageService;
     private final static int PASS_LENGTH = 6;
 
     @Autowired
-    public FacultyUploadService(DepartmentRepository departmentRepository, FacultyService facultyService, AbstractUploadService<FacultyUpload, FacultyMember, String> uploadService, FileSystemStorageService fileSystemStorageService) {
+    public FacultyUploadService(DepartmentRepository departmentRepository, FacultyService facultyService, AbstractUploadService<FacultyUpload, FacultyMember> uploadService, FileSystemStorageService fileSystemStorageService) {
         this.departmentRepository = departmentRepository;
         this.facultyService = facultyService;
         this.uploadService = uploadService;
@@ -57,11 +57,11 @@ public class FacultyUploadService {
 
         if (!optional.isPresent()) {
             invalidDepartment = true;
-            log.warn("Faculty Registration : Invalid Department {}", departmentName);
+            log.info("Faculty Registration : Invalid Department {}", departmentName);
             return "No such department: " + departmentName;
         } else if (facultyService.getById(facultyMember.getFacultyId()) != null) {
             duplicateFacultyId = true;
-            log.warn("Duplicate Faculty ID {}", facultyMember.getFacultyId());
+            log.info("Duplicate Faculty ID {}", facultyMember.getFacultyId());
             return "Duplicate Faculty ID";
         } else {
             facultyMember.getUser().setDepartment(optional.get());
@@ -69,13 +69,13 @@ public class FacultyUploadService {
         }
     }
 
-    public Confirmation<FacultyMember, String> confirmUpload(UploadResult<FacultyUpload> uploadResult) {
+    public Confirmation<FacultyMember> confirmUpload(UploadResult<FacultyUpload> uploadResult) {
         invalidDepartment = false;
         duplicateFacultyId = false;
 
         List<Department> departments = departmentRepository.findAll();
 
-        Confirmation<FacultyMember, String> facultyConfirmation = uploadService.confirmUpload(
+        Confirmation<FacultyMember> facultyConfirmation = uploadService.confirmUpload(
                 uploadResult,
                 FacultyUploadService::fromFacultyUpload,
                 facultyMember -> getMappedValue(facultyMember, departments)
@@ -86,25 +86,30 @@ public class FacultyUploadService {
         if (duplicateFacultyId)
             facultyConfirmation.getErrors().add("Faculty Member with duplicate Faculty ID found");
 
+        if (!facultyConfirmation.getErrors().isEmpty()) {
+            log.warn(facultyConfirmation.getErrors().toString());
+            log.warn(facultyConfirmation.getData().toString());
+        }
+
         return facultyConfirmation;
     }
 
-    public String registerFaculty(Confirmation<FacultyMember, String> confirmation) throws IOException {
+    public String registerFaculty(Confirmation<FacultyMember> confirmation) throws IOException {
         String filename = saveFile(confirmation);
         long started = System.currentTimeMillis();
-        facultyService.register(confirmation.getData().keySet());
+        facultyService.register(confirmation.getData());
         log.warn("Saved {} faculty members in {} ms", confirmation.getData().size(), System.currentTimeMillis() - started);
 
         return filename;
     }
 
-    private String saveFile(Confirmation<FacultyMember, String> confirmation) throws IOException {
+    private String saveFile(Confirmation<FacultyMember> confirmation) throws IOException {
         String filename = systemStorageService.generateFileName("faculty_password.csv");
 
         Path filePath = systemStorageService.load(filename);
         File newFile = filePath.toFile();
 
-        List<FacultyUpload> facultyUploads = confirmation.getData().keySet().stream()
+        List<FacultyUpload> facultyUploads = confirmation.getData().stream()
                 .map(FacultyUploadService::fromFacultyMember)
                 .collect(Collectors.toList());
 

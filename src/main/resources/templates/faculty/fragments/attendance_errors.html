@@ -23,9 +23,9 @@
                         </thead>
                         <tbody>
                         <th:block th:each="confirm: ${confirmAttendanceErrors.data}">
-                            <tr th:class="(${confirm.value} ? '':'bg-danger white')">
-                                <td class="text-xs-center" th:text="${confirm.key.enrolment_no}"></td>
-                                <td class="text-xs-center" th:text="|${confirm.key.attended}/${confirm.key.delivered}|"></td>
+                            <tr th:class="(${confirm.meta} ? '':'bg-danger white')">
+                                <td class="text-xs-center" th:text="${confirm.enrolment_no}"></td>
+                                <td class="text-xs-center" th:text="|${confirm.attended}/${confirm.delivered}|"></td>
                             </tr>
                         </th:block>
                         </tbody>

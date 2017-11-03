@@ -1,10 +1,12 @@
 package in.ac.amu.zhcet.data.model.dto.upload;
 
 import com.j256.simplecsv.common.CsvColumn;
+import in.ac.amu.zhcet.data.model.base.Meta;
 import lombok.Data;
 
 @Data
-public class AttendanceUpload {
+public class AttendanceUpload implements Meta {
+    private String meta;
     @CsvColumn(mustNotBeBlank = true)
     private String enrolment_no;
     @CsvColumn(mustBeSupplied = false)

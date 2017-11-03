@@ -58,20 +58,20 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!--/*@thymesVar id="confirm" type="java.util.Map.Entry<in.ac.amu.zhcet.data.model.Student, String>"*/-->
+                                        <!--/*@thymesVar id="confirm" type="in.ac.amu.zhcet.data.model.Student"*/-->
                                         <th:block th:each="confirm: ${confirmRegistration.data}">
-                                            <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
+                                            <tr th:class="(${confirm.meta} ? 'bg-danger white':'')">
                                                 <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
-                                                <td th:text="${confirm.key.enrolmentNumber}"></td>
-                                                <td th:text="${confirm.key.facultyNumber}"></td>
-                                                <td th:text="${confirm.key.user.name}"></td>
-                                                <td th:text="${confirm.key.user.details.gender}"></td>
-                                                <td th:text="${confirm.key.user.department?.name}"></td>
-                                                <td th:text="${confirm.key.section}"></td>
-                                                <td th:text="${confirm.key.hallCode}"></td>
-                                                <td th:text="${confirm.key.registrationYear}"></td>
-                                                <td th:text="${confirm.key.status}"></td>
-                                                <td th:text="${confirm.value}"></td>
+                                                <td th:text="${confirm.enrolmentNumber}"></td>
+                                                <td th:text="${confirm.facultyNumber}"></td>
+                                                <td th:text="${confirm.user.name}"></td>
+                                                <td th:text="${confirm.user.details.gender}"></td>
+                                                <td th:text="${confirm.user.department?.name}"></td>
+                                                <td th:text="${confirm.section}"></td>
+                                                <td th:text="${confirm.hallCode}"></td>
+                                                <td th:text="${confirm.registrationYear}"></td>
+                                                <td th:text="${confirm.status}"></td>
+                                                <td th:text="${confirm.meta}"></td>
                                             </tr>
                                         </th:block>
                                         </tbody>

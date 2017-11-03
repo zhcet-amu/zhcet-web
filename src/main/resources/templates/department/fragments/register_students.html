@@ -35,7 +35,7 @@
             </form>
         </div>
     </div>
-    <!--/*@thymesVar id="confirmRegistration" type="in.ac.amu.zhcet.service.csv.base.Confirmation<in.ac.amu.zhcet.data.model.CourseRegistration, String>"*/-->
+    <!--/*@thymesVar id="confirmRegistration" type="in.ac.amu.zhcet.service.csv.base.Confirmation<in.ac.amu.zhcet.data.model.CourseRegistration>"*/-->
     <div th:with="confirmRegistration = ${#session.getAttribute('confirmRegistration')}">
         <div th:if="${confirmRegistration}" id="registration-modal" class="modal">
         <div class="modal-dialog modal-lg">
@@ -62,14 +62,14 @@
                                     </thead>
                                     <tbody>
                                     <th:block th:each="confirm: ${confirmRegistration.data}">
-                                        <tr th:class="(${confirm.value} ? 'bg-danger white':'')">
-                                            <td class="text-xs-center" th:text="${confirm.key.student.enrolmentNumber}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.key.student.facultyNumber}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.key.student.user?.name}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.key.student.section}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.key.student.user?.department?.name}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.key.mode}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.value}"></td>
+                                        <tr th:class="(${confirm.meta} ? 'bg-danger white':'')">
+                                            <td class="text-xs-center" th:text="${confirm.student.enrolmentNumber}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.student.facultyNumber}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.student.user?.name}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.student.section}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.student.user?.department?.name}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.mode}"></td>
+                                            <td class="text-xs-center" th:text="${confirm.meta}"></td>
                                         </tr>
                                     </th:block>
                                     </tbody>

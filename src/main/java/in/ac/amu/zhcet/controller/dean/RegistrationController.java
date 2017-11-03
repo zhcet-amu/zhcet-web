@@ -52,7 +52,7 @@ public class RegistrationController {
                 attributes.addFlashAttribute("students_errors", result.getErrors());
             } else {
                 attributes.addFlashAttribute("students_success", true);
-                Confirmation<Student, String> confirmation = studentUploadService.confirmUpload(result);
+                Confirmation<Student> confirmation = studentUploadService.confirmUpload(result);
 
                 session.setAttribute("confirmStudentRegistration", confirmation);
             }
@@ -65,7 +65,7 @@ public class RegistrationController {
 
     @PostMapping("/dean/register_students_confirmed")
     public String uploadStudents(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
-        Confirmation<Student, String> confirmation = (Confirmation<Student, String>) session.getAttribute("confirmStudentRegistration");
+        Confirmation<Student> confirmation = (Confirmation<Student>) session.getAttribute("confirmStudentRegistration");
 
         if (confirmation == null || !confirmation.getErrors().isEmpty()) {
             attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));
@@ -94,7 +94,7 @@ public class RegistrationController {
                 attributes.addFlashAttribute("faculty_errors", result.getErrors());
             } else {
                 attributes.addFlashAttribute("faculty_success", true);
-                Confirmation<FacultyMember, String> confirmation = facultyUploadService.confirmUpload(result);
+                Confirmation<FacultyMember> confirmation = facultyUploadService.confirmUpload(result);
                 session.setAttribute("confirmFacultyRegistration", confirmation);
             }
         } catch (IOException ioe) {
@@ -106,7 +106,7 @@ public class RegistrationController {
 
     @PostMapping("/dean/register_faculty_confirmed")
     public String uploadFaculty(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
-        Confirmation<FacultyMember, String> confirmation = (Confirmation<FacultyMember, String>) session.getAttribute("confirmFacultyRegistration");
+        Confirmation<FacultyMember> confirmation = (Confirmation<FacultyMember>) session.getAttribute("confirmFacultyRegistration");
 
         if (confirmation == null || !confirmation.getErrors().isEmpty()) {
             attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));

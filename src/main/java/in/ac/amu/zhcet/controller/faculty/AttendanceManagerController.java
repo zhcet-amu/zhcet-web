@@ -51,12 +51,12 @@ public class AttendanceManagerController {
                 attributes.addFlashAttribute("errors", result.getErrors());
             } else {
                 attributes.addFlashAttribute("success", true);
-                Confirmation<AttendanceUpload, Boolean> confirmation = attendanceUploadService.confirmUpload(course, section, result);
+                Confirmation<AttendanceUpload> confirmation = attendanceUploadService.confirmUpload(course, section, result);
 
                 if (confirmation.getErrors().isEmpty()) {
                     AttendanceModel attendanceModel = new AttendanceModel();
                     List<AttendanceUpload> attendanceUploads = new ArrayList<>();
-                    attendanceUploads.addAll(confirmation.getData().keySet());
+                    attendanceUploads.addAll(confirmation.getData());
                     Utils.sortAttendanceUpload(attendanceUploads);
                     attendanceModel.setUploadList(attendanceUploads);
                     attributes.addFlashAttribute("attendanceModel", attendanceModel);

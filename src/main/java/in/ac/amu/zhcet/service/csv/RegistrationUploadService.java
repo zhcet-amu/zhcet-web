@@ -33,10 +33,10 @@ public class RegistrationUploadService {
     private final StudentService studentService;
     private final CourseManagementService courseManagementService;
     private final CourseRegistrationService courseRegistrationService;
-    private final AbstractUploadService<RegistrationUpload, CourseRegistration, String> uploadService;
+    private final AbstractUploadService<RegistrationUpload, CourseRegistration> uploadService;
 
     @Autowired
-    public RegistrationUploadService(StudentService studentService, CourseManagementService courseManagementService, CourseRegistrationService courseRegistrationService, AbstractUploadService<RegistrationUpload, CourseRegistration, String> uploadService) {
+    public RegistrationUploadService(StudentService studentService, CourseManagementService courseManagementService, CourseRegistrationService courseRegistrationService, AbstractUploadService<RegistrationUpload, CourseRegistration> uploadService) {
         this.studentService = studentService;
         this.courseManagementService = courseManagementService;
         this.courseRegistrationService = courseRegistrationService;
@@ -51,7 +51,7 @@ public class RegistrationUploadService {
                 attributes.addFlashAttribute("errors", result.getErrors());
             } else {
                 attributes.addFlashAttribute("success", true);
-                Confirmation<CourseRegistration, String> confirmation = confirmUpload(course, result);
+                Confirmation<CourseRegistration> confirmation = confirmUpload(course, result);
                 session.setAttribute("confirmRegistration", confirmation);
             }
         } catch (IOException ioe) {
@@ -61,7 +61,7 @@ public class RegistrationUploadService {
 
     public void register(Course course, RedirectAttributes attributes, HttpSession session) {
         try {
-            registerStudents(course, (Confirmation<CourseRegistration, String>) session.getAttribute("confirmRegistration"));
+            registerStudents(course, (Confirmation<CourseRegistration>) session.getAttribute("confirmRegistration"));
             attributes.addFlashAttribute("registered", true);
         } catch (Exception e) {
             log.error("Error confirming student registrations", e);
@@ -102,13 +102,13 @@ public class RegistrationUploadService {
         }
     }
 
-    private Confirmation<CourseRegistration, String> confirmUpload(Course course, UploadResult<RegistrationUpload> uploadResult) {
+    private Confirmation<CourseRegistration> confirmUpload(Course course, UploadResult<RegistrationUpload> uploadResult) {
         invalidEnrolment = false;
         alreadyEnrolled = false;
 
         List<CourseRegistration> registrations = courseManagementService.getFloatedCourseByCourse(course).getCourseRegistrations();
 
-        Confirmation<CourseRegistration, String> registrationConfirmation = uploadService.confirmUpload(
+        Confirmation<CourseRegistration> registrationConfirmation = uploadService.confirmUpload(
                 uploadResult,
                 this::fromRegistrationUpload,
                 courseRegistration -> getMappedValue(courseRegistration.getStudent(), course, registrations)
@@ -123,8 +123,8 @@ public class RegistrationUploadService {
     }
 
     @Transactional
-    private void registerStudents(Course course, Confirmation<CourseRegistration, String> confirmation) {
-        courseRegistrationService.registerStudents(course, confirmation.getData().keySet());
+    private void registerStudents(Course course, Confirmation<CourseRegistration> confirmation) {
+        courseRegistrationService.registerStudents(course, confirmation.getData());
     }
 
 }

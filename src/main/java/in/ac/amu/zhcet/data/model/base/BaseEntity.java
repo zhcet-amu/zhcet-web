@@ -17,7 +17,7 @@ import java.time.ZonedDateTime;
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity {
+public abstract class BaseEntity implements Meta {
     @Transient
     private String meta; // For storing temporary info
 
