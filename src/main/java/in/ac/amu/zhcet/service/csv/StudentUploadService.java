@@ -68,19 +68,19 @@ public class StudentUploadService {
 
         if (!optional.isPresent()) {
             invalidDepartment = true;
-            log.warn("Student Registration : Invalid Department {}", departmentName);
+            log.info("Student Registration : Invalid Department {}", departmentName);
             return  "No such department: " + departmentName;
         } else if (identifiers.parallelStream().anyMatch(identifier -> identifier.getEnrolmentNumber().equals(student.getEnrolmentNumber()))) {
             duplicateEnrolmentNo = true;
-            log.warn("Duplicate Enrolment {}", student.getEnrolmentNumber());
+            log.info("Duplicate Enrolment {}", student.getEnrolmentNumber());
             return  "Duplicate enrolment number";
         } else if (identifiers.parallelStream().anyMatch(identifier -> identifier.getFacultyNumber().equals(student.getFacultyNumber()))) {
             duplicateFacultyNo = true;
-            log.warn("Duplicate Faculty Number {}", student.getFacultyNumber());
+            log.info("Duplicate Faculty Number {}", student.getFacultyNumber());
             return "Duplicate faculty number";
         } else if (student.getHallCode().length() > 2) {
             invalidHallCode = true;
-            log.warn("Invalid Hall Code {}", student.getHallCode());
+            log.info("Invalid Hall Code {}", student.getHallCode());
             return "Invalid Hall Code : " + student.getHallCode();
         } else {
             student.getUser().setDepartment(optional.get());
@@ -112,10 +112,17 @@ public class StudentUploadService {
         if (invalidHallCode)
             studentConfirmation.getErrors().add("Students with invalid hall code found. Hall Code should be of 2 characters");
 
+        if (!studentConfirmation.getErrors().isEmpty()) {
+            log.warn(studentConfirmation.getErrors().toString());
+            log.warn(studentConfirmation.getData().toString());
+        }
+
         return studentConfirmation;
     }
 
     public void registerStudents(Confirmation<Student, String> confirmation) {
+        long start = System.currentTimeMillis();
         studentService.register(confirmation.getData().keySet());
+        log.warn("Saved {} students in {} ms", confirmation.getData().size(), System.currentTimeMillis() - start);
     }
 }

@@ -91,7 +91,9 @@ public class FacultyUploadService {
 
     public String registerFaculty(Confirmation<FacultyMember, String> confirmation) throws IOException {
         String filename = saveFile(confirmation);
+        long started = System.currentTimeMillis();
         facultyService.register(confirmation.getData().keySet());
+        log.warn("Saved {} faculty members in {} ms", confirmation.getData().size(), System.currentTimeMillis() - started);
 
         return filename;
     }
