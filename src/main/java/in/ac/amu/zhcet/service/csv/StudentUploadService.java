@@ -68,19 +68,15 @@ public class StudentUploadService {
 
         if (!optional.isPresent()) {
             invalidDepartment = true;
-            log.info("Student Registration : Invalid Department {}", departmentName);
             return  "No such department: " + departmentName;
         } else if (identifiers.parallelStream().anyMatch(identifier -> identifier.getEnrolmentNumber().equals(student.getEnrolmentNumber()))) {
             duplicateEnrolmentNo = true;
-            log.info("Duplicate Enrolment {}", student.getEnrolmentNumber());
             return  "Duplicate enrolment number";
         } else if (identifiers.parallelStream().anyMatch(identifier -> identifier.getFacultyNumber().equals(student.getFacultyNumber()))) {
             duplicateFacultyNo = true;
-            log.info("Duplicate Faculty Number {}", student.getFacultyNumber());
             return "Duplicate faculty number";
         } else if (student.getHallCode().length() > 2) {
             invalidHallCode = true;
-            log.info("Invalid Hall Code {}", student.getHallCode());
             return "Invalid Hall Code : " + student.getHallCode();
         } else {
             student.getUser().setDepartment(optional.get());
@@ -114,7 +110,6 @@ public class StudentUploadService {
 
         if (!studentConfirmation.getErrors().isEmpty()) {
             log.warn(studentConfirmation.getErrors().toString());
-            log.warn(studentConfirmation.getData().toString());
         }
 
         return studentConfirmation;

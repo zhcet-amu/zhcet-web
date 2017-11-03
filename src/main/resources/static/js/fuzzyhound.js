@@ -1,5 +1,6 @@
 var fuzzyhound = (function () {
     var fuzzyhound = new FuzzySearch({output_limit: 6, output_map:"alias"});
+    var loaded = null;
 
     $.ajaxSetup({cache: true});
     function setSource(url, keys) {
@@ -7,7 +8,9 @@ var fuzzyhound = (function () {
             fuzzyhound.setOptions({
                 source: response,
                 keys: keys
-            })
+            });
+            if ($.isFunction(loaded))
+                loaded(response);
         });
     }
 
@@ -15,6 +18,9 @@ var fuzzyhound = (function () {
         get: function () {
             return fuzzyhound;
         },
-        setSource: setSource
+        setSource: setSource,
+        onLoad: function (callback) {
+            loaded = callback;
+        }
     }
 }());

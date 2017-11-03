@@ -11,6 +11,10 @@
     .category {
         background-color: rgba(0,0,0,0.1);
     }
+
+    .list {
+        list-style-type: none;
+    }
 </style>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
       class="vertical-layout vertical-menu 2-columns  fixed-navbar">
@@ -34,6 +38,32 @@
                     <div th:replace="fragments/layout :: error(condition = ${float_error}, error = ${float_error})"></div>
                     <input class="courses twitter-typeahead form-control round mb-1" autocomplete="off" placeholder="Search" />
 
+                    <div class="bs-callout-primary callout-border-left p-1">
+                        <strong>OR</strong><br>
+                        Add courses by selecting from a list
+                    </div>
+                    <br>
+                    <button id="select-courses" class="btn btn-primary float-xs-right" data-toggle="modal" data-target="#selection-modal">Select</button>
+
+                    <div class="modal fade text-xs-left" id="selection-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title">Select Courses</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="list-group list" id="course-selection-list"></ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="float-selected" class="btn btn-outline-primary" data-dismiss="modal">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
                     <form class="selected-courses-container" th:hidden="${courses == null ? true : false}"
                           method="post" th:action="@{|/department/${department.code}/course/float|}">
                         <div class="selected-courses">
