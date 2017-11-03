@@ -1,0 +1,28 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="email_list" th:if="${!email_list.isEmpty()}">
+    <div class="card" data-toggle="modal" data-target="#email_modal" style="cursor: pointer">
+        <div class="card-body">
+            <div class="media">
+                <div class="p-2 text-xs-center bg-indigo bg-darken-2 media-left media-middle" style="background-color: #3F51B5">
+                    <i class="icon-mail6 font-large-2 text-white"></i>
+                </div>
+                <div class="p-2 bg-cyan text-white media-body" style="background-color: #7986CB">
+                    <h5>Get Email List</h5>
+                    <h5 class="text-bold-400" th:text="|${email_list.size()} Verified Students|"></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" id="email_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Email List</h4>
+                </div>
+                <div class="modal-body">
+                    <textarea th:text="${#strings.listJoin(email_list, ',')}" style="width: 100%"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
