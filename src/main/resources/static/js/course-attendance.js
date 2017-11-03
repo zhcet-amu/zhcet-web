@@ -29,7 +29,5 @@
         });
 
         $("#upload_modal").modal('show');
-
-        $("#email_modal").modal('show');
     });
 }());

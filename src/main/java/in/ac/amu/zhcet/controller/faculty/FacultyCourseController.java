@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -63,9 +62,16 @@ public class FacultyCourseController {
         model.addAttribute("page_description", "Upload attendance for the floated course");
 
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
+        List<Student> students = courseRegistrations
+                .parallelStream()
+                .map(CourseRegistration::getStudent)
+                .collect(Collectors.toList());
+        List<String> emails = emailNotificationService.getEmails(students);
         Utils.sortCourseAttendance(courseRegistrations);
+
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("course", course);
+        model.addAttribute("email_list", emails);
 
         return "faculty/course_attendance";
     }
@@ -75,25 +81,5 @@ public class FacultyCourseController {
         CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(course, section);
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
         attendanceDownloadService.download(course.getCode() + "_" + Utils.defaultString(section, "all"), "faculty", courseRegistrations, response);
-    }
-
-    @GetMapping("faculty/courses/{course}/attendance/get_email")
-    public String getEmail(RedirectAttributes redirectAttributes, @PathVariable Course course, @RequestParam(required = false) String section) {
-        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(course, section);
-        List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-
-        List<Student> students = courseRegistrations
-                .parallelStream()
-                .map(CourseRegistration::getStudent)
-                .collect(Collectors.toList());
-
-        List<String> emails = emailNotificationService.getEmails(students);
-
-        String emailList = emails.stream().collect(Collectors.joining(","));
-
-        log.info(emails.toString());
-        redirectAttributes.addFlashAttribute("email_list", emailList);
-
-        return "redirect:/faculty/courses/{course}/attendance";
     }
 }

@@ -5,6 +5,7 @@ import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.csv.RegistrationUploadService;
 import in.ac.amu.zhcet.service.misc.AttendanceDownloadService;
+import in.ac.amu.zhcet.service.misc.EmailNotificationService;
 import in.ac.amu.zhcet.utils.Utils;
 import in.ac.amu.zhcet.utils.page.Path;
 import in.ac.amu.zhcet.utils.page.PathChain;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -37,13 +39,15 @@ public class FloatedCourseController {
     private final CourseManagementService courseManagementService;
     private final AttendanceDownloadService attendanceDownloadService;
     private final RegistrationUploadService registrationUploadService;
+    private final EmailNotificationService emailNotificationService;
 
     @Autowired
-    public FloatedCourseController(CourseInChargeService courseInChargeService, CourseManagementService courseManagementService, AttendanceDownloadService attendanceDownloadService, RegistrationUploadService registrationUploadService) {
+    public FloatedCourseController(CourseInChargeService courseInChargeService, CourseManagementService courseManagementService, AttendanceDownloadService attendanceDownloadService, RegistrationUploadService registrationUploadService, EmailNotificationService emailNotificationService) {
         this.courseInChargeService = courseInChargeService;
         this.courseManagementService = courseManagementService;
         this.attendanceDownloadService = attendanceDownloadService;
         this.registrationUploadService = registrationUploadService;
+        this.emailNotificationService = emailNotificationService;
     }
 
     public static PathChain getPath(Department department, Course course) {
@@ -70,10 +74,17 @@ public class FloatedCourseController {
         model.addAttribute("page_path", getPath(department, course));
 
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
+        List<Student> students = courseRegistrations
+                .parallelStream()
+                .map(CourseRegistration::getStudent)
+                .collect(Collectors.toList());
+        List<String> emails = emailNotificationService.getEmails(students);
+        Utils.sortCourseAttendance(courseRegistrations);
         Utils.sortCourseAttendance(courseRegistrations);
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("floatedCourse", floatedCourse);
         model.addAttribute("sections", courseInChargeService.getSections(floatedCourse));
+        model.addAttribute("email_list", emails);
 
         return "department/floated_course";
     }
