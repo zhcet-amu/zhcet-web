@@ -37,14 +37,14 @@ public class EmailNotificationService {
         log.info("Email Attendance Notification : {}", course.getCode());
         log.info("URL : {}", url);
 
-        List<String> emails = uploadList
+        List<Student> students = uploadList
                 .parallelStream()
                 .map(AttendanceUpload::getEnrolment_no)
                 .map(studentService::getByEnrolmentNumber)
-                .map(Student::getUser)
-                .filter(userAuth -> userAuth.isEmailVerified() && !userAuth.isEmailUnsubscribed())
-                .map(UserAuth::getEmail)
                 .collect(Collectors.toList());
+
+        List<String> emails = getEmails(students);
+
 
         if (emails.isEmpty()) {
             log.warn("No activated subscribed student found for emailing...");
@@ -72,5 +72,14 @@ public class EmailNotificationService {
         map.put("unsubscribe_link", unsubcribeUrl);
 
         return emailService.render("html/link", map);
+    }
+
+    public List<String> getEmails(List<Student> students) {
+
+        return students.stream()
+                .map(Student::getUser)
+                .filter(userAuth -> userAuth.isEmailVerified() && !userAuth.isEmailUnsubscribed())
+                .map(UserAuth::getEmail)
+                .collect(Collectors.toList());
     }
 }
