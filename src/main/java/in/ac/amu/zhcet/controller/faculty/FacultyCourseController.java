@@ -1,12 +1,10 @@
 package in.ac.amu.zhcet.controller.faculty;
 
-import in.ac.amu.zhcet.data.model.Course;
-import in.ac.amu.zhcet.data.model.CourseInCharge;
-import in.ac.amu.zhcet.data.model.CourseRegistration;
-import in.ac.amu.zhcet.data.model.FacultyMember;
+import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.service.misc.AttendanceDownloadService;
+import in.ac.amu.zhcet.service.misc.EmailNotificationService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +13,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -28,12 +28,14 @@ public class FacultyCourseController {
     private final FacultyService facultyService;
     private final CourseInChargeService courseInChargeService;
     private final AttendanceDownloadService attendanceDownloadService;
+    private final EmailNotificationService emailNotificationService;
 
     @Autowired
-    public FacultyCourseController(AttendanceDownloadService attendanceDownloadService, FacultyService facultyService, CourseInChargeService courseInChargeService) {
+    public FacultyCourseController(AttendanceDownloadService attendanceDownloadService, FacultyService facultyService, CourseInChargeService courseInChargeService, EmailNotificationService emailNotificationService) {
         this.attendanceDownloadService = attendanceDownloadService;
         this.facultyService = facultyService;
         this.courseInChargeService = courseInChargeService;
+        this.emailNotificationService = emailNotificationService;
     }
 
     @GetMapping("/faculty/courses")
@@ -73,5 +75,25 @@ public class FacultyCourseController {
         CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(course, section);
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
         attendanceDownloadService.download(course.getCode() + "_" + Utils.defaultString(section, "all"), "faculty", courseRegistrations, response);
+    }
+
+    @GetMapping("faculty/courses/{course}/attendance/get_email")
+    public String getEmail(RedirectAttributes redirectAttributes, @PathVariable Course course, @RequestParam(required = false) String section) {
+        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(course, section);
+        List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
+
+        List<Student> students = courseRegistrations
+                .parallelStream()
+                .map(CourseRegistration::getStudent)
+                .collect(Collectors.toList());
+
+        List<String> emails = emailNotificationService.getEmails(students);
+
+        String emailList = emails.stream().collect(Collectors.joining(","));
+
+        log.info(emails.toString());
+        redirectAttributes.addFlashAttribute("email_list", emailList);
+
+        return "redirect:/faculty/courses/{course}/attendance";
     }
 }

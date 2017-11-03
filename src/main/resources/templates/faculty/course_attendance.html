@@ -21,6 +21,22 @@
         </div>
         <div class="col-xs-12 col-xl-3">
             <div class="card">
+                <a th:href="|/faculty/courses/${course.code}/attendance/get_email|">
+                    <div class="card-body">
+                        <div class="media">
+                            <div class="p-2 text-xs-center bg-indigo bg-darken-2 media-left media-middle" style="background-color: #3F51B5">
+                                <i class="icon-download font-large-2 text-white"></i>
+                            </div>
+                            <div class="p-2 bg-cyan text-white media-body" th:if="${courseRegistrations != null}" style="background-color: #7986CB">
+                                <h5>Get email list</h5>
+                                <h5 class="text-bold-600" th:text="|Section : ${#strings.defaultString(param.section, 'All')}|"></h5>
+                                <h5 class="text-bold-400" th:text="|${courseRegistrations.size()} Students|"></h5>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
                 <a th:href="|/faculty/courses/${course.code}/attendance/download?section=${param.section}|" target="_blank">
                     <div class="card-body">
                         <div class="media">
@@ -35,6 +51,19 @@
                         </div>
                     </div>
                 </a>
+            </div>
+            <div th:if="${email_list}" class="modal fade" role="dialog" id="email_modal">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Email List</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p th:text="${email_list}"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div th:replace="faculty/fragments/attendance_upload"></div>
             <div th:replace="faculty/fragments/attendance_errors"></div>
@@ -72,6 +101,7 @@
 
         return truncatedNum / multiplier;
     };
+
 </script>
 <script th:src="@{/js/course-attendance.js}"></script>
 <script src="//cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
