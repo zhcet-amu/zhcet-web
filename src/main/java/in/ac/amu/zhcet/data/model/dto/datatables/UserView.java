@@ -28,4 +28,7 @@ public class UserView {
     @JsonView(DataTablesOutput.View.class)
     @JsonProperty("is-verified")
     private boolean userEmailVerified;
+    @JsonView(DataTablesOutput.View.class)
+    @JsonProperty("user_enabled")
+    private String userEnabled;
 }

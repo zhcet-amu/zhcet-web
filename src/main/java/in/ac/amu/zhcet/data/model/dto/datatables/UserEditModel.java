@@ -23,4 +23,5 @@ public class UserEditModel {
     private String userDetailsPhoneNumbers;
     @Enumerated(EnumType.STRING)
     private Gender userDetailsGender;
+    private boolean userEnabled;
 }
