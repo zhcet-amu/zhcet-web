@@ -89,13 +89,13 @@ public class RegistrationUploadService {
     private String getMappedValue(Student student, Course course, List<CourseRegistration> registrations) {
         if (student.getEnrolmentNumber() == null) {
             invalidEnrolment = true;
-            log.warn("Course Registration : Invalid Faculty Number {} {}", course.getCode(), student.getFacultyNumber());
+            log.info("Course Registration : Invalid Faculty Number {} {}", course.getCode(), student.getFacultyNumber());
             return  "No such student found";
         } else if(registrations.stream()
                 .map(CourseRegistration::getStudent)
                 .anyMatch(oldStudent -> oldStudent.equals(student))) {
             alreadyEnrolled = true;
-            log.warn("Student already enrolled in course : {} {}", course.getCode(), student.getEnrolmentNumber());
+            log.info("Student already enrolled in course : {} {}", course.getCode(), student.getEnrolmentNumber());
             return "Already enrolled in " + course.getCode();
         } else {
             return null;
@@ -118,6 +118,10 @@ public class RegistrationUploadService {
             registrationConfirmation.getErrors().add("Invalid student faculty number found");
         if (alreadyEnrolled)
             registrationConfirmation.getErrors().add("Students already enrolled in course found");
+
+        if (!registrationConfirmation.getErrors().isEmpty()) {
+            log.warn(registrationConfirmation.getErrors().toString());
+        }
 
         return registrationConfirmation;
     }

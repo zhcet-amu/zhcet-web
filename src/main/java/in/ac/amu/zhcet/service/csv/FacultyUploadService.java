@@ -88,7 +88,6 @@ public class FacultyUploadService {
 
         if (!facultyConfirmation.getErrors().isEmpty()) {
             log.warn(facultyConfirmation.getErrors().toString());
-            log.warn(facultyConfirmation.getData().toString());
         }
 
         return facultyConfirmation;
