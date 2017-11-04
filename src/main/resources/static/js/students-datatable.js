@@ -153,7 +153,7 @@
             "lengthMenu": [[10, 25, 50, 100, 200, 500], [10, 25, 50, 100, 200, 500]],
             "initComplete": function () {
                 DataUtils.searchDelay(table);
-                DataUtils.restoreState(table, [{
+                DataUtils.restoreState(table, 'DataTables_studentTable_/dean/students', [{
                     id: '#stat',
                     defaultVal: 'A',
                     columnName: 'status'

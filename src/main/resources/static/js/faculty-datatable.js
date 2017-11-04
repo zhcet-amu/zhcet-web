@@ -101,7 +101,7 @@
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
             "initComplete": function () {
                 DataUtils.searchDelay(table);
-                DataUtils.restoreState(table, [{
+                DataUtils.restoreState(table, 'DataTables_facultyTable_/dean/faculty', [{
                     id: '#gend',
                     columnName: 'gender'
                 }]);
