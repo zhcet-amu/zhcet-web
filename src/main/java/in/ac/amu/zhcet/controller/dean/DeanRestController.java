@@ -12,9 +12,11 @@ import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.misc.ConfigurationService;
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -53,7 +56,10 @@ public class DeanRestController {
     @PostMapping(value = "/dean/api/faculty")
     public DataTablesOutput<FacultyView> getFaculty(@Valid @RequestBody DataTablesInput input) {
         convertInput(input);
-        return facultyRepository.findAll(input, this::fromFaculty);
+        Boolean working = sanitizeBoolean(input, "working");
+        return facultyRepository.findAll(input, (root, query, cb) ->
+                        (working != null) ? cb.equal(root.get("working"), working) : cb.and(), // cb.and() is always true
+                null, this::fromFaculty);
     }
 
     @JsonView(DataTablesOutput.View.class)
@@ -64,6 +70,29 @@ public class DeanRestController {
         return floatedCourseRepository.findAll(input, (root, query, cb) ->
                 cb.equal(root.get("session"), ConfigurationService.getDefaultSessionCode()),
                 null, this::fromFloatedCourse);
+    }
+
+    /**
+     * Workaround for boolean column filtering as default library version does not work correctly
+     * @param input DataTablesInput : Input to be sanitized and source of the boolean to be returned
+     * @param columnName String : Boolean column name to be cleared
+     * @return Boolean : Set value of columnName before sanitizing
+     */
+    private static Boolean sanitizeBoolean(DataTablesInput input, String columnName) {
+        Optional<Column> columnOptional = input.getColumns()
+                .stream()
+                .filter(column -> column.getName().equals(columnName))
+                .findFirst();
+
+        if (!columnOptional.isPresent())
+            return null;
+
+        Column column = columnOptional.get();
+        String value = column.getSearch().getValue();
+        Boolean stored = Utils.isEmpty(value) ? null : Boolean.parseBoolean(value);
+        column.getSearch().setValue(null);
+
+        return stored;
     }
 
     private static void convertInput(DataTablesInput input) {

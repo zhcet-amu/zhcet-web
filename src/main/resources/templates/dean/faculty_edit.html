@@ -49,7 +49,7 @@
                         <span id="gender" th:text="${gender}"  th:class="|capsule ${@viewService.getClassForGender(gender)}|">Male</span>
                         <br><br>
                     </div>
-                    <div th:class="|capsule ${faculty.working ? 'bg-success' : 'bg-danger'}|" style="width: 120px;display: inline-block" th:text="${faculty.working ? 'Active' : 'Inactive'}">Active</div>
+                    <div th:class="|capsule ${faculty.working ? 'bg-success' : 'bg-danger'}|" style="width: 120px;display: inline-block" th:text="${faculty.working ? 'Working' : 'Inactive'}">Active</div>
                     <span th:text="${faculty.user.email}"></span><span th:if="${faculty.user.emailVerified}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
                     <br>
                 </div>
@@ -112,7 +112,7 @@
                                     </div>
 
                                     <div class="form-group col-xs-12 mb-2">
-                                        <label for="working">Active</label>&nbsp;
+                                        <label for="working">Working</label>&nbsp;
                                         <input type="checkbox" id="working" data-color="primary"
                                                class="switchery" th:field="*{working}">
                                     </div>

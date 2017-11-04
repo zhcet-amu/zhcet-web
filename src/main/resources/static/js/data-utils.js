@@ -1,10 +1,9 @@
 var DataUtils = (function () {
 
-    function setSelectInput(id, context, index, selected) {
+    function setSelectInput(id, table, index, selected) {
         $(id).on('change', function () {
             var val = $(this).val();
-
-            var column = context.columns(index);
+            var column = table.columns(index);
 
             if (val !== column.search()) {
                 column.search(val).draw();
@@ -41,7 +40,7 @@ var DataUtils = (function () {
             return date.split('[')[0];
         },
 
-        restoreState: function(table, localStorageKey, options) {
+        attachSelectors: function(table, localStorageKey, options) {
             for (var i = 0; i < options.length; i++) {
                 var option = options[i];
                 var statusIndex = table.column(option['columnName'] + ':name').index();

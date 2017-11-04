@@ -14,7 +14,7 @@ public class FacultyView extends UserView {
     @JsonView(DataTablesOutput.View.class)
     private String designation;
     @JsonView(DataTablesOutput.View.class)
-    private boolean working;
+    private Boolean working;
     @JsonView(DataTablesOutput.View.class)
     private String createdAt;
     @JsonView(DataTablesOutput.View.class)

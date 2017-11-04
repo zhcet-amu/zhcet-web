@@ -51,6 +51,25 @@
         }
     }
 
+    function changeStudent(table) {
+        var data = table.rows( { selected: true } ).data();
+
+        if (data.count() <= 0) {
+            toastr.error('No student(s) selected');
+            return;
+        }
+
+        // Setting enrolment numbers to be changed
+        var enrolments = $('.enrolments');
+        enrolments.html(''); // Clear previous values
+        for (var i = 0; i < data.count(); i++)
+            enrolments.append('<input name="enrolments" value="' + data[i].enrolmentNumber + '" />');
+
+        // Set the student count
+        $('.count').html(data.count());
+        $('#section-modal').modal('show');
+    }
+
     $(document).ready(function () {
         var header = $("meta[name='_csrf_header']").attr("content");
         var token = $("meta[name='_csrf']").attr("content");
@@ -90,7 +109,7 @@
                     searchable: false,
                     orderable: false,
                     defaultContent: 'https://zhcet-backend.firebaseapp.com/static/img/account.svg',
-                    render: function (data, type, row) {
+                    render: function (data) {
                         if (data && data !== '')
                             return '<img class="rounded-circle" style="background-color: white" src="' + data + '" height="48px" />';
                         return '<img class="rounded-circle" style="background-color: white" src="https://zhcet-backend.firebaseapp.com/static/img/account.svg" />';
@@ -130,22 +149,7 @@
                     enabled: false,
                     text: 'Change Section/Status',
                     action: function () {
-                        var data = table.rows( { selected: true } ).data();
-
-                        if (data.count() <= 0) {
-                            toastr.error('No student(s) selected');
-                            return;
-                        }
-
-                        // Setting enrolment numbers to be changed
-                        var enrolments = $('.enrolments');
-                        enrolments.html(''); // Clear previous values
-                        for (var i = 0; i < data.count(); i++)
-                            enrolments.append('<input name="enrolments" value="' + data[i].enrolmentNumber + '" />');
-
-                        // Set the student count
-                        $('.count').html(data.count());
-                        $('#section-modal').modal('show');
+                        changeStudent(table)
                     }
                 },
                 'copy', 'csv', 'excel', 'pdf', 'print'
@@ -153,7 +157,7 @@
             "lengthMenu": [[10, 25, 50, 100, 200, 500], [10, 25, 50, 100, 200, 500]],
             "initComplete": function () {
                 DataUtils.searchDelay(table);
-                DataUtils.restoreState(table, 'DataTables_studentTable_/dean/students', [{
+                DataUtils.attachSelectors(table, 'DataTables_studentTable_/dean/students', [{
                     id: '#stat',
                     defaultVal: 'A',
                     columnName: 'status'

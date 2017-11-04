@@ -7,7 +7,7 @@
         modal.find('#faculty_id').html(data['facultyId']);
         modal.find('#designation').html(data['designation']);
         modal.find('#department').html(data['user_department_name']);
-        modal.find('#working').html(data['working'] ? 'Active' : 'Inactive');
+        modal.find('#working').html(data['working'] ? 'Working' : 'Inactive');
         modal.find('#working').attr('class', 'capsule ' + (data['working'] ? 'bg-success' : 'bg-danger'));
         modal.find('#link').attr('href', '/dean/faculty/' + data['facultyId']);
 
@@ -76,7 +76,7 @@
                 searchable: false,
                 orderable: false,
                 defaultContent: 'https://zhcet-backend.firebaseapp.com/static/img/account.svg',
-                render: function (data, type, row) {
+                render: function (data) {
                     if (data && data !== '')
                         return '<img class="rounded-circle" src="' + data + '" height="48px" />';
                     return '<img class="rounded-circle" src="https://zhcet-backend.firebaseapp.com/static/img/account.svg" />';
@@ -93,7 +93,18 @@
             }, {
                 data: 'user_department_name'
             }, {
-                data: 'working'
+                data: 'working',
+                name: 'working',
+                render: function (data) {
+                    var text = 'Working';
+                    var css = 'bg-success';
+                    if (!data) {
+                        text = 'Inactive';
+                        css = 'bg-danger';
+                    }
+
+                    return '<span class="capsule '+css+'">'+text+'</span>';
+                }
             }, {
                 data: 'user_email'
             }],
@@ -101,7 +112,10 @@
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
             "initComplete": function () {
                 DataUtils.searchDelay(table);
-                DataUtils.restoreState(table, 'DataTables_facultyTable_/dean/faculty', [{
+                DataUtils.attachSelectors(table, 'DataTables_facultyTable_/dean/faculty', [{
+                    id: '#working-status',
+                    columnName: 'working'
+                }, {
                     id: '#gend',
                     columnName: 'gender'
                 }]);
