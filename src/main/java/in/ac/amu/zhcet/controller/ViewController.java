@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -55,6 +56,16 @@ public class ViewController {
     @RequestMapping(value = {"/", ""})
     public String homePage() {
         return "redirect:" + RoleWiseSuccessHandler.determineTargetUrl(SecurityContextHolder.getContext().getAuthentication());
+    }
+
+    @GetMapping("/terms")
+    public String getTerms() {
+        return "terms_of_service";
+    }
+
+    @GetMapping("/privacy")
+    public String getPrivacyPolicy() {
+        return "privacy_policy";
     }
 
 }

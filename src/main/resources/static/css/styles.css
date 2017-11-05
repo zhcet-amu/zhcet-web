@@ -128,3 +128,7 @@ i.helper {
 .dt-button.buttons-columnVisibility.active {
     color: black;
 }
+
+.footer-dark a {  color: #B39DDB;  }
+.footer-dark a:hover {  color: #D1C4E9;  }
+.footer-dark a:visited {  color: #9575CD;  }
