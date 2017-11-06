@@ -147,3 +147,22 @@ body {
 }
 
 .page-row-expanded { height: 100%; }
+
+a.md-header-link {
+    text-decoration: none;
+    color: black;
+}
+
+blockquote {
+    padding: 0 1em;
+    color: #6a737d;
+    border-left: 0.25em solid #dfe2e5;
+}
+
+blockquote>:first-child {
+    margin-top: 0;
+}
+
+blockquote>:last-child {
+    margin-bottom: 0;
+}

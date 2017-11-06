@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" data-textdirection="ltr" class="loading"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/layout :: head"></head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<style>
+    .editor-toolbar.fullscreen, .CodeMirror-fullscreen, .editor-preview-side {
+        z-index: 1200
+    }
+</style>
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'faculty_courses')" sec:authorize="hasRole('ROLE_FACULTY')">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div th:replace="fragments/layout :: toolbar"></div>
+
+                <form id="notification" th:action="@{/notification/send}" method="post">
+                    <textarea name="notification" id="notification-editor"></textarea>
+
+                    <button type="submit" class="btn btn-primary float-xs-right">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/layout :: scripts"></div>
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+    (function () {
+        new SimpleMDE({
+            element: $("#notification-editor")[0],
+            autosave: {
+                enabled: true,
+                uniqueId: "faculty_notification"
+            }
+        });
+    }());
+</script>
+</body>
+</html>

@@ -28,6 +28,7 @@ springBoot  {
 }
 
 def hibernate_version = "5.2.12.Final"
+def flexmark_version = "0.28.2"
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
@@ -58,6 +59,17 @@ dependencies {
     compile 'io.sentry:sentry-spring:1.6.1'
     compile 'io.sentry:sentry-logback:1.6.1'
     compile 'com.github.ben-manes.caffeine:caffeine:2.6.0'
+
+    // Markdown Processor
+    compile "com.vladsch.flexmark:flexmark:${flexmark_version}"
+    compile "com.vladsch.flexmark:flexmark-ext-anchorlink:${flexmark_version}"
+    compile "com.vladsch.flexmark:flexmark-ext-autolink:${flexmark_version}"
+    compile "com.vladsch.flexmark:flexmark-ext-emoji:${flexmark_version}"
+    compile "com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:${flexmark_version}"
+    compile "com.vladsch.flexmark:flexmark-ext-gfm-tasklist:${flexmark_version}"
+    compile "com.vladsch.flexmark:flexmark-ext-gfm-tables:${flexmark_version}"
+    compile "com.vladsch.flexmark:flexmark-ext-superscript:${flexmark_version}"
+
     compileOnly "org.projectlombok:lombok:1.16.18"
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 }
