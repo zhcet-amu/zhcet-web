@@ -1,11 +1,12 @@
-package in.ac.amu.zhcet.service.user.auth;
+package in.ac.amu.zhcet.service.security.login;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
-import in.ac.amu.zhcet.configuration.security.PathAuthorizationAuditListener;
+import in.ac.amu.zhcet.configuration.security.login.listener.PathAuthorizationAuditListener;
 import in.ac.amu.zhcet.service.misc.ConfigurationService;
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class LoginAttemptService {
 
-    public static final TimeUnit TIME_UNIT = TimeUnit.HOURS;
+    private static final TimeUnit TIME_UNIT = TimeUnit.HOURS;
 
     private final LoadingCache<String, Integer> attemptsCache;
     private final ConfigurationService configurationService;
@@ -38,7 +39,7 @@ public class LoginAttemptService {
         this.configurationService = configurationService;
 
         RemovalListener<String, Integer> removalListener = removal ->
-                log.info("Key {} with value {} was removed because : {}",
+                log.info("Login Key {} with value {} was removed because : {}",
                 removal.getKey(), removal.getValue(), removal.getCause());
 
         attemptsCache = CacheBuilder
@@ -62,14 +63,6 @@ public class LoginAttemptService {
         return configurationService.getBlockDuration();
     }
 
-    public static String getClientIP(HttpServletRequest request) {
-        String xfHeader = request.getHeader("X-Forwarded-For");
-        if (xfHeader == null){
-            return request.getRemoteAddr();
-        }
-        return xfHeader.split(",")[0];
-    }
-
     public String getErrorMessage(HttpServletRequest request) {
         String defaultMessage = "Username or Password is incorrect!";
 
@@ -77,7 +70,7 @@ public class LoginAttemptService {
         if (object == null)
             return defaultMessage;
 
-        String ip = LoginAttemptService.getClientIP(request);
+        String ip = Utils.getClientIP(request);
         String coolDownPeriod = getBlockDuration() + " " + LoginAttemptService.TIME_UNIT;
         if(object instanceof LockedException || isBlocked(ip)) {
             return "IP blocked for <strong>" + coolDownPeriod + "</strong> since last wrong login attempt";

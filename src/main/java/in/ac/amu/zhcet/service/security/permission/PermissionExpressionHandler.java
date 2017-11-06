@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.permission;
+package in.ac.amu.zhcet.service.security.permission;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;

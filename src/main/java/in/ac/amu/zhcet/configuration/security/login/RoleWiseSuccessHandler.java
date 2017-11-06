@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.configuration.security;
+package in.ac.amu.zhcet.configuration.security.login;
 
 import in.ac.amu.zhcet.data.type.Roles;
 import lombok.extern.slf4j.Slf4j;

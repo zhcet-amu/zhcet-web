@@ -1,6 +1,6 @@
-package in.ac.amu.zhcet.configuration.security;
+package in.ac.amu.zhcet.configuration.security.login.listener;
 
-import in.ac.amu.zhcet.service.user.auth.LoginAttemptService;
+import in.ac.amu.zhcet.service.security.login.LoginAttemptService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.audit.AuditEvent;

@@ -1,6 +1,6 @@
-package in.ac.amu.zhcet.configuration.security;
+package in.ac.amu.zhcet.configuration.security.permission;
 
-import in.ac.amu.zhcet.service.permission.PermissionExpressionHandler;
+import in.ac.amu.zhcet.service.security.permission.PermissionExpressionHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

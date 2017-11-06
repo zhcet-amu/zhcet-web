@@ -1,11 +1,12 @@
 package in.ac.amu.zhcet.configuration.security;
 
+import in.ac.amu.zhcet.configuration.security.login.RoleWiseSuccessHandler;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.user.Auditor;
 import in.ac.amu.zhcet.service.user.UserDetailService;
-import in.ac.amu.zhcet.service.user.auth.LoginAttemptService;
 import in.ac.amu.zhcet.service.user.auth.PersistentTokenService;
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -63,7 +64,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         CustomAuthenticationDetails(HttpServletRequest request) {
             super(request);
-            this.remoteAddress = LoginAttemptService.getClientIP(request);
+            this.remoteAddress = Utils.getClientIP(request);
             if (!remoteAddress.equals(request.getRemoteAddr())) {
                 log.info("Received User IP : {}", request.getRemoteAddr());
                 log.info("Replaced User IP : {}", remoteAddress);

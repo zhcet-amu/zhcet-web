@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.configuration.security;
+package in.ac.amu.zhcet.configuration.security.login.listener;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.ReflectiveMethodInvocation;

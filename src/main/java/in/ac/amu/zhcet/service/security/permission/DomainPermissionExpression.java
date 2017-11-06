@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.permission;
+package in.ac.amu.zhcet.service.security.permission;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseInCharge;
