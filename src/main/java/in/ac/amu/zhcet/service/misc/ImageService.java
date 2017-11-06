@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.service.misc;
 
+import in.ac.amu.zhcet.utils.ImageUtils;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -103,7 +104,7 @@ public class ImageService {
         }
 
         try {
-            BufferedImage image = Utils.readImage(file);
+            BufferedImage image = ImageUtils.readImage(file);
             if (image == null || !verifyType(file.getOriginalFilename(), false) || !verifyType(file.getContentType(), true)) {
                 log.warn("Image should be of valid type : {}", file.getOriginalFilename());
                 throw new ImageUploadException("File type must be image, found " + file.getContentType());

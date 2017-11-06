@@ -10,7 +10,7 @@ import in.ac.amu.zhcet.service.csv.base.AbstractUploadService;
 import in.ac.amu.zhcet.service.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.csv.base.UploadResult;
 import in.ac.amu.zhcet.service.storage.FileSystemStorageService;
-import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -122,11 +122,11 @@ public class FacultyUploadService {
         String password = generatePassword(PASS_LENGTH);
         facultyUpload.setPassword(password);
         FacultyMember facultyMember = new FacultyMember();
-        facultyMember.setFacultyId(Utils.capitalizeAll(facultyUpload.getFacultyId()));
-        facultyMember.setDesignation(Utils.capitalizeFirst(facultyUpload.getDesignation()));
-        facultyMember.getUser().setName(Utils.capitalizeFirst(facultyUpload.getName()));
+        facultyMember.setFacultyId(StringUtils.capitalizeAll(facultyUpload.getFacultyId()));
+        facultyMember.setDesignation(StringUtils.capitalizeFirst(facultyUpload.getDesignation()));
+        facultyMember.getUser().setName(StringUtils.capitalizeFirst(facultyUpload.getName()));
         facultyMember.getUser().setPassword(password);
-        facultyMember.getUser().setDepartment(Department.builder().name(Utils.capitalizeFirst(facultyUpload.getDepartment())).build());
+        facultyMember.getUser().setDepartment(Department.builder().name(StringUtils.capitalizeFirst(facultyUpload.getDepartment())).build());
         facultyMember.getUser().getDetails().setGender(facultyUpload.getGender());
 
         return facultyMember;

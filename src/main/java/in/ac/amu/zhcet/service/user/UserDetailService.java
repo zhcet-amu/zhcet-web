@@ -3,8 +3,9 @@ package in.ac.amu.zhcet.service.user;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.misc.ImageService;
-import in.ac.amu.zhcet.service.permission.PermissionManager;
-import in.ac.amu.zhcet.service.user.auth.LoginAttemptService;
+import in.ac.amu.zhcet.service.security.login.LoginAttemptService;
+import in.ac.amu.zhcet.service.security.permission.PermissionManager;
+import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +38,7 @@ public class UserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String ip = LoginAttemptService.getClientIP(request);
+        String ip = Utils.getClientIP(request);
 
         UserAuth user = userService.findById(username);
 

@@ -1,9 +1,9 @@
 package in.ac.amu.zhcet.controller;
 
-import in.ac.amu.zhcet.configuration.security.RoleWiseSuccessHandler;
+import in.ac.amu.zhcet.configuration.security.login.RoleWiseSuccessHandler;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.user.Auditor;
-import in.ac.amu.zhcet.service.user.auth.LoginAttemptService;
+import in.ac.amu.zhcet.service.security.login.LoginAttemptService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

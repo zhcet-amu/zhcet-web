@@ -5,7 +5,7 @@ import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.StudentService;
-import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -54,7 +54,7 @@ public class EmailNotificationService {
             log.info("Sending email to " + recipient);
 
             String unsubscribeUrl = configurationService.getBaseUrl() + "/login/unsubscribe?email="
-                    + recipient + "&conf=" + Utils.getHash(recipient);
+                    + recipient + "&conf=" + SecurityUtils.getHash(recipient);
 
             log.info("Unsubscribe Link {}", unsubscribeUrl);
             String html = getHtml(course.getCode(), course.getTitle(), url, unsubscribeUrl);

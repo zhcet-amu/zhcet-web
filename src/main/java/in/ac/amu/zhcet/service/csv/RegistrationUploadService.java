@@ -10,6 +10,7 @@ import in.ac.amu.zhcet.service.StudentService;
 import in.ac.amu.zhcet.service.csv.base.AbstractUploadService;
 import in.ac.amu.zhcet.service.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.csv.base.UploadResult;
+import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,6 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
-
-import static in.ac.amu.zhcet.utils.Utils.capitalizeAll;
 
 @Slf4j
 @Service
@@ -74,7 +73,7 @@ public class RegistrationUploadService {
     }
 
     private CourseRegistration fromRegistrationUpload(RegistrationUpload upload) {
-        Student student = studentService.getByFacultyNumber(capitalizeAll(upload.getFacultyNo()));
+        Student student = studentService.getByFacultyNumber(StringUtils.capitalizeAll(upload.getFacultyNo()));
 
         if (student == null)
             student = Student.builder().facultyNumber(upload.getFacultyNo()).build();

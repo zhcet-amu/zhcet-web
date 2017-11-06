@@ -12,7 +12,7 @@ import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.misc.ConfigurationService;
-import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +89,7 @@ public class DeanRestController {
 
         Column column = columnOptional.get();
         String value = column.getSearch().getValue();
-        Boolean stored = Utils.isEmpty(value) ? null : Boolean.parseBoolean(value);
+        Boolean stored = StringUtils.isEmpty(value) ? null : Boolean.parseBoolean(value);
         column.getSearch().setValue(null);
 
         return stored;

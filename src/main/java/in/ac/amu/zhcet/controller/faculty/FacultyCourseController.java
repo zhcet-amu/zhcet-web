@@ -5,7 +5,8 @@ import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.service.misc.AttendanceDownloadService;
 import in.ac.amu.zhcet.service.misc.EmailNotificationService;
-import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.utils.SortUtils;
+import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -67,7 +68,7 @@ public class FacultyCourseController {
                 .map(CourseRegistration::getStudent)
                 .collect(Collectors.toList());
         List<String> emails = emailNotificationService.getEmails(students);
-        Utils.sortCourseAttendance(courseRegistrations);
+        SortUtils.sortCourseAttendance(courseRegistrations);
 
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("course", course);
@@ -80,6 +81,7 @@ public class FacultyCourseController {
     public void getStudents(HttpServletResponse response, @PathVariable Course course, @RequestParam(required = false) String section) throws IOException {
         CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(course, section);
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-        attendanceDownloadService.download(course.getCode() + "_" + Utils.defaultString(section, "all"), "faculty", courseRegistrations, response);
+        attendanceDownloadService.download(course.getCode() + "_" +
+                StringUtils.defaultString(section, "all"), "faculty", courseRegistrations, response);
     }
 }

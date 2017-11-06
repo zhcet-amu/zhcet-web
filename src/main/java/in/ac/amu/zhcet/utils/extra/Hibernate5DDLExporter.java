@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.utils;
+package in.ac.amu.zhcet.utils.extra;
 
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.boot.MetadataSources;

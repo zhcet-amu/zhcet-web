@@ -3,7 +3,7 @@ package in.ac.amu.zhcet.controller.dean;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.service.DepartmentService;
 import in.ac.amu.zhcet.service.UserService;
-import in.ac.amu.zhcet.utils.DuplicateException;
+import in.ac.amu.zhcet.utils.exception.DuplicateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

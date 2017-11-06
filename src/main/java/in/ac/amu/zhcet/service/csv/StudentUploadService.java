@@ -9,6 +9,7 @@ import in.ac.amu.zhcet.service.StudentService;
 import in.ac.amu.zhcet.service.csv.base.AbstractUploadService;
 import in.ac.amu.zhcet.service.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.csv.base.UploadResult;
+import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
-import static in.ac.amu.zhcet.utils.Utils.capitalizeAll;
-import static in.ac.amu.zhcet.utils.Utils.capitalizeFirst;
 
 @Slf4j
 @Service
@@ -46,12 +44,12 @@ public class StudentUploadService {
 
     private static Student fromStudentUpload(StudentUpload studentUpload) {
         Student student = new Student();
-        student.setEnrolmentNumber(capitalizeAll(studentUpload.getEnrolmentNo()));
-        student.setFacultyNumber(capitalizeAll(studentUpload.getFacultyNo()));
-        student.getUser().setName(capitalizeFirst(studentUpload.getName()));
-        student.getUser().setDepartment(Department.builder().name(capitalizeFirst(studentUpload.getDepartment())).build());
-        student.setSection(capitalizeAll(studentUpload.getSection()));
-        student.setHallCode(capitalizeAll(studentUpload.getHall()));
+        student.setEnrolmentNumber(StringUtils.capitalizeAll(studentUpload.getEnrolmentNo()));
+        student.setFacultyNumber(StringUtils.capitalizeAll(studentUpload.getFacultyNo()));
+        student.getUser().setName(StringUtils.capitalizeFirst(studentUpload.getName()));
+        student.getUser().setDepartment(Department.builder().name(StringUtils.capitalizeFirst(studentUpload.getDepartment())).build());
+        student.setSection(StringUtils.capitalizeAll(studentUpload.getSection()));
+        student.setHallCode(StringUtils.capitalizeAll(studentUpload.getHall()));
         student.setRegistrationYear(studentUpload.getRegistrationYear());
         student.setStatus(studentUpload.getStatus());
         student.getUser().getDetails().setGender(studentUpload.getGender());

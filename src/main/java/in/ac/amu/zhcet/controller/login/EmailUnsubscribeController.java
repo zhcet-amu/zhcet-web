@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.controller.login;
 
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.UserService;
-import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,7 @@ public class EmailUnsubscribeController {
     @ResponseBody
     @GetMapping("/login/unsubscribe")
     public String unsubscribe(@RequestParam String email, @RequestParam String conf) {
-        if (!Utils.hashMatches(email, conf))
+        if (!SecurityUtils.hashMatches(email, conf))
             return "Invalid Entry";
 
         UserAuth userAuth = userService.getUserByEmail(email);

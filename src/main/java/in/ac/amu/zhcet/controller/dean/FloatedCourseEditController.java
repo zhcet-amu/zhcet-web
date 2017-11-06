@@ -8,6 +8,7 @@ import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.csv.RegistrationUploadService;
 import in.ac.amu.zhcet.service.misc.AttendanceDownloadService;
 import in.ac.amu.zhcet.service.misc.EmailNotificationService;
+import in.ac.amu.zhcet.utils.SortUtils;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,7 @@ public class FloatedCourseEditController {
                 .map(CourseRegistration::getStudent)
                 .collect(Collectors.toList());
         List<String> emails = emailNotificationService.getEmails(students);
-        Utils.sortCourseAttendance(courseRegistrations);
+        SortUtils.sortCourseAttendance(courseRegistrations);
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("floatedCourse", floatedCourse);
         model.addAttribute("deanOverride", "dean");

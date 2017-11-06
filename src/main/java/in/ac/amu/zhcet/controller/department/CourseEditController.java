@@ -4,7 +4,7 @@ import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.type.CourseType;
 import in.ac.amu.zhcet.service.CourseManagementService;
-import in.ac.amu.zhcet.utils.UpdateException;
+import in.ac.amu.zhcet.utils.exception.UpdateException;
 import in.ac.amu.zhcet.utils.page.Path;
 import in.ac.amu.zhcet.utils.page.PathChain;
 import lombok.extern.slf4j.Slf4j;

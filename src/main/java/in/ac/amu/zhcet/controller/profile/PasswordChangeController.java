@@ -3,7 +3,7 @@ package in.ac.amu.zhcet.controller.profile;
 import in.ac.amu.zhcet.data.model.dto.PasswordChange;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.UserService;
-import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,7 +58,7 @@ public class PasswordChangeController {
             return redirectUrl;
         }
 
-        List<String> errors = Utils.validatePassword(passwordChange.getNewPassword(), passwordChange.getConfirmPassword());
+        List<String> errors = SecurityUtils.validatePassword(passwordChange.getNewPassword(), passwordChange.getConfirmPassword());
 
         if (!errors.isEmpty()) {
             redirectAttributes.addFlashAttribute("pass_errors", errors);

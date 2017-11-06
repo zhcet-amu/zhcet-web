@@ -6,7 +6,8 @@ import in.ac.amu.zhcet.data.model.user.UserDetail;
 import in.ac.amu.zhcet.data.repository.UserDetailRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import in.ac.amu.zhcet.data.type.Roles;
-import in.ac.amu.zhcet.utils.DuplicateException;
+import in.ac.amu.zhcet.utils.StringUtils;
+import in.ac.amu.zhcet.utils.exception.DuplicateException;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class UserService {
     }
 
     public boolean throwDuplicateEmail(String email, UserAuth userAuth) {
-        if (!Utils.isEmpty(email)) {
+        if (!StringUtils.isEmpty(email)) {
             UserAuth checkEmailDuplicate = getUserByEmail(email);
             if (checkEmailDuplicate != null && !checkEmailDuplicate.getUserId().equals(userAuth.getUserId())) {
                 log.error("User with email already exists {} {}", userAuth.getUserId(), email);

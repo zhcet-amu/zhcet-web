@@ -1,12 +1,12 @@
 package in.ac.amu.zhcet.service;
 
-import in.ac.amu.zhcet.data.type.HallCode;
-import in.ac.amu.zhcet.data.type.StudentStatus;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.datatables.StudentEditModel;
-import in.ac.amu.zhcet.utils.DuplicateException;
-import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.data.type.HallCode;
+import in.ac.amu.zhcet.data.type.StudentStatus;
+import in.ac.amu.zhcet.utils.StringUtils;
+import in.ac.amu.zhcet.utils.exception.DuplicateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
 import org.modelmapper.ModelMapper;
@@ -66,7 +66,7 @@ public class StudentEditService {
             }
         }
 
-        if (!Utils.isEmpty(studentEditModel.getHallCode()) && !EnumUtils.isValidEnum(HallCode.class, studentEditModel.getHallCode())) {
+        if (!StringUtils.isEmpty(studentEditModel.getHallCode()) && !EnumUtils.isValidEnum(HallCode.class, studentEditModel.getHallCode())) {
             log.error("Tried to save student with invalid hall code {} {}", id, studentEditModel.getHallCode());
             throw new RuntimeException("Invalid Hall : " + studentEditModel.getHallCode() + ". Must be within " + EnumUtils.getEnumMap(HallCode.class).keySet());
         }

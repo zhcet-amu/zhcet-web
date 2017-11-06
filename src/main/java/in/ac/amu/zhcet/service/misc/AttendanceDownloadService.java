@@ -6,7 +6,7 @@ import in.ac.amu.zhcet.data.model.Attendance;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.service.storage.FileSystemStorageService;
-import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.utils.SortUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,7 +63,7 @@ public class AttendanceDownloadService {
     }
 
     private List<String> attendanceCsv(String authority, String meta, List<CourseRegistration> courseRegistrations) throws IOException {
-        Utils.sortCourseAttendance(courseRegistrations);
+        SortUtils.sortCourseAttendance(courseRegistrations);
         String fileName = fileSystemStorageService.generateFileName(authority + "_" + meta + ".csv");
 
         log.info("Writing CSV to a file : {}", fileName);

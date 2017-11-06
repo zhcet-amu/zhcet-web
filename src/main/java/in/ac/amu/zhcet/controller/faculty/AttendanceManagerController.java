@@ -6,7 +6,7 @@ import in.ac.amu.zhcet.service.csv.AttendanceUploadService;
 import in.ac.amu.zhcet.service.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.csv.base.UploadResult;
 import in.ac.amu.zhcet.service.misc.EmailNotificationService;
-import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.utils.SortUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -57,7 +57,7 @@ public class AttendanceManagerController {
                     AttendanceModel attendanceModel = new AttendanceModel();
                     List<AttendanceUpload> attendanceUploads = new ArrayList<>();
                     attendanceUploads.addAll(confirmation.getData());
-                    Utils.sortAttendanceUpload(attendanceUploads);
+                    SortUtils.sortAttendanceUpload(attendanceUploads);
                     attendanceModel.setUploadList(attendanceUploads);
                     attributes.addFlashAttribute("attendanceModel", attendanceModel);
                 } else {

@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.configuration;
 
-import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.utils.SecurityUtils;
+import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,8 +31,8 @@ public class EmailConfiguration {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        if (!Utils.isEmpty(applicationProperties.getSalt()) && !applicationProperties.getSalt().equals(Utils.SALT)) {
-            Utils.SALT = applicationProperties.getSalt();
+        if (!StringUtils.isEmpty(applicationProperties.getSalt()) && !applicationProperties.getSalt().equals(SecurityUtils.SALT)) {
+            SecurityUtils.SALT = applicationProperties.getSalt();
             log.info("Applied salt to application");
         } else {
             log.error("Using default salt for app, this is dangerous and can lead to hacking into system");

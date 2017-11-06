@@ -3,6 +3,7 @@ package in.ac.amu.zhcet.service.misc;
 import in.ac.amu.zhcet.configuration.ConfigurationComponent;
 import in.ac.amu.zhcet.data.model.Configuration;
 import in.ac.amu.zhcet.data.repository.ConfigurationRepository;
+import in.ac.amu.zhcet.utils.StringUtils;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +99,8 @@ public class ConfigurationService {
     }
 
     public String getBaseUrl(String defaultUrl) {
-        if ((defaultUrl == null || defaultUrl.contains("127.0.0.1") || defaultUrl.contains("localhost")) && !Utils.isEmpty(configuration.getUrl()))
+        if ((defaultUrl == null || defaultUrl.contains("127.0.0.1") || defaultUrl.contains("localhost")) &&
+                !StringUtils.isEmpty(configuration.getUrl()))
             return configuration.getUrl();
         return getBase(defaultUrl);
     }

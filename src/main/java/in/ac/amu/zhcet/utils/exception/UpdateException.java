@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.utils;
+package in.ac.amu.zhcet.utils.exception;
 
 public class UpdateException extends RuntimeException {
 
