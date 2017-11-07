@@ -1,9 +1,8 @@
 package in.ac.amu.zhcet.service.security.login;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.cache.RemovalListener;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.RemovalListener;
 import in.ac.amu.zhcet.configuration.security.login.listener.PathAuthorizationAuditListener;
 import in.ac.amu.zhcet.service.misc.ConfigurationService;
 import in.ac.amu.zhcet.utils.Utils;
@@ -18,10 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -31,28 +28,23 @@ public class LoginAttemptService {
 
     private static final TimeUnit TIME_UNIT = TimeUnit.HOURS;
 
-    private final LoadingCache<String, Integer> attemptsCache;
+    private final Cache<String, Integer> attemptsCache;
     private final ConfigurationService configurationService;
 
     @Autowired
     public LoginAttemptService(ConfigurationService configurationService) {
         this.configurationService = configurationService;
 
-        RemovalListener<String, Integer> removalListener = removal ->
+        RemovalListener<String, Integer> removalListener = (key, value, cause) ->
                 log.info("Login Key {} with value {} was removed because : {}",
-                removal.getKey(), removal.getValue(), removal.getCause());
+                key, value, cause);
 
-        attemptsCache = CacheBuilder
+        attemptsCache = Caffeine
                 .newBuilder()
                 .maximumSize(10000)
                 .removalListener(removalListener)
                 .expireAfterWrite(getBlockDuration(), TIME_UNIT)
-                .build(new CacheLoader<String, Integer>() {
-                    @Override
-                    public Integer load(@Nonnull String key) throws Exception {
-                        return 0;
-                    }
-                });
+                .build(key -> 0);
     }
 
     private int getMaxRetries() {
@@ -107,41 +99,32 @@ public class LoginAttemptService {
         }
     }
 
-    public void loginSucceeded(String key) {
+    private int getFromCache(String key) {
+        Integer attempts = attemptsCache.getIfPresent(key);
+        return attempts != null ? attempts : 0;
+    }
+
+    private void loginSucceeded(String key) {
         attemptsCache.invalidate(key);
     }
 
-    public void loginFailed(String key) {
+    private void loginFailed(String key) {
         if (isBlocked(key)) {
             log.info("IP {} is already blocked, even correct attempts will be marked wrong, hence ignoring", key);
             return;
         }
 
-        int attempts;
-        try {
-            attempts = attemptsCache.get(key);
-        } catch (ExecutionException e) {
-            attempts = 0;
-        }
-        attempts++;
-        attemptsCache.put(key, attempts);
+        int attempts = getFromCache(key);
+        attemptsCache.put(key, ++attempts);
         log.info("Attempts : {}, Max Attempts : {}", attempts, getMaxRetries());
     }
 
     public boolean isBlocked(String key) {
-        try {
-            return attemptsCache.get(key) >= getMaxRetries();
-        } catch (ExecutionException e) {
-            return false;
-        }
+        return getFromCache(key) >= getMaxRetries();
     }
 
     private int triesLeft(String key) {
-        try {
-            return getMaxRetries() - attemptsCache.get(key);
-        } catch (ExecutionException e) {
-            return getMaxRetries();
-        }
+        return getMaxRetries() - getFromCache(key);
     }
 
     public boolean isRememberMe(Authentication authentication) {

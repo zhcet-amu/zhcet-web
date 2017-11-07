@@ -25,32 +25,38 @@ public class RateLimitInterceptor extends HandlerInterceptorAdapter {
         this.rateLimitService = rateLimitService;
     }
 
+    private boolean isPost(HttpServletRequest request) {
+        return request.getMethod().equals(POST_METHOD);
+    }
+
+    private int getLimit(HttpServletRequest request) {
+        return isPost(request) ? POST_LIMIT : GET_LIMIT;
+    }
+
     private String getKey(HttpServletRequest request) {
-        return request.getMethod().equals(POST_METHOD) ? "POST~" : "GET~" + Utils.getClientIP(request);
+        return isPost(request) ? "POST~" : "GET~" + Utils.getClientIP(request);
     }
 
-    private boolean isLimitExceeded(HttpServletRequest request, String key) {
-        int requests = rateLimitService.incrementAttempts(key);
-
-        return requests > (request.getMethod().equals(POST_METHOD) ? POST_LIMIT : GET_LIMIT);
+    private boolean isLimitExceeded(HttpServletRequest request, int requests) {
+        return requests > getLimit(request);
     }
 
-    private int getRemainingLimit(HttpServletRequest request, String key) {
-        int requests = rateLimitService.getAttempts(key);
-
-        return (request.getMethod().equals(POST_METHOD) ? POST_LIMIT : GET_LIMIT) - requests;
+    private int getRemainingLimit(HttpServletRequest request, int requests) {
+        return getLimit(request) - requests;
     }
 
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String key = getKey(request);
 
-        if (isLimitExceeded(request, key)) {
+        int attempts = rateLimitService.incrementAttempts(key);
+        if (isLimitExceeded(request, attempts)) {
             log.warn("{} accessed {} far too frequently", Utils.getClientIP(request), request.getRequestURL());
             response.sendError(429, "Rate limit exceeded, wait for the next minute");
             return false;
         }
 
-        response.addIntHeader("Remaining-Requests", getRemainingLimit(request, key));
+        response.addIntHeader("Remaining-Requests", getRemainingLimit(request, attempts));
         return true;
     }
 

@@ -15,7 +15,9 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepositoryFactoryBean;
@@ -76,6 +78,11 @@ public class CoreApplication extends SpringBootServletInitializer {
     @Bean
     public ServletContextInitializer sentryServletContextInitializer() {
         return new io.sentry.spring.SentryServletContextInitializer();
+    }
+
+    @Bean
+    public CacheManager cacheManager() {
+        return new CaffeineCacheManager();
     }
 
     @Bean
