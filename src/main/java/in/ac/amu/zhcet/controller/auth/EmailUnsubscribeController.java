@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller.login;
+package in.ac.amu.zhcet.controller.auth;
 
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.UserService;

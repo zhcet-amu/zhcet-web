@@ -1,5 +1,4 @@
-package in.ac.amu.zhcet.controller.login;
-
+package in.ac.amu.zhcet.controller.auth;
 
 import in.ac.amu.zhcet.data.model.dto.PasswordReset;
 import in.ac.amu.zhcet.service.user.auth.PasswordResetService;
@@ -42,7 +41,7 @@ public class ResetPasswordController {
 
     @PostMapping("/login/reset_password")
     public String savePassword(@Valid PasswordReset passwordReset, RedirectAttributes redirectAttributes) {
-        String redirectUrl = "redirect:/login/reset_password?id="+passwordReset.getId()+"&auth="+passwordReset.getToken();
+        String redirectUrl = String.format("redirect:/login/reset_password?id=%s&auth=%s", passwordReset.getId(), passwordReset.getToken());
 
         String result = passwordResetService.validate(passwordReset.getId(), passwordReset.getToken());
         if (result != null) {
