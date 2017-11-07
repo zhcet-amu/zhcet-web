@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,11 +24,13 @@ public class StudentService {
 
     private final UserService userService;
     private final StudentRepository studentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public StudentService(UserService userService, StudentRepository studentRepository) {
+    public StudentService(UserService userService, StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.studentRepository = studentRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Student getLoggedInStudent() {
@@ -57,7 +60,7 @@ public class StudentService {
         return studentRepository.getByFacultyNumber(userId);
     }
 
-    private static Student initializeStudent(Student student) {
+    private Student initializeStudent(Student student) {
         student.getUser().setType(Type.STUDENT);
 
         if (student.getUser().getUserId() == null)
@@ -67,7 +70,7 @@ public class StudentService {
         if (student.getUser().getPassword() == null)
             student.getUser().setPassword(student.getFacultyNumber());
 
-        student.getUser().setPassword(UserAuth.PASSWORD_ENCODER.encode(student.getUser().getPassword()));
+        student.getUser().setPassword(passwordEncoder.encode(student.getUser().getPassword()));
 
         return student;
     }
@@ -75,7 +78,7 @@ public class StudentService {
     @Transactional
     public void register(Set<Student> students) {
         List<Student> studentList = students.parallelStream()
-                .map(StudentService::initializeStudent)
+                .map(this::initializeStudent)
                 .collect(Collectors.toList());
         List<UserAuth> userAuths = studentList.parallelStream()
                 .map(Student::getUser)

@@ -6,6 +6,7 @@ import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +22,12 @@ import java.util.List;
 public class PasswordChangeController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public PasswordChangeController(UserService userService) {
+    public PasswordChangeController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/profile/change_password")
@@ -52,7 +55,7 @@ public class PasswordChangeController {
             return redirectUrl;
         }
 
-        if (!UserAuth.PASSWORD_ENCODER.matches(passwordChange.getOldPassword(), userAuth.getPassword())) {
+        if (!passwordEncoder.matches(passwordChange.getOldPassword(), userAuth.getPassword())) {
             log.warn("Current password does not match");
             redirectAttributes.addFlashAttribute("pass_errors", "Current password does not match provided password");
             return redirectUrl;

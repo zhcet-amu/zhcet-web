@@ -1,20 +1,20 @@
 package in.ac.amu.zhcet.service;
 
-import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.model.user.UserDetail;
 import in.ac.amu.zhcet.data.repository.UserDetailRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.utils.StringUtils;
-import in.ac.amu.zhcet.utils.exception.DuplicateException;
 import in.ac.amu.zhcet.utils.Utils;
+import in.ac.amu.zhcet.utils.exception.DuplicateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,11 +27,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserDetailRepository userDetailRepository) {
+    public UserService(UserRepository userRepository, UserDetailRepository userDetailRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userDetailRepository = userDetailRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void save(UserAuth userAuth) {
@@ -56,12 +58,7 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    // Checking if the user is active prevents email hoarding
-    public boolean emailExists(String email) {
-        return getUserByEmail(email) != null;
-    }
-
-    public boolean throwDuplicateEmail(String email, UserAuth userAuth) {
+    boolean throwDuplicateEmail(String email, UserAuth userAuth) {
         if (!StringUtils.isEmpty(email)) {
             UserAuth checkEmailDuplicate = getUserByEmail(email);
             if (checkEmailDuplicate != null && !checkEmailDuplicate.getUserId().equals(userAuth.getUserId())) {
@@ -125,15 +122,8 @@ public class UserService {
     }
 
     @Transactional
-    public void updateDepartment(String id, Department department) {
-        UserAuth user = findById(id);
-        user.setDepartment(department);
-        userRepository.save(user);
-    }
-
-    @Transactional
     public void changeUserPassword(UserAuth userAuth, String password) {
-        userAuth.setPassword(UserAuth.PASSWORD_ENCODER.encode(password));
+        userAuth.setPassword(passwordEncoder.encode(password));
         userAuth.setPasswordChanged(true);
         userRepository.save(userAuth);
     }

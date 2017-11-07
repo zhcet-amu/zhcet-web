@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,11 +25,13 @@ public class FacultyService {
 
     private final FacultyRepository facultyRepository;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public FacultyService(FacultyRepository facultyRepository, UserService userService) {
+    public FacultyService(FacultyRepository facultyRepository, UserService userService, PasswordEncoder passwordEncoder) {
         this.facultyRepository = facultyRepository;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public FacultyMember getById(String facultyId) {
@@ -37,10 +40,6 @@ public class FacultyService {
 
     public List<FacultyMember> getAll() {
         return facultyRepository.findAllByWorking(true);
-    }
-
-    public List<FacultyMember> getByIds(List<String> facultyIds) {
-        return facultyRepository.getByFacultyIdIn(facultyIds);
     }
 
     public List<FacultyMember> getByDepartment(Department department) {
@@ -58,7 +57,7 @@ public class FacultyService {
         return getById(userName);
     }
 
-    private static FacultyMember initializeFaculty(FacultyMember facultyMember) {
+    private FacultyMember initializeFaculty(FacultyMember facultyMember) {
         facultyMember.getUser().setType(Type.FACULTY);
 
         if (facultyMember.getUser().getUserId() == null)
@@ -66,14 +65,14 @@ public class FacultyService {
         if (facultyMember.getUser().getRoles() == null || facultyMember.getUser().getRoles().isEmpty())
             facultyMember.getUser().setRoles(Collections.singleton(Roles.FACULTY));
 
-        facultyMember.getUser().setPassword(UserAuth.PASSWORD_ENCODER.encode(facultyMember.getUser().getPassword()));
+        facultyMember.getUser().setPassword(passwordEncoder.encode(facultyMember.getUser().getPassword()));
         return facultyMember;
     }
 
     @Transactional
     public void register(Set<FacultyMember> facultyMembers) {
         List<FacultyMember> memberList = facultyMembers.parallelStream()
-                .map(FacultyService::initializeFaculty)
+                .map(this::initializeFaculty)
                 .collect(Collectors.toList());
         List<UserAuth> userAuths = memberList.parallelStream()
                 .map(FacultyMember::getUser)

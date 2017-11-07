@@ -22,6 +22,8 @@ import org.springframework.data.jpa.datatables.repository.DataTablesRepositoryFa
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.util.Arrays;
@@ -74,6 +76,11 @@ public class CoreApplication extends SpringBootServletInitializer {
     @Bean
     public ServletContextInitializer sentryServletContextInitializer() {
         return new io.sentry.spring.SentryServletContextInitializer();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

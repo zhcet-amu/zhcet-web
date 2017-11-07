@@ -8,8 +8,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -29,8 +27,6 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true, exclude="details")
 @ToString(exclude = "password")
 public class UserAuth extends BaseEntity {
-
-    public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
     @Id
     @NotBlank

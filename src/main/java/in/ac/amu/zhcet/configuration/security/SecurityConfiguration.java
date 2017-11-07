@@ -1,12 +1,11 @@
 package in.ac.amu.zhcet.configuration.security;
 
+import in.ac.amu.zhcet.configuration.security.login.CustomAuthenticationDetails;
 import in.ac.amu.zhcet.configuration.security.login.RoleWiseSuccessHandler;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.user.Auditor;
 import in.ac.amu.zhcet.service.user.UserDetailService;
 import in.ac.amu.zhcet.service.user.auth.PersistentTokenService;
-import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +18,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,10 +37,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder authenticationMgr) throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder authenticationMgr, PasswordEncoder passwordEncoder) throws Exception {
         authenticationMgr
                 .userDetailsService(userDetailsService)
-                .passwordEncoder(UserAuth.PASSWORD_ENCODER);
+                .passwordEncoder(passwordEncoder);
     }
 
     @Bean
@@ -56,25 +56,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
-    }
-
-    // To enable reverse proxied servers to get actual user IP
-    private static class CustomAuthenticationDetails extends WebAuthenticationDetails {
-        private String remoteAddress;
-
-        CustomAuthenticationDetails(HttpServletRequest request) {
-            super(request);
-            this.remoteAddress = Utils.getClientIP(request);
-            if (!remoteAddress.equals(request.getRemoteAddr())) {
-                log.info("Received User IP : {}", request.getRemoteAddr());
-                log.info("Replaced User IP : {}", remoteAddress);
-            }
-        }
-
-        @Override
-        public String getRemoteAddress() {
-            return remoteAddress;
-        }
     }
 
     @Bean
