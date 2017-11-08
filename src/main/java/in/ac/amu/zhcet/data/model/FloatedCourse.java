@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
-import in.ac.amu.zhcet.service.misc.ConfigurationService;
+import in.ac.amu.zhcet.service.ConfigurationService;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;

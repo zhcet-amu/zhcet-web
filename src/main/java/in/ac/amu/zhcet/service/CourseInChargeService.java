@@ -3,7 +3,6 @@ package in.ac.amu.zhcet.service;
 import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.repository.CourseInChargeRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
-import in.ac.amu.zhcet.service.misc.ConfigurationService;
 import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

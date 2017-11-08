@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.storage;
+package in.ac.amu.zhcet.service.upload.storage;
 
 public class StorageException extends RuntimeException {
 

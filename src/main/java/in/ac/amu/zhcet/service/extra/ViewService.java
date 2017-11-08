@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.misc;
+package in.ac.amu.zhcet.service.extra;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.type.Gender;

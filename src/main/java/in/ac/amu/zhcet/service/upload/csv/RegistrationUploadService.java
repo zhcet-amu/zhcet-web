@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.csv;
+package in.ac.amu.zhcet.service.upload.csv;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
@@ -7,9 +7,9 @@ import in.ac.amu.zhcet.data.model.dto.upload.RegistrationUpload;
 import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.CourseRegistrationService;
 import in.ac.amu.zhcet.service.StudentService;
-import in.ac.amu.zhcet.service.csv.base.AbstractUploadService;
-import in.ac.amu.zhcet.service.csv.base.Confirmation;
-import in.ac.amu.zhcet.service.csv.base.UploadResult;
+import in.ac.amu.zhcet.service.upload.csv.base.AbstractUploadService;
+import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
+import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
 import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

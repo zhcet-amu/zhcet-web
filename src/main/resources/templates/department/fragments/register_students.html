@@ -35,7 +35,7 @@
             </form>
         </div>
     </div>
-    <!--/*@thymesVar id="confirmRegistration" type="in.ac.amu.zhcet.service.csv.base.Confirmation<in.ac.amu.zhcet.data.model.CourseRegistration>"*/-->
+    <!--/*@thymesVar id="confirmRegistration" type="in.ac.amu.zhcet.service.upload.csv.base.Confirmation<in.ac.amu.zhcet.data.model.CourseRegistration>"*/-->
     <div th:with="confirmRegistration = ${#session.getAttribute('confirmRegistration')}">
         <div th:if="${confirmRegistration}" id="registration-modal" class="modal">
         <div class="modal-dialog modal-lg">

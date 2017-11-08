@@ -4,7 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.RemovalListener;
 import in.ac.amu.zhcet.configuration.security.login.listener.PathAuthorizationAuditListener;
-import in.ac.amu.zhcet.service.misc.ConfigurationService;
+import in.ac.amu.zhcet.service.ConfigurationService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.AllArgsConstructor;
 import lombok.Data;

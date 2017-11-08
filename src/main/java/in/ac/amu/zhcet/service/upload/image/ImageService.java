@@ -1,5 +1,6 @@
-package in.ac.amu.zhcet.service.misc;
+package in.ac.amu.zhcet.service.upload.image;
 
+import in.ac.amu.zhcet.service.upload.FirebaseService;
 import in.ac.amu.zhcet.utils.ImageUtils;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.AllArgsConstructor;

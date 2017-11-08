@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.configuration.actuator;
 
-import in.ac.amu.zhcet.service.misc.ViewService;
+import in.ac.amu.zhcet.service.extra.ViewService;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

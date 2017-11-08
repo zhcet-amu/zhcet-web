@@ -5,7 +5,6 @@ import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
-import in.ac.amu.zhcet.service.misc.ConfigurationService;
 import in.ac.amu.zhcet.utils.exception.DuplicateException;
 import in.ac.amu.zhcet.utils.exception.UpdateException;
 import lombok.extern.slf4j.Slf4j;

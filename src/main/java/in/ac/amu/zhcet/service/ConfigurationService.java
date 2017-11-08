@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.misc;
+package in.ac.amu.zhcet.service;
 
 import in.ac.amu.zhcet.configuration.ConfigurationComponent;
 import in.ac.amu.zhcet.data.model.Configuration;

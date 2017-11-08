@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.csv.base;
+package in.ac.amu.zhcet.service.upload.csv.base;
 
 import in.ac.amu.zhcet.data.model.base.Meta;
 import lombok.Data;

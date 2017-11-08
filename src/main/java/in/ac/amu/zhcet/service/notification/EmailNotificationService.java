@@ -1,10 +1,11 @@
-package in.ac.amu.zhcet.service.misc;
+package in.ac.amu.zhcet.service.notification;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.StudentService;
+import in.ac.amu.zhcet.service.ConfigurationService;
 import in.ac.amu.zhcet.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

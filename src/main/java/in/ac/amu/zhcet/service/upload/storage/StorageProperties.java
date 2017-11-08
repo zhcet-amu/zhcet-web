@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.storage;
+package in.ac.amu.zhcet.service.upload.storage;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

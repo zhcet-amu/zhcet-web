@@ -11,7 +11,7 @@ import in.ac.amu.zhcet.data.repository.FacultyRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.service.CourseInChargeService;
-import in.ac.amu.zhcet.service.misc.ConfigurationService;
+import in.ac.amu.zhcet.service.ConfigurationService;
 import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

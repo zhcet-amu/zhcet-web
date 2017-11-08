@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.service.user;
 
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.UserService;
-import in.ac.amu.zhcet.service.misc.ImageService;
+import in.ac.amu.zhcet.service.upload.image.ImageService;
 import in.ac.amu.zhcet.service.security.login.LoginAttemptService;
 import in.ac.amu.zhcet.service.security.permission.PermissionManager;
 import in.ac.amu.zhcet.utils.Utils;

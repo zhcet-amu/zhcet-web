@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.storage;
+package in.ac.amu.zhcet.service.upload.storage;
 
 import in.ac.amu.zhcet.service.user.Auditor;
 import lombok.extern.slf4j.Slf4j;

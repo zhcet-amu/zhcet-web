@@ -1,8 +1,8 @@
 package in.ac.amu.zhcet.controller.profile;
 
 import in.ac.amu.zhcet.data.model.user.UserAuth;
-import in.ac.amu.zhcet.service.misc.ImageService;
-import in.ac.amu.zhcet.service.misc.ImageUploadException;
+import in.ac.amu.zhcet.service.upload.image.ImageService;
+import in.ac.amu.zhcet.service.upload.image.ImageUploadException;
 import in.ac.amu.zhcet.service.user.UserDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

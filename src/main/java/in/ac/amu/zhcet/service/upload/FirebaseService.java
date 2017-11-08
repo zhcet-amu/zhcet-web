@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.misc;
+package in.ac.amu.zhcet.service.upload;
 
 import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.BlobInfo;

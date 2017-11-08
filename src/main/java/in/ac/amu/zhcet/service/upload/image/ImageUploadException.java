@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.misc;
+package in.ac.amu.zhcet.service.upload.image;
 
 public class ImageUploadException extends IllegalStateException {
 

@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.csv.base;
+package in.ac.amu.zhcet.service.upload.csv.base;
 
 import lombok.Data;
 import lombok.NonNull;

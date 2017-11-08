@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.controller.dean;
 
 import in.ac.amu.zhcet.data.model.Configuration;
 import in.ac.amu.zhcet.data.model.dto.Config;
-import in.ac.amu.zhcet.service.misc.ConfigurationService;
+import in.ac.amu.zhcet.service.ConfigurationService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
