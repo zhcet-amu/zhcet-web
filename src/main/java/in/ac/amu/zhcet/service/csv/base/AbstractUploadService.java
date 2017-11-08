@@ -4,6 +4,7 @@ import com.j256.simplecsv.processor.CsvProcessor;
 import com.j256.simplecsv.processor.ParseError;
 import in.ac.amu.zhcet.data.model.base.Meta;
 import in.ac.amu.zhcet.service.storage.FileSystemStorageService;
+import in.ac.amu.zhcet.service.storage.FileType;
 import in.ac.amu.zhcet.service.storage.StorageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class AbstractUploadService<T, U extends Meta> {
 
     private void storeFile(UploadResult<T> uploadResult, MultipartFile file) {
         try {
-            systemStorageService.store(file);
+            systemStorageService.store(FileType.CSV, file);
         } catch (StorageException fileException) {
             uploadResult.getErrors().add(fileException.getMessage());
             log.error(String.format("Error storing file %s", file.getOriginalFilename()), fileException);

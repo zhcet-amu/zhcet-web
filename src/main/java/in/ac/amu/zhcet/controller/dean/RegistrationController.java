@@ -9,6 +9,7 @@ import in.ac.amu.zhcet.service.csv.FacultyUploadService;
 import in.ac.amu.zhcet.service.csv.StudentUploadService;
 import in.ac.amu.zhcet.service.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.csv.base.UploadResult;
+import in.ac.amu.zhcet.service.storage.FileType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -149,7 +150,7 @@ public class RegistrationController {
 
         response.setHeader("Content-disposition", "attachment;filename=passwords.csv");
 
-        List<String> lines = Files.readAllLines(systemStorageService.load(filename));
+        List<String> lines = Files.readAllLines(systemStorageService.load(FileType.CSV, filename));
         for (String line : lines) {
             response.getOutputStream().println(line);
         }

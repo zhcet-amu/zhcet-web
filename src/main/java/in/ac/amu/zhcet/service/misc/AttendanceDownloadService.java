@@ -1,11 +1,11 @@
 package in.ac.amu.zhcet.service.misc;
 
-
 import com.j256.simplecsv.processor.CsvProcessor;
 import in.ac.amu.zhcet.data.model.Attendance;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.service.storage.FileSystemStorageService;
+import in.ac.amu.zhcet.service.storage.FileType;
 import in.ac.amu.zhcet.utils.SortUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +68,7 @@ public class AttendanceDownloadService {
 
         log.info("Writing CSV to a file : {}", fileName);
 
-        csvProcessor.writeAll(fileSystemStorageService.load(fileName).toFile(),
+        csvProcessor.writeAll(fileSystemStorageService.load(FileType.CSV, fileName).toFile(),
                 courseRegistrations.stream()
                     .map(this::fromCourseRegistration)
                     .collect(Collectors.toList()), true
@@ -76,7 +76,7 @@ public class AttendanceDownloadService {
 
         log.info("File Written!");
 
-        return Files.readAllLines(fileSystemStorageService.load(fileName));
+        return Files.readAllLines(fileSystemStorageService.load(FileType.CSV, fileName));
     }
 
     public void download(String suffix, String authority, List<CourseRegistration> courseRegistrations, HttpServletResponse response) throws IOException {

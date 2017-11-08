@@ -10,6 +10,7 @@ import in.ac.amu.zhcet.service.csv.base.AbstractUploadService;
 import in.ac.amu.zhcet.service.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.csv.base.UploadResult;
 import in.ac.amu.zhcet.service.storage.FileSystemStorageService;
+import in.ac.amu.zhcet.service.storage.FileType;
 import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +106,7 @@ public class FacultyUploadService {
     private String saveFile(Confirmation<FacultyMember> confirmation) throws IOException {
         String filename = systemStorageService.generateFileName("faculty_password.csv");
 
-        Path filePath = systemStorageService.load(filename);
+        Path filePath = systemStorageService.load(FileType.CSV, filename);
         File newFile = filePath.toFile();
 
         List<FacultyUpload> facultyUploads = confirmation.getData().stream()

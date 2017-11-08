@@ -1,10 +1,10 @@
 package in.ac.amu.zhcet.service.storage;
 
+import in.ac.amu.zhcet.service.user.Auditor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
@@ -23,22 +23,36 @@ import java.util.stream.Stream;
 @Service
 public class FileSystemStorageService implements StorageService {
 
-    private final Path rootLocation;
+    private final Path rootCsvLocation;
+    private final Path rootImgLocation;
+    private final Path rootDocLocation;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
-        this.rootLocation = Paths.get(properties.getLocation());
+        this.rootCsvLocation = Paths.get(properties.getCsv().getLocation());
+        this.rootImgLocation = Paths.get(properties.getImage().getLocation());
+        this.rootDocLocation = Paths.get(properties.getDocument().getLocation());
+    }
+
+    private Path fromFileType(FileType fileType) {
+        switch (fileType) {
+            case CSV:
+                return rootCsvLocation;
+            case IMAGE:
+                return rootImgLocation;
+            case DOCUMENT:
+                return rootDocLocation;
+            default:
+                return rootDocLocation;
+        }
     }
 
     @Override
     public String generateFileName(String name) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        LocalDateTime localDateTime = LocalDateTime.now();
-
-        return StringUtils.cleanPath(localDateTime.toString() + "_" + username + "_" + name);
+        return StringUtils.cleanPath(LocalDateTime.now().toString() + "_" + Auditor.getLoggedInUsername() + "_" + name);
     }
 
-    private void storeAbstract(String name, boolean empty, InputStream inputStream) {
+    private void storeAbstract(FileType fileType, String name, boolean empty, InputStream inputStream) {
         String filename = generateFileName(name);
         try {
             if (empty) {
@@ -51,7 +65,7 @@ public class FileSystemStorageService implements StorageService {
                 log.warn(message);
                 throw new StorageException(message);
             }
-            Files.copy(inputStream, this.rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(inputStream, fromFileType(fileType).resolve(filename), StandardCopyOption.REPLACE_EXISTING);
             log.info("Saved file " + filename);
         } catch (IOException e) {
             log.error(String.format("Failed storing file %s", filename), e);
@@ -60,9 +74,9 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void store(File file) {
+    public void store(FileType fileType, File file) {
         try {
-            storeAbstract(file.getName(), file.length() == 0, new FileInputStream(file));
+            storeAbstract(fileType, file.getName(), file.length() == 0, new FileInputStream(file));
         } catch (FileNotFoundException e) {
             log.error(String.format("Failed storing file %s", file.getName()), e);
             throw new StorageException("Failed to store file " + file.getName(), e);
@@ -70,9 +84,9 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void store(MultipartFile file) {
+    public void store(FileType fileType, MultipartFile file) {
         try {
-            storeAbstract(file.getOriginalFilename(), file.isEmpty(), file.getInputStream());
+            storeAbstract(fileType, file.getOriginalFilename(), file.isEmpty(), file.getInputStream());
         } catch (IOException e) {
             log.error(String.format("Failed storing file %s", file.getName()), e);
             throw new StorageException("Failed to store file " + file.getName(), e);
@@ -80,11 +94,12 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public Stream<Path> loadAll() {
+    public Stream<Path> loadAll(FileType fileType) {
         try {
-            return Files.walk(this.rootLocation, 1)
-                    .filter(path -> !path.equals(this.rootLocation))
-                    .map(this.rootLocation::relativize);
+            Path location = fromFileType(fileType);
+            return Files.walk(location, 1)
+                    .filter(path -> !path.equals(location))
+                    .map(location::relativize);
         }
         catch (IOException e) {
             log.error("Failed to read files", e);
@@ -94,14 +109,14 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public Path load(String filename) {
-        return rootLocation.resolve(filename);
+    public Path load(FileType fileType, String filename) {
+        return fromFileType(fileType).resolve(filename);
     }
 
     @Override
-    public Resource loadAsResource(String filename) {
+    public Resource loadAsResource(FileType fileType, String filename) {
         try {
-            Path file = load(filename);
+            Path file = load(fileType, filename);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
@@ -109,22 +124,23 @@ public class FileSystemStorageService implements StorageService {
                 log.error("Failed to read file {}", filename);
                 throw new StorageFileNotFoundException("Could not read file: " + filename);
             }
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             log.error(String.format("Failed to read file %s", filename), e);
             throw new StorageFileNotFoundException("Could not read file: " + filename, e);
         }
     }
 
     @Override
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
+    public void deleteAll(FileType fileType) {
+        FileSystemUtils.deleteRecursively(fromFileType(fileType).toFile());
     }
 
     @Override
     public void init() {
         try {
-            Files.createDirectories(rootLocation);
+            Files.createDirectories(rootCsvLocation);
+            Files.createDirectories(rootImgLocation);
+            Files.createDirectories(rootDocLocation);
         } catch (IOException e) {
             log.error("Could not initialize storage", e);
             throw new StorageException("Could not initialize storage", e);
