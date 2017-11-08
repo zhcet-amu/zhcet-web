@@ -7,7 +7,7 @@
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
       class="vertical-layout vertical-menu 2-columns  fixed-navbar">
 <nav th:replace="fragments/header :: header"></nav>
-<div th:replace="fragments/navigation :: navigation(pageId = 'department', subPage = 'courses')"></div>
+<div th:replace="fragments/navigation :: navigation(pageId = 'department', subPage = 'add_course')"></div>
 
 <div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <div class="row">
