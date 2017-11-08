@@ -43,15 +43,32 @@
 </head>
 <body>
 
-<div th:fragment="wrapper">
-    <div class="app-content content container-fluid">
-        <div class="content-wrapper">
-            <div class="content-body">
-                <div th:include="this :: content"></div>
+<th:block th:fragment="wrapper">
+    <main class="page-row page-row-expanded">
+        <nav th:replace="fragments/header :: header"></nav>
+        <div th:replace="fragments/navigation :: navigation"></div>
+        <div class="app-content content container-fluid">
+            <div class="content-wrapper">
+                <div class="content-body">
+                    <div th:include="this :: content"></div>
+                </div>
             </div>
         </div>
+    </main>
+    <div class="page-row">
+        <footer class="footer footer-static footer-dark navbar-border">
+            <p class="clearfix text-muted text-sm-center mb-0 px-2">
+                <span class="float-md-left d-xs-block d-md-inline-block" th:text="|Copyright &copy; ${#temporals.year(#temporals.createNow())} ZHCET, All rights reserved.|"></span>
+                <span class="float-md-right d-xs-block d-md-inline-block">
+                    <a href="/terms" target="_blank">Terms of Services</a> |
+                    <a href="/privacy" target="_blank">Privacy Policy</a> |
+                    <a href="https://github.com/zhcet-amu/zhcet-web" target="_blank"><i class="icon-github"></i> View Source</a> |
+                    <a href="https://github.com/zhcet-amu/zhcet-web/graphs/contributors" target="_blank">Developers</a>
+                </span>
+            </p>
+        </footer>
     </div>
-</div>
+</th:block>
 
 <div class="content-header row" style="margin-bottom: 10px;" th:fragment="toolbar">
     <div class="content-header-left col-md-6 col-xs-12">
@@ -107,28 +124,28 @@
     <span th:utext="${message}">Fix this and try and try again</span>
 </div>
 
-<div th:fragment="scripts">
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" type="text/javascript"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.8.0/js/perfect-scrollbar.jquery.min.js" type="text/javascript"></script>
-    <script src="https://zhcet-backend.firebaseapp.com/static/js/unison.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.2/jquery.matchHeight-min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/screenfull.js/3.3.1/screenfull.min.js" type="text/javascript"></script>
-    <script src="https://zhcet-backend.firebaseapp.com/static/js/pace.min.js" type="text/javascript"></script>
-    <script src="https://zhcet-backend.firebaseapp.com/static/js/app-menu.min.js" type="text/javascript"></script>
-    <script src="https://zhcet-backend.firebaseapp.com/static/js/app.min.js" type="text/javascript"></script>
-    <script src="//cdn.muicss.com/mui-0.9.18/js/mui.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.colVis.min.js"></script>
-    <script src="https://zhcet-backend.firebaseapp.com/static/js/switchery.min.js" type="text/javascript"></script>
-    <script src="https://zhcet-backend.firebaseapp.com/static/js/switch.min.js" type="text/javascript"></script>
-    <script th:src="@{/js/file-uploader.js}"></script>
-    <script th:src="@{/js/app.js}" type="text/javascript"></script>
-</div>
+<th:block th:fragment="scripts">
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" type="text/javascript"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.8.0/js/perfect-scrollbar.jquery.min.js" type="text/javascript"></script>
+<script src="https://zhcet-backend.firebaseapp.com/static/js/unison.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.2/jquery.matchHeight-min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/screenfull.js/3.3.1/screenfull.min.js" type="text/javascript"></script>
+<script src="https://zhcet-backend.firebaseapp.com/static/js/pace.min.js" type="text/javascript"></script>
+<script src="https://zhcet-backend.firebaseapp.com/static/js/app-menu.min.js" type="text/javascript"></script>
+<script src="https://zhcet-backend.firebaseapp.com/static/js/app.min.js" type="text/javascript"></script>
+<script src="//cdn.muicss.com/mui-0.9.18/js/mui.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.colVis.min.js"></script>
+<script src="https://zhcet-backend.firebaseapp.com/static/js/switchery.min.js" type="text/javascript"></script>
+<script src="https://zhcet-backend.firebaseapp.com/static/js/switch.min.js" type="text/javascript"></script>
+<script th:src="@{/js/file-uploader.js}"></script>
+<script th:src="@{/js/app.js}" type="text/javascript"></script>
+</th:block>
 </body>
 </html>

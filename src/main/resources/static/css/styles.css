@@ -132,3 +132,18 @@ i.helper {
 .footer-dark a {  color: #B39DDB;  }
 .footer-dark a:hover {  color: #D1C4E9;  }
 .footer-dark a:visited {  color: #9575CD;  }
+
+html,
+body { height: 100%; }
+
+body {
+    display: table;
+    width: 100%;
+}
+
+.page-row {
+    display: table-row;
+    height: 1px;
+}
+
+.page-row-expanded { height: 100%; }

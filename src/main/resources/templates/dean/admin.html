@@ -6,30 +6,28 @@
 <head th:replace="fragments/layout :: head">
 </head>
 
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
-      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
-<nav th:replace="fragments/header :: header"></nav>
-<div th:replace="fragments/navigation :: navigation(pageId = 'dean', subPage = 'dean_admin')"></div>
-
-<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
-    <div class="row">
-        <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
-            <div th:replace="fragments/layout :: toolbar"></div>
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage = 'dean_admin')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div th:replace="fragments/layout :: toolbar"></div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 col-md-10 offset-md-1 offset-lg-0 col-lg-6 col-xl-4 offset-xl-2">
-            <div th:replace="dean/fragments/register_student:: register_student"></div>
-            <div th:replace="dean/fragments/register_faculty :: register_faculty"></div>
+        <div class="row">
+            <div class="col-xs-12 col-lg-6">
+                <div th:replace="dean/fragments/register_student:: register_student"></div>
+                <div th:replace="dean/fragments/register_faculty :: register_faculty"></div>
+            </div>
+            <div class="col-xs-12 col-lg-6">
+                <div th:replace="dean/fragments/add_department"></div>
+                <div th:replace="dean/fragments/role_management"></div>
+            </div>
         </div>
-        <div class="col-xs-12 col-md-10 offset-md-1 offset-lg-0 col-lg-6 col-xl-4">
-            <div th:replace="dean/fragments/add_department"></div>
-            <div th:replace="dean/fragments/role_management"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 col-md-10 offset-md-1 offset-lg-0 col-xl-8 offset-xl-2">
-            <div th:replace="dean/fragments/user_table"></div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div th:replace="dean/fragments/user_table"></div>
+            </div>
         </div>
     </div>
 </div>

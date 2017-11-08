@@ -36,18 +36,11 @@
         .translucent {  background-color: rgba(255, 255, 255, 0.9);  }
         .pattern-bg {
             background: #f1f2f3 url("https://zhcet-backend.firebaseapp.com/static/img/zhcet-pattern.png");
-            background-size: 340px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -2;
-            opacity: .6;
+            background-size: 340px;  position: fixed;  top: 0;  left: 0;  right: 0;  bottom: 0;  z-index: -2;  opacity: .6;
         }
     </style>
 </head>
-<body data-open="click" data-menu="vertical-menu" data-col="1-column" class="vertical-layout vertical-menu 1-column  blank-page blank-page">
+<body class="blank-page">
 <div class="app-content content container-fluid">
     <div class="pattern-bg"></div>
     <div class="content-wrapper">
@@ -68,6 +61,17 @@
         </div>
     </div>
 </div>
+<footer class="footer footer-static footer-dark navbar-border">
+    <p class="clearfix text-muted text-sm-center mb-0 px-2">
+        <span class="float-md-left d-xs-block d-md-inline-block" th:text="|Copyright &copy; ${#temporals.year(#temporals.createNow())} ZHCET, All rights reserved.|"></span>
+        <span class="float-md-right d-xs-block d-md-inline-block">
+            <a href="/terms" target="_blank">Terms of Services</a> |
+            <a href="/privacy" target="_blank">Privacy Policy</a> |
+            <a href="https://github.com/zhcet-amu/zhcet-web" target="_blank"><i class="icon-github"></i> View Source</a> |
+            <a href="https://github.com/zhcet-amu/zhcet-web/graphs/contributors" target="_blank">Developers</a>
+        </span>
+    </p>
+</footer>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
 <script src="https://zhcet-backend.firebaseapp.com/static/js/pace.min.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js" type="text/javascript"></script>

@@ -16,77 +16,75 @@
         list-style-type: none;
     }
 </style>
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns"
-      class="vertical-layout vertical-menu 2-columns  fixed-navbar">
-<nav th:replace="fragments/header :: header"></nav>
-<div th:replace="fragments/navigation :: navigation(pageId = 'department', subPage = 'float_course')"></div>
-
-<div th:fragment="content" th:include="fragments/layout :: wrapper" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
-    <div class="row">
-        <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
-        <div id="department" th:text="${department.code}" hidden></div>
-        <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
-            <div th:replace="fragments/layout :: toolbar"></div>
-            <div class="row">
-                <div class="col-md-10 col-xl-8 offset-md-1 offset-xl-2">
-                    <div class="bs-callout-primary callout-border-left p-1">
-                        <strong>Add courses by searching</strong><br>
-                        Search for courses by course code or title and float multiple courses in one go!
-                    </div>
-                    <br>
-                    <div th:replace="fragments/layout :: success(condition = ${float_success}, message = ${float_success})"></div>
-                    <div th:replace="fragments/layout :: error(condition = ${float_error}, error = ${float_error})"></div>
-                    <input class="courses twitter-typeahead form-control round mb-1" autocomplete="off" placeholder="Search" />
-
-                    <div class="bs-callout-primary callout-border-left p-1">
-                        <strong>OR</strong><br>
-                        Add courses by selecting from a list
-                    </div>
-                    <br>
-                    <button id="select-courses" class="btn btn-primary float-xs-right" data-toggle="modal" data-target="#selection-modal">Select</button>
-
-                    <div class="modal fade text-xs-left" id="selection-modal" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <h4 class="modal-title">Select Courses</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <ul class="list-group list" id="course-selection-list"></ul>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" id="float-selected" class="btn btn-outline-primary" data-dismiss="modal">Add</button>
-                                </div>
-                            </div>
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'department', subPage = 'float_course')" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
+    <div class="container">
+        <div class="row">
+            <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
+            <div id="department" th:text="${department.code}" hidden></div>
+            <div class="col-xs-12">
+                <div th:replace="fragments/layout :: toolbar"></div>
+                <div class="row">
+                    <div class="col-md-10 col-xl-8 offset-md-1 offset-xl-2">
+                        <div class="bs-callout-primary callout-border-left p-1">
+                            <strong>Add courses by searching</strong><br>
+                            Search for courses by course code or title and float multiple courses in one go!
                         </div>
-                    </div>
-                    <br><br>
-                    <form class="selected-courses-container" th:hidden="${courses == null ? true : false}"
-                          method="post" th:action="@{|/department/${department.code}/course/float|}">
-                        <div class="selected-courses">
-                            <div th:each="course : ${courses}" class="course card">
-                                <input type="text" class="chosen-code" name="code" th:value="${course.code}" hidden>
-                                <div class="card-body">
-                                    <div class="card-block">
-                                        <h4 class="card-title">
-                                            <strong th:text="${course.code}">CO304</strong> -
-                                            <span th:text="${course.title}">Computer Architecture</span>
-                                        </h4>
-                                        <p class="card-text">
-                                            <span class="capsule category" th:text="${course.category}">DC</span>
-                                            <span class="semester" th:text="|Semester : ${course.semester}|">Semester : 3</span> -
-                                            <span class="credits" th:text="|Credits : ${course.credits}|">Credits : 4</span>
-                                        </p>
-                                        <button class="remove btn btn-outline-danger float-xs-right">Remove</button>
+                        <br>
+                        <div th:replace="fragments/layout :: success(condition = ${float_success}, message = ${float_success})"></div>
+                        <div th:replace="fragments/layout :: error(condition = ${float_error}, error = ${float_error})"></div>
+                        <input class="courses twitter-typeahead form-control round mb-1" autocomplete="off" placeholder="Search" />
+
+                        <div class="bs-callout-primary callout-border-left p-1">
+                            <strong>OR</strong><br>
+                            Add courses by selecting from a list
+                        </div>
+                        <br>
+                        <button id="select-courses" class="btn btn-primary float-xs-right" data-toggle="modal" data-target="#selection-modal">Select</button>
+
+                        <div class="modal fade text-xs-left" id="selection-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Select Courses</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul class="list-group list" id="course-selection-list"></ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" id="float-selected" class="btn btn-outline-primary" data-dismiss="modal">Add</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <input type="submit" class="btn btn-primary float-xs-right" value="Float">
-                    </form>
+                        <br><br>
+                        <form class="selected-courses-container" th:hidden="${courses == null ? true : false}"
+                              method="post" th:action="@{|/department/${department.code}/course/float|}">
+                            <div class="selected-courses">
+                                <div th:each="course : ${courses}" class="course card">
+                                    <input type="text" class="chosen-code" name="code" th:value="${course.code}" hidden>
+                                    <div class="card-body">
+                                        <div class="card-block">
+                                            <h4 class="card-title">
+                                                <strong th:text="${course.code}">CO304</strong> -
+                                                <span th:text="${course.title}">Computer Architecture</span>
+                                            </h4>
+                                            <p class="card-text">
+                                                <span class="capsule category" th:text="${course.category}">DC</span>
+                                                <span class="semester" th:text="|Semester : ${course.semester}|">Semester : 3</span> -
+                                                <span class="credits" th:text="|Credits : ${course.credits}|">Credits : 4</span>
+                                            </p>
+                                            <button class="remove btn btn-outline-danger float-xs-right">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="submit" class="btn btn-primary float-xs-right" value="Float">
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -97,16 +95,5 @@
 <script src="https://zhcet-backend.firebaseapp.com/static/js/FuzzySearch.min.js"></script>
 <script th:src="@{/js/fuzzyhound.js}"></script>
 <script th:src="@{/js/float-course.js}"></script>
-<footer class="footer footer-static footer-dark navbar-border">
-    <p class="clearfix text-muted text-sm-center mb-0 px-2">
-        <span class="float-md-left d-xs-block d-md-inline-block" th:text="|Copyright  &copy; ${#temporals.year(#temporals.createNow())} ZHCET, All rights reserved.|"></span>
-        <span class="float-md-right d-xs-block d-md-inline-block">
-            <a href="/terms" target="_blank">Terms of Services</a> |
-            <a href="/privacy" target="_blank">Privacy Policy</a> |
-            <a href="https://github.com/zhcet-amu/zhcet-web" target="_blank"><i class="icon-github"></i> View Source</a> |
-            <a href="https://github.com/zhcet-amu/zhcet-web/graphs/contributors" target="_blank">Developers</a>
-        </span>
-    </p>
-</footer>
 </body>
 </html>
