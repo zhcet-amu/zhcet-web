@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.controller.dean;
 
+import com.google.common.base.Strings;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.datatables.StudentEditModel;
 import in.ac.amu.zhcet.data.type.Gender;
@@ -8,7 +9,6 @@ import in.ac.amu.zhcet.data.type.StudentStatus;
 import in.ac.amu.zhcet.service.DepartmentService;
 import in.ac.amu.zhcet.service.StudentEditService;
 import in.ac.amu.zhcet.service.StudentService;
-import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Controller;
@@ -90,7 +90,7 @@ public class StudentEditController {
 
     @PostMapping("/dean/student/section") // We use 'student' instead of 'students' so that it does not clash with 'studentPost' method above
     public String studentSection(RedirectAttributes redirectAttributes, @RequestParam List<String> enrolments, @RequestParam String section) {
-        if (StringUtils.isEmpty(section)) {
+        if (Strings.isNullOrEmpty(section)) {
             redirectAttributes.addFlashAttribute("section_error", "Section must not be empty");
             return "redirect:/dean/students";
         }
@@ -108,7 +108,7 @@ public class StudentEditController {
 
     @PostMapping("/dean/student/status") // We use 'student' instead of 'students' so that it does not clash with 'studentPost' method above
     public String studentStatus(RedirectAttributes redirectAttributes, @RequestParam List<String> enrolments, @RequestParam String status) {
-        if (StringUtils.isEmpty(status)) {
+        if (Strings.isNullOrEmpty(status)) {
             redirectAttributes.addFlashAttribute("section_error", "Status was unchanged");
             return "redirect:/dean/students";
         }

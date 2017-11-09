@@ -1,9 +1,9 @@
 package in.ac.amu.zhcet.service;
 
+import com.google.common.base.Strings;
 import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.repository.CourseInChargeRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
-import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -49,7 +49,7 @@ public class CourseInChargeService {
         stored.getInCharge().clear();
 
         for (CourseInCharge courseInCharge : courseInCharges)
-            addInCharge(stored, courseInCharge.getFacultyMember().getFacultyId(), StringUtils.nullIfEmpty(courseInCharge.getSection()));
+            addInCharge(stored, courseInCharge.getFacultyMember().getFacultyId(), Strings.emptyToNull(courseInCharge.getSection()));
     }
 
     private void addInCharge(FloatedCourse stored, String facultyId, String section) {
@@ -82,11 +82,11 @@ public class CourseInChargeService {
     public CourseInCharge getCourseInCharge(Course course, String section) {
         FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
         return courseInChargeRepository.findByFloatedCourseAndFacultyMemberAndSection
-                (floatedCourse, facultyService.getLoggedInMember(), StringUtils.nullIfEmpty(section));
+                (floatedCourse, facultyService.getLoggedInMember(), Strings.emptyToNull(section));
     }
 
     public List<CourseRegistration> getCourseRegistrations(CourseInCharge courseInCharge) {
-        String section = StringUtils.nullIfEmpty(courseInCharge.getSection());
+        String section = Strings.emptyToNull(courseInCharge.getSection());
         if (section == null) // Allow all registrations
             return courseInCharge.getFloatedCourse().getCourseRegistrations();
         else

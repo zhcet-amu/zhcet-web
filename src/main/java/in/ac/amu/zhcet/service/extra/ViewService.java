@@ -1,9 +1,9 @@
 package in.ac.amu.zhcet.service.extra;
 
+import com.google.common.base.Strings;
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.type.Gender;
 import in.ac.amu.zhcet.service.user.CustomUser;
-import in.ac.amu.zhcet.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
@@ -56,7 +56,7 @@ public class ViewService {
     }
 
     public String getAvatarUrl(String url) {
-        if (StringUtils.isEmpty(url))
+        if (Strings.isNullOrEmpty(url))
             return "https://zhcet-web-amu.firebaseapp.com/static/img/account.svg";
 
         return url;

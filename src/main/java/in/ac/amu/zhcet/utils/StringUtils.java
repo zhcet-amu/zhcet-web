@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.utils;
 
+import com.google.common.base.Strings;
 import org.apache.commons.text.WordUtils;
 
 import java.util.Locale;
@@ -19,16 +20,8 @@ public class StringUtils {
         return string.trim().toUpperCase(Locale.getDefault());
     }
 
-    public static boolean isEmpty(CharSequence charSequence) {
-        return charSequence == null || charSequence.length() == 0;
-    }
-
-    public static String nullIfEmpty(String string) {
-        return defaultString(string, null);
-    }
-
     public static String defaultString(String string, String defaultString) {
-        if (isEmpty(string))
+        if (Strings.isNullOrEmpty(string))
             return defaultString;
 
         return string;

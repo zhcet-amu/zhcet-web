@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.controller.dean;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.google.common.base.Strings;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.model.Student;
@@ -10,9 +11,8 @@ import in.ac.amu.zhcet.data.model.dto.datatables.StudentView;
 import in.ac.amu.zhcet.data.repository.FacultyRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
-import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.ConfigurationService;
-import in.ac.amu.zhcet.utils.StringUtils;
+import in.ac.amu.zhcet.service.CourseInChargeService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +89,7 @@ public class DeanRestController {
 
         Column column = columnOptional.get();
         String value = column.getSearch().getValue();
-        Boolean stored = StringUtils.isEmpty(value) ? null : Boolean.parseBoolean(value);
+        Boolean stored = Strings.isNullOrEmpty(value) ? null : Boolean.parseBoolean(value);
         column.getSearch().setValue(null);
 
         return stored;

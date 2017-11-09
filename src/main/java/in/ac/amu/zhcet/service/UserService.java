@@ -1,11 +1,11 @@
 package in.ac.amu.zhcet.service;
 
+import com.google.common.base.Strings;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.model.user.UserDetail;
 import in.ac.amu.zhcet.data.repository.UserDetailRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import in.ac.amu.zhcet.data.type.Roles;
-import in.ac.amu.zhcet.utils.StringUtils;
 import in.ac.amu.zhcet.utils.Utils;
 import in.ac.amu.zhcet.utils.exception.DuplicateException;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +59,7 @@ public class UserService {
     }
 
     boolean throwDuplicateEmail(String email, UserAuth userAuth) {
-        if (!StringUtils.isEmpty(email)) {
+        if (!Strings.isNullOrEmpty(email)) {
             UserAuth checkEmailDuplicate = getUserByEmail(email);
             if (checkEmailDuplicate != null && !checkEmailDuplicate.getUserId().equals(userAuth.getUserId())) {
                 log.error("User with email already exists {} {}", userAuth.getUserId(), email);

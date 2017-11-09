@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.configuration;
 
+import com.google.common.base.Strings;
 import in.ac.amu.zhcet.utils.SecurityUtils;
-import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,7 @@ public class EmailConfiguration {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        if (!StringUtils.isEmpty(applicationProperties.getSalt()) && !applicationProperties.getSalt().equals(SecurityUtils.SALT)) {
+        if (!Strings.isNullOrEmpty(applicationProperties.getSalt()) && !applicationProperties.getSalt().equals(SecurityUtils.SALT)) {
             SecurityUtils.SALT = applicationProperties.getSalt();
             log.info("Applied salt to application");
         } else {
