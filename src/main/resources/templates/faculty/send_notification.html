@@ -8,6 +8,11 @@
     .editor-toolbar.fullscreen, .CodeMirror-fullscreen, .editor-preview-side {
         z-index: 1200
     }
+
+    i.gray {
+        color: #777;
+        margin-bottom: 4px;
+    }
 </style>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'faculty_courses')" sec:authorize="hasRole('ROLE_FACULTY')">
@@ -16,8 +21,45 @@
             <div class="col-xs-12">
                 <div th:replace="fragments/layout :: toolbar"></div>
 
-                <form id="notification" th:action="@{/notification/send}" method="post">
-                    <textarea name="notification" id="notification-editor"></textarea>
+                <!--/*@thymesVar id="notification" type="in.ac.amu.zhcet.data.model.notification.Notification"*/-->
+                <form id="notification" th:action="@{/notification/send}" method="post" th:object="${notification}">
+                    <div th:each="error : ${#fields.detailedErrors('*')}">
+                        <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                    </div>
+                    <div th:replace="fragments/layout :: success(condition = ${notification_success}, message = ${notification_success})"></div>
+                    <div class="form-group">
+                        <div class="position-relative has-icon-left">
+                            <input type="text" id="title" class="form-control" placeholder="Notification Title" th:field="*{title}">
+                            <div class="form-control-position">
+                                <i class="material-icons gray">edit</i>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea name="notification" id="notification-editor" th:field="*{message}"></textarea>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mui-select">
+                                <label for="type">Type</label>
+                                <select id="type" th:field="*{channelType}">
+                                    <option th:each="type : ${channel_types}"
+                                            th:value="${type.name()}"
+                                            th:text="${type}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group py-1">
+                                <div class="position-relative has-icon-left">
+                                    <input type="text" id="channel" class="form-control" placeholder="ID" th:field="*{recipientChannel}" required>
+                                    <div class="form-control-position">
+                                        <i class="material-icons gray">edit</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <button type="submit" class="btn btn-primary float-xs-right">Send</button>
                 </form>
@@ -29,12 +71,10 @@
 <script>
     (function () {
         new SimpleMDE({
-            element: $("#notification-editor")[0],
-            autosave: {
-                enabled: true,
-                uniqueId: "faculty_notification"
-            }
+            element: $("#notification-editor")[0]
         });
+
+        // TODO: Add autosave feature
     }());
 </script>
 </body>

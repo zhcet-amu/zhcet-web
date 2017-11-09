@@ -1,0 +1,1 @@
+ALTER TABLE notification_recipient CHANGE `read` seen BIT(1) DEFAULT b'0';

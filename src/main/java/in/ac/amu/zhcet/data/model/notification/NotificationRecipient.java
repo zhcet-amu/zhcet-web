@@ -23,7 +23,7 @@ public class NotificationRecipient extends BaseIdEntity {
     @OneToOne
     private UserAuth recipient;
     private boolean favorite;
-    private boolean read;
+    private boolean seen;
     private LocalDateTime readTime;
 
 }

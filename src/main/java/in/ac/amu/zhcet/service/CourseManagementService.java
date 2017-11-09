@@ -88,6 +88,15 @@ public class CourseManagementService {
         return floatedCourseRepository.getBySessionAndCourse(ConfigurationService.getDefaultSessionCode(), course);
     }
 
+    /**
+     * Unprotected method for getting the floated course, allows null return value
+     * @param courseCode String course code to be searched
+     * @return FloatedCourse for the corresponding code
+     */
+    public FloatedCourse getFloatedCourseByCode(String courseCode) {
+        return floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseCode);
+    }
+
     public void deleteCourse(Course course) {
         courseRepository.delete(course.getCode());
     }

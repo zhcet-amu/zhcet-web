@@ -9,6 +9,8 @@ import org.hibernate.envers.NotAudited;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,19 +20,20 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class Notification extends BaseIdEntity {
 
-    @NotBlank
     @OneToOne
     private UserAuth sender;
+    @Size(max = 255)
     private String title;
     @NotBlank
+    @Size(max = 255)
     private String message;
     @NotBlank
     private String recipientChannel;
-    @NotBlank
+    @NotNull
     @Enumerated(EnumType.STRING)
     private ChannelType channelType;
     private boolean scheduled;
-    private LocalDateTime sentTime;
+    private LocalDateTime sentTime = LocalDateTime.now();
 
     @NotAudited
     @OneToMany(mappedBy = "notification")
