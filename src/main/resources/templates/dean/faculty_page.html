@@ -3,9 +3,6 @@
 <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <head th:replace="fragments/layout :: head"></head>
-<link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.3/css/select.bootstrap4.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.bootstrap4.min.css">
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage = 'faculty_page')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
@@ -142,14 +139,7 @@
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://zhcet-backend.firebaseapp.com/static/js/throttle.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.bootstrap4.min.js"></script>
 <script th:src="@{/js/data-utils.js}"></script>
 <script th:src="@{/js/faculty-datatable.js}"></script>
-<script src="//cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
-<script src="//cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
-<script src="//cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
+<div th:replace="fragments/layout :: export_datatables"></div>
 </html>
