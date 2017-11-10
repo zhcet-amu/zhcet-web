@@ -3,7 +3,7 @@ package in.ac.amu.zhcet.service.user.auth;
 import in.ac.amu.zhcet.data.model.token.PasswordResetToken;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.PasswordResetTokenRepository;
-import in.ac.amu.zhcet.service.notification.EmailService;
+import in.ac.amu.zhcet.service.notification.email.EmailService;
 import in.ac.amu.zhcet.service.ConfigurationService;
 import in.ac.amu.zhcet.service.UserService;
 import lombok.extern.slf4j.Slf4j;

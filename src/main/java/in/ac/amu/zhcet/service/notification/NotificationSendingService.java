@@ -1,22 +1,16 @@
 package in.ac.amu.zhcet.service.notification;
 
-import in.ac.amu.zhcet.data.model.CourseRegistration;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
-import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.data.model.notification.NotificationRecipient;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.NotificationRecipientRepository;
 import in.ac.amu.zhcet.data.repository.NotificationRepository;
-import in.ac.amu.zhcet.service.CourseManagementService;
-import in.ac.amu.zhcet.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -26,16 +20,19 @@ public class NotificationSendingService {
     private final NotificationRepository notificationRepository;
     private final NotificationRecipientRepository notificationRecipientRepository;
     private final CachedNotificationService cachedNotificationService;
-    private final CourseManagementService courseManagementService;
-    private final StudentService studentService;
+    private final UserExtractor userExtractor;
 
     @Autowired
-    public NotificationSendingService(NotificationRepository notificationRepository, NotificationRecipientRepository notificationRecipientRepository, CachedNotificationService cachedNotificationService, CourseManagementService courseManagementService, StudentService studentService) {
+    public NotificationSendingService(
+            NotificationRepository notificationRepository,
+            NotificationRecipientRepository notificationRecipientRepository,
+            CachedNotificationService cachedNotificationService,
+            UserExtractor userExtractor
+    ) {
         this.notificationRepository = notificationRepository;
         this.notificationRecipientRepository = notificationRecipientRepository;
         this.cachedNotificationService = cachedNotificationService;
-        this.courseManagementService = courseManagementService;
-        this.studentService = studentService;
+        this.userExtractor = userExtractor;
     }
 
     @Async
@@ -56,37 +53,36 @@ public class NotificationSendingService {
                 break;
             case COURSE:
                 sendToCourse(notification);
+                break;
+            case SECTION:
+                sendToSection(notification);
+                break;
+            case FACULTY:
+                sendToFaculty(notification);
+                break;
             default:
                 // Do nothing
         }
     }
 
+    private void sendToFaculty(Notification notification) {
+        userExtractor.fromFacultyId(notification.getRecipientChannel(),
+                userAuth -> saveUserNotification(notification, userAuth));
+    }
+
+    private void sendToSection(Notification notification) {
+        userExtractor.fromSection(notification.getRecipientChannel(),
+                userAuth -> saveUserNotification(notification, userAuth));
+    }
+
     private void sendToCourse(Notification notification) {
-        String floatedCourseId = notification.getRecipientChannel();
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(floatedCourseId);
-
-        if (floatedCourse == null) {
-            log.warn("No such floated course exists {}", floatedCourseId);
-            return;
-        }
-
-        List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-        for (CourseRegistration courseRegistration : courseRegistrations)
-            saveUserNotification(notification, courseRegistration.getStudent().getUser());
+        userExtractor.fromFloatedCourse(notification.getRecipientChannel(),
+                userAuth -> saveUserNotification(notification, userAuth));
     }
 
     private void sendToStudent(Notification notification) {
-        String studentId = notification.getRecipientChannel();
-        Student recipient = studentService.getByEnrolmentNumber(studentId);
-        if (recipient == null)
-            recipient = studentService.getByFacultyNumber(studentId);
-
-        if (recipient == null) {
-            log.warn("No student found with ID {}", studentId);
-            return;
-        }
-
-        saveUserNotification(notification, recipient.getUser());
+        userExtractor.fromStudentId(notification.getRecipientChannel(),
+                userAuth -> saveUserNotification(notification, userAuth));
     }
 
     private void saveUserNotification(Notification notification, UserAuth userAuth) {

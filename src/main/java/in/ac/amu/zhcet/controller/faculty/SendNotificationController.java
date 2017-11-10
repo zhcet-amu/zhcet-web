@@ -33,7 +33,10 @@ public class SendNotificationController {
         model.addAttribute("page_subtitle", "Notification Manager");
         model.addAttribute("page_description", "Send notifications to students, sections or departments");
 
-        model.addAttribute("channel_types", Arrays.asList(ChannelType.STUDENT, ChannelType.COURSE));
+        model.addAttribute("channel_types", Arrays.asList(
+                ChannelType.STUDENT, ChannelType.COURSE,
+                ChannelType.SECTION, ChannelType.FACULTY
+        ));
 
         if (!model.containsAttribute("notification")) {
             Notification notification = new Notification();

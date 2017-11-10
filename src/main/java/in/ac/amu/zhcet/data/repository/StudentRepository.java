@@ -16,6 +16,8 @@ public interface StudentRepository extends DataTablesRepository<Student, Long> {
 
     Student getByFacultyNumber(String facultyNumber);
 
+    List<Student> getBySectionAndStatus(String section, Character status);
+
     List<Student> getByEnrolmentNumberIn(List<String> ids);
 
     List<Identifier> findAllProjectedBy();

@@ -5,7 +5,7 @@ import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.upload.csv.RegistrationUploadService;
 import in.ac.amu.zhcet.service.extra.AttendanceDownloadService;
-import in.ac.amu.zhcet.service.notification.EmailNotificationService;
+import in.ac.amu.zhcet.service.notification.email.EmailNotificationService;
 import in.ac.amu.zhcet.utils.SortUtils;
 import in.ac.amu.zhcet.utils.page.Path;
 import in.ac.amu.zhcet.utils.page.PathChain;

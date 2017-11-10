@@ -4,7 +4,7 @@ import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.service.extra.AttendanceDownloadService;
-import in.ac.amu.zhcet.service.notification.EmailNotificationService;
+import in.ac.amu.zhcet.service.notification.email.EmailNotificationService;
 import in.ac.amu.zhcet.utils.SortUtils;
 import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.notification;
+package in.ac.amu.zhcet.service.notification.email;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Student;

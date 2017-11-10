@@ -52,6 +52,10 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    public List<Student> getBySection(String section) {
+        return studentRepository.getBySectionAndStatus(section, 'A');
+    }
+
     public List<Student> getByIds(List<String> studentIds) {
         return studentRepository.getByEnrolmentNumberIn(studentIds);
     }

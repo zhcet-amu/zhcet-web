@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.notification;
+package in.ac.amu.zhcet.service.notification.email;
 
 import in.ac.amu.zhcet.configuration.ApplicationProperties;
 import lombok.extern.slf4j.Slf4j;

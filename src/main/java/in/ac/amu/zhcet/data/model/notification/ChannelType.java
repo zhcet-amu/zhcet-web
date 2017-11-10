@@ -5,6 +5,7 @@ import in.ac.amu.zhcet.utils.StringUtils;
 public enum ChannelType {
     DEPARTMENT,
     COURSE,
+    SECTION,
     FACULTY,
     GENDER,
     STUDENT;
