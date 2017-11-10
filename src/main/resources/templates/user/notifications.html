@@ -89,7 +89,7 @@
                                 <div class="heading-elements">
                                     <ul class="list-inline mb-0">
                                         <li>
-                                            <form method="post" th:action="@{|/notifications/mark/favorite/${notificationRecipient.id}|}">
+                                            <form method="post" th:action="@{|/notifications/${notificationRecipient.favorite ? 'unmark' : 'mark'}/favorite/${notificationRecipient.id}|}">
                                                 <input type="text" name="page" th:value="${currentPage}" hidden>
                                                 <button type="submit" class="fav btn btn-icon btn-pure">
                                                     <i th:class="${notificationRecipient.favorite ? 'icon-star-full' : 'icon-star-empty'}"></i>

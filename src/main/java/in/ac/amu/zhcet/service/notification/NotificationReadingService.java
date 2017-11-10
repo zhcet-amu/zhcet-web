@@ -64,4 +64,8 @@ public class NotificationReadingService {
         notificationRecipientRepository.save(notification);
     }
 
+    public void unmarkFavorite(NotificationRecipient notification) {
+        notification.setFavorite(false);
+        notificationRecipientRepository.save(notification);
+    }
 }

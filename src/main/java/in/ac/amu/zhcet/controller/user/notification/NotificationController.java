@@ -83,4 +83,14 @@ public class NotificationController {
         return "redirect:/notifications?page=" + page;
     }
 
+    @PostMapping("/notifications/unmark/favorite/{notification}")
+    public String unmarkFavorite(@RequestParam int page, @PathVariable NotificationRecipient notification, RedirectAttributes redirectAttributes) {
+        if (notification == null)
+            return "redirect:/notifications?page=" + page;
+
+        notificationReadingService.unmarkFavorite(notification);
+        redirectAttributes.addFlashAttribute("notification_success", "Unmarked the notification as favorite");
+        return "redirect:/notifications?page=" + page;
+    }
+
 }
