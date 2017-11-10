@@ -47,11 +47,13 @@
                 </a>
             </li>
             <li th:class="|nav-item ${pageId == 'notification_management' ? 'active' : ''} |" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
-                <a th:href="@{/department}" href="department.html">
-                    <i class="icon-mail6"></i>
+                <a th:href="@{/notification/send}" href="department.html">
+                    <i class="icon-bell-4"></i>
                     <span data-i18n="nav.project.main" class="menu-title">Notification</span>
                 </a>
                 <ul class="menu-content">
+
+                    <li th:class="${subPage == 'manage_notification' ? 'active' : ''}" ><a th:href="@{/notification/manage}" class="menu-item">Manage Notifications</a></li>
                     <li th:class="${subPage == 'send_notification' ? 'active' : ''}" ><a th:href="@{/notification/send}" class="menu-item">Send Notification</a></li>
                 </ul>
             </li>

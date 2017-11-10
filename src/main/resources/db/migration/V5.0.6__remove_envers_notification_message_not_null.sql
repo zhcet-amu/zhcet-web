@@ -1,0 +1,1 @@
+ALTER TABLE notification_aud MODIFY message VARCHAR(500);

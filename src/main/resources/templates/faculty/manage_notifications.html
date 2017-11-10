@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head"></head>
+<style>
+    .title, .title > p {
+        padding: 0;
+        margin: 0;
+    }
+
+    .card-header {
+        min-height: 55px;
+    }
+
+    .head-icon {
+        padding: 0 5px 3px 5px;
+    }
+
+    .bg-light-gray {
+        background-color: #ddd;
+    }
+
+    table.statistics td {
+        padding: .5rem;
+    }
+
+    .accordion-title, .accordion-title:hover, .accordion-title:visited, .accordion-title:focus {
+        text-decoration: none;
+        color: #333;
+    }
+</style>
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification', subPage='manage_notification')" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
+    <!--/*@thymesVar id="currentPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="minPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="maxPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="notifications" type="java.util.List"*/-->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div th:replace="fragments/layout :: toolbar"></div>
+                <div th:replace="fragments/layout :: success(condition = ${notification_success}, message = ${notification_success})"></div>
+                <div th:replace="fragments/layout :: pagination(pageUrl = 'notification/manage')"></div>
+
+                <!--/*@thymesVar id="notification" type="in.ac.amu.zhcet.data.model.notification.Notification"*/-->
+
+                <div th:if="${notifications.isEmpty()}" class="text-xs-center text-muted">
+                    <h3>No notifications</h3>
+                </div>
+
+                <div class="modal fade text-xs-left" id="delete" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger white">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title">Delete Notification</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger" role="alert">
+                                    <span class="text-bold-600">Beware!</span> Deleting the notification will also delete it for all recipients
+                                </div>
+                                <p>If you wish to continue, please click the delete button</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+                                <a id="delete-link" href="/notification/delete/">
+                                    <button type="button" id="delete-button" class="btn btn-outline-danger">Delete</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:each="notification : ${notifications}">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="title" th:utext="${@markDownService.render(notification.title)}"></h4>
+                            <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                            <div class="heading-elements">
+                                <ul class="list-inline mb-0">
+                                    <li>
+                                        <form method="get" th:action="@{|/notification/edit/${notification.id}|}">
+                                            <input type="text" name="page" th:value="${currentPage}" hidden>
+                                            <button type="submit" class="head-icon btn btn-icon btn-pure">
+                                                <i data-toggle="tooltip" data-original-title="Edit Notification" class="icon-marquee"></i>
+                                            </button>
+                                        </form>
+                                    </li>
+                                    <li><button class="head-icon btn btn-icon btn-pure" th:onclick="|NotificationManager.deleteNotification(${notification.id})|">
+                                        <i data-toggle="tooltip" data-original-title="Delete Notification" class="icon-trash4"></i>
+                                    </button></li>
+                                    <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                                    <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                                    <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body collapse in">
+                            <div th:id="|statisticsWrap${notification.id}|" role="tablist" aria-multiselectable="true">
+                                <div class="collapse-icon accordion-icon-rotate">
+                                    <div th:id="|statisticsHeader${notification.id}|" class="card-header bg-light-gray">
+                                        <a data-toggle="collapse" th:href="|#statisticsAccordion${notification.id}|" aria-expanded="false" class="accordion-title lead collapsed">Statistics</a>
+                                    </div>
+                                    <div th:id="|statisticsAccordion${notification.id}|" role="tabpanel" class="card-collapse collapse" aria-expanded="false" style="height: 0;">
+                                        <div class="bg-light-gray px-1">
+                                            <table class="statistics collapse in">
+                                                <tr>
+                                                    <td><i class="icon-share4"></i></td>
+                                                    <td>Type</td>
+                                                    <td th:text="${notification.channelType}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><i class="icon-fast-forward2"></i></td>
+                                                    <td>Recipient</td>
+                                                    <td th:text="${notification.recipientChannel}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><i class="icon-bell4"></i></td>
+                                                    <td>Received</td>
+                                                    <td th:text="${notification.notificationRecipients.size()}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><i class="icon-eye6"></i></td>
+                                                    <td>Seen</td>
+                                                    <td th:text="${notification.seenCount}"></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-block" th:utext="${@markDownService.render(notification.message)}"></div>
+                        </div>
+                        <blockquote class="mb-2">
+                                <span>From : <code th:text="${notification.sender.name}"></code>
+                                    <span th:if="${notification.automated}">
+                                        <i data-toggle="tooltip" data-original-title="Automated" class="icon-asterisk"></i>
+                                    </span>
+                                </span>
+                            <small class="float-xs-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notification.sentTime)}"></em></small>
+                        </blockquote>
+                    </div>
+                </div>
+                <div th:replace="fragments/layout :: pagination(pageUrl = 'notification/manage')"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    var NotificationManager = (function () {
+        var page = 1;
+
+        function deleteNotification(id) {
+            var deleteLink = $('#delete-link');
+            var baseUrl = deleteLink.attr('href');
+            baseUrl += id + '?' + $.param({ page: page });
+            deleteLink.attr('href', baseUrl);
+            $('#delete').modal();
+        }
+
+        return {
+            deleteNotification: deleteNotification,
+            init: function (pageId) {
+                page = pageId;
+                console.log(pageId)
+            }
+        }
+    }());
+
+    /*<![CDATA[*/
+    NotificationManager.init(/*[[${currentPage}]]*/ 1);
+    /*]]>*/
+</script>
+</body>
+</html>

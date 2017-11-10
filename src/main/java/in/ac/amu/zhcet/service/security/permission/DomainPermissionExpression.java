@@ -4,6 +4,8 @@ import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.model.notification.Notification;
+import in.ac.amu.zhcet.data.model.notification.NotificationRecipient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
@@ -21,31 +23,30 @@ public class DomainPermissionExpression extends SecurityExpressionRoot implement
     }
 
     public boolean isDepartment(Department department) {
-        if (department == null)
-            return false;
+        return department != null && PermissionManager.hasPermissionOfDepartment(authentication, department);
 
-        return PermissionManager.hasPermissionOfDepartment(authentication, department);
     }
 
     public boolean isOfDepartment(Department department, Course course) {
-        if (department == null || course == null)
-            return false;
+        return !(department == null || course == null) && PermissionManager.hasPermissionOfDepartmentAndCourse(authentication, department, course);
 
-        return PermissionManager.hasPermissionOfDepartmentAndCourse(authentication, department, course);
     }
 
     public boolean isFloated(FloatedCourse floatedCourse) {
-        if (floatedCourse == null)
-            return false;
-        return isOfDepartment(floatedCourse.getCourse().getDepartment(), floatedCourse.getCourse());
+        return floatedCourse != null && isOfDepartment(floatedCourse.getCourse().getDepartment(), floatedCourse.getCourse());
     }
 
     public boolean isCourseInCharge(CourseInCharge courseInCharge) {
-        if (courseInCharge == null)
-            return false;
-        return true;
+        return courseInCharge != null;
     }
 
+    public boolean createdNotification(Notification notification) {
+        return notification != null && PermissionManager.createdNotification(authentication, notification);
+    }
+
+    public boolean hasNotificationPermission(NotificationRecipient notification) {
+        return notification != null && PermissionManager.hasPermissionOfNotification(authentication, notification);
+    }
 
     @Override
     public void setFilterObject(Object filterObject) {

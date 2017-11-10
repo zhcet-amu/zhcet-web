@@ -38,6 +38,8 @@ public class Notification extends BaseIdEntity {
     private LocalDateTime sentTime = LocalDateTime.now();
     private boolean automated;
 
+    private transient int seenCount;
+
     @NotAudited
     @OneToMany(mappedBy = "notification")
     private List<NotificationRecipient> notificationRecipients;

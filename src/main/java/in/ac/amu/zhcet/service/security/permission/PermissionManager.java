@@ -2,6 +2,8 @@ package in.ac.amu.zhcet.service.security.permission;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.Department;
+import in.ac.amu.zhcet.data.model.notification.Notification;
+import in.ac.amu.zhcet.data.model.notification.NotificationRecipient;
 import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.user.CustomUser;
 import lombok.extern.slf4j.Slf4j;
@@ -69,4 +71,11 @@ public class PermissionManager {
         return hasPermissionOfDepartment(user, department);
     }
 
+    public static boolean hasPermissionOfNotification(Authentication user, NotificationRecipient notificationRecipient) {
+        return notificationRecipient.getRecipient().getUserId().equals(user.getName());
+    }
+
+    public static boolean createdNotification(Authentication user, Notification notification) {
+        return notification.getSender().getUserId().equals(user.getName());
+    }
 }

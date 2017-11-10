@@ -26,19 +26,6 @@
                  th:insert="faculty/fragments/attendance_download"></div>
             <div th:replace="department/fragments/register_students"></div>
         </div>
-        <div class="modal fade" role="dialog" id="email_modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Email List</h4>
-                    </div>
-                    <div class="modal-body">
-                        <textarea th:text="${#strings.listJoin(email_list,',')}" style="width: 100%"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="col-xs-12 col-xl-7">
             <div th:replace="department/fragments/registered_students"></div>
         </div>

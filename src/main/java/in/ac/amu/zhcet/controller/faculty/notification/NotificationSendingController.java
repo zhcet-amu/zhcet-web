@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller.faculty;
+package in.ac.amu.zhcet.controller.faculty.notification;
 
 import in.ac.amu.zhcet.data.model.notification.ChannelType;
 import in.ac.amu.zhcet.data.model.notification.Notification;
@@ -17,12 +17,12 @@ import java.util.Arrays;
 
 @Slf4j
 @Controller
-public class SendNotificationController {
+public class NotificationSendingController {
 
     private final UserService userService;
     private final NotificationSendingService notificationSendingService;
 
-    public SendNotificationController(UserService userService, NotificationSendingService notificationSendingService) {
+    public NotificationSendingController(UserService userService, NotificationSendingService notificationSendingService) {
         this.userService = userService;
         this.notificationSendingService = notificationSendingService;
     }

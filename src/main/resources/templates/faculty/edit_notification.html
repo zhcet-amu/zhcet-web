@@ -15,18 +15,17 @@
     }
 </style>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
-<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification_manager', subPage='send_notification')" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification_manager', subPage='manage_notification')" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
                 <div th:replace="fragments/layout :: toolbar"></div>
 
                 <!--/*@thymesVar id="notification" type="in.ac.amu.zhcet.data.model.notification.Notification"*/-->
-                <form id="notification" th:action="@{/notification/send}" method="post" th:object="${notification}">
+                <form id="notification" th:action="@{|/notification/edit/${notification.id}|}" method="post" th:object="${notification}">
                     <div th:each="error : ${#fields.detailedErrors('*')}">
                         <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
                     </div>
-                    <div th:replace="fragments/layout :: success(condition = ${notification_success}, message = ${notification_success})"></div>
                     <div class="form-group">
                         <div class="position-relative has-icon-left">
                             <input type="text" id="title" class="form-control" placeholder="Notification Title" th:field="*{title}">
@@ -37,31 +36,11 @@
                     </div>
                     <textarea name="notification" id="notification-editor" th:field="*{message}"></textarea>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mui-select">
-                                <label for="type">Type</label>
-                                <select id="type" th:field="*{channelType}">
-                                    <option th:each="type : ${channel_types}"
-                                            th:value="${type.name()}"
-                                            th:text="${type}">
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group py-1">
-                                <div class="position-relative has-icon-left">
-                                    <input type="text" id="channel" class="form-control" placeholder="ID" th:field="*{recipientChannel}" required>
-                                    <div class="form-control-position">
-                                        <i class="material-icons gray">edit</i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <input name="page" th:value="${param.page}" hidden>
+                    <input th:field="*{channelType}" hidden>
+                    <input th:field="*{recipientChannel}" hidden>
 
-                    <button type="submit" class="btn btn-primary float-xs-right">Send</button>
+                    <button type="submit" class="btn btn-primary float-xs-right">Save</button>
                 </form>
             </div>
         </div>
@@ -73,8 +52,6 @@
         new SimpleMDE({
             element: $("#notification-editor")[0]
         });
-
-        // TODO: Add autosave feature
     }());
 </script>
 </body>
