@@ -1,11 +1,11 @@
 package in.ac.amu.zhcet.service.upload;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Bucket;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.auth.FirebaseCredentials;
 import com.google.firebase.cloud.StorageClient;
 import in.ac.amu.zhcet.configuration.ApplicationProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class FirebaseService {
         }
 
         FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredential(FirebaseCredentials.fromCertificate(serviceAccount))
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .setDatabaseUrl(firebase.getDatabaseUrl())
                 .setStorageBucket(firebase.getStorageBucket())
                 .build();
