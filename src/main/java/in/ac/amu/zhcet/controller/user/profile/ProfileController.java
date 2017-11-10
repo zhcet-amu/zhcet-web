@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller.profile;
+package in.ac.amu.zhcet.controller.user.profile;
 
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.Student;

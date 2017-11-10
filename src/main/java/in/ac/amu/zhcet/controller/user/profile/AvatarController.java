@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller.profile;
+package in.ac.amu.zhcet.controller.user.profile;
 
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.upload.image.ImageService;

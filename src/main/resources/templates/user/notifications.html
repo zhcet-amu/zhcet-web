@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head"></head>
+<style>
+    .title, .title > p {
+        padding: 0;
+        margin: 0;
+    }
+</style>
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'profile')" sec:authorize="isAuthenticated()">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-lg-10 offset-lg-1 col-xl-8 offset-xl-2">
+                <div th:replace="fragments/layout :: toolbar"></div>
+
+                <div th:fragment="pagination" class="text-xs-center pages my-1">
+                    <nav aria-label="Page navigation">
+                        <!--/*@thymesVar id="currentPage" type="java.lang.Integer"*/-->
+                        <!--/*@thymesVar id="minPage" type="java.lang.Integer"*/-->
+                        <!--/*@thymesVar id="maxPage" type="java.lang.Integer"*/-->
+                        <ul class="pagination pagination-round">
+                            <li th:class="|page-item ${currentPage <= minPage ? 'disabled' : ''}|">
+                                <a class="page-link" th:href="@{/notifications(page=${currentPage - 1})}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li th:each="num : ${#numbers.sequence(minPage, maxPage)}" th:class="|page-item ${currentPage == num ? 'active' : ''}|">
+                                <a class="page-link" th:href="@{/notifications(page=${num})}" th:text="${num}">1</a>
+                            </li>
+                            <li th:class="|page-item ${currentPage >= maxPage ? 'disabled' : ''}|">
+                                <a class="page-link" th:href="@{/notifications(page=${currentPage + 1})}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <!--/*@thymesVar id="notificationRecipient" type="in.ac.amu.zhcet.data.model.notification.NotificationRecipient"*/-->
+
+                <div th:if="${notifications.isEmpty()}" class="text-xs-center text-muted">
+                    <h3>No notifications</h3>
+                </div>
+
+                <div th:each="notificationRecipient : ${notifications}" class="row">
+                    <div class="col-xs-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="title" th:utext="${@markDownService.render(notificationRecipient.notification.title)}"></h4>
+                                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body collapse in">
+                                <div class="card-block" th:utext="${@markDownService.render(notificationRecipient.notification.message)}"></div>
+                            </div>
+                            <blockquote class="p-1">
+                                <span>From : <code th:text="${notificationRecipient.notification.sender.name}"></code></span>
+                                <span class="float-xs-right"><em th:text="${#temporals.format(notificationRecipient.notification.sentTime)}"></em></span>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div th:replace="this :: pagination"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

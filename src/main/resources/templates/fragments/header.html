@@ -11,7 +11,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a th:href="@{/}" href="../home.html" class="navbar-brand nav-link">
+                    <a th:href="@{/}" class="navbar-brand nav-link">
                         <img
                                 alt="branding logo"
                                 src="https://zhcet-backend.firebaseapp.com/static/img/logo-big.png"
@@ -30,12 +30,26 @@
         <div class="navbar-container content container-fluid">
             <div id="navbar-mobile" class="collapse navbar-toggleable-sm">
                 <ul class="nav navbar-nav">
-                    <li class="nav-item hidden-sm-down"><a class="nav-link nav-menu-main menu-toggle hidden-xs"><i
-                            class="icon-menu5"> </i></a></li>
-                    <li class="nav-item hidden-sm-down"><a href="#" class="nav-link nav-link-expand"><i
-                            class="ficon icon-expand2"></i></a></li>
+                    <li class="nav-item hidden-sm-down"><a class="nav-link nav-menu-main menu-toggle hidden-xs"><i class="icon-menu5"> </i></a></li>
+                    <li class="nav-item hidden-sm-down"><a href="#" class="nav-link nav-link-expand"><i class="ficon icon-expand2"></i></a></li>
                 </ul>
                 <ul class="nav navbar-nav float-xs-right" sec:authorize="isAuthenticated()">
+                    <li class="dropdown dropdown-notification nav-item">
+                        <a href="#" data-toggle="dropdown" class="nav-link nav-link-label"><i class="ficon icon-bell4"></i>
+                            <!-- TODO: Add unread notifications -->
+                            <span class="tag tag-pill tag-default tag-danger tag-default tag-up">&nbsp;</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
+                            <li class="dropdown-menu-header">
+                                <h6 class="dropdown-header m-0">
+                                    <span class="grey darken-2">Notifications</span>
+                                    <!-- TODO: Add unread notifications -->
+                                    <span class="notification-tag tag tag-default tag-danger float-xs-right m-0"></span>
+                                </h6>
+                            </li>
+                            <li class="dropdown-menu-footer"><a th:href="@{/notifications}" class="dropdown-item text-muted text-xs-center">Read all notifications</a></li>
+                        </ul>
+                    </li>
                     <li class="dropdown dropdown-user nav-item">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link dropdown-user-link">
                             <span class="avatar avatar-online">
@@ -45,10 +59,10 @@
                             <span class="user-name" sec:authentication="principal.name">John Smith</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a href="#" th:href="@{/profile}" class="dropdown-item" sec:authorize="isAuthenticated()">
+                            <a href="#" th:href="@{/profile}" class="dropdown-item">
                                 <i class="icon-head"></i> Edit Profile
                             </a>
-                            <a href="#" th:href="@{/profile/change_password}" class="dropdown-item" sec:authorize="isAuthenticated()">
+                            <a href="#" th:href="@{/profile/change_password}" class="dropdown-item">
                                 <i class="icon-unlock"></i> Change Password
                             </a>
                             <div class="dropdown-divider"></div>
