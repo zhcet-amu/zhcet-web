@@ -17,6 +17,10 @@
     .card-header {
         min-height: 55px;
     }
+
+    .fav {
+        padding: 0 0 5px 0;
+    }
 </style>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
@@ -35,7 +39,13 @@
 
                 <div class="col-xs-12" th:unless="${notifications.isEmpty()}">
                     <div class="float-xs-right">
-                        <form th:action="@{/notifications/mark/read}" method="post">
+                        <a th:href="@{/notifications}" th:if="${favorite_page}">
+                            <button class="btn btn-round text-white bg-primary">All Notifications</button>
+                        </a>
+                        <a th:href="@{/notifications/favorite}" th:unless="${favorite_page}">
+                            <button class="btn btn-round text-white" style="background-color: #E91E63">Favorites</button>
+                        </a>
+                        <form th:action="@{/notifications/mark/read}" method="post" style="display: inline-block">
                             <input type="text" name="page" th:value="${currentPage}" hidden>
                             <button type="submit" class="btn btn-round text-white bg-success">Mark all as read</button>
                         </form>
@@ -78,6 +88,14 @@
                                 <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
                                 <div class="heading-elements">
                                     <ul class="list-inline mb-0">
+                                        <li>
+                                            <form method="post" th:action="@{|/notifications/mark/favorite/${notificationRecipient.id}|}">
+                                                <input type="text" name="page" th:value="${currentPage}" hidden>
+                                                <button type="submit" class="fav btn btn-icon btn-pure">
+                                                    <i th:class="${notificationRecipient.favorite ? 'icon-star-full' : 'icon-star-empty'}"></i>
+                                                </button>
+                                            </form>
+                                        </li>
                                         <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
                                         <li><a data-action="reload"><i class="icon-reload"></i></a></li>
                                         <li><a data-action="expand"><i class="icon-expand2"></i></a></li>

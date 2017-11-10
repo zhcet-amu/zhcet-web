@@ -34,6 +34,12 @@ public class NotificationReadingService {
         return notificationRecipientRepository.findByRecipientUserId(userId, pageRequest);
     }
 
+    public Page<NotificationRecipient> getFavoriteNotifications(int page) {
+        String userId = Auditor.getLoggedInUsername();
+        PageRequest pageRequest = new PageRequest(page - 1, PAGE_SIZE, Sort.Direction.DESC, "notification.sentTime");
+        return notificationRecipientRepository.findByRecipientUserIdAndFavorite(userId, true, pageRequest);
+    }
+
     public void markRead() {
         String userId = Auditor.getLoggedInUsername();
         List<NotificationRecipient> notificationRecipients = notificationRecipientRepository.findByRecipientUserIdAndSeen(userId, false);
@@ -43,4 +49,10 @@ public class NotificationReadingService {
         }
         notificationRecipientRepository.save(notificationRecipients);
     }
+
+    public void markFavorite(NotificationRecipient notification) {
+        notification.setFavorite(true);
+        notificationRecipientRepository.save(notification);
+    }
+
 }
