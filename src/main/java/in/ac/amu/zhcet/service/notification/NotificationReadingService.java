@@ -10,8 +10,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Slf4j
 @Service
+@Transactional
 public class NotificationReadingService {
 
     private static final int PAGE_SIZE = 10;
@@ -27,5 +32,15 @@ public class NotificationReadingService {
         String userId = Auditor.getLoggedInUsername();
         PageRequest pageRequest = new PageRequest(page - 1, PAGE_SIZE, Sort.Direction.DESC, "notification.sentTime");
         return notificationRecipientRepository.findByRecipientUserId(userId, pageRequest);
+    }
+
+    public void markRead() {
+        String userId = Auditor.getLoggedInUsername();
+        List<NotificationRecipient> notificationRecipients = notificationRecipientRepository.findByRecipientUserIdAndSeen(userId, false);
+        for (NotificationRecipient notificationRecipient : notificationRecipients) {
+            notificationRecipient.setSeen(true);
+            notificationRecipient.setReadTime(LocalDateTime.now());
+        }
+        notificationRecipientRepository.save(notificationRecipients);
     }
 }

@@ -15,7 +15,7 @@
     }
 </style>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
-<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'faculty_courses')" sec:authorize="hasRole('ROLE_FACULTY')">
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification_manager', subPage='send_notification')" sec:authorize="hasRole('ROLE_FACULTY')">
     <div class="container">
         <div class="row">
             <div class="col-xs-12">

@@ -22,10 +22,10 @@ public class Notification extends BaseIdEntity {
 
     @OneToOne
     private UserAuth sender;
-    @Size(max = 255)
+    @Size(max = 150)
     private String title;
     @NotBlank
-    @Size(max = 255)
+    @Size(max = 500)
     private String message;
     @NotBlank
     private String recipientChannel;
@@ -34,6 +34,7 @@ public class Notification extends BaseIdEntity {
     private ChannelType channelType;
     private boolean scheduled;
     private LocalDateTime sentTime = LocalDateTime.now();
+    private boolean automated;
 
     @NotAudited
     @OneToMany(mappedBy = "notification")

@@ -8,7 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
@@ -44,6 +46,13 @@ public class NotificationController {
         model.addAttribute("currentPage", currentPage);
 
         return "user/notifications";
+    }
+
+    @PostMapping("/notifications/mark/read")
+    public String get(@RequestParam int page, RedirectAttributes redirectAttributes) {
+        notificationReadingService.markRead();
+        redirectAttributes.addFlashAttribute("notification_success", "Marked all notifications as read");
+        return "redirect:/notifications?page=" + page;
     }
 
 }

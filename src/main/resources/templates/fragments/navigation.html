@@ -46,6 +46,15 @@
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Course Management</span>
                 </a>
             </li>
+            <li th:class="|nav-item ${pageId == 'notification_management' ? 'active' : ''} |" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
+                <a th:href="@{/department}" href="department.html">
+                    <i class="icon-mail6"></i>
+                    <span data-i18n="nav.project.main" class="menu-title">Notification</span>
+                </a>
+                <ul class="menu-content">
+                    <li th:class="${subPage == 'send_notification' ? 'active' : ''}" ><a th:href="@{/notification/send}" class="menu-item">Send Notification</a></li>
+                </ul>
+            </li>
             <li th:class="|nav-item ${pageId == 'profile' ? 'active' : ''} |" sec:authorize="isAuthenticated()">
                 <a th:href="@{/profile}" href="profile.html">
                     <i class="icon-head"></i>

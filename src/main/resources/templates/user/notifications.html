@@ -9,20 +9,41 @@
         padding: 0;
         margin: 0;
     }
+
+    .new {
+        background-color: #DCEDC8;
+    }
+
+    .card-header {
+        min-height: 55px;
+    }
 </style>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'profile')" sec:authorize="isAuthenticated()">
+    <!--/*@thymesVar id="currentPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="minPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="maxPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="notifications" type="java.util.List"*/-->
+
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-lg-10 offset-lg-1 col-xl-8 offset-xl-2">
                 <div th:replace="fragments/layout :: toolbar"></div>
 
+                <div th:replace="fragments/layout :: success(condition = ${notification_success}, message = ${notification_success})"></div>
+
+                <div class="col-xs-12" th:unless="${notifications.isEmpty()}">
+                    <div class="float-xs-right">
+                        <form th:action="@{/notifications/mark/read}" method="post">
+                            <input type="text" name="page" th:value="${currentPage}" hidden>
+                            <button type="submit" class="btn btn-round text-white bg-success">Mark all as read</button>
+                        </form>
+                    </div>
+                </div>
+
                 <div th:fragment="pagination" class="text-xs-center pages my-1">
                     <nav aria-label="Page navigation">
-                        <!--/*@thymesVar id="currentPage" type="java.lang.Integer"*/-->
-                        <!--/*@thymesVar id="minPage" type="java.lang.Integer"*/-->
-                        <!--/*@thymesVar id="maxPage" type="java.lang.Integer"*/-->
                         <ul class="pagination pagination-round">
                             <li th:class="|page-item ${currentPage <= minPage ? 'disabled' : ''}|">
                                 <a class="page-link" th:href="@{/notifications(page=${currentPage - 1})}" aria-label="Previous">
@@ -52,7 +73,7 @@
                 <div th:each="notificationRecipient : ${notifications}" class="row">
                     <div class="col-xs-12">
                         <div class="card">
-                            <div class="card-header">
+                            <div th:class="|card-header ${notificationRecipient.seen ? '' : 'new'}|">
                                 <h4 class="title" th:utext="${@markDownService.render(notificationRecipient.notification.title)}"></h4>
                                 <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
                                 <div class="heading-elements">
@@ -67,7 +88,11 @@
                                 <div class="card-block" th:utext="${@markDownService.render(notificationRecipient.notification.message)}"></div>
                             </div>
                             <blockquote class="p-1">
-                                <span>From : <code th:text="${notificationRecipient.notification.sender.name}"></code></span>
+                                <span>From : <code th:text="${notificationRecipient.notification.sender.name}"></code>
+                                    <span th:if="${notificationRecipient.notification.automated}">
+                                        <i data-toggle="tooltip" data-original-title="Automated" class="icon-asterisk"></i>
+                                    </span>
+                                </span>
                                 <span class="float-xs-right"><em th:text="${#temporals.format(notificationRecipient.notification.sentTime)}"></em></span>
                             </blockquote>
                         </div>
