@@ -105,13 +105,13 @@
                             <div class="card-body collapse in">
                                 <div class="card-block" th:utext="${@markDownService.render(notificationRecipient.notification.message)}"></div>
                             </div>
-                            <blockquote class="p-1">
+                            <blockquote class="mb-2">
                                 <span>From : <code th:text="${notificationRecipient.notification.sender.name}"></code>
                                     <span th:if="${notificationRecipient.notification.automated}">
                                         <i data-toggle="tooltip" data-original-title="Automated" class="icon-asterisk"></i>
                                     </span>
                                 </span>
-                                <span class="float-xs-right"><em th:text="${#temporals.format(notificationRecipient.notification.sentTime)}"></em></span>
+                                <small class="float-xs-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notificationRecipient.notification.sentTime)}"></em></small>
                             </blockquote>
                         </div>
                     </div>

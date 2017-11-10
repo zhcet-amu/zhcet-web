@@ -13,6 +13,8 @@ public interface NotificationRecipientRepository extends PagingAndSortingReposit
 
     List<NotificationRecipient> findByRecipientUserIdAndSeen(String userId, boolean read);
 
+    Page<NotificationRecipient> findByRecipientUserIdAndSeen(String userId, boolean read, Pageable pageable);
+
     Page<NotificationRecipient> findByRecipientUserIdAndFavorite(String userId, boolean favorite, Pageable pageable);
 
 }

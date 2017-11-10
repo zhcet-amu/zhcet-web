@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.base.BaseIdEntity;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.validator.constraints.NotBlank;
@@ -18,6 +19,7 @@ import java.util.List;
 @Entity
 @Audited
 @EqualsAndHashCode(callSuper = false)
+@ToString(exclude = "notificationRecipients")
 public class Notification extends BaseIdEntity {
 
     @OneToOne

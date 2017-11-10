@@ -5,27 +5,41 @@ import in.ac.amu.zhcet.data.repository.NotificationRecipientRepository;
 import in.ac.amu.zhcet.service.user.Auditor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
 @Service
 @Transactional
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class NotificationReadingService {
 
-    private static final int PAGE_SIZE = 10;
+    /* package private */ static final int PAGE_SIZE = 10;
 
     private final NotificationRecipientRepository notificationRecipientRepository;
+    private final CachedNotificationService cachedNotificationService;
 
     @Autowired
-    public NotificationReadingService(NotificationRecipientRepository notificationRecipientRepository) {
+    public NotificationReadingService(NotificationRecipientRepository notificationRecipientRepository, CachedNotificationService cachedNotificationService) {
         this.notificationRecipientRepository = notificationRecipientRepository;
+        this.cachedNotificationService = cachedNotificationService;
+    }
+
+    public List<NotificationRecipient> getUnreadNotifications() {
+        String userId = Auditor.getLoggedInUsername();
+        return cachedNotificationService.getUnreadNotifications(userId).getContent();
+    }
+
+    public String getUnreadNotificationCount() {
+        int size = getUnreadNotifications().size();
+        return size + (size >= 10 ? "+" : "");
     }
 
     public Page<NotificationRecipient> getNotifications(int page) {
@@ -42,12 +56,7 @@ public class NotificationReadingService {
 
     public void markRead() {
         String userId = Auditor.getLoggedInUsername();
-        List<NotificationRecipient> notificationRecipients = notificationRecipientRepository.findByRecipientUserIdAndSeen(userId, false);
-        for (NotificationRecipient notificationRecipient : notificationRecipients) {
-            notificationRecipient.setSeen(true);
-            notificationRecipient.setReadTime(LocalDateTime.now());
-        }
-        notificationRecipientRepository.save(notificationRecipients);
+        cachedNotificationService.markRead(userId);
     }
 
     public void markFavorite(NotificationRecipient notification) {

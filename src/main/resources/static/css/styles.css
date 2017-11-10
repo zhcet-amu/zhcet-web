@@ -53,6 +53,10 @@ table td {
     max-width: 1200px;
 }
 
+.bg-gray {
+    background-color: #777;
+}
+
 .bg-orange {
     background-color: #FF5722;
 }
@@ -165,4 +169,8 @@ blockquote>:first-child {
 
 blockquote>:last-child {
     margin-bottom: 0;
+}
+
+small > blockquote {
+    margin-bottom: 10px;
 }

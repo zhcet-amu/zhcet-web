@@ -25,13 +25,15 @@ public class NotificationSendingService {
 
     private final NotificationRepository notificationRepository;
     private final NotificationRecipientRepository notificationRecipientRepository;
+    private final CachedNotificationService cachedNotificationService;
     private final CourseManagementService courseManagementService;
     private final StudentService studentService;
 
     @Autowired
-    public NotificationSendingService(NotificationRepository notificationRepository, NotificationRecipientRepository notificationRecipientRepository, CourseManagementService courseManagementService, StudentService studentService) {
+    public NotificationSendingService(NotificationRepository notificationRepository, NotificationRecipientRepository notificationRecipientRepository, CachedNotificationService cachedNotificationService, CourseManagementService courseManagementService, StudentService studentService) {
         this.notificationRepository = notificationRepository;
         this.notificationRecipientRepository = notificationRecipientRepository;
+        this.cachedNotificationService = cachedNotificationService;
         this.courseManagementService = courseManagementService;
         this.studentService = studentService;
     }
@@ -92,5 +94,6 @@ public class NotificationSendingService {
         notificationRecipient.setNotification(notification);
         notificationRecipient.setRecipient(userAuth);
         notificationRecipientRepository.save(notificationRecipient);
+        cachedNotificationService.resetUnreadCount(userAuth.getUserId());
     }
 }

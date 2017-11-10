@@ -36,16 +36,33 @@
                 <ul class="nav navbar-nav float-xs-right" sec:authorize="isAuthenticated()">
                     <li class="dropdown dropdown-notification nav-item">
                         <a href="#" data-toggle="dropdown" class="nav-link nav-link-label"><i class="ficon icon-bell4"></i>
-                            <!-- TODO: Add unread notifications -->
-                            <span class="tag tag-pill tag-default tag-danger tag-default tag-up">&nbsp;</span>
+                            <span class="tag tag-pill tag-default tag-danger tag-default tag-up" th:text="${@notificationReadingService.getUnreadNotificationCount()}"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
                             <li class="dropdown-menu-header">
                                 <h6 class="dropdown-header m-0">
                                     <span class="grey darken-2">Notifications</span>
-                                    <!-- TODO: Add unread notifications -->
-                                    <span class="notification-tag tag tag-default tag-danger float-xs-right m-0"></span>
+                                    <!-- TODO: Add icons to notifications -->
+                                    <span class="notification-tag tag tag-default tag-danger float-xs-right m-0" th:text="|${@notificationReadingService.getUnreadNotificationCount()} NEW|"></span>
                                 </h6>
+                            </li>
+                            <li class="list-group scrollable-container">
+                                <div th:each="notification : ${@notificationReadingService.getUnreadNotifications()}" class="list-group-item">
+                                    <div class="media">
+                                        <div class="media-left valign-middle"><i class="icon-bell icon-bg-circle bg-gray"></i></div>
+                                        <div class="media-body">
+                                            <h6 class="media-heading" th:utext="${@markDownService.render(notification.notification.title)}">99% Server load</h6>
+                                            <hr>
+                                            <p class="notification-text font-small-3 text-muted" th:utext="${@markDownService.render(notification.notification.message)}">Aliquam tincidunt mauris eu risus.</p>
+                                            <small>
+                                                <blockquote>From <code th:text="${notification.notification.sender.name}">dean</code>
+                                                    <span th:if="${notification.notification.automated}"><i class="icon-asterisk"></i></span>
+                                                </blockquote>
+                                            </small>
+                                            <small><span class="media-meta text-muted" th:text="${#temporals.format(notification.notification.sentTime)}">Five hour ago</span></small>
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
                             <li class="dropdown-menu-footer"><a th:href="@{/notifications}" class="dropdown-item text-muted text-xs-center">Read all notifications</a></li>
                         </ul>
