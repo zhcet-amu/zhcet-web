@@ -1,10 +1,13 @@
 package in.ac.amu.zhcet.controller.faculty;
 
-import in.ac.amu.zhcet.data.model.*;
+import in.ac.amu.zhcet.data.model.Course;
+import in.ac.amu.zhcet.data.model.CourseInCharge;
+import in.ac.amu.zhcet.data.model.CourseRegistration;
+import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.service.CourseInChargeService;
+import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.service.extra.AttendanceDownloadService;
-import in.ac.amu.zhcet.service.notification.email.EmailNotificationService;
 import in.ac.amu.zhcet.utils.SortUtils;
 import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +31,12 @@ public class FacultyCourseController {
     private final FacultyService facultyService;
     private final CourseInChargeService courseInChargeService;
     private final AttendanceDownloadService attendanceDownloadService;
-    private final EmailNotificationService emailNotificationService;
 
     @Autowired
-    public FacultyCourseController(AttendanceDownloadService attendanceDownloadService, FacultyService facultyService, CourseInChargeService courseInChargeService, EmailNotificationService emailNotificationService) {
+    public FacultyCourseController(AttendanceDownloadService attendanceDownloadService, FacultyService facultyService, CourseInChargeService courseInChargeService) {
         this.attendanceDownloadService = attendanceDownloadService;
         this.facultyService = facultyService;
         this.courseInChargeService = courseInChargeService;
-        this.emailNotificationService = emailNotificationService;
     }
 
     @GetMapping("/faculty/courses")
@@ -63,11 +64,9 @@ public class FacultyCourseController {
         model.addAttribute("page_description", "Upload attendance for the floated course");
 
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-        List<Student> students = courseRegistrations
-                .parallelStream()
-                .map(CourseRegistration::getStudent)
+        List<String> emails = CourseManagementService
+                .getEmailsFromCourseRegistrations(courseRegistrations.stream())
                 .collect(Collectors.toList());
-        List<String> emails = emailNotificationService.getEmails(students);
         SortUtils.sortCourseAttendance(courseRegistrations);
 
         model.addAttribute("courseRegistrations", courseRegistrations);

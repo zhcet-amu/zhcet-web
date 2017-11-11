@@ -12,6 +12,7 @@ public class ApplicationProperties {
 
     private String salt = SecurityUtils.SALT;
     private String url = "http://localhost:8080/";
+    private boolean skipEmails;
     private final Email email = new Email();
     private final Firebase firebase = new Firebase();
 

@@ -3,9 +3,9 @@ package in.ac.amu.zhcet.service.user.auth;
 import in.ac.amu.zhcet.data.model.token.PasswordResetToken;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.PasswordResetTokenRepository;
-import in.ac.amu.zhcet.service.notification.email.EmailService;
-import in.ac.amu.zhcet.service.ConfigurationService;
 import in.ac.amu.zhcet.service.UserService;
+import in.ac.amu.zhcet.service.notification.email.LinkMailService;
+import in.ac.amu.zhcet.service.notification.email.data.LinkMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,22 +15,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.UUID;
 
 @Slf4j
 @Service
 public class PasswordResetService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
-    private final EmailService emailService;
     private final UserService userService;
-    private final ConfigurationService configurationService;
+    private final LinkMailService linkMailService;
 
     @Autowired
-    public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository, EmailService emailService, UserService userService, ConfigurationService configurationService) {
+    public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository, UserService userService, LinkMailService linkMailService) {
         this.passwordResetTokenRepository = passwordResetTokenRepository;
-        this.emailService = emailService;
         this.userService = userService;
-        this.configurationService = configurationService;
+        this.linkMailService = linkMailService;
     }
 
     public String validate(String id, String token) {
@@ -70,21 +70,26 @@ public class PasswordResetService {
     }
 
     public void sendMail(PasswordResetToken token) {
-        String url = configurationService.getBaseUrl() + "/login/reset_password?id=" + token.getUserAuth().getUserId() + "&auth=" + token.getToken();
+        UserAuth userAuth = token.getUserAuth();
+        String relativeUrl = String.format("/login/reset_password?id=%s&auth=%s", userAuth.getUserId(), token.getToken());
+        log.info("Password reset link generated : {}", relativeUrl);
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("title", "Password Reset Link");
-        map.put("name", token.getUserAuth().getName());
-        map.put("link", url);
-        map.put("link_text", "Reset Password");
-        map.put("pre_message", "You requested password reset on zhcet for user ID: " + token.getUserAuth().getUserId() +
-                "<br>Please click the button below to reset your password");
-        map.put("post_message", "If you did not request the password reset, please contact website admin");
+        LinkMessage linkMessage = getPayLoad(userAuth, relativeUrl);
+        linkMailService.sendEmail(linkMessage, false);
+    }
 
-        log.info("Password reset link generated : " + url);
-        String message = emailService.render("html/link", map);
-
-        emailService.sendHtmlMail(token.getUserAuth().getEmail(), "ZHCET Reset Password Link", message);
+    private LinkMessage getPayLoad(UserAuth userAuth, String url) {
+        return LinkMessage.builder()
+                .recipient(userAuth.getEmail())
+                .name(userAuth.getName())
+                .subject("ZHCET Reset Password Link")
+                .title("Password Reset Link")
+                .relativeLink(url)
+                .linkText("Reset Password")
+                .preMessage("You requested password reset on zhcet for user ID: " + userAuth.getUserId() +
+                        "<br>Please click the button below to reset your password")
+                .postMessage("If you did not request the password reset, please contact website admin")
+                .build();
     }
 
     public void resetPassword(String newPassword, String token) {

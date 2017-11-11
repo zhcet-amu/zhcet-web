@@ -49,7 +49,7 @@
                             <li class="list-group scrollable-container">
                                 <div th:each="notification : ${@notificationReadingService.getUnreadNotifications()}" class="list-group-item">
                                     <div class="media">
-                                        <div class="media-left valign-middle"><i class="icon-bell icon-bg-circle bg-gray"></i></div>
+                                        <div class="media-left valign-middle"><i class="icon-bell4 icon-bg-circle bg-gray"></i></div>
                                         <div class="media-body">
                                             <h6 class="media-heading" th:utext="${@markDownService.render(notification.notification.title)}">99% Server load</h6>
                                             <hr>

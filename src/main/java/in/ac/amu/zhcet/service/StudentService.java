@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -58,6 +59,15 @@ public class StudentService {
 
     public List<Student> getByIds(List<String> studentIds) {
         return studentRepository.getByEnrolmentNumberIn(studentIds);
+    }
+
+    public static Stream<UserAuth> verifiedUsers(Stream<Student> students) {
+        return UserService.verifiedUsers(students.map(Student::getUser));
+    }
+
+    public static Stream<String> getEmails(Stream<Student> students) {
+        return verifiedUsers(students)
+                .map(UserAuth::getEmail);
     }
 
     public Student getByFacultyNumber(String userId) {

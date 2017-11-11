@@ -42,8 +42,8 @@ public class NotificationSendingService {
     }
 
     /**
-     * Asynchronously send notification to different channel types: Student, Course, Department, etc
-     * Currently, only student and course are supported
+     * Asynchronously send notification to different channel types: Student, Course, Section, Faculty, Department, etc
+     * Currently, only student course, section and faculty are supported
      * @param notification Notification to be sent, containing message and channel information
      */
     private void sendToRecipients(Notification notification) {

@@ -275,13 +275,14 @@
     </style>
 </head>
 <body>
+<!--/*@thymesVar id="link_message" type="in.ac.amu.zhcet.service.notification.email.data.LinkMessage"*/-->
 <table border="0" cellpadding="0" cellspacing="0" class="body" th:fragment="wrapper">
     <tr>
         <td>&nbsp;</td>
         <td class="container">
             <div class="content">
                 <!-- START CENTERED WHITE CONTAINER -->
-                <span th:if="${prehead}" class="preheader">This is preheader text. Some clients will show this text as a preview.</span>
+                <span th:if="${link_message.preview}" class="preheader">This is preheader text. Some clients will show this text as a preview.</span>
                 <table class="main">
 
                     <!-- START MAIN CONTENT AREA -->
@@ -304,8 +305,8 @@
                         <tr>
                             <td class="content-block">
                                 <span class="apple-link">ZHCET Web, AMU</span>
-                                <div th:if="${unsubscribe_link}">
-                                    <br> Don't like these emails? <a th:href="${unsubscribe_link}" target="_blank">Unsubscribe</a>.
+                                <div th:if="${link_message.unSubscribeUrl}">
+                                    <br> Don't like these emails? <a th:href="${link_message.unSubscribeUrl}" target="_blank">Unsubscribe</a>.
                                 </div>
                             </td>
                         </tr>

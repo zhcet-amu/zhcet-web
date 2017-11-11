@@ -1,8 +1,6 @@
 package in.ac.amu.zhcet.service;
 
-import in.ac.amu.zhcet.data.model.Course;
-import in.ac.amu.zhcet.data.model.Department;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.utils.exception.DuplicateException;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -38,6 +37,11 @@ public class CourseManagementService {
 
     public List<FloatedCourse> getCurrentFloatedCourses(Department department) {
         return floatedCourseRepository.getBySessionAndCourse_Department(ConfigurationService.getDefaultSessionCode(), department);
+    }
+
+    public static Stream<String> getEmailsFromCourseRegistrations(Stream<CourseRegistration> courseRegistrations) {
+        return StudentService.getEmails(courseRegistrations
+                .map(CourseRegistration::getStudent));
     }
 
     @Transactional

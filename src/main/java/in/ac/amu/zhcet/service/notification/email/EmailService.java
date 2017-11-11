@@ -3,29 +3,25 @@ package in.ac.amu.zhcet.service.notification.email;
 import in.ac.amu.zhcet.configuration.ApplicationProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.Locale;
-import java.util.Map;
+import java.io.IOException;
 
 @Slf4j
 @Service
 public class EmailService{
     private final JavaMailSender sender;
-    private final TemplateEngine htmlTemplateEngine;
-    private String senderEmail;
+    private final ApplicationProperties applicationProperties;
+    private final String senderEmail;
 
     @Autowired
-    public EmailService(JavaMailSender sender, ApplicationProperties applicationProperties, @Qualifier("emailEngine") TemplateEngine htmlTemplateEngine) {
+    public EmailService(JavaMailSender sender, ApplicationProperties applicationProperties) {
         this.sender = sender;
-        this.htmlTemplateEngine = htmlTemplateEngine;
+        this.applicationProperties = applicationProperties;
         this.senderEmail = applicationProperties.getEmail().getAddress();
     }
 
@@ -53,32 +49,43 @@ public class EmailService{
         return mimeMessage;
     }
 
-    public void sendHtmlMail(String email, String subject, String html) {
-        try {
-            sender.send(constructHtmlEmail(email, subject, html, null));
-        } catch (MessagingException e) {
-            log.error("Error sending mail", e);
+    private void sendMail(MimeMessage mimeMessage) throws MessagingException {
+        if (applicationProperties.isSkipEmails()) {
+            try {
+                log.info("Skipping mail because of property override.\n" +
+                        "Sender: {}\n" +
+                        "Recipients: {}\n" +
+                        "Subject: {}\n" +
+                        "Content: {}",
+                        mimeMessage.getSender(), mimeMessage.getAllRecipients(),
+                        mimeMessage.getSubject(), mimeMessage.getContent());
+            } catch (IOException e) {
+                log.error("Error extracting information", e);
+            }
+            return;
         }
+
+        sender.send(mimeMessage);
     }
 
     public void sendHtmlMail(String email, String subject, String html, String[] bcc) {
         try {
-            sender.send(constructHtmlEmail(email, subject, html, bcc));
+            sendMail(constructHtmlEmail(email, subject, html, bcc));
         } catch (MessagingException e) {
             log.error("Error sending mail", e);
         }
+    }
+
+    public void sendHtmlMail(String email, String subject, String html) {
+        sendHtmlMail(email, subject, html, null);
     }
 
     public void sendSimpleMail(String email, String subject, String message) {
         try {
-            sender.send(constructEmail(email, subject, message, null));
+            sendMail(constructEmail(email, subject, message, null));
         } catch (MessagingException e) {
             log.error("Error sending mail", e);
         }
-    }
-
-    public String render(String template, Map<String, Object> payload) {
-        return htmlTemplateEngine.process(template, new Context(Locale.getDefault(), payload));
     }
 
 }

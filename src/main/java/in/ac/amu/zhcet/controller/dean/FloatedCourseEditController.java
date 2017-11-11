@@ -3,11 +3,9 @@ package in.ac.amu.zhcet.controller.dean;
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FloatedCourse;
-import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.service.CourseManagementService;
-import in.ac.amu.zhcet.service.upload.csv.RegistrationUploadService;
 import in.ac.amu.zhcet.service.extra.AttendanceDownloadService;
-import in.ac.amu.zhcet.service.notification.email.EmailNotificationService;
+import in.ac.amu.zhcet.service.upload.csv.RegistrationUploadService;
 import in.ac.amu.zhcet.utils.SortUtils;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -36,14 +34,12 @@ public class FloatedCourseEditController {
     private final CourseManagementService courseManagementService;
     private final AttendanceDownloadService attendanceDownloadService;
     private final RegistrationUploadService registrationUploadService;
-    private final EmailNotificationService emailNotificationService;
 
     @Autowired
-    public FloatedCourseEditController(CourseManagementService courseManagementService, AttendanceDownloadService attendanceDownloadService, RegistrationUploadService registrationUploadService, EmailNotificationService emailNotificationService) {
+    public FloatedCourseEditController(CourseManagementService courseManagementService, AttendanceDownloadService attendanceDownloadService, RegistrationUploadService registrationUploadService) {
         this.courseManagementService = courseManagementService;
         this.attendanceDownloadService = attendanceDownloadService;
         this.registrationUploadService = registrationUploadService;
-        this.emailNotificationService = emailNotificationService;
     }
 
     @GetMapping("/dean/floated")
@@ -66,11 +62,9 @@ public class FloatedCourseEditController {
         model.addAttribute("page_description", "Register Students for the Floated course");
 
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-        List<Student> students = courseRegistrations
-                .parallelStream()
-                .map(CourseRegistration::getStudent)
+        List<String> emails = CourseManagementService
+                .getEmailsFromCourseRegistrations(courseRegistrations.stream())
                 .collect(Collectors.toList());
-        List<String> emails = emailNotificationService.getEmails(students);
         SortUtils.sortCourseAttendance(courseRegistrations);
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("floatedCourse", floatedCourse);

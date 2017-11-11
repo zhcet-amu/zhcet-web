@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -106,6 +107,11 @@ public class UserService {
 
     public Iterable<UserAuth> getAll() {
         return userRepository.findAll(new PageRequest(0, 10, Sort.Direction.DESC, "createdAt"));
+    }
+
+    public static Stream<UserAuth> verifiedUsers(Stream<UserAuth> users) {
+        return users
+                .filter(userAuth -> userAuth.isEmailVerified() && !userAuth.isEmailUnsubscribed());
     }
 
     @Transactional

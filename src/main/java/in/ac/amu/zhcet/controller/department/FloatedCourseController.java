@@ -3,9 +3,8 @@ package in.ac.amu.zhcet.controller.department;
 import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseManagementService;
-import in.ac.amu.zhcet.service.upload.csv.RegistrationUploadService;
 import in.ac.amu.zhcet.service.extra.AttendanceDownloadService;
-import in.ac.amu.zhcet.service.notification.email.EmailNotificationService;
+import in.ac.amu.zhcet.service.upload.csv.RegistrationUploadService;
 import in.ac.amu.zhcet.utils.SortUtils;
 import in.ac.amu.zhcet.utils.page.Path;
 import in.ac.amu.zhcet.utils.page.PathChain;
@@ -39,15 +38,13 @@ public class FloatedCourseController {
     private final CourseManagementService courseManagementService;
     private final AttendanceDownloadService attendanceDownloadService;
     private final RegistrationUploadService registrationUploadService;
-    private final EmailNotificationService emailNotificationService;
 
     @Autowired
-    public FloatedCourseController(CourseInChargeService courseInChargeService, CourseManagementService courseManagementService, AttendanceDownloadService attendanceDownloadService, RegistrationUploadService registrationUploadService, EmailNotificationService emailNotificationService) {
+    public FloatedCourseController(CourseInChargeService courseInChargeService, CourseManagementService courseManagementService, AttendanceDownloadService attendanceDownloadService, RegistrationUploadService registrationUploadService) {
         this.courseInChargeService = courseInChargeService;
         this.courseManagementService = courseManagementService;
         this.attendanceDownloadService = attendanceDownloadService;
         this.registrationUploadService = registrationUploadService;
-        this.emailNotificationService = emailNotificationService;
     }
 
     public static PathChain getPath(Department department, Course course) {
@@ -74,12 +71,9 @@ public class FloatedCourseController {
         model.addAttribute("page_path", getPath(department, course));
 
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-        List<Student> students = courseRegistrations
-                .parallelStream()
-                .map(CourseRegistration::getStudent)
+        List<String> emails = CourseManagementService
+                .getEmailsFromCourseRegistrations(courseRegistrations.stream())
                 .collect(Collectors.toList());
-        List<String> emails = emailNotificationService.getEmails(students);
-        SortUtils.sortCourseAttendance(courseRegistrations);
         SortUtils.sortCourseAttendance(courseRegistrations);
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("floatedCourse", floatedCourse);
@@ -138,6 +132,7 @@ public class FloatedCourseController {
         return courseInCharges;
     }
 
+    @PreAuthorize("isOfDepartment(#department, #course)")
     @PostMapping("department/{department}/floated/{course}/in_charge")
     public String addInCharge(RedirectAttributes redirectAttributes, @PathVariable Department department, @PathVariable Course course, @RequestParam(required = false) List<String> facultyId, @RequestParam(required = false) List<String> section) {
         if (facultyId == null) {
@@ -151,6 +146,7 @@ public class FloatedCourseController {
         return "redirect:/department/{department}/floated/{course}";
     }
 
+    @PreAuthorize("isOfDepartment(#department, #course)")
     @GetMapping("department/{department}/floated/{course}/attendance/download")
     public void downloadAttendance(@PathVariable Department department, @PathVariable Course course, HttpServletResponse response) throws IOException {
         FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
