@@ -1,4 +1,4 @@
-var DataUtils = (function () {
+var DataUtils = (function ($) {
 
     function setSelectInput(id, table, index, selected) {
         $(id).on('change', function () {
@@ -49,4 +49,4 @@ var DataUtils = (function () {
             }
         }
     }
-}());
+}(jQuery));

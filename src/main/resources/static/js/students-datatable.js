@@ -1,4 +1,4 @@
-(function () {
+(function ($) {
     function showStudent(data) {
         var modal = $('#studentModal');
         modal.modal();
@@ -177,4 +177,4 @@
             showStudent(table.row(this).data());
         } );
     });
-}());
+}(jQuery));

@@ -1,4 +1,4 @@
-(function () {
+(function ($, fuzzyhound) {
     function itemTemplate(suggestion) {
         return [
             "<div " + (suggestion._item.floated ? "class='bg-danger'" : "") + ">",
@@ -123,4 +123,4 @@
             });
         });
     });
-}());
+}(jQuery, fuzzyhound));

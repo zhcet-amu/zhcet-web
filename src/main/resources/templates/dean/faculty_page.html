@@ -127,19 +127,10 @@
     </div>
 </div>
 </body>
-<style>
-    table.dataTable.display tr {
-        cursor: pointer;
-        *cursor: hand;
-    }
-
-    table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
-        background-color: #d1c4e9;
-    }
-</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-<script src="https://zhcet-backend.firebaseapp.com/static/js/throttle.min.js"></script>
 <script th:src="@{/js/data-utils.js}"></script>
 <script th:src="@{/js/faculty-datatable.js}"></script>
-<div th:replace="fragments/layout :: export_datatables"></div>
+<div th:replace="fragments/layout :: data_details"></div>
+<div th:replace="fragments/layout :: datatables"></div>
+<div th:replace="fragments/layout :: datatables_export"></div>
+<link rel="stylesheet" th:href="@{/css/datatables-select.css}">
 </html>

@@ -41,11 +41,10 @@
         </select>
     </span>
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.jquery.min.js"></script>
-<script src="https://zhcet-backend.firebaseapp.com/static/js/FuzzySearch.min.js"></script>
-<script src="https://zhcet-backend.firebaseapp.com/static/js/tmpl.min.js"></script>
+<div th:replace="fragments/layout :: typeahead"></div>
 <script th:src="@{/js/fuzzyhound.js}"></script>
 <script th:src="@{/js/floated-course.js}"></script>
-<div th:replace="fragments/layout :: export_datatables"></div>
+<div th:replace="fragments/layout :: datatables"></div>
+<div th:replace="fragments/layout :: datatables_export"></div>
 </body>
 </html>

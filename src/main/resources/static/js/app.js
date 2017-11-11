@@ -1,4 +1,4 @@
-var App = (function () {
+var App = (function (Authentication) {
 
     Authentication.auth().init();
 
@@ -9,4 +9,4 @@ var App = (function () {
             })
         }
     }
-}());
+}(Authentication));

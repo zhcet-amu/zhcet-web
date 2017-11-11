@@ -3,32 +3,7 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="fragments/layout :: head"></head>
-<style>
-    .pad {
-        padding: 0.3rem;
-    }
-
-    .list {
-        list-style-type: none;
-    }
-
-    .type {
-        background-color: #E1BEE7;
-        font-weight:100;
-    }
-
-    .floated-title {
-        background-color: #C8E6C9;
-    }
-
-    .inactive-title {
-        background-color: #ffcdd2;
-    }
-
-    .course-title:hover {
-        color: #304FFE;
-    }
-</style>
+<link rel="stylesheet" th:href="@{/css/courses.css}">
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'department', subPage = 'courses')" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
@@ -138,38 +113,6 @@
         </div>
     </div>
 </div>
-<script src="https://zhcet-backend.firebaseapp.com/static/js/list.min.js"></script>
-<script>
-    (function () {
-        var showFloatedOnly = false;
-
-        function filterFloated(list, filter) {
-            if (filter) {
-                list.filter(function (item) {
-                    return item.values().floated !== '';
-                });
-            } else {
-                list.filter();
-            }
-        }
-
-        var options = {
-            valueNames: [ 'code', 'title', 'semester', 'floated' ],
-            page: 10,
-            pagination: true
-        };
-
-        $(document).ready(function () {
-            var courseList = new List('courses', options);
-            $('#toggle-floated').click(function (event) {
-                showFloatedOnly = !showFloatedOnly;
-                filterFloated(courseList, showFloatedOnly);
-                var btn = $(event.target);
-                btn.toggleClass('btn-secondary');
-                btn.toggleClass('btn-outline-success');
-            });
-        });
-    }());
-</script>
+<script th:src="@{/js/courses.js}"></script>
 </body>
 </html>

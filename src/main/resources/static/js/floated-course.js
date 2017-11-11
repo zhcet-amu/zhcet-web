@@ -1,4 +1,4 @@
-(function () {
+(function ($, fuzzyhound) {
     function getImageUrl(url) {
         if (url && url !== '')
             return url;
@@ -42,7 +42,7 @@
             scrollCollapse: true,
             "order": [],
             dom: 'lBfrtip',
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
         });
         $('#confirmRegistrationTable').dataTable({
             scrollY:        true,
@@ -86,4 +86,4 @@
 
         attachRemove();
     });
-}());
+}(jQuery, fuzzyhound));

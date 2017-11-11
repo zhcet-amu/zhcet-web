@@ -3,43 +3,6 @@
 <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <head th:replace="fragments/layout :: head"></head>
-<link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.3/css/select.bootstrap4.min.css">
-<style>
-    .select-info {
-        margin-left: 10px;
-        padding: 7px;
-        background-color: #ddd;
-        border-radius: 30px;
-    }
-
-    table.dataTable tbody td.select-checkbox:before, table.dataTable tbody th.select-checkbox:before {
-        margin-top: 10px;
-    }
-
-    table.dataTable tr.selected td.select-checkbox:after, table.dataTable tr.selected th.select-checkbox:after {
-        margin-top: 2px;
-    }
-
-    table.dataTable.stripe tbody>tr.odd.selected,table.dataTable.stripe tbody>tr.odd>.selected,table.dataTable.display tbody>tr.odd.selected,table.dataTable.display tbody>tr.odd>.selected {
-        background-color: #967ADC;
-    }
-
-    table.dataTable.display tbody>tr.even.selected>.sorting_1, table.dataTable.order-column.stripe tbody>tr.even.selected>.sorting_1 {
-        background-color: #967ADC;
-    }
-
-    table.dataTable.display tbody>tr.odd.selected>.sorting_1, table.dataTable.order-column.stripe tbody>tr.odd.selected>.sorting_1 {
-        background-color: #967ADC;
-    }
-
-    table.dataTable.hover tbody>tr.selected:hover, table.dataTable.hover tbody>tr>.selected:hover, table.dataTable.display tbody>tr.selected:hover, table.dataTable.display tbody>tr>.selected:hover {
-        background-color: #673AB7;
-    }
-
-    table.dataTable.display tbody>tr.selected:hover>.sorting_1, table.dataTable.order-column.hover tbody>tr.selected:hover>.sorting_1 {
-        background-color: #673AB7;
-    }
-</style>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage = 'students_page')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
@@ -210,20 +173,11 @@
     </div>
 </div>
 </body>
-<style>
-    table.dataTable.display tr {
-        cursor: pointer;
-        *cursor: hand;
-    }
-
-    table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
-        background-color: #d1c4e9;
-    }
-</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-<script src="https://zhcet-backend.firebaseapp.com/static/js/throttle.min.js"></script>
-<script src="https://cdn.datatables.net/select/1.2.3/js/dataTables.select.min.js"></script>
 <script th:src="@{/js/data-utils.js}"></script>
 <script th:src="@{/js/students-datatable.js}"></script>
-<div th:replace="fragments/layout :: export_datatables"></div>
+<div th:replace="fragments/layout :: data_details"></div>
+<div th:replace="fragments/layout :: datatables"></div>
+<div th:replace="fragments/layout :: datatables_export"></div>
+<div th:replace="fragments/layout :: datatables_select"></div>
+<link rel="stylesheet" th:href="@{/css/datatables-select.css}">
 </html>

@@ -1,4 +1,4 @@
-(function () {
+(function ($) {
 
     function showCourse(data) {
         var modal = $('#floatedCourseModal');
@@ -89,4 +89,4 @@
             showCourse(table.row(this).data());
         } );
     });
-}());
+}(jQuery));

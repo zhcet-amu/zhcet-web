@@ -1,7 +1,7 @@
-(function () {
+(function ($) {
     $(document).ready(function () {
         $.fn.dataTable.ext.search.push(
-            function( settings, data, dataIndex ) {
+            function(settings, data) {
                 var percentIndex = 6; // Index of percentage column in table
 
                 var min = parseInt( $('#min').val(), 10 );
@@ -30,4 +30,4 @@
 
         $("#upload_modal").modal('show');
     });
-}());
+}(jQuery));

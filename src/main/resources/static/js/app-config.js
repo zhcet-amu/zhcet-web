@@ -1,4 +1,4 @@
-(function () {
+(function ($) {
     function disableInput(disable) {
         $('#session-term').attr('disabled', disable);
         $('#session-year').attr('disabled', disable);
@@ -24,4 +24,4 @@
             })
         });
     });
-}());
+}(jQuery));

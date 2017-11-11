@@ -1,4 +1,4 @@
-(function () {
+(function (firebase) {
     /* Initialize Firebase */
     function initializeFirebase() {
         var config = {
@@ -14,4 +14,4 @@
     }
 
     initializeFirebase();
-}());
+}(firebase));

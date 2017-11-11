@@ -1,4 +1,4 @@
-(function () {
+(function ($, Authentication) {
     $(document).ready(function () {
         var btn = $('#link-google');
         var loader = $('#loader');
@@ -58,4 +58,4 @@
             }
         });
     });
-}());
+}(jQuery, Authentication));

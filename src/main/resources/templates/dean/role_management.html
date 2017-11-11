@@ -95,9 +95,8 @@
     </div>
     </div>
 </div>
-<script src="https://zhcet-backend.firebaseapp.com/static/js/list.min.js"></script>
 <script>
-    (function () {
+    (function (List) {
         var options = {
             valueNames: [ 'faculty-id', 'name' ],
             page: 10,
@@ -105,7 +104,7 @@
         };
 
         new List('payload', options);
-    }());
+    }(List));
 </script>
 </body>
 </html>

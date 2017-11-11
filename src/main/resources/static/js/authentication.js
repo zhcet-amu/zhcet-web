@@ -1,4 +1,4 @@
-var Authentication = (function ($) {
+var Authentication = (function ($, firebase) {
     var googleProvider = new firebase.auth.GoogleAuthProvider();
     var userInformation;
 
@@ -171,4 +171,4 @@ var Authentication = (function ($) {
         auth: auth,
         google: google
     }
-}(jQuery));
+}(jQuery, firebase));

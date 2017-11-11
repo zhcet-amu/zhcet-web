@@ -1,4 +1,4 @@
-(function () {
+(function ($) {
     function showFaculty(data) {
         var modal = $('#facultyModal');
         modal.modal();
@@ -126,4 +126,4 @@
             showFaculty(table.row(this).data());
         } );
     });
-}());
+}(jQuery));

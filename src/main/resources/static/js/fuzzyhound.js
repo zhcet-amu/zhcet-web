@@ -1,4 +1,4 @@
-var fuzzyhound = (function () {
+var fuzzyhound = (function ($, FuzzySearch) {
     var fuzzyhound = new FuzzySearch({output_limit: 6, output_map:"alias"});
     var loaded = null;
 
@@ -23,4 +23,4 @@ var fuzzyhound = (function () {
             loaded = callback;
         }
     }
-}());
+}(jQuery, FuzzySearch));

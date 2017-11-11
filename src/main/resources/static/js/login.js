@@ -1,4 +1,4 @@
-var Login = (function ($) {
+var Login = (function ($, Authentication) {
     // Default Slide Images
     var slides = [];
 
@@ -45,4 +45,4 @@ var Login = (function ($) {
     return {
         startLoginFlow: setupLoginFlow
     }
-}(jQuery));
+}(jQuery, Authentication));

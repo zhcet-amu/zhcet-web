@@ -1,0 +1,24 @@
+.pad {
+    padding: 0.3rem;
+}
+
+.list {
+    list-style-type: none;
+}
+
+.type {
+    background-color: #E1BEE7;
+    font-weight:100;
+}
+
+.floated-title {
+    background-color: #C8E6C9;
+}
+
+.inactive-title {
+    background-color: #ffcdd2;
+}
+
+.course-title:hover {
+    color: #304FFE;
+}
