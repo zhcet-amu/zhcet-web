@@ -12,7 +12,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.persistence.Version;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
@@ -23,11 +23,11 @@ public abstract class BaseEntity implements Meta {
 
     @CreatedDate
     @JsonIgnore
-    private ZonedDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @JsonIgnore
-    private ZonedDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     @CreatedBy
     private String createdBy;

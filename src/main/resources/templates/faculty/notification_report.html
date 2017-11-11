@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head"></head>
+<link rel="stylesheet" th:href="@{/css/notification.css}">
+
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification', subPage='manage_notification')" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div th:replace="fragments/layout :: toolbar"></div>
+            </div>
+        </div>
+
+        <!--/*@thymesVar id="notification" type="in.ac.amu.zhcet.data.model.notification.Notification"*/-->
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="title" th:utext="${@markDownService.render(notification.title)}"></h4>
+                        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                        <div class="heading-elements">
+                            <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body collapse in">
+                        <div class="card-block" th:utext="${@markDownService.render(notification.message)}"></div>
+                    </div>
+                    <blockquote class="mb-2">
+                                <span>From : <code th:text="${notification.sender.name}"></code>
+                                    <span th:if="${notification.automated}">
+                                        <i data-toggle="tooltip" data-original-title="Automated" class="icon-asterisk"></i>
+                                    </span>
+                                </span>
+                        <small class="float-xs-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notification.sentTime)}"></em></small>
+                    </blockquote>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="bg-light-gray p-1 mb-1">
+                    <table class="statistics collapse in">
+                        <tr>
+                            <td><i class="icon-share4"></i></td>
+                            <td>Type</td>
+                            <td th:text="${notification.channelType}"></td>
+                        </tr>
+                        <tr>
+                            <td><i class="icon-fast-forward2"></i></td>
+                            <td>Recipient</td>
+                            <td th:text="${notification.recipientChannel}"></td>
+                        </tr>
+                        <tr>
+                            <td><i class="icon-bell4"></i></td>
+                            <td>Received</td>
+                            <td th:text="${notification.notificationRecipients.size()}"></td>
+                        </tr>
+                        <tr>
+                            <td><i class="icon-eye6"></i></td>
+                            <td>Seen</td>
+                            <td th:text="${notification.seenCount}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="title">Notification Report</h4>
+                        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                        <div class="heading-elements">
+                            <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body collapse in">
+                        <div class="card-block">
+                            <table id="report" class="table display responsive nowrap">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Receive Time</th>
+                                    <th>Favorite</th>
+                                    <th>Seen</th>
+                                    <th>Seen Time</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="recipient : ${notification.notificationRecipients}">
+                                    <td th:text="${recipient.recipient.userId}"></td>
+                                    <td th:text="${recipient.recipient.name}"></td>
+                                    <td><small th:text="${#temporals.format(recipient.createdAt)}"></small></td>
+                                    <td><i th:class="${recipient.favorite ? 'icon-android-done' : ''}"></i></td>
+                                    <td><i th:class="${recipient.seen ? 'icon-android-done-all' : ''}"></i></td>
+                                    <td><small th:text="${#temporals.format(recipient.readTime)}"></small></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    (function () {
+        $(document).ready(function () {
+            $('#report').DataTable({
+                order: [],
+                dom: 'lBfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+        });
+    }());
+</script>
+<div th:replace="fragments/layout :: export_datatables"></div>
+</body>
+</html>

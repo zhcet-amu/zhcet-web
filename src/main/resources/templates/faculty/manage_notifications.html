@@ -69,7 +69,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
-                                <a id="delete-link" href="/notification/delete/">
+                                <a id="delete-link" href="/notification/">
                                     <button type="button" id="delete-button" class="btn btn-outline-danger">Delete</button>
                                 </a>
                             </div>
@@ -85,10 +85,10 @@
                             <div class="heading-elements">
                                 <ul class="list-inline mb-0">
                                     <li>
-                                        <form method="get" th:action="@{|/notification/edit/${notification.id}|}">
+                                        <form method="get" th:action="@{|/notification/${notification.id}/edit|}">
                                             <input type="text" name="page" th:value="${currentPage}" hidden>
                                             <button type="submit" class="head-icon btn btn-icon btn-pure">
-                                                <i data-toggle="tooltip" data-original-title="Edit Notification" class="icon-marquee"></i>
+                                                <i data-toggle="tooltip" data-original-title="Edit Notification" class="icon-android-create"></i>
                                             </button>
                                         </form>
                                     </li>
@@ -130,6 +130,11 @@
                                                     <td>Seen</td>
                                                     <td th:text="${notification.seenCount}"></td>
                                                 </tr>
+                                                <tr>
+                                                    <td><i class="icon-paper"></i></td>
+                                                    <td><a th:href="@{|/notification/${notification.id}/report|}">Report</a></td>
+                                                    <td></td>
+                                                </tr>
                                             </table>
                                         </div>
                                     </div>
@@ -159,7 +164,7 @@
         function deleteNotification(id) {
             var deleteLink = $('#delete-link');
             var baseUrl = deleteLink.attr('href');
-            baseUrl += id + '?' + $.param({ page: page });
+            baseUrl += id + '/delete?' + $.param({ page: page });
             deleteLink.attr('href', baseUrl);
             $('#delete').modal();
         }

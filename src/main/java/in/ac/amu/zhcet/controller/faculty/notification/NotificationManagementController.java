@@ -43,7 +43,19 @@ public class NotificationManagementController {
     }
 
     @PreAuthorize("createdNotification(#notification)")
-    @GetMapping("/notification/delete/{notification}")
+    @GetMapping("/notification/{notification}/report")
+    public String notificationReport(@RequestParam(required = false) Integer page, @PathVariable Notification notification, Model model) {
+        model.addAttribute("page_title", "Notification Report");
+        model.addAttribute("page_subtitle", "Notification Manager");
+        model.addAttribute("page_description", "View notification receipt");
+
+        model.addAttribute("notification", notification);
+
+        return "faculty/notification_report";
+    }
+
+    @PreAuthorize("createdNotification(#notification)")
+    @GetMapping("/notification/{notification}/delete")
     public String deleteNotification(@RequestParam(required = false) Integer page, @PathVariable Notification notification, RedirectAttributes redirectAttributes) {
         int currentPage = NotificationUtils.normalizePage(page);
 

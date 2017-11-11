@@ -29,11 +29,11 @@ public class NotificationEditController {
     }
 
     @PreAuthorize("createdNotification(#notification)")
-    @GetMapping("/notification/edit/{notification}")
+    @GetMapping("/notification/{notification}/edit")
     public String editNotification(@PathVariable Notification notification, Model model) {
-        model.addAttribute("page_title", "Manage Notifications");
+        model.addAttribute("page_title", "Edit Notification");
         model.addAttribute("page_subtitle", "Notification Manager");
-        model.addAttribute("page_description", "Manage and monitor sent notifications");
+        model.addAttribute("page_description", "Edit sent notifications");
 
         if (!model.containsAttribute("notification"))
             model.addAttribute("notification", notification);
@@ -41,7 +41,7 @@ public class NotificationEditController {
     }
 
     @PreAuthorize("createdNotification(#notification)")
-    @PostMapping("/notification/edit/{notification}")
+    @PostMapping("/notification/{notification}/edit")
     public String saveEditNotification(@RequestParam(required = false) Integer page, @PathVariable Notification notification,
                                        @Valid Notification edited, BindingResult result,
                                        RedirectAttributes redirectAttributes)

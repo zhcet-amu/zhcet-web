@@ -1,0 +1,25 @@
+.title, .title > p {
+    padding: 0;
+    margin: 0;
+}
+
+.card-header {
+    min-height: 55px;
+}
+
+.head-icon {
+    padding: 0 5px 3px 5px;
+}
+
+.bg-light-gray {
+    background-color: #ddd;
+}
+
+table.statistics td {
+    padding: .5rem;
+}
+
+.accordion-title, .accordion-title:hover, .accordion-title:visited, .accordion-title:focus {
+    text-decoration: none;
+    color: #333;
+}
