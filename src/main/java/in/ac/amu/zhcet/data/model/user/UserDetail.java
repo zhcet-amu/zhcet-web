@@ -50,6 +50,7 @@ public class UserDetail extends BaseEntity {
 
     @Size(max = 255)
     private String phoneNumbers;
+    private String firebaseClaims;
 
     public void setPhoneNumberList(String[] phoneNumbers) {
         this.phoneNumbers = String.join(",", phoneNumbers);

@@ -36,18 +36,8 @@ public class UserDetailService implements UserDetailsService {
         this.loginAttemptService = loginAttemptService;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails detailsFromUserAuth(UserAuth user) {
         String ip = Utils.getClientIP(request);
-
-        UserAuth user = userService.findById(username);
-
-        if (user == null)
-            user = userService.getUserByEmail(username);
-
-        if (user == null)
-            throw new UsernameNotFoundException(username);
-
         return new CustomUser(user.getUserId(), user.getPassword(), user.isEnabled(), loginAttemptService.isBlocked(ip),
                 PermissionManager.authorities(user.getRoles()))
                 .name(user.getName())
@@ -56,13 +46,28 @@ public class UserDetailService implements UserDetailsService {
                 .department(user.getDepartment());
     }
 
+    public Authentication authenticationFromUserAuth(UserAuth user) {
+        return new UsernamePasswordAuthenticationToken(
+                detailsFromUserAuth(user), user.getPassword(), PermissionManager.authorities(user.getRoles())
+        );
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserAuth user = userService.findById(username);
+
+        if (user == null)
+            user = userService.getUserByEmail(username);
+
+        if (user == null)
+            throw new UsernameNotFoundException(username);
+
+        return detailsFromUserAuth(user);
+    }
+
     public void updatePrincipal(UserAuth userAuth) {
         // Update the principal for use throughout the app
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                loadUserByUsername(userAuth.getUserId()), userAuth.getPassword(), PermissionManager.authorities(userAuth.getRoles())
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authenticationFromUserAuth(userAuth));
     }
 
     public UserAuth getLoggedInUser() {

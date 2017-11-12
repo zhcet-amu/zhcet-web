@@ -14,16 +14,6 @@
     <meta name="msapplication-navbutton-color" content="#673AB7">
     <meta name="apple-mobile-web-app-status-bar-style" content="#673AB7">
 
-    <!-- Global Site Tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106215806-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments)}
-        gtag('js', new Date());
-
-        gtag('config', 'UA-106215806-1');
-    </script>
-
     <link rel="shortcut icon" href="https://zhcet-backend.firebaseapp.com/static/img/icon.png" />
 
     <link href="//cdn.muicss.com/mui-0.9.18/css/mui.min.css" rel="stylesheet" type="text/css"/>
@@ -186,6 +176,7 @@
 <script src="https://zhcet-backend.firebaseapp.com/static/js/switch.min.js" type="text/javascript"></script>
 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
+<script th:src="@{/js/firebase.js}"></script>
 <script th:src="@{/js/file-uploader.js}"></script>
 <script th:src="@{/js/authentication.js}"></script>
 <script th:src="@{/js/app.js}" type="text/javascript"></script>

@@ -25,7 +25,7 @@
             <div id="gender-container" class="mt-1" th:with="gender = ${user.details.gender}" th:if="${user.details.gender}">
                 <span id="gender" th:text="${gender}"  th:class="|capsule ${@viewService.getClassForGender(gender)}|">Male</span>
             </div>
-            <div>
+            <div class="pt-1">
                 <span th:text="${user.email}"></span><span th:if="${user.emailVerified}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
                 <br><br>
             </div>

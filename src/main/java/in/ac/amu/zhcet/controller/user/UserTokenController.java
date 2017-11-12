@@ -1,9 +1,12 @@
 package in.ac.amu.zhcet.controller.user;
 
 import in.ac.amu.zhcet.service.firebase.FirebaseAuthService;
+import in.ac.amu.zhcet.service.firebase.UserToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -18,8 +21,13 @@ public class UserTokenController {
     }
 
     @GetMapping("/profile/api/token")
-    public FirebaseAuthService.UserToken getToken() {
+    public UserToken getToken() {
         return firebaseAuthService.generateToken();
+    }
+
+    @PostMapping("/login/api/token")
+    public String postToken(@RequestBody String token) {
+        return firebaseAuthService.getAction(token);
     }
 
 }

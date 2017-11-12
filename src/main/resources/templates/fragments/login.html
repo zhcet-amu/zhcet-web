@@ -13,16 +13,8 @@
     <meta name="theme-color" content="#673AB7">
     <meta name="msapplication-navbutton-color" content="#673AB7">
     <meta name="apple-mobile-web-app-status-bar-style" content="#673AB7">
-
-    <!-- Global Site Tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106215806-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments)}
-        gtag('js', new Date());
-
-        gtag('config', 'UA-106215806-1');
-    </script>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <link rel="shortcut icon" href="https://zhcet-backend.firebaseapp.com/static/img/icon.png" />
 
@@ -78,25 +70,8 @@
 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
-<script th:src="@{/js/app.js}"></script>
-<script>
-    (function () {
-        // Default Slide Images
-        var slides = [];
-
-        function updateSlides(slides) {
-            $('.pattern-bg').hide();
-            $.backstretch(slides, { duration: 2000, fade: 750 });
-        }
-
-        firebase.auth().signOut();
-        $(document).ready(function() {
-            var database = firebase.database();
-            database.ref('login/slides').on('value', function (snapshot) {
-                updateSlides(snapshot.val())
-            });
-        });
-    }());
-</script>
+<script th:src="@{/js/firebase.js}"></script>
+<script th:src="@{/js/authentication.js}"></script>
+<script th:src="@{/js/login.js}"></script>
 </body>
 </html>

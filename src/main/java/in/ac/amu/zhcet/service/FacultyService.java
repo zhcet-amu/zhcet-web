@@ -6,7 +6,7 @@ import in.ac.amu.zhcet.data.model.user.Type;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.FacultyRepository;
 import in.ac.amu.zhcet.data.type.Roles;
-import in.ac.amu.zhcet.service.firebase.FirebaseAuthService;
+import in.ac.amu.zhcet.service.firebase.FirebaseUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -27,14 +27,14 @@ public class FacultyService {
     private final FacultyRepository facultyRepository;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final FirebaseAuthService firebaseAuthService;
+    private final FirebaseUserService firebaseUserService;
 
     @Autowired
-    public FacultyService(FacultyRepository facultyRepository, UserService userService, PasswordEncoder passwordEncoder, FirebaseAuthService firebaseAuthService) {
+    public FacultyService(FacultyRepository facultyRepository, UserService userService, PasswordEncoder passwordEncoder, FirebaseUserService firebaseUserService) {
         this.facultyRepository = facultyRepository;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
-        this.firebaseAuthService = firebaseAuthService;
+        this.firebaseUserService = firebaseUserService;
     }
 
     public FacultyMember getById(String facultyId) {
@@ -88,7 +88,7 @@ public class FacultyService {
     @Transactional
     public void save(FacultyMember facultyMember) {
         facultyRepository.save(facultyMember);
-        firebaseAuthService.updateUser(facultyMember.getUser());
+        firebaseUserService.updateUser(facultyMember.getUser());
     }
 
 }

@@ -36,6 +36,10 @@
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 Logged out successfully
             </div>
+            <div th:if="${param.invalid_token}" class="alert alert-dismissible alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <div>User bearing this token is not registered with the site</div>
+            </div>
             <div th:if="${remember_error}" class="alert alert-dismissible alert-danger">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <div th:utext="${remember_error}">Username and Password does not match any user</div>
@@ -48,8 +52,28 @@
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>Sent!</strong> Password reset link has been sent successfully to your email!
             </div>
-            <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="icon-unlock2"></i> Login</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="icon-unlock2"></i>Login</button>
         </form>
+        <div class="text-xs-center p-1">
+            <div id="checking">
+                <div id="loader-message">Checking existing login...</div>
+                <div class="md-progress">
+                    <div class="indeterminate"></div>
+                </div>
+            </div>
+            <div id="login-panel" style="display: none">
+                <button id="google-login" class="btn btn-secondary">
+                    <img class="avatar" src="https://developers.google.com/identity/sign-in/g-normal.png" alt="Google Logo">
+                </button>
+            </div>
+        </div>
     </div>
 </div>
+<script>
+    (function () {
+        document.addEventListener("DOMContentLoaded", function () {
+            Login.startLoginFlow();
+        });
+    }());
+</script>
 </html>
