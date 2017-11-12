@@ -1,8 +1,12 @@
 <div xmlns:th="http://www.thymeleaf.org">
     <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.user.UserAuth"*/-->
-    <div class="text-xs-right" th:if="${user.emailVerified}">
-        <button th:class="|btn btn-round btn-${user.emailUnsubscribed ? 'success' : 'danger'} mb-2|"
+    <div class="text-xs-right">
+        <button id="link-google" class="btn btn-round btn-info" style="display: none">Link Google Account</button>
+        <button th:if="${user.emailVerified}" th:class="|btn btn-round btn-${user.emailUnsubscribed ? 'success' : 'danger'}|"
                 data-toggle="modal" data-target="#unsubscribe" th:text="${user.emailUnsubscribed ? 'Subscribe Email' : 'Unsubscribe Email'}"></button>
+        <div id="loader" class="md-progress" style="visibility: hidden">
+            <div class="indeterminate"></div>
+        </div>
     </div>
     <div class="modal fade text-xs-left" id="unsubscribe" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">

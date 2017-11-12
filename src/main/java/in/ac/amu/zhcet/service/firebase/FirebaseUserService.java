@@ -7,6 +7,7 @@ import com.google.firebase.auth.UserRecord;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import in.ac.amu.zhcet.service.user.CustomUser;
+import in.ac.amu.zhcet.service.user.UserDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.annotation.Async;
@@ -100,6 +101,11 @@ public class FirebaseUserService {
         if (user != null && !user.getUserId().equals(userAuth.getUserId()))
             return;
 
+        if (userAuth.isEmailVerified() && (userAuth.getEmail() != null && !userAuth.getEmail().equals(token.getEmail()))) {
+            log.info("User email is already verified, skipping mail merge");
+            return;
+        }
+
         if (token.isEmailVerified()) {
             userAuth.setEmail(token.getEmail());
             userAuth.setEmailVerified(true);
@@ -119,10 +125,10 @@ public class FirebaseUserService {
 
         mergeMail(userAuth, token);
 
-        if (Strings.isNullOrEmpty(userAuth.getDetails().getAvatarUrl()) &&
-                !Strings.isNullOrEmpty(token.getPicture())) {
+        if (Strings.isNullOrEmpty(userAuth.getDetails().getAvatarUrl()) && !Strings.isNullOrEmpty(token.getPicture())) {
             userAuth.getDetails().setOriginalAvatarUrl(token.getPicture());
             userAuth.getDetails().setAvatarUrl(token.getPicture());
+            UserDetailService.updateStaticPrincipal(userAuth);
         }
 
         userRepository.save(userAuth);

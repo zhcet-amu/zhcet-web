@@ -52,7 +52,7 @@ public class FirebaseAuthService {
     private void setUserAuthentication(UserAuth userAuth) {
         SecurityContextHolder
                 .getContext()
-                .setAuthentication(userDetailService.authenticationFromUserAuth(userAuth));
+                .setAuthentication(userDetailService.authenticationFromUser(userAuth));
 
         log.info("Logged in user using Social Login: {}", userAuth.getUserId());
     }
@@ -69,7 +69,7 @@ public class FirebaseAuthService {
         if (token.getEmail() == null)
             return null;
 
-        if (token.isEmailVerified())
+        if (!token.isEmailVerified())
             log.warn("Unverified Email Login {}", token.getEmail());
 
         return userService.getUserByEmail(token.getEmail());
@@ -88,6 +88,10 @@ public class FirebaseAuthService {
         return true;
     }
 
+    private FirebaseToken getToken(String token) throws ExecutionException, InterruptedException {
+        return FirebaseAuth.getInstance().verifyIdTokenAsync(token).get();
+    }
+
     public String getAction(String token) {
         String errorUrl = "/login?invalid_token";
 
@@ -95,7 +99,7 @@ public class FirebaseAuthService {
             return errorUrl;
 
         try {
-            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdTokenAsync(token).get();
+            FirebaseToken decodedToken = getToken(token);
             log.info("User Claims: {}", decodedToken.getClaims());
 
             return authenticate(decodedToken) ? "/" : errorUrl;

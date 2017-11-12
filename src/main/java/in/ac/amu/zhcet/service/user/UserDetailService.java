@@ -2,9 +2,9 @@ package in.ac.amu.zhcet.service.user;
 
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.UserService;
-import in.ac.amu.zhcet.service.upload.image.ImageService;
 import in.ac.amu.zhcet.service.security.login.LoginAttemptService;
 import in.ac.amu.zhcet.service.security.permission.PermissionManager;
+import in.ac.amu.zhcet.service.upload.image.ImageService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +36,8 @@ public class UserDetailService implements UserDetailsService {
         this.loginAttemptService = loginAttemptService;
     }
 
-    public UserDetails detailsFromUserAuth(UserAuth user) {
-        String ip = Utils.getClientIP(request);
-        return new CustomUser(user.getUserId(), user.getPassword(), user.isEnabled(), loginAttemptService.isBlocked(ip),
+    private static UserDetails detailsFromUser(UserAuth user, boolean isBlocked) {
+        return new CustomUser(user.getUserId(), user.getPassword(), user.isEnabled(), isBlocked,
                 PermissionManager.authorities(user.getRoles()))
                 .name(user.getName())
                 .avatar(user.getDetails().getAvatarUrl())
@@ -46,10 +45,19 @@ public class UserDetailService implements UserDetailsService {
                 .department(user.getDepartment());
     }
 
-    public Authentication authenticationFromUserAuth(UserAuth user) {
+    private UserDetails detailsFromUserAuth(UserAuth user) {
+        String ip = Utils.getClientIP(request);
+        return detailsFromUser(user, loginAttemptService.isBlocked(ip));
+    }
+
+    public static Authentication authenticationFromUserAuth(UserAuth user, UserDetails userDetails) {
         return new UsernamePasswordAuthenticationToken(
-                detailsFromUserAuth(user), user.getPassword(), PermissionManager.authorities(user.getRoles())
+                userDetails, user.getPassword(), PermissionManager.authorities(user.getRoles())
         );
+    }
+
+    public Authentication authenticationFromUser(UserAuth user) {
+        return authenticationFromUserAuth(user, detailsFromUserAuth(user));
     }
 
     @Override
@@ -65,9 +73,15 @@ public class UserDetailService implements UserDetailsService {
         return detailsFromUserAuth(user);
     }
 
+    public static void updateStaticPrincipal(UserAuth userAuth) {
+        SecurityContextHolder.getContext().setAuthentication(
+                authenticationFromUserAuth(userAuth, detailsFromUser(userAuth, false))
+        );
+    }
+
     public void updatePrincipal(UserAuth userAuth) {
         // Update the principal for use throughout the app
-        SecurityContextHolder.getContext().setAuthentication(authenticationFromUserAuth(userAuth));
+        SecurityContextHolder.getContext().setAuthentication(authenticationFromUser(userAuth));
     }
 
     public UserAuth getLoggedInUser() {
