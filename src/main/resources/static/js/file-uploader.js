@@ -64,5 +64,11 @@
                 fileName.addClass('bg-danger');
             });
         });
-    }
+    };
+
+    $('.file-uploader').initUpload({
+        error: function (message) {
+            toastr.error(message);
+        }
+    });
 }(jQuery));

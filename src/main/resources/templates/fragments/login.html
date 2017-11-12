@@ -72,12 +72,13 @@
         </span>
     </p>
 </footer>
-<script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
 <script src="https://zhcet-backend.firebaseapp.com/static/js/pace.min.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js" type="text/javascript"></script>
-<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
-<script th:src="@{/js/firebase.js}" type="text/javascript"></script>
+<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
+<script th:src="@{/js/app.js}"></script>
 <script>
     (function () {
         // Default Slide Images
@@ -88,12 +89,12 @@
             $.backstretch(slides, { duration: 2000, fade: 750 });
         }
 
+        firebase.auth().signOut();
         $(document).ready(function() {
             var database = firebase.database();
             database.ref('login/slides').on('value', function (snapshot) {
                 updateSlides(snapshot.val())
-            })
-
+            });
         });
     }());
 </script>
