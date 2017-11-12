@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.service.upload.image;
 
-import in.ac.amu.zhcet.service.upload.FirebaseService;
+import in.ac.amu.zhcet.service.firebase.FirebaseStorageService;
 import in.ac.amu.zhcet.utils.ImageUtils;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@ public class ImageService {
     private static final int ORIGINAL_AVATAR_SIZE = 1000;
     private static final int AVATAR_SIZE = 86;
 
-    private final FirebaseService firebaseService;
+    private final FirebaseStorageService firebaseStorageService;
 
     @Data
     @NoArgsConstructor
@@ -39,8 +39,8 @@ public class ImageService {
     }
 
     @Autowired
-    public ImageService(FirebaseService firebaseService) {
-        this.firebaseService = firebaseService;
+    public ImageService(FirebaseStorageService firebaseStorageService) {
+        this.firebaseStorageService = firebaseStorageService;
     }
 
     private boolean verifyType(String fileName, boolean contentType) {
@@ -124,7 +124,7 @@ public class ImageService {
                 log.warn("Not resizing image");
             }
 
-            return firebaseService.uploadFile(pathWithoutExtension + "." + extension, file.getContentType(), toUpload);
+            return firebaseStorageService.uploadFile(pathWithoutExtension + "." + extension, file.getContentType(), toUpload);
         } catch (IOException e) {
             log.error("Avatar Error", e);
             throw new ImageUploadException(e.getMessage());

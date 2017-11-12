@@ -2,12 +2,12 @@ var App = (function () {
 
     function initializeFirebase() {
         var config = {
-            apiKey: "AIzaSyC11g0JvjdYajA9N_yA9DiqoxMhIuuJGzY",
-            authDomain: "zhcet-backend.firebaseapp.com",
-            databaseURL: "https://zhcet-backend.firebaseio.com",
-            projectId: "zhcet-backend",
-            storageBucket: "zhcet-backend.appspot.com",
-            messagingSenderId: "591868576688"
+            apiKey: "AIzaSyDPzDrlYgC1GlPooyvCmEOEBeQhLeJuggU",
+            authDomain: "zhcet-web-amu.firebaseapp.com",
+            databaseURL: "https://zhcet-web-amu.firebaseio.com",
+            projectId: "zhcet-web-amu",
+            storageBucket: "zhcet-web-amu.appspot.com",
+            messagingSenderId: "632575632330"
         };
 
         firebase.initializeApp(config);

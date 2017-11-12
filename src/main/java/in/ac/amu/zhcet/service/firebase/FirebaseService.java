@@ -1,8 +1,6 @@
-package in.ac.amu.zhcet.service.upload;
+package in.ac.amu.zhcet.service.firebase;
 
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.storage.Acl;
-import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Bucket;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -14,15 +12,14 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 @Service
 public class FirebaseService {
+
+    private static final boolean DEBUG_OVERRIDE = false;
+
+    private boolean uninitialized;
 
     @Autowired
     public FirebaseService(ApplicationProperties applicationProperties) throws IOException {
@@ -31,7 +28,8 @@ public class FirebaseService {
         InputStream serviceAccount = getServiceAccountJson();
 
         if (serviceAccount == null) {
-            log.error("Firebase Service Account JSON not found anywhere. Any Firebase interaction will throw exception");
+            log.error("Firebase Service Account JSON not found anywhere. Any Firebase interaction may throw exception");
+            uninitialized = true;
             return;
         }
 
@@ -74,35 +72,16 @@ public class FirebaseService {
         }
     }
 
-    private Bucket getBucket() {
+    Bucket getBucket() {
         return StorageClient.getInstance().bucket();
     }
 
-    public String uploadFile(String path, String contentType, InputStream fileStream) throws UnsupportedEncodingException {
-        log.warn("Uploading file '{}' of type {}...", path, contentType);
-        Bucket bucket = getBucket();
-        log.warn("Bucket used : " + bucket.getName());
-        String uuid = UUID.randomUUID().toString();
-        log.warn("Firebase Download Token : {}", uuid);
-        Map<String, String> map = new HashMap<>();
-        map.put("firebaseStorageDownloadTokens", uuid);
+    boolean canProceed() {
+        boolean unproceedable = uninitialized || DEBUG_OVERRIDE;
+        if (unproceedable)
+            log.error("Cannot proceed as Firebase is uninitialized");
 
-        BlobInfo uploadContent = BlobInfo.newBuilder(getBucket().getName(), path)
-                .setContentType(contentType)
-                .setMetadata(map)
-                .setAcl(Collections.singletonList(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)))
-                .build();
-        BlobInfo uploaded = bucket.getStorage().create(uploadContent, fileStream);
-
-        log.warn("File Uploaded");
-        log.warn("Media Link : {}", uploaded.getMediaLink());
-        log.warn("Metadata : {}", uploaded.getMetadata().toString());
-
-        String link = String.format("https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media&auth=%s",
-                uploaded.getBucket(), URLEncoder.encode(uploaded.getName(), "UTF-8"), uuid);
-        log.warn("Firebase Link : {}", link);
-
-        return link;
+        return !unproceedable;
     }
 
 }
