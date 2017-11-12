@@ -1,10 +1,10 @@
 var App = (function () {
 
-    Authentication.normalFlow();
+    Authentication.auth().init();
 
     return {
         logout: function () {
-            Authentication.signOut().then(function () {
+            Authentication.auth().signOut().then(function () {
                 document.getElementById('logout-form').submit();
             })
         }

@@ -4,6 +4,8 @@
         var loader = $('#loader');
         var listener;
 
+        var googleLink = Authentication.google().link();
+
         function setListener(func) {
             if (listener)
                 btn.off('click', listener);
@@ -20,7 +22,7 @@
                 btn.html('Unlink Google Account');
                 setListener(function () {
                     showLoader(true);
-                    Authentication.unlinkGoogle(function (success, error) {
+                    googleLink.unlinkGoogle(function (success, error) {
                         showLoader(false);
                         if (success) {
                             setState(false);
@@ -34,7 +36,7 @@
                 btn.html('Link Google Account');
                 setListener(function () {
                     showLoader(true);
-                    Authentication.linkGoogle(function (success, error) {
+                    googleLink.linkGoogle(function (success, error) {
                         showLoader(false);
                         if (success) {
                             setState(true);
@@ -47,7 +49,7 @@
             }
         }
 
-        Authentication.isGoogleLinked(function (linked) {
+        googleLink.isGoogleLinked(function (linked) {
             if (linked !== undefined) {
                 btn.show();
                 setState(linked);

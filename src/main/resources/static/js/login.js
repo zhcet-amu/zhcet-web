@@ -23,23 +23,21 @@ var Login = (function ($) {
             checking.show();
             loginPanel.hide();
             loaderMessage.html('Redirecting to Google...');
-            Authentication.googleLogin();
-        });
-
-        Authentication.loginFlow(function (unauthenticated, message) {
-            if (unauthenticated) {
-                loginPanel.show();
-                if (message)
-                    loaderMessage.html(message);
-                else
-                    checking.hide();
-            } else {
-                loaderMessage.html('Trying to Login. Please wait...');
-            }
+            Authentication.google().login(function (success, message) {
+                if (success) {
+                    loaderMessage.html('Trying to Login. Please wait...');
+                } else {
+                    loginPanel.show();
+                    if (message)
+                        loaderMessage.html(message);
+                    else
+                        checking.hide();
+                }
+            });
         });
     }
 
-    Authentication.signOut();
+    Authentication.auth().signOut();
     $(document).ready(function() {
         setupSlideShow();
     });
