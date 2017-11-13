@@ -61,9 +61,7 @@ public class StudentEditService {
         if (!studentEditModel.getUserEmail().equals(student.getUser().getEmail())) {
             if (userService.throwDuplicateEmail(studentEditModel.getUserEmail(), student.getUser()))
                 studentEditModel.setUserEmail(null);
-            else {
-                student.getUser().setEmailVerified(false);
-            }
+            student.getUser().setEmailVerified(false);
         }
 
         if (!Strings.isNullOrEmpty(studentEditModel.getHallCode()) && !EnumUtils.isValidEnum(HallCode.class, studentEditModel.getHallCode())) {

@@ -47,11 +47,9 @@ public class FacultyEditService {
         }
 
         if (!facultyEditModel.getUserEmail().equals(facultyMember.getUser().getEmail())) {
-            if (userService.throwDuplicateEmail(facultyEditModel.getUserEmail(), facultyMember.getUser())) {
+            if (userService.throwDuplicateEmail(facultyEditModel.getUserEmail(), facultyMember.getUser()))
                 facultyEditModel.setUserEmail(null);
-            } else  {
-                facultyMember.getUser().setEmailVerified(false);
-            }
+            facultyMember.getUser().setEmailVerified(false);
         }
 
         facultyMember.getUser().setDepartment(department);
