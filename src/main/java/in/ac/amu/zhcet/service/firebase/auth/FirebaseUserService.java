@@ -1,10 +1,15 @@
-package in.ac.amu.zhcet.service.firebase;
+package in.ac.amu.zhcet.service.firebase.auth;
 
 import com.google.common.base.Strings;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
+import in.ac.amu.zhcet.data.model.notification.ChannelType;
+import in.ac.amu.zhcet.data.model.notification.Notification;
+import in.ac.amu.zhcet.data.model.user.Type;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.service.firebase.FirebaseService;
+import in.ac.amu.zhcet.service.notification.NotificationSendingService;
 import in.ac.amu.zhcet.service.user.CustomUser;
 import in.ac.amu.zhcet.service.user.UserDetailService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +29,13 @@ public class FirebaseUserService {
 
     private final FirebaseService firebaseService;
     private final UserDetailService userDetailService;
+    private final NotificationSendingService notificationSendingService;
     private final ModelMapper modelMapper;
 
-    public FirebaseUserService(FirebaseService firebaseService, UserDetailService userDetailService, ModelMapper modelMapper) {
+    public FirebaseUserService(FirebaseService firebaseService, UserDetailService userDetailService, NotificationSendingService notificationSendingService, ModelMapper modelMapper) {
         this.firebaseService = firebaseService;
         this.userDetailService = userDetailService;
+        this.notificationSendingService = notificationSendingService;
         this.modelMapper = modelMapper;
     }
 
@@ -45,6 +52,24 @@ public class FirebaseUserService {
         information.setToken(token);
         information.setAuthenticated(true);
         return information;
+    }
+
+    private ChannelType fromUser(UserAuth userAuth) {
+        return userAuth.getType() == Type.STUDENT ? ChannelType.STUDENT : ChannelType.FACULTY;
+    }
+
+    private void sendEmailChangeNotification(UserAuth recipient, UserAuth claimant, String email) {
+        Notification notification = Notification.builder()
+                .automated(true)
+                .channelType(fromUser(recipient))
+                .recipientChannel(recipient.getUserId())
+                .sender(claimant)
+                .title("Email Claimed")
+                .message(String.format("Your previously set email **%s** is now claimed by `%s` *(%s)*.\n" +
+                        "Please change it or claim it back by verifying it", email, claimant.getName(), claimant.getUserId()))
+                .build();
+
+        notificationSendingService.sendNotification(notification);
     }
 
     private void mergeMail(UserAuth userAuth, FirebaseToken token) {
@@ -65,6 +90,7 @@ public class FirebaseUserService {
 
                 userDetailService.getUserService().save(duplicate);
                 log.info("Cleared email info from duplicate user, {}", userDetailService.getUserService().findById(duplicate.getUserId()).getEmail());
+                sendEmailChangeNotification(duplicate, userAuth, token.getEmail());
             }
 
         }

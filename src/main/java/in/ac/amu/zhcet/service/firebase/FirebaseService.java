@@ -72,11 +72,11 @@ public class FirebaseService {
         }
     }
 
-    Bucket getBucket() {
+    public Bucket getBucket() {
         return StorageClient.getInstance().bucket();
     }
 
-    boolean canProceed() {
+    public boolean canProceed() {
         boolean unproceedable = uninitialized || DEBUG_OVERRIDE;
         if (unproceedable)
             log.error("Cannot proceed as Firebase is uninitialized");

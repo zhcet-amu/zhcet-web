@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.firebase;
+package in.ac.amu.zhcet.service.firebase.auth;
 
 import lombok.Data;
 

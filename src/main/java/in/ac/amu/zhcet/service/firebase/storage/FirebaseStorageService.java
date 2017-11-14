@@ -1,8 +1,9 @@
-package in.ac.amu.zhcet.service.firebase;
+package in.ac.amu.zhcet.service.firebase.storage;
 
 import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Bucket;
+import in.ac.amu.zhcet.service.firebase.FirebaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

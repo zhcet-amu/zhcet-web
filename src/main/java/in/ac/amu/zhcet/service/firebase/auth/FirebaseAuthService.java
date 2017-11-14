@@ -1,9 +1,10 @@
-package in.ac.amu.zhcet.service.firebase;
+package in.ac.amu.zhcet.service.firebase.auth;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.UserService;
+import in.ac.amu.zhcet.service.firebase.FirebaseService;
 import in.ac.amu.zhcet.service.user.Auditor;
 import in.ac.amu.zhcet.service.user.CustomUser;
 import in.ac.amu.zhcet.service.user.UserDetailService;
@@ -114,13 +115,7 @@ public class FirebaseAuthService {
     public void linkData(String token) {
         try {
             FirebaseToken decodedToken = getToken(token);
-            log.info(decodedToken.getName());
-            log.info(decodedToken.getPicture());
-            log.info(decodedToken.getIssuer());
-            log.info(decodedToken.getEmail());
-            log.info(decodedToken.getUid());
-            log.info(decodedToken.isEmailVerified()+"");
-            //firebaseUserService.getUser(decodedToken.getUid());
+            log.info(decodedToken.getClaims().toString());
             UserAuth user = userService.getLoggedInUser();
             firebaseUserService.mergeFirebaseDetails(user, decodedToken);
         } catch (ExecutionException | InterruptedException e) {

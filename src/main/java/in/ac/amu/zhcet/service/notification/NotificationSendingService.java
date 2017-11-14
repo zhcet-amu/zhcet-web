@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -37,6 +38,8 @@ public class NotificationSendingService {
 
     @Async
     public void sendNotification(Notification notification) {
+        if (notification.getSentTime() == null)
+            notification.setSentTime(LocalDateTime.now());
         notificationRepository.save(notification);
         sendToRecipients(notification);
     }
