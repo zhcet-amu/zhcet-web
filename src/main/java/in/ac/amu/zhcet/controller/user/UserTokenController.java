@@ -30,4 +30,11 @@ public class UserTokenController {
         return firebaseAuthService.getAction(token);
     }
 
+    @PostMapping("/profile/api/link")
+    public String linkData(@RequestBody String token) {
+        firebaseAuthService.linkData(token);
+        return "OK";
+    }
+
+
 }

@@ -39,6 +39,7 @@ public class FirebaseAuthService {
 
         try {
             CustomUser user = Auditor.getLoggedInUser();
+            if (user == null) return FirebaseUserService.getUnauthenticated();
             Map<String, Object> claims = new HashMap<>();
             claims.put("type", user.getType().toString());
             claims.put("department", user.getDepartment().getName());
@@ -110,4 +111,20 @@ public class FirebaseAuthService {
         return errorUrl;
     }
 
+    public void linkData(String token) {
+        try {
+            FirebaseToken decodedToken = getToken(token);
+            log.info(decodedToken.getName());
+            log.info(decodedToken.getPicture());
+            log.info(decodedToken.getIssuer());
+            log.info(decodedToken.getEmail());
+            log.info(decodedToken.getUid());
+            log.info(decodedToken.isEmailVerified()+"");
+            //firebaseUserService.getUser(decodedToken.getUid());
+            UserAuth user = userService.getLoggedInUser();
+            firebaseUserService.mergeFirebaseDetails(user, decodedToken);
+        } catch (ExecutionException | InterruptedException e) {
+            log.error("Error linking data", e);
+        }
+    }
 }

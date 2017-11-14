@@ -6,7 +6,6 @@ import in.ac.amu.zhcet.data.model.user.UserDetail;
 import in.ac.amu.zhcet.data.repository.UserDetailRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import in.ac.amu.zhcet.data.type.Roles;
-import in.ac.amu.zhcet.service.firebase.FirebaseUserService;
 import in.ac.amu.zhcet.utils.Utils;
 import in.ac.amu.zhcet.utils.exception.DuplicateException;
 import lombok.extern.slf4j.Slf4j;
@@ -30,16 +29,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
     private final PasswordEncoder passwordEncoder;
-    private final FirebaseUserService firebaseUserService;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserDetailRepository userDetailRepository, PasswordEncoder passwordEncoder, FirebaseUserService firebaseUserService) {
+    public UserService(UserRepository userRepository, UserDetailRepository userDetailRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userDetailRepository = userDetailRepository;
         this.passwordEncoder = passwordEncoder;
-        this.firebaseUserService = firebaseUserService;
     }
 
+    @Transactional
     public void save(UserAuth userAuth) {
         userRepository.save(userAuth);
     }
@@ -52,7 +50,6 @@ public class UserService {
                 .collect(Collectors.toList())
         );
         userRepository.save(userAuths);
-        userAuths.forEach(firebaseUserService::createUser);
     }
 
     public UserAuth findById(String id) {
@@ -129,7 +126,6 @@ public class UserService {
         details.setDob(userDetail.getDob());
 
         save(user);
-        firebaseUserService.updateUser(user);
     }
 
     @Transactional

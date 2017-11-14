@@ -36,6 +36,10 @@ public class UserDetailService implements UserDetailsService {
         this.loginAttemptService = loginAttemptService;
     }
 
+    public UserService getUserService() {
+        return userService;
+    }
+
     private static UserDetails detailsFromUser(UserAuth user, boolean isBlocked) {
         return new CustomUser(user.getUserId(), user.getPassword(), user.isEnabled(), isBlocked,
                 PermissionManager.authorities(user.getRoles()))
@@ -50,7 +54,7 @@ public class UserDetailService implements UserDetailsService {
         return detailsFromUser(user, loginAttemptService.isBlocked(ip));
     }
 
-    public static Authentication authenticationFromUserAuth(UserAuth user, UserDetails userDetails) {
+    private static Authentication authenticationFromUserAuth(UserAuth user, UserDetails userDetails) {
         return new UsernamePasswordAuthenticationToken(
                 userDetails, user.getPassword(), PermissionManager.authorities(user.getRoles())
         );

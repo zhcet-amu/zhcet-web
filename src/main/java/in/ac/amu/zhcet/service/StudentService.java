@@ -5,7 +5,6 @@ import in.ac.amu.zhcet.data.model.user.Type;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.data.type.Roles;
-import in.ac.amu.zhcet.service.firebase.FirebaseUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -27,14 +26,12 @@ public class StudentService {
     private final UserService userService;
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
-    private final FirebaseUserService firebaseUserService;
 
     @Autowired
-    public StudentService(UserService userService, StudentRepository studentRepository, PasswordEncoder passwordEncoder, FirebaseUserService firebaseUserService) {
+    public StudentService(UserService userService, StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
-        this.firebaseUserService = firebaseUserService;
     }
 
     public Student getLoggedInStudent() {
@@ -108,7 +105,6 @@ public class StudentService {
     @Transactional
     public void save(Student student) {
         studentRepository.save(student);
-        firebaseUserService.updateUser(student.getUser());
     }
 
 }

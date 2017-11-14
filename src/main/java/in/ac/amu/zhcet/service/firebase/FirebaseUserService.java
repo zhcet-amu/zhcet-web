@@ -5,7 +5,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
-import in.ac.amu.zhcet.data.repository.UserRepository;
 import in.ac.amu.zhcet.service.user.CustomUser;
 import in.ac.amu.zhcet.service.user.UserDetailService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -25,12 +23,12 @@ public class FirebaseUserService {
     private static final UserToken UNAUTHENTICATED = new UserToken();
 
     private final FirebaseService firebaseService;
-    private final UserRepository userRepository;
+    private final UserDetailService userDetailService;
     private final ModelMapper modelMapper;
 
-    public FirebaseUserService(FirebaseService firebaseService, UserRepository userRepository, ModelMapper modelMapper) {
+    public FirebaseUserService(FirebaseService firebaseService, UserDetailService userDetailService, ModelMapper modelMapper) {
         this.firebaseService = firebaseService;
-        this.userRepository = userRepository;
+        this.userDetailService = userDetailService;
         this.modelMapper = modelMapper;
     }
 
@@ -49,59 +47,29 @@ public class FirebaseUserService {
         return information;
     }
 
-    @Async
-    public void createUser(UserAuth userAuth) {
-        if (!firebaseService.canProceed())
-            return;
-
-        UserRecord.CreateRequest request = new UserRecord.CreateRequest()
-                .setUid(userAuth.getUserId())
-                .setDisplayName(userAuth.getName());
-
-        try {
-            UserRecord userRecord = FirebaseAuth.getInstance().createUserAsync(request).get();
-            log.info("Successfully created new user {}", userRecord.getUid());
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("Error creating user on Firebase", e);
-        }
-    }
-
-    private void setIfNotNull(String string, Consumer<String> consumer) {
-        if (Strings.isNullOrEmpty(string))
-            return;
-
-        consumer.accept(string);
-    }
-
-    @Async
-    public void updateUser(UserAuth userAuth) {
-        UserRecord.UpdateRequest request = new UserRecord.UpdateRequest(userAuth.getUserId())
-                .setEmailVerified(userAuth.isEmailVerified())
-                .setDisplayName(userAuth.getName())
-                .setPhotoUrl(userAuth.getDetails().getOriginalAvatarUrl())
-                .setDisabled(!userAuth.isEnabled());
-
-        setIfNotNull(userAuth.getEmail(), request::setEmail);
-        setIfNotNull(userAuth.getDetails().getPhoneNumbers(), request::setPhoneNumber);
-
-        try {
-            UserRecord userRecord = FirebaseAuth.getInstance().updateUserAsync(request).get();
-            log.info("Successfully updated user {}", userRecord.getUid());
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("Error updating user on Firebase", e);
-        }
-    }
-
     private void mergeMail(UserAuth userAuth, FirebaseToken token) {
         if (Strings.isNullOrEmpty(token.getEmail()))
             return;
 
-        UserAuth user = userRepository.findByEmail(token.getEmail());
+        UserAuth duplicate = userDetailService.getUserService().getUserByEmail(token.getEmail());
 
-        if (user != null && !user.getUserId().equals(userAuth.getUserId()))
-            return;
+        // Exchange user emails if someone else has access to the email provided
+        if (duplicate != null && !duplicate.getUserId().equals(userAuth.getUserId())) {
+            log.warn("Another user account with same email exists, {} {} : {}", userAuth.getUserId(), duplicate.getUserId(), token.getEmail());
 
-        if (userAuth.isEmailVerified() && (userAuth.getEmail() != null && !userAuth.getEmail().equals(token.getEmail()))) {
+            if (token.isEmailVerified()) {
+                log.warn("New user has verified email, unconditionally exchanging emails from previous user");
+
+                duplicate.setEmail(null);
+                duplicate.setEmailVerified(false);
+
+                userDetailService.getUserService().save(duplicate);
+                log.info("Cleared email info from duplicate user, {}", userDetailService.getUserService().findById(duplicate.getUserId()).getEmail());
+            }
+
+        }
+
+        if (userAuth.isEmailVerified() && userAuth.getEmail() != null && !userAuth.getEmail().equals(token.getEmail())) {
             log.info("User email is already verified, skipping mail merge");
             return;
         }
@@ -117,7 +85,7 @@ public class FirebaseUserService {
 
     @Async
     public void mergeFirebaseDetails(UserAuth userAuth, FirebaseToken token) {
-        if (userAuth == null || token == null)
+        if (userAuth == null || token == null || !firebaseService.canProceed())
             return;
 
         if (token.getClaims() != null)
@@ -131,7 +99,16 @@ public class FirebaseUserService {
             UserDetailService.updateStaticPrincipal(userAuth);
         }
 
-        userRepository.save(userAuth);
-        log.info("Merged firebase details into user account");
+        userDetailService.getUserService().save(userAuth);
+    }
+
+    @Async
+    public void getUser(String uid) {
+        try {
+            UserRecord userRecord = FirebaseAuth.getInstance().getUserAsync(uid).get();
+            log.info(userRecord.toString());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -63,42 +63,70 @@ var Authentication = (function ($, firebase) {
          */
         function link() {
 
+            function getProviderData(providerDataArray, providerId) {
+                if (!providerDataArray)
+                    return null;
+
+                for (var i = 0; i < providerDataArray.length; i++)
+                    if (providerDataArray[i].providerId === providerId)
+                        return providerDataArray[i];
+
+                return null;
+            }
+
+            function accountLinked(linkCallback, user) {
+                callIfFunction(linkCallback, true);
+                var providerData = getProviderData(user.providerData, googleProvider.providerId);
+
+                if (providerData) {
+                    var updateUser = {};
+                    if (!user.displayName)
+                        updateUser.displayName = providerData.displayName;
+                    if (!user.photoURL)
+                        updateUser.photoURL = providerData.photoURL;
+                    user.updateProfile(updateUser).then(function () {
+                        firebase.auth().currentUser.getIdToken(false).then(function (token) {
+                            postToServer('/profile/api/link', token, function (response) {
+                                if (response === 'OK') {
+                                    setTimeout(function () {
+                                        window.location = '/profile?refresh';
+                                    }, 5000);
+                                }
+                            });
+                        });
+                    });
+                }
+            }
+
             function isProvider(providerData, providerId) {
-                if (!providerData)
-                    return;
-
-                for (var i = 0; i < providerData.length; i++)
-                    if (providerData[i].providerId === providerId)
-                        return true;
-
-                return false;
+                return getProviderData(providerData, providerId) !== null;
             }
 
             return {
                 linkGoogle: function (linkCallback) {
                     firebase.auth().currentUser.linkWithPopup(googleProvider)
-                        .then(function() {
-                            callIfFunction(linkCallback, true);
+                        .then(function(result) {
+                            accountLinked(linkCallback, result.user);
                         }).catch(function(error) {
-                        if (error.code === 'auth/credential-already-in-use') {
-                            var auth = firebase.auth();
-                            var prevUser = auth.currentUser;
-                            var credential = error.credential;
-                            auth.signInWithCredential(credential).then(function(user) {
-                                return user.delete().then(function() {
-                                    return prevUser.linkWithCredential(credential);
-                                }).then(function() {
-                                    return auth.signInWithCredential(credential);
-                                }).then(function () {
-                                    callIfFunction(linkCallback, true);
+                            if (error.code === 'auth/credential-already-in-use') {
+                                var auth = firebase.auth();
+                                var prevUser = auth.currentUser;
+                                var credential = error.credential;
+                                auth.signInWithCredential(credential).then(function(user) {
+                                    return user.delete().then(function() {
+                                        return prevUser.linkWithCredential(credential);
+                                    }).then(function() {
+                                        return auth.signInWithCredential(credential);
+                                    }).then(function (user) {
+                                        accountLinked(linkCallback, user);
+                                    });
+                                }).catch(function(error) {
+                                    callIfFunction(linkCallback, false, error);
                                 });
-                            }).catch(function(error) {
+                            } else {
                                 callIfFunction(linkCallback, false, error);
-                            });
-                        } else {
-                            callIfFunction(linkCallback, false, error);
-                        }
-                    });
+                            }
+                        });
                 },
 
                 unlinkGoogle: function (unlinkCallback) {

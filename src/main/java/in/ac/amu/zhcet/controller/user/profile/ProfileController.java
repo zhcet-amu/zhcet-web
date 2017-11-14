@@ -9,6 +9,7 @@ import in.ac.amu.zhcet.data.type.Gender;
 import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.service.StudentService;
 import in.ac.amu.zhcet.service.UserService;
+import in.ac.amu.zhcet.service.user.UserDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
 @Slf4j
@@ -27,18 +29,20 @@ import javax.validation.Valid;
 public class ProfileController {
 
     private final UserService userService;
+    private final UserDetailService userDetailService;
     private final StudentService studentService;
     private final FacultyService facultyService;
 
     @Autowired
-    public ProfileController(UserService userService, StudentService studentService, FacultyService facultyService) {
-        this.userService = userService;
+    public ProfileController(UserService userService, UserDetailService userDetailService, StudentService studentService, FacultyService facultyService) {
+        this.userDetailService = userDetailService;
+        this.userService = userDetailService.getUserService();
         this.studentService = studentService;
         this.facultyService = facultyService;
     }
 
     @GetMapping("/profile")
-    public String profile(Model model) {
+    public String profile(Model model, ServletRequest request) {
         UserAuth userAuth = userService.getLoggedInUser();
         model.addAttribute("user", userAuth);
 
@@ -57,6 +61,9 @@ public class ProfileController {
             FacultyMember facultyMember = facultyService.getLoggedInMember();
             model.addAttribute("faculty", facultyMember);
         }
+
+        if (request.getParameterMap().containsKey("refresh"))
+            userDetailService.updatePrincipal(userAuth);
 
         return "user/profile";
     }

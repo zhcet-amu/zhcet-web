@@ -12,6 +12,7 @@ public class Auditor implements AuditorAware<String> {
     }
 
     public static CustomUser getLoggedInUser() {
+        if (getLoggedInAuthentication() == null) return null;
         return (CustomUser) getLoggedInAuthentication().getPrincipal();
     }
 
