@@ -1,4 +1,5 @@
 <div class="card" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+    <!--/*@thymesVar id="faculty" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
     <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
     <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.user.UserAuth"*/-->
     <div class="card-header">
@@ -15,13 +16,52 @@
     <div class="text-xs-center">
         <div class="card-block">
             <h4 th:text="${user.name}">Name</h4>
-            <ul class="list-inline list-inline-pipe" th:if="${user.type == 'STUDENT'}">
-                <li th:text="${student.facultyNumber}">FacultyNumber</li>
-                <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
-            </ul>
-            <ul class="list-inline list-inline-pipe" th:if="${user.type == 'FACULTY'}">
-                <li th:text="${faculty.facultyId}">FacultyNumber</li>
-            </ul>
+            <div th:if="${user.type.name() == 'STUDENT'}">
+                <ul class="list-inline list-inline-pipe">
+                    <li th:text="${student.facultyNumber}">FacultyNumber</li>
+                    <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
+                </ul>
+                <div class="row">
+                    <div class="col-xs-8 offset-xs-2 col-lg-6 offset-lg-3 bg-light-gray">
+                        <table class="table">
+                            <tr>
+                                <td>Section</td>
+                                <td th:text="${student.section}">A4PE</td>
+                            </tr>
+                            <tr>
+                                <td>Hall</td>
+                                <td th:text="${student.hallCode}">NR</td>
+                            </tr>
+                            <tr>
+                                <td>Registered</td>
+                                <td th:text="${student.registrationYear}">2014</td>
+                            </tr>
+                            <tr>
+                                <td>Status</td>
+                                <td th:text="${student.status}">Active</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${user.type.name() == 'FACULTY'}">
+                <ul class="list-inline list-inline-pipe">
+                    <li th:text="${faculty.facultyId}">FacultyNumber</li>
+                </ul>
+                <div class="row">
+                    <div class="col-xs-8 offset-xs-2 col-lg-6 offset-lg-3 bg-light-gray">
+                        <table class="table">
+                            <tr>
+                                <td>Designation</td>
+                                <td th:text="${faculty.designation}">A4PE</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="capsule col-xs-6 offset-xs-3" th:text="${user.department.name}"></div>
+            </div>
             <div id="gender-container" class="mt-1" th:with="gender = ${user.details.gender}" th:if="${user.details.gender}">
                 <span id="gender" th:text="${gender}"  th:class="|capsule ${@viewService.getClassForGender(gender)}|">Male</span>
             </div>
