@@ -5,6 +5,7 @@ import in.ac.amu.zhcet.utils.StringUtils;
 public enum ChannelType {
     DEPARTMENT,
     COURSE,
+    TAUGHT_COURSE,
     SECTION,
     FACULTY,
     GENDER,
@@ -12,6 +13,6 @@ public enum ChannelType {
 
     @Override
     public String toString() {
-        return StringUtils.capitalizeFirst(name());
+        return StringUtils.capitalizeFirst(name().replace('_', ' '));
     }
 }

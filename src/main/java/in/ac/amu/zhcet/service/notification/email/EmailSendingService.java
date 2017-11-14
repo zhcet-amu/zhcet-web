@@ -15,19 +15,19 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Service
-public class EmailNotificationService {
+public class EmailSendingService {
 
     private final LinkMailService linkMailService;
     private final StudentService studentService;
 
     @Autowired
-    public EmailNotificationService(LinkMailService linkMailService, StudentService studentService) {
+    public EmailSendingService(LinkMailService linkMailService, StudentService studentService) {
         this.linkMailService = linkMailService;
         this.studentService = studentService;
     }
 
     @Async
-    public void sendNotificationsForAttendance(Course course, List<AttendanceUpload> uploadList) {
+    public void sendEmailsForAttendance(Course course, List<AttendanceUpload> uploadList) {
         log.info("Email Attendance Notification : {}", course.getCode());
 
         Stream<Student> students = uploadList

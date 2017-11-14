@@ -34,7 +34,7 @@ public class NotificationSendingController {
         model.addAttribute("page_description", "Send notifications to students, sections or departments");
 
         model.addAttribute("channel_types", Arrays.asList(
-                ChannelType.STUDENT, ChannelType.COURSE,
+                ChannelType.STUDENT, ChannelType.COURSE, ChannelType.TAUGHT_COURSE,
                 ChannelType.SECTION, ChannelType.FACULTY
         ));
 

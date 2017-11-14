@@ -46,7 +46,7 @@ public class NotificationSendingService {
 
     /**
      * Asynchronously send notification to different channel types: Student, Course, Section, Faculty, Department, etc
-     * Currently, only student course, section and faculty are supported
+     * Currently, only student, course, taught course, section and faculty are supported
      * @param notification Notification to be sent, containing message and channel information
      */
     private void sendToRecipients(Notification notification) {
@@ -57,6 +57,8 @@ public class NotificationSendingService {
             case COURSE:
                 sendToCourse(notification);
                 break;
+            case TAUGHT_COURSE:
+                sendToTaughtCourse(notification);
             case SECTION:
                 sendToSection(notification);
                 break;
@@ -66,6 +68,11 @@ public class NotificationSendingService {
             default:
                 // Do nothing
         }
+    }
+
+    private void sendToTaughtCourse(Notification notification) {
+        userExtractor.fromTaughtCourse(notification.getRecipientChannel(), notification.getSender().getUserId(),
+                userAuth -> saveUserNotification(notification, userAuth));
     }
 
     private void sendToFaculty(Notification notification) {

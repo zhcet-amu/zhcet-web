@@ -1,10 +1,8 @@
 package in.ac.amu.zhcet.service.notification;
 
-import in.ac.amu.zhcet.data.model.CourseRegistration;
-import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
-import in.ac.amu.zhcet.data.model.Student;
+import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.service.StudentService;
@@ -20,14 +18,21 @@ import java.util.function.Consumer;
 class UserExtractor {
 
     private final CourseManagementService courseManagementService;
+    private final CourseInChargeService courseInChargeService;
     private final StudentService studentService;
     private final FacultyService facultyService;
 
     @Autowired
-    UserExtractor(CourseManagementService courseManagementService, StudentService studentService, FacultyService facultyService) {
+    UserExtractor(CourseManagementService courseManagementService, CourseInChargeService courseInChargeService, StudentService studentService, FacultyService facultyService) {
         this.courseManagementService = courseManagementService;
+        this.courseInChargeService = courseInChargeService;
         this.studentService = studentService;
         this.facultyService = facultyService;
+    }
+
+    private static void sendToCourseRegistrations(List<CourseRegistration> courseRegistrations, Consumer<UserAuth> consumer) {
+        for (CourseRegistration courseRegistration : courseRegistrations)
+            consumer.accept(courseRegistration.getStudent().getUser());
     }
 
     void fromFloatedCourse(String floatedCourseId, Consumer<UserAuth> consumer) {
@@ -39,8 +44,7 @@ class UserExtractor {
         }
 
         List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-        for (CourseRegistration courseRegistration : courseRegistrations)
-            consumer.accept(courseRegistration.getStudent().getUser());
+        sendToCourseRegistrations(courseRegistrations, consumer);
     }
 
     void fromSection(String section, Consumer<UserAuth> consumer) {
@@ -72,6 +76,22 @@ class UserExtractor {
         }
 
         consumer.accept(recipient.getUser());
+    }
+
+    void fromTaughtCourse(String courseId, String inChargeId, Consumer<UserAuth> consumer) {
+        FacultyMember facultyMember = facultyService.getById(inChargeId);
+
+        if (facultyMember == null) {
+            log.warn("No faculty member found for {}", inChargeId);
+            return;
+        }
+
+        courseInChargeService.getCourseByFaculty(facultyMember)
+                .stream()
+                .filter(inCharge ->
+                        inCharge.getFloatedCourse().getCourse().getCode().equals(courseId))
+                .forEach(inCharge ->
+                        sendToCourseRegistrations(courseInChargeService.getCourseRegistrations(inCharge), consumer));
     }
 
 }
