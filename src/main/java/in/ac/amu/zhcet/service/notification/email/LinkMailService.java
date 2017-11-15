@@ -10,10 +10,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -67,16 +63,7 @@ public class LinkMailService {
 
         payLoad.put("link_message", linkMessage);
 
-        String html = render(LINK_TEMPLATE, payLoad);
-        Path path = Paths.get("test.html");
-        byte[] strToBytes = html.getBytes();
-
-        try {
-            Files.write(path, strToBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return html;
+        return render(LINK_TEMPLATE, payLoad);
     }
 
     public void sendEmail(LinkMessage linkMessage, boolean allowUnSubscribe) {
