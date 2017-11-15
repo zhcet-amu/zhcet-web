@@ -9,7 +9,7 @@
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification', subPage='manage_notification')" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-xs-12">
                 <div th:replace="fragments/layout :: toolbar"></div>
@@ -102,13 +102,13 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="recipientEmail : ${notification.notificationRecipients}">
-                                    <td th:text="${recipientEmail.recipientEmail.userId}"></td>
-                                    <td th:text="${recipientEmail.recipientEmail.name}"></td>
-                                    <td><small th:text="${#temporals.format(recipientEmail.createdAt)}"></small></td>
-                                    <td><i th:class="${recipientEmail.favorite ? 'icon-android-done' : ''}"></i></td>
-                                    <td><i th:class="${recipientEmail.seen ? 'icon-android-done-all' : ''}"></i></td>
-                                    <td><small th:text="${#temporals.format(recipientEmail.readTime)}"></small></td>
+                                <tr th:each="recipient : ${notification.notificationRecipients}">
+                                    <td th:text="${recipient.recipient.userId}"></td>
+                                    <td th:text="${recipient.recipient.name}"></td>
+                                    <td><small th:text="${#temporals.format(recipient.createdAt)}"></small></td>
+                                    <td><i th:class="${recipient.favorite ? 'icon-android-done' : ''}"></i></td>
+                                    <td><i th:class="${recipient.seen ? 'icon-android-done-all' : ''}"></i></td>
+                                    <td><small th:text="${#temporals.format(recipient.readTime)}"></small></td>
                                 </tr>
                                 </tbody>
                             </table>
