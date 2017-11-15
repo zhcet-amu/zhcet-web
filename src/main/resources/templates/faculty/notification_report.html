@@ -102,13 +102,13 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="recipient : ${notification.notificationRecipients}">
-                                    <td th:text="${recipient.recipient.userId}"></td>
-                                    <td th:text="${recipient.recipient.name}"></td>
-                                    <td><small th:text="${#temporals.format(recipient.createdAt)}"></small></td>
-                                    <td><i th:class="${recipient.favorite ? 'icon-android-done' : ''}"></i></td>
-                                    <td><i th:class="${recipient.seen ? 'icon-android-done-all' : ''}"></i></td>
-                                    <td><small th:text="${#temporals.format(recipient.readTime)}"></small></td>
+                                <tr th:each="recipientEmail : ${notification.notificationRecipients}">
+                                    <td th:text="${recipientEmail.recipientEmail.userId}"></td>
+                                    <td th:text="${recipientEmail.recipientEmail.name}"></td>
+                                    <td><small th:text="${#temporals.format(recipientEmail.createdAt)}"></small></td>
+                                    <td><i th:class="${recipientEmail.favorite ? 'icon-android-done' : ''}"></i></td>
+                                    <td><i th:class="${recipientEmail.seen ? 'icon-android-done-all' : ''}"></i></td>
+                                    <td><small th:text="${#temporals.format(recipientEmail.readTime)}"></small></td>
                                 </tr>
                                 </tbody>
                             </table>

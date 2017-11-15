@@ -5,7 +5,6 @@ import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.service.upload.csv.AttendanceUploadService;
 import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
-import in.ac.amu.zhcet.service.notification.email.EmailSendingService;
 import in.ac.amu.zhcet.utils.SortUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +28,10 @@ import java.util.List;
 @Controller
 public class AttendanceManagerController {
     private final AttendanceUploadService attendanceUploadService;
-    private final EmailSendingService emailSendingService;
 
     @Autowired
-    public AttendanceManagerController(AttendanceUploadService attendanceUploadService, EmailSendingService emailSendingService) {
+    public AttendanceManagerController(AttendanceUploadService attendanceUploadService) {
         this.attendanceUploadService = attendanceUploadService;
-        this.emailSendingService = emailSendingService;
     }
 
     @Data
@@ -79,7 +76,6 @@ public class AttendanceManagerController {
         } else {
             try {
                 attendanceUploadService.updateAttendance(course, section, attendanceModel.getUploadList());
-                emailSendingService.sendEmailsForAttendance(course, attendanceModel.getUploadList());
                 attributes.addFlashAttribute("updated", true);
             } catch (Exception e) {
                 log.error("Attendance Confirm", e);

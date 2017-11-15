@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX notification_recipient_unique_index ON notification_recipient (notification_id, recipient_user_id);

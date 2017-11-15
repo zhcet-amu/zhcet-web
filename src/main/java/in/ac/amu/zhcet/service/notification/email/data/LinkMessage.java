@@ -1,15 +1,16 @@
 package in.ac.amu.zhcet.service.notification.email.data;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LinkMessage {
-    private String recipient;
+    private String recipientEmail;
     private String name;
     private String subject;
     private String title;
@@ -25,8 +26,8 @@ public class LinkMessage {
     public void validateSelf() {
         List<String> invalidFields = new ArrayList<>();
 
-        if (recipient == null)
-            invalidFields.add("recipient");
+        if (recipientEmail == null)
+            invalidFields.add("recipientEmail");
         if (subject == null)
             invalidFields.add("subject");
 

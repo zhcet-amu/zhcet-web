@@ -3,9 +3,14 @@ package in.ac.amu.zhcet.service.upload.csv;
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
+import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
+import in.ac.amu.zhcet.data.model.notification.ChannelType;
+import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseRegistrationService;
+import in.ac.amu.zhcet.service.notification.NotificationSendingService;
+import in.ac.amu.zhcet.service.notification.email.EmailSendingService;
 import in.ac.amu.zhcet.service.upload.csv.base.AbstractUploadService;
 import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
@@ -27,12 +32,14 @@ public class AttendanceUploadService {
     private final AbstractUploadService<AttendanceUpload, AttendanceUpload> uploadService;
     private final CourseInChargeService courseInChargeService;
     private final CourseRegistrationService courseRegistrationService;
+    private final NotificationSendingService notificationSendingService;
 
     @Autowired
-    public AttendanceUploadService(AbstractUploadService<AttendanceUpload, AttendanceUpload> uploadService, CourseInChargeService courseInChargeService, CourseRegistrationService courseRegistrationService) {
+    public AttendanceUploadService(AbstractUploadService<AttendanceUpload, AttendanceUpload> uploadService, CourseInChargeService courseInChargeService, CourseRegistrationService courseRegistrationService, NotificationSendingService notificationSendingService) {
         this.uploadService = uploadService;
         this.courseInChargeService = courseInChargeService;
         this.courseRegistrationService = courseRegistrationService;
+        this.notificationSendingService = notificationSendingService;
     }
 
     public UploadResult<AttendanceUpload> handleUpload(MultipartFile file) throws IOException {
@@ -87,6 +94,26 @@ public class AttendanceUploadService {
         for (AttendanceUpload attendance : uploadList) {
             courseRegistrationService.setAttendance(course, attendance);
         }
+
+        sendNotification(courseInCharge.getFacultyMember(), course);
+    }
+
+    private static Notification fromStudent(FacultyMember sender, Course course) {
+        return Notification.builder()
+                .automated(true)
+                .channelType(ChannelType.TAUGHT_COURSE)
+                .recipientChannel(course.getCode())
+                .sender(sender.getUser())
+                .title("Attendance Update")
+                .message(String.format("The attendance for course **%s** - *%s* has just been updated",
+                        course.getCode(), course.getTitle()))
+                .build();
+    }
+
+    private void sendNotification(FacultyMember sender, Course course) {
+        Notification notification = fromStudent(sender, course);
+        notification.setMeta(EmailSendingService.ATTENDANCE_TYPE);
+        notificationSendingService.sendNotification(notification);
     }
 
 }

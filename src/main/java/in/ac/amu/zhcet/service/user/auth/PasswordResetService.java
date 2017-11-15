@@ -80,7 +80,7 @@ public class PasswordResetService {
 
     private LinkMessage getPayLoad(UserAuth userAuth, String url) {
         return LinkMessage.builder()
-                .recipient(userAuth.getEmail())
+                .recipientEmail(userAuth.getEmail())
                 .name(userAuth.getName())
                 .subject("ZHCET Reset Password Link")
                 .title("Password Reset Link")

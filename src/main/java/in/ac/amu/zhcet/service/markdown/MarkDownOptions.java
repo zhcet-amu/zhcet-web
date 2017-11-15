@@ -30,6 +30,7 @@ public class MarkDownOptions {
                 .set(HtmlRenderer.PERCENT_ENCODE_URLS, true)
                 .set(HtmlRenderer.GENERATE_HEADER_ID, true)
                 .set(HtmlRenderer.ESCAPE_HTML, true)
+                .set(HtmlRenderer.SOFT_BREAK, "<br>")
 
                 // for full GFM table compatibility add the following table extension options:
                 .set(TablesExtension.COLUMN_SPANS, false)

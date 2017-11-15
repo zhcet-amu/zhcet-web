@@ -74,9 +74,9 @@ public class EmailVerificationService {
         userService.save(userAuth);
     }
 
-    private LinkMessage getPayLoad(String recipient, UserAuth userAuth, String url) {
+    private LinkMessage getPayLoad(String recipientEmail, UserAuth userAuth, String url) {
         return LinkMessage.builder()
-                .recipient(recipient)
+                .recipientEmail(recipientEmail)
                 .title("Email Verification")
                 .subject("ZHCET Email Verification")
                 .name(userAuth.getName())

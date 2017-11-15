@@ -68,7 +68,7 @@ public class EmailService{
         sender.send(mimeMessage);
     }
 
-    public void sendHtmlMail(String email, String subject, String html, String[] bcc) {
+    void sendHtmlMail(String email, String subject, String html, String[] bcc) {
         try {
             sendMail(constructHtmlEmail(email, subject, html, bcc));
         } catch (MessagingException e) {
@@ -76,7 +76,7 @@ public class EmailService{
         }
     }
 
-    public void sendHtmlMail(String email, String subject, String html) {
+    void sendHtmlMail(String email, String subject, String html) {
         sendHtmlMail(email, subject, html, null);
     }
 

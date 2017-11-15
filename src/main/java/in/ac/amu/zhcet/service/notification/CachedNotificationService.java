@@ -1,7 +1,9 @@
 package in.ac.amu.zhcet.service.notification;
 
+import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.data.model.notification.NotificationRecipient;
 import in.ac.amu.zhcet.data.repository.NotificationRecipientRepository;
+import in.ac.amu.zhcet.data.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,10 +18,12 @@ import java.util.List;
 @Service
 class CachedNotificationService {
 
+    private final NotificationRepository notificationRepository;
     private final NotificationRecipientRepository notificationRecipientRepository;
 
     @Autowired
-    CachedNotificationService(NotificationRecipientRepository notificationRecipientRepository) {
+    CachedNotificationService(NotificationRepository notificationRepository, NotificationRecipientRepository notificationRecipientRepository) {
+        this.notificationRepository = notificationRepository;
         this.notificationRecipientRepository = notificationRecipientRepository;
     }
 
@@ -42,5 +46,13 @@ class CachedNotificationService {
     @CacheEvict(value = "unread_notifications", key = "#userId")
     public void resetUnreadCount(String userId) {
         // Do nothing
+    }
+
+    public void save(NotificationRecipient notificationRecipient) {
+        notificationRecipientRepository.save(notificationRecipient);
+    }
+
+    public void save(Notification notification) {
+        notificationRepository.save(notification);
     }
 }
