@@ -34,7 +34,7 @@ public class ProfileController {
     private final FacultyService facultyService;
 
     @Autowired
-    public ProfileController(UserService userService, UserDetailService userDetailService, StudentService studentService, FacultyService facultyService) {
+    public ProfileController(UserDetailService userDetailService, StudentService studentService, FacultyService facultyService) {
         this.userDetailService = userDetailService;
         this.userService = userDetailService.getUserService();
         this.studentService = studentService;

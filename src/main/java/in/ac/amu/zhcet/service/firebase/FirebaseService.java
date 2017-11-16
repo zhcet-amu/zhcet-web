@@ -17,14 +17,15 @@ import java.net.URL;
 @Service
 public class FirebaseService {
 
-    private static final boolean DEBUG_OVERRIDE = false;
-
+    private static final boolean DEBUG_SUPPRESS = false;
+    private final String messagingServerKey;
     private boolean uninitialized;
 
     @Autowired
     public FirebaseService(ApplicationProperties applicationProperties) throws IOException {
         log.info("Initializing Firebase");
         ApplicationProperties.Firebase firebase = applicationProperties.getFirebase();
+        messagingServerKey = firebase.getMessagingServerKey();
         InputStream serviceAccount = getServiceAccountJson();
 
         if (serviceAccount == null) {
@@ -33,8 +34,9 @@ public class FirebaseService {
             return;
         }
 
+        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(serviceAccount);
         FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setCredentials(googleCredentials)
                 .setDatabaseUrl(firebase.getDatabaseUrl())
                 .setStorageBucket(firebase.getStorageBucket())
                 .build();
@@ -77,11 +79,23 @@ public class FirebaseService {
     }
 
     public boolean canProceed() {
-        boolean unproceedable = uninitialized || DEBUG_OVERRIDE;
+        boolean unproceedable = uninitialized || DEBUG_SUPPRESS;
         if (unproceedable)
             log.error("Cannot proceed as Firebase is uninitialized");
 
         return !unproceedable;
+    }
+
+    public boolean canSendMessage() {
+        boolean unsendable = messagingServerKey == null || DEBUG_SUPPRESS;
+        if (unsendable)
+            log.error("Cannot broadcast as Firebase Messaging Server Key is not found");
+
+        return !unsendable;
+    }
+
+    public String getMessagingServerKey() {
+        return messagingServerKey;
     }
 
 }

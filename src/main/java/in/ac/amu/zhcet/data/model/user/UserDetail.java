@@ -51,6 +51,7 @@ public class UserDetail extends BaseEntity {
     @Size(max = 255)
     private String phoneNumbers;
     private String firebaseClaims;
+    private String fcmToken;
 
     public void setPhoneNumberList(String[] phoneNumbers) {
         this.phoneNumbers = String.join(",", phoneNumbers);

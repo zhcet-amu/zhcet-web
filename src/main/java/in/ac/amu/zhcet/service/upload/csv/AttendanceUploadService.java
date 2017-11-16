@@ -87,7 +87,7 @@ public class AttendanceUploadService {
         for (AttendanceUpload attendanceUpload : uploadList) {
             if (studentExists(attendanceUpload, courseRegistrations) == null) {
                 log.error("Force updating attendance of invalid student {} {} {}", course, section, attendanceUpload.getEnrolment_no());
-                throw new RuntimeException("Invalid Data : " + attendanceUpload);
+                throw new RuntimeException("Invalid DataBody : " + attendanceUpload);
             }
         }
 

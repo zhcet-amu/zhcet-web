@@ -36,17 +36,17 @@
                 <ul class="nav navbar-nav float-xs-right" sec:authorize="isAuthenticated()">
                     <li class="dropdown dropdown-notification nav-item">
                         <a href="#" data-toggle="dropdown" class="nav-link nav-link-label"><i class="ficon icon-bell4"></i>
-                            <span class="tag tag-pill tag-default tag-danger tag-default tag-up" th:text="${@notificationReadingService.getUnreadNotificationCount()}"></span>
+                            <span id="notification-count" class="tag tag-pill tag-default tag-danger tag-default tag-up" th:text="${@notificationReadingService.getUnreadNotificationCount()}"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
                             <li class="dropdown-menu-header">
                                 <h6 class="dropdown-header m-0">
                                     <span class="grey darken-2">Notifications</span>
                                     <!-- TODO: Add icons to notifications -->
-                                    <span class="notification-tag tag tag-default tag-danger float-xs-right m-0" th:text="|${@notificationReadingService.getUnreadNotificationCount()} NEW|"></span>
+                                    <span id="new-count" class="notification-tag tag tag-default tag-danger float-xs-right m-0" th:text="|${@notificationReadingService.getUnreadNotificationCount()} NEW|"></span>
                                 </h6>
                             </li>
-                            <li class="list-group scrollable-container">
+                            <li id="notification-panel" class="list-group scrollable-container">
                                 <div th:each="notification : ${@notificationReadingService.getUnreadNotifications()}" class="list-group-item">
                                     <div class="media">
                                         <div class="media-left valign-middle"><i class="icon-bell4 icon-bg-circle bg-gray"></i></div>
@@ -93,6 +93,20 @@
             </div>
         </div>
     </div>
+    <script id="notification-template" type="text/x-tmpl">
+        <div class="list-group-item">
+            <div class="media">
+                <div class="media-left valign-middle"><i class="icon-bell4 icon-bg-circle bg-gray"></i></div>
+                <div class="media-body">
+                    <h6 class="media-heading">{%#o.title%}</h6>
+                    <hr>
+                    <p class="notification-text font-small-3 text-muted">{%#o.message%}</p>
+                    <small><blockquote>From <code>{%=o.sender%}</code></blockquote></small>
+                    <small><span class="media-meta text-muted">{%=o.sentTime%}</span></small>
+                </div>
+            </div>
+        </div>
+    </script>
 </nav>
 </body>
 </html>

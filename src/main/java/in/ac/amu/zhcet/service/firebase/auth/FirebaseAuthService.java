@@ -32,6 +32,8 @@ public class FirebaseAuthService {
         this.userDetailService = userDetailService;
         this.firebaseService = firebaseService;
         this.firebaseUserService = firebaseUserService;
+
+        log.info("Firebase Auth Running : {}", firebaseService.canProceed());
     }
 
     public UserToken generateToken() {

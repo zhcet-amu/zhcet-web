@@ -1,4 +1,4 @@
-var Login = (function ($, Authentication) {
+var Login = (function ($) {
     // Default Slide Images
     var slides = [];
 
@@ -15,6 +15,7 @@ var Login = (function ($, Authentication) {
     }
 
     function setupLoginFlow() {
+        Authentication.auth().signOut();
         var checking = $('#checking');
         var loginPanel = $('#login-panel');
         var loaderMessage = $('#loader-message');
@@ -37,7 +38,6 @@ var Login = (function ($, Authentication) {
         });
     }
 
-    Authentication.auth().signOut();
     $(document).ready(function() {
         setupSlideShow();
     });
@@ -45,4 +45,4 @@ var Login = (function ($, Authentication) {
     return {
         startLoginFlow: setupLoginFlow
     }
-}(jQuery, Authentication));
+}(jQuery));

@@ -26,6 +26,7 @@ public class ApplicationProperties {
     public static class Firebase {
         private String databaseUrl;
         private String storageBucket;
+        private String messagingServerKey;
     }
 
 }

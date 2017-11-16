@@ -8,6 +8,7 @@ var Authentication = (function ($, firebase) {
 
         $.ajax({
             type: 'POST',
+            contentType: 'application/json; charset=utf-8',
             url: url,
             data: idToken,
             beforeSend: function (xhr) {
@@ -197,6 +198,7 @@ var Authentication = (function ($, firebase) {
 
     return {
         auth: auth,
-        google: google
+        google: google,
+        postToServer: postToServer
     }
 }(jQuery, firebase));

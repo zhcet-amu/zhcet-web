@@ -175,6 +175,10 @@ small > blockquote {
     margin-bottom: 10px;
 }
 
+#toast-container {
+    margin-top: 60px;
+}
+
 /* Progress Bar */
 .md-progress {
     position: relative;

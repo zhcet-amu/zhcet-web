@@ -1,79 +1,81 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="container" th:include="fragments/login :: login(page_title = 'Login', message = 'Login with ZHCET')" lang="en" data-textdirection="ltr" class="loading">
-<div class="card-body collapse in">
-    <div class="card-block">
-        <form class="form-horizontal form-simple" action="#" th:action="@{/login}" method="post">
-            <fieldset class="form-group position-relative has-icon-left mb-0">
-                <input type="text" class="transparent form-control form-control-lg input-lg" id="username"
-                       name="username" placeholder="Your User ID" th:required="required"/>
-                <div class="form-control-position">
-                    <i class="material-icons md-24 md-dark">account_circle</i>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" data-textdirection="ltr" class="loading">
+<th:block th:fragment="container" th:include="fragments/login :: login(page_title = 'Login', message = 'Login with ZHCET')">
+    <div class="card-body collapse in">
+        <div class="card-block">
+            <form class="form-horizontal form-simple" action="#" th:action="@{/login}" method="post">
+                <fieldset class="form-group position-relative has-icon-left mb-0">
+                    <input type="text" class="transparent form-control form-control-lg input-lg" id="username"
+                           name="username" placeholder="Your User ID" th:required="required"/>
+                    <div class="form-control-position">
+                        <i class="material-icons md-24 md-dark">account_circle</i>
+                    </div>
+                </fieldset>
+                <fieldset class="form-group position-relative has-icon-left">
+                    <input type="password" class="transparent form-control form-control-lg input-lg" id="password"
+                           name="password" placeholder="Enter Password" th:required="required"/>
+                    <div class="form-control-position">
+                        <i class="material-icons md-24 md-dark">vpn_key</i>
+                    </div>
+                </fieldset>
+                <fieldset class="form-group row">
+                    <div class="col-md-6 col-xs-12 text-xs-center text-md-left">
+                        <fieldset>
+                            <input type="checkbox" id="remember-me" name="remember-me" class="chk-remember"/>
+                            <label for="remember-me"> Remember Me</label>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6 col-xs-12 text-xs-center text-md-right">
+                        <a href="forgot_password.html" th:href="@{/login/forgot_password}" class="card-link">Forgot Password?</a>
+                    </div>
+                </fieldset>
+                <div th:if="${param.error}" class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <div th:utext="${login_error}">Username and Password does not match any user</div>
                 </div>
-            </fieldset>
-            <fieldset class="form-group position-relative has-icon-left">
-                <input type="password" class="transparent form-control form-control-lg input-lg" id="password"
-                       name="password" placeholder="Enter Password" th:required="required"/>
-                <div class="form-control-position">
-                    <i class="material-icons md-24 md-dark">vpn_key</i>
+                <div th:if="${param.logout}" class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    Logged out successfully
                 </div>
-            </fieldset>
-            <fieldset class="form-group row">
-                <div class="col-md-6 col-xs-12 text-xs-center text-md-left">
-                    <fieldset>
-                        <input type="checkbox" id="remember-me" name="remember-me" class="chk-remember"/>
-                        <label for="remember-me"> Remember Me</label>
-                    </fieldset>
+                <div th:if="${param.invalid_token}" class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <div>User bearing this token is not registered with the site</div>
                 </div>
-                <div class="col-md-6 col-xs-12 text-xs-center text-md-right">
-                    <a href="forgot_password.html" th:href="@{/login/forgot_password}" class="card-link">Forgot Password?</a>
+                <div th:if="${remember_error}" class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <div th:utext="${remember_error}">Username and Password does not match any user</div>
                 </div>
-            </fieldset>
-            <div th:if="${param.error}" class="alert alert-dismissible alert-danger">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <div th:utext="${login_error}">Username and Password does not match any user</div>
-            </div>
-            <div th:if="${param.logout}" class="alert alert-dismissible alert-success">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                Logged out successfully
-            </div>
-            <div th:if="${param.invalid_token}" class="alert alert-dismissible alert-danger">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <div>User bearing this token is not registered with the site</div>
-            </div>
-            <div th:if="${remember_error}" class="alert alert-dismissible alert-danger">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <div th:utext="${remember_error}">Username and Password does not match any user</div>
-            </div>
-            <div th:if="${reset_success}" class="alert alert-dismissible alert-success">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>Reset!</strong> Password successfully reset!<br/>
-            </div>
-            <div th:if="${reset_link_sent}" class="alert alert-dismissible alert-success">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>Sent!</strong> Password reset link has been sent successfully to your email!
-            </div>
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
-        </form>
-        <div class="text-xs-center p-1">
-            <div id="checking" style="display: none">
-                <div id="loader-message">Checking existing login...</div>
-                <div class="md-progress">
-                    <div class="indeterminate"></div>
+                <div th:if="${reset_success}" class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Reset!</strong> Password successfully reset!<br/>
                 </div>
-            </div>
-            <div id="login-panel">
-                <button id="google-login" class="btn btn-secondary">
-                    <img class="avatar" src="https://developers.google.com/identity/sign-in/g-normal.png" alt="Google Logo">
-                </button>
+                <div th:if="${reset_link_sent}" class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Sent!</strong> Password reset link has been sent successfully to your email!
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
+            </form>
+            <div class="text-xs-center p-1">
+                <div id="checking" style="display: none">
+                    <div id="loader-message">Checking existing login...</div>
+                    <div class="md-progress">
+                        <div class="indeterminate"></div>
+                    </div>
+                </div>
+                <div id="login-panel">
+                    <button id="google-login" class="btn btn-secondary">
+                        <img class="avatar" src="https://developers.google.com/identity/sign-in/g-normal.png" alt="Google Logo">
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</th:block>
+<script th:src="@{/js/authentication.js}"></script>
 <script>
     (function () {
-        document.addEventListener("DOMContentLoaded", function () {
-            Login.startLoginFlow();
-        });
+        config.initialize();
+        Login.startLoginFlow();
     }());
 </script>
 </html>

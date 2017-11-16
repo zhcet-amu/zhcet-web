@@ -1,0 +1,15 @@
+{
+  "name": "ZHCET Web",
+  "short_name": "ZHCET",
+  "description": "A site for students, faculty and administrators of ZHCET",
+  "lang": "en-IN",
+  "theme_color": "#673ab7",
+  "display": "browser",
+  "start_url": "/",
+  "gcm_sender_id": "103953800507",
+  "icons": [
+    {
+      "src": "https://zhcet-backend.firebaseapp.com/static/img/icon.png"
+    }
+  ]
+}

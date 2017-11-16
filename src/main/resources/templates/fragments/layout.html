@@ -14,6 +14,11 @@
     <meta name="msapplication-navbutton-color" content="#673AB7">
     <meta name="apple-mobile-web-app-status-bar-style" content="#673AB7">
 
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <link rel="manifest" th:href="@{/js/manifest.json}">
+
     <link rel="shortcut icon" href="https://zhcet-backend.firebaseapp.com/static/img/icon.png" />
 
     <link href="/webjars/muicss/dist/css/mui.min.css" rel="stylesheet" type="text/css"/>
@@ -177,6 +182,7 @@
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-messaging.js"></script>
 </th:block>
 
 <th:block th:fragment="scripts">
@@ -191,10 +197,11 @@
     <script src="/webjars/muicss/dist/js/mui.min.js"></script>
     <script src="/webjars/toastr/build/toastr.min.js"></script>
     <div th:replace="this :: firebase"></div>
-    <script th:src="@{/js/firebase.js}"></script>
     <script th:src="@{/js/file-uploader.js}"></script>
+    <script th:src="@{/js/config.js}"></script>
     <script th:src="@{/js/authentication.js}"></script>
     <script th:src="@{/js/app.js}" type="text/javascript"></script>
+    <script th:src="@{/js/messaging.js}"></script>
 </th:block>
 </body>
 </html>

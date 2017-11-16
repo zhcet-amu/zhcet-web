@@ -2,6 +2,8 @@ package in.ac.amu.zhcet.controller.user;
 
 import in.ac.amu.zhcet.service.firebase.auth.FirebaseAuthService;
 import in.ac.amu.zhcet.service.firebase.auth.UserToken;
+import in.ac.amu.zhcet.service.firebase.messaging.FirebaseMessagingService;
+import in.ac.amu.zhcet.service.user.Auditor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserTokenController {
 
     private final FirebaseAuthService firebaseAuthService;
+    private final FirebaseMessagingService firebaseMessagingService;
 
     @Autowired
-    public UserTokenController(FirebaseAuthService firebaseAuthService) {
+    public UserTokenController(FirebaseAuthService firebaseAuthService, FirebaseMessagingService firebaseMessagingService) {
         this.firebaseAuthService = firebaseAuthService;
+        this.firebaseMessagingService = firebaseMessagingService;
     }
 
     @GetMapping("/profile/api/token")
@@ -36,5 +40,10 @@ public class UserTokenController {
         return "OK";
     }
 
+    @PostMapping("/profile/api/messaging_token")
+    public String postMessagingToken(@RequestBody String token) {
+        firebaseMessagingService.attachToken(Auditor.getLoggedInUsername(), token);
+        return "OK";
+    }
 
 }
