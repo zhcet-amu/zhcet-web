@@ -8,6 +8,7 @@ import in.ac.amu.zhcet.service.user.UserDetailService;
 import in.ac.amu.zhcet.service.user.auth.PersistentTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -16,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -91,6 +93,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .tokenRepository(persistentTokenService)
                 .and()
                     .sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());
+    }
+
+    /**
+     * Spring Security Context is limited to local thread and hence every asynchronous method gets
+     * null logged in user info. We modify the SecurityContextHolder here to leverage auditing capabilities
+     * in asynchronous methods as well by enabling MODE_INHERITABLETHREADLOCAL
+     * @return MethodInvokingFactoryBean
+     */
+    @Bean
+    public MethodInvokingFactoryBean methodInvokingFactoryBean() {
+        MethodInvokingFactoryBean methodInvokingFactoryBean = new MethodInvokingFactoryBean();
+        methodInvokingFactoryBean.setTargetClass(SecurityContextHolder.class);
+        methodInvokingFactoryBean.setTargetMethod("setStrategyName");
+        methodInvokingFactoryBean.setArguments((Object[]) new String[]{ SecurityContextHolder.MODE_INHERITABLETHREADLOCAL });
+        return methodInvokingFactoryBean;
     }
 
 }
