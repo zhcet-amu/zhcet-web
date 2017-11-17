@@ -2,6 +2,7 @@ package in.ac.amu.zhcet.service.firebase;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Bucket;
+import com.google.common.base.Strings;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.StorageClient;
@@ -17,7 +18,7 @@ import java.net.URL;
 @Service
 public class FirebaseService {
 
-    private static final boolean DEBUG_SUPPRESS = false;
+    private final boolean disabled;
     private final String messagingServerKey;
     private boolean uninitialized;
 
@@ -25,11 +26,20 @@ public class FirebaseService {
     public FirebaseService(ApplicationProperties applicationProperties) throws IOException {
         log.info("Initializing Firebase");
         ApplicationProperties.Firebase firebase = applicationProperties.getFirebase();
+        disabled = firebase.isDisabled();
         messagingServerKey = firebase.getMessagingServerKey();
         InputStream serviceAccount = getServiceAccountJson();
 
+        if (disabled) {
+            log.warn("CONFIG (Firebase): Firebase is disabled");
+        }
+
+        if (Strings.isNullOrEmpty(messagingServerKey)) {
+            log.error("CONFIG (Firebase Messaging): Firebase Messaging Server Key not found!");
+        }
+
         if (serviceAccount == null) {
-            log.error("Firebase Service Account JSON not found anywhere. Any Firebase interaction may throw exception");
+            log.error("CONFIG (Firebase): Firebase Service Account JSON not found anywhere. Any Firebase interaction may throw exception");
             uninitialized = true;
             return;
         }
@@ -79,7 +89,7 @@ public class FirebaseService {
     }
 
     public boolean canProceed() {
-        boolean unproceedable = uninitialized || DEBUG_SUPPRESS;
+        boolean unproceedable = uninitialized || disabled;
         if (unproceedable)
             log.error("Cannot proceed as Firebase is uninitialized");
 
@@ -87,7 +97,7 @@ public class FirebaseService {
     }
 
     public boolean canSendMessage() {
-        boolean unsendable = messagingServerKey == null || DEBUG_SUPPRESS;
+        boolean unsendable = messagingServerKey == null || disabled;
         if (unsendable)
             log.error("Cannot broadcast as Firebase Messaging Server Key is not found");
 

@@ -1,5 +1,6 @@
-package in.ac.amu.zhcet.service.notification.email;
+package in.ac.amu.zhcet.service.email;
 
+import com.google.common.base.Strings;
 import in.ac.amu.zhcet.configuration.ApplicationProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +15,20 @@ import java.io.IOException;
 @Slf4j
 @Service
 public class EmailService{
+    private final boolean disabled;
+
     private final JavaMailSender sender;
-    private final ApplicationProperties applicationProperties;
     private final String senderEmail;
 
     @Autowired
     public EmailService(JavaMailSender sender, ApplicationProperties applicationProperties) {
         this.sender = sender;
-        this.applicationProperties = applicationProperties;
+        this.disabled = applicationProperties.getEmail().isDisabled();
         this.senderEmail = applicationProperties.getEmail().getAddress();
+
+        if (disabled) {
+            log.warn("CONFIG (Email): Email sending is disabled");
+        }
     }
 
     private static void setBasicInfo(MimeMessageHelper mailMessage, String from, String to, String subject, String[] bcc) throws MessagingException {
@@ -50,9 +56,9 @@ public class EmailService{
     }
 
     private void sendMail(MimeMessage mimeMessage) throws MessagingException {
-        if (applicationProperties.isSkipEmails()) {
+        if (disabled) {
             try {
-                log.info("Skipping mail because of property override.\n" +
+                log.warn("Skipping mail because of property override.\n" +
                         "Sender: {}\n" +
                         "Recipients: {}\n" +
                         "Subject: {}\n" +
@@ -63,6 +69,10 @@ public class EmailService{
                 log.error("Error extracting information", e);
             }
             return;
+        }
+
+        if (Strings.isNullOrEmpty(senderEmail)) {
+            log.error("Sender Email not configured. Skipping...");
         }
 
         sender.send(mimeMessage);

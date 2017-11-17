@@ -33,7 +33,7 @@ public class FirebaseAuthService {
         this.firebaseService = firebaseService;
         this.firebaseUserService = firebaseUserService;
 
-        log.info("Firebase Auth Running : {}", firebaseService.canProceed());
+        log.info("CONFIG (Firebase): Firebase Auth Running : {}", firebaseService.canProceed());
     }
 
     public UserToken generateToken() {

@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.notification.email.data;
+package in.ac.amu.zhcet.service.email.data;
 
 import lombok.*;
 

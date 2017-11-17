@@ -10,7 +10,7 @@ import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseRegistrationService;
 import in.ac.amu.zhcet.service.notification.NotificationSendingService;
-import in.ac.amu.zhcet.service.notification.email.EmailSendingService;
+import in.ac.amu.zhcet.service.email.EmailSendingService;
 import in.ac.amu.zhcet.service.upload.csv.base.AbstractUploadService;
 import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;

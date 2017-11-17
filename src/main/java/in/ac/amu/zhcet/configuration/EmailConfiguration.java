@@ -38,8 +38,15 @@ public class EmailConfiguration {
             log.error("Using default salt for app, this is dangerous and can lead to hacking into system");
         }
 
-        mailSender.setUsername(applicationProperties.getEmail().getAddress());
-        mailSender.setPassword(applicationProperties.getEmail().getPassword());
+        String username = applicationProperties.getEmail().getAddress();
+        String password = applicationProperties.getEmail().getPassword();
+
+        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
+            log.error("CONFIG (Email): Email or Password not found : {} {}", username, password);
+        }
+
+        mailSender.setUsername(username);
+        mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

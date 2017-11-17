@@ -4,7 +4,7 @@ import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.data.model.notification.NotificationRecipient;
 import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.service.firebase.messaging.FirebaseMessagingService;
-import in.ac.amu.zhcet.service.notification.email.EmailSendingService;
+import in.ac.amu.zhcet.service.email.EmailSendingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;

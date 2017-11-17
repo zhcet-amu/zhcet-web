@@ -42,7 +42,7 @@ public class FirebaseMessagingService {
         this.userService = userService;
 
         HEADER_MAP.put("Authorization", "key=" + firebaseService.getMessagingServerKey());
-        log.info("Firebase Messaging Running : {}", firebaseService.canSendMessage());
+        log.info("CONFIG (Firebase): Firebase Messaging Running : {}", firebaseService.canSendMessage());
     }
 
     @Async

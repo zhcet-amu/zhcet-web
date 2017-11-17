@@ -1,8 +1,8 @@
-package in.ac.amu.zhcet.service.notification.email;
+package in.ac.amu.zhcet.service.email;
 
 import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.data.model.notification.NotificationRecipient;
-import in.ac.amu.zhcet.service.notification.email.data.LinkMessage;
+import in.ac.amu.zhcet.service.email.data.LinkMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
