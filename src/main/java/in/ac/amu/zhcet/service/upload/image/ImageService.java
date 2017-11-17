@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -57,28 +58,28 @@ public class ImageService {
         return false;
     }
 
-    public float getRatio(BufferedImage image) {
+    private float getRatio(BufferedImage image) {
         return ((float)image.getHeight())/image.getWidth();
     }
 
-    public BufferedImage crop(BufferedImage image, int pixels) {
+    private BufferedImage crop(BufferedImage image, int pixels) {
         if (image == null)
             return null;
         float ratio = getRatio(image);
         if (Math.abs(ratio - 1) < 0.2)
             return image;
-        log.warn("Image Aspect Ratio " + ratio + " not within confines... Cropping...");
+        log.warn("Image Aspect Ratio {} not within confines... Cropping...", ratio);
         pixels = Math.min(pixels, Math.min(image.getHeight(), image.getWidth()));
-        log.warn("Cropping image to largest square center crop : " + pixels + " pixels");
+        log.warn("Cropping image to largest square center crop : {} pixels", pixels);
         return Scalr.crop(image, (image.getWidth() - pixels) / 2, (image.getHeight() - pixels) / 2, pixels, pixels);
     }
 
-    public InputStream generateThumbnail(BufferedImage image, String format, int pixels) throws IOException {
-        log.info("Original Image Resolution : %dx%d", image.getHeight(), image.getWidth());
+    private InputStream generateThumbnail(BufferedImage image, String format, int pixels) throws IOException {
+        log.info("Original Image Resolution : {}x{}", image.getHeight(), image.getWidth());
 
         BufferedImage newImage = null;
         if (Math.max(image.getHeight(), image.getWidth()) > pixels) {
-            log.warn("Image larger than " + pixels + " pixels. Resizing...");
+            log.warn("Image larger than {} pixels. Resizing...", pixels);
             Scalr.Mode mode = image.getHeight() > image.getWidth() ? Scalr.Mode.FIT_TO_WIDTH : Scalr.Mode.FIT_TO_HEIGHT;
             newImage = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, mode, pixels, pixels);
             log.warn("New Image Resolution : {}x{}", newImage.getHeight(), newImage.getWidth());
@@ -96,34 +97,40 @@ public class ImageService {
         return new ByteArrayInputStream(os.toByteArray());
     }
 
-    public String upload(String pathWithoutExtension, MultipartFile file, Integer size) {
-        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-
+    private InputStream getNormalizedImage(MultipartFile file, String format, Integer size) throws IOException {
         if (file.getSize() > MAX_FILE_SIZE) {
             log.warn("Image larger than 2 MB : {}", file.getOriginalFilename());
             throw new ImageUploadException("File should be smaller than 2 MB");
         }
 
+        BufferedImage image = ImageUtils.readImage(file);
+        if (image == null || !verifyType(file.getOriginalFilename(), false) || !verifyType(file.getContentType(), true)) {
+            log.warn("Image should be of valid type : {}", file.getOriginalFilename());
+            throw new ImageUploadException("File type must be image, found " + file.getContentType());
+        }
+
+        log.warn("Original Image Size : {}", Utils.humanReadableByteCount(file.getSize(), true));
+
+        InputStream toUpload = file.getInputStream();
+        if (size != null) {
+            log.warn("Resizing image to size : {}", size);
+            InputStream resizedImage = generateThumbnail(image, format, size);
+
+            if (resizedImage != null)
+                toUpload = resizedImage;
+        } else {
+            log.warn("Not resizing image");
+        }
+
+        return toUpload;
+    }
+
+    @Nullable
+    public String upload(String pathWithoutExtension, MultipartFile file, Integer size) {
+        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+
         try {
-            BufferedImage image = ImageUtils.readImage(file);
-            if (image == null || !verifyType(file.getOriginalFilename(), false) || !verifyType(file.getContentType(), true)) {
-                log.warn("Image should be of valid type : {}", file.getOriginalFilename());
-                throw new ImageUploadException("File type must be image, found " + file.getContentType());
-            }
-
-            log.warn(String.format("Original Image Size : %s", Utils.humanReadableByteCount(file.getSize(), true)));
-
-            InputStream toUpload = file.getInputStream();
-            if (size != null) {
-                log.warn("Resizing image to size : {}", size);
-                InputStream resizedImage = generateThumbnail(image, extension, size);
-
-                if (resizedImage != null)
-                    toUpload = resizedImage;
-            } else {
-                log.warn("Not resizing image");
-            }
-
+            InputStream toUpload = getNormalizedImage(file, extension, size);
             return firebaseStorageService.uploadFile(pathWithoutExtension + "." + extension, file.getContentType(), toUpload);
         } catch (IOException e) {
             log.error("Avatar Error", e);

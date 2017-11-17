@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -27,15 +28,24 @@ public class FirebaseStorageService {
         this.firebaseService = firebaseService;
     }
 
+    /**
+     * Uploads a file to Firebase Storage
+     * @param path Path at which the file is to be stored on Firebase
+     * @param contentType Content-Type of file - Helps Firebase to set meta data on file
+     * @param fileStream InputStream of file to be stored
+     * @return Public facing URL of the uploaded file
+     * @throws UnsupportedEncodingException if the file type is unsupported
+     */
+    @Nullable
     public String uploadFile(String path, String contentType, InputStream fileStream) throws UnsupportedEncodingException {
         if (!firebaseService.canProceed())
             return null;
 
-        log.warn("Uploading file '{}' of type {}...", path, contentType);
+        log.info("Uploading file '{}' of type {}...", path, contentType);
         Bucket bucket = firebaseService.getBucket();
-        log.warn("Bucket used : " + bucket.getName());
+        log.info("Bucket used : " + bucket.getName());
         String uuid = UUID.randomUUID().toString();
-        log.warn("Firebase Download Token : {}", uuid);
+        log.info("Firebase Download Token : {}", uuid);
         Map<String, String> map = new HashMap<>();
         map.put("firebaseStorageDownloadTokens", uuid);
 
@@ -46,13 +56,13 @@ public class FirebaseStorageService {
                 .build();
         BlobInfo uploaded = bucket.getStorage().create(uploadContent, fileStream);
 
-        log.warn("File Uploaded");
-        log.warn("Media Link : {}", uploaded.getMediaLink());
-        log.warn("Metadata : {}", uploaded.getMetadata().toString());
+        log.info("File Uploaded");
+        log.info("Media Link : {}", uploaded.getMediaLink());
+        log.info("Metadata : {}", uploaded.getMetadata().toString());
 
         String link = String.format("https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media&auth=%s",
                 uploaded.getBucket(), URLEncoder.encode(uploaded.getName(), "UTF-8"), uuid);
-        log.warn("Firebase Link : {}", link);
+        log.info("Firebase Link : {}", link);
 
         return link;
     }

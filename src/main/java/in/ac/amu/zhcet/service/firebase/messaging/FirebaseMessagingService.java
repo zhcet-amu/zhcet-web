@@ -45,6 +45,11 @@ public class FirebaseMessagingService {
         log.info("CONFIG (Firebase): Firebase Messaging Running : {}", firebaseService.canSendMessage());
     }
 
+    /**
+     * Attaches FCM registration received from front end to user for push notifications
+     * @param userId User ID to attach token info to
+     * @param token FCM Registration Token to be attached
+     */
     @Async
     public void attachToken(String userId, String token) {
         if (userId == null || token == null)
@@ -61,24 +66,16 @@ public class FirebaseMessagingService {
         userService.save(userAuth);
     }
 
-    private MessagingClient getMessagingClient() {
-        if (messagingClient == null) {
-            messagingClient = Feign.builder()
-                    .client(new OkHttpClient())
-                    .decoder(new JacksonDecoder())
-                    .encoder(new JacksonEncoder())
-                    .target(MessagingClient.class, BASE_URL);
-        }
-
-        return messagingClient;
-    }
-
+    /**
+     * Sends a push notification to notification recipient user using FCM token
+     * NotificationBody and DataBody is created for FCM HTTP V1 API using the Notification content passed
+     * If FCM token of user is not found, sending is skipped
+     * @param notificationRecipient Notification Recipient
+     */
     @Async
     public void sendMessage(NotificationRecipient notificationRecipient) {
-        if (!firebaseService.canSendMessage()) {
-            log.warn("No FCM server key found! Skipping message broadcast");
+        if (!firebaseService.canSendMessage())
             return;
-        }
 
         String fcmToken = notificationRecipient.getRecipient().getDetails().getFcmToken();
 
@@ -108,6 +105,18 @@ public class FirebaseMessagingService {
                 HEADER_MAP);
 
         log.info("Sent Broadcast : {}", sendResponse);
+    }
+
+    private MessagingClient getMessagingClient() {
+        if (messagingClient == null) {
+            messagingClient = Feign.builder()
+                    .client(new OkHttpClient())
+                    .decoder(new JacksonDecoder())
+                    .encoder(new JacksonEncoder())
+                    .target(MessagingClient.class, BASE_URL);
+        }
+
+        return messagingClient;
     }
 
 }

@@ -36,6 +36,36 @@ public class FirebaseAuthService {
         log.info("CONFIG (Firebase): Firebase Auth Running : {}", firebaseService.canProceed());
     }
 
+    /**
+     * Receives firebase token from frontend and verifies if a user is valid
+     * If user is valid, authenticates the user and sends back login URL to the frontend
+     * If user is invalid, sends back to page indicating error
+     * @param token String: Firebase token of the user sent from frontend
+     * @return String: URL denoting authenticated or error endpoint
+     */
+    public String getAction(String token) {
+        String errorUrl = "/login?invalid_token";
+
+        if (!firebaseService.canProceed())
+            return errorUrl;
+
+        try {
+            FirebaseToken decodedToken = getToken(token);
+            log.info("User Claims: {}", decodedToken.getClaims());
+
+            return authenticate(decodedToken) ? "/" : errorUrl;
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Unable to decode Firebase token", e);
+        }
+
+        return errorUrl;
+    }
+
+    /**
+     * Generates custom firebase token for authenticated user
+     * Note: Only to be called from an authenticated endpoint
+     * @return UserToken
+     */
     public UserToken generateToken() {
         if (!firebaseService.canProceed())
             return null;
@@ -50,6 +80,26 @@ public class FirebaseAuthService {
             return firebaseUserService.fromUser(user, token);
         } catch (InterruptedException | ExecutionException e) {
             return FirebaseUserService.getUnauthenticated();
+        }
+    }
+
+    /**
+     * Links authenticated user to one of the Identity providers, like Google
+     * Also merges the provider data like email, verification status, and photo into user account
+     * NOTE: Only to be called from an authenticated endpoint
+     * @param token String: Firebase Authentication Token
+     */
+    public void linkData(String token) {
+        if (!firebaseService.canProceed())
+            return;
+
+        try {
+            FirebaseToken decodedToken = getToken(token);
+            log.info(decodedToken.getClaims().toString());
+            UserAuth user = userService.getLoggedInUser();
+            firebaseUserService.mergeFirebaseDetails(user, decodedToken);
+        } catch (ExecutionException | InterruptedException e) {
+            log.error("Error linking data", e);
         }
     }
 
@@ -94,34 +144,5 @@ public class FirebaseAuthService {
 
     private FirebaseToken getToken(String token) throws ExecutionException, InterruptedException {
         return FirebaseAuth.getInstance().verifyIdTokenAsync(token).get();
-    }
-
-    public String getAction(String token) {
-        String errorUrl = "/login?invalid_token";
-
-        if (!firebaseService.canProceed())
-            return errorUrl;
-
-        try {
-            FirebaseToken decodedToken = getToken(token);
-            log.info("User Claims: {}", decodedToken.getClaims());
-
-            return authenticate(decodedToken) ? "/" : errorUrl;
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("Unable to decode Firebase token", e);
-        }
-
-        return errorUrl;
-    }
-
-    public void linkData(String token) {
-        try {
-            FirebaseToken decodedToken = getToken(token);
-            log.info(decodedToken.getClaims().toString());
-            UserAuth user = userService.getLoggedInUser();
-            firebaseUserService.mergeFirebaseDetails(user, decodedToken);
-        } catch (ExecutionException | InterruptedException e) {
-            log.error("Error linking data", e);
-        }
     }
 }

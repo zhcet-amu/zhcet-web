@@ -17,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nullable;
 import javax.transaction.Transactional;
 import java.util.concurrent.ExecutionException;
 
@@ -54,24 +55,58 @@ public class FirebaseUserService {
         return information;
     }
 
-    private ChannelType fromUser(UserAuth userAuth) {
-        return userAuth.getType() == Type.STUDENT ? ChannelType.STUDENT : ChannelType.FACULTY;
+    /**
+     * Merges firebase data into user account
+     *
+     * - Saves token claims in database
+     * - Merges email and verification status from token
+     * - Updates profile picture from provider data
+     *
+     * Mail merge and avatar update is done only if the user account information is not already present
+     * @param userAuth User Account the data is to be merged in
+     * @param token Decoded Firebase Token containing data
+     */
+    @Async
+    public void mergeFirebaseDetails(@Nullable UserAuth userAuth, @Nullable FirebaseToken token) {
+        if (userAuth == null || token == null || !firebaseService.canProceed())
+            return;
+
+        if (token.getClaims() != null)
+            userAuth.getDetails().setFirebaseClaims(token.getClaims().toString());
+
+        mergeMail(userAuth, token);
+
+        if (Strings.isNullOrEmpty(userAuth.getDetails().getAvatarUrl()) && !Strings.isNullOrEmpty(token.getPicture())) {
+            userAuth.getDetails().setOriginalAvatarUrl(token.getPicture());
+            userAuth.getDetails().setAvatarUrl(token.getPicture());
+            UserDetailService.updateStaticPrincipal(userAuth);
+        }
+
+        userDetailService.getUserService().save(userAuth);
     }
 
-    private void sendEmailChangeNotification(UserAuth recipient, UserAuth claimant, String email) {
-        Notification notification = Notification.builder()
-                .automated(true)
-                .channelType(fromUser(recipient))
-                .recipientChannel(recipient.getUserId())
-                .sender(claimant)
-                .title("Email Claimed")
-                .message(String.format("Your previously set email **%s** is now claimed by `%s` *(%s)*.\n" +
-                        "Please change it or claim it back by verifying it", email, claimant.getName(), claimant.getUserId()))
-                .build();
-
-        notificationSendingService.sendNotification(notification);
+    @Async
+    public void getUser(String uid) {
+        try {
+            UserRecord userRecord = FirebaseAuth.getInstance().getUserAsync(uid).get();
+            log.info(userRecord.toString());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Merges mail from firebase token into user account
+     *
+     * - If the email of user is already verified, process is skipped
+     * - If the email in provider is already claimed by another user, that user's email
+     *   and it's verification status is cleared and given to the passed in user.
+     *   Previous user is notified of this revocation
+     * - If the provider email is not verified, but account email is null, provider email is saved.
+     *   But verification status is set to false
+     * @param userAuth User
+     * @param token Firebase Token containing email information
+     */
     private void mergeMail(UserAuth userAuth, FirebaseToken token) {
         if (Strings.isNullOrEmpty(token.getEmail()))
             return;
@@ -109,32 +144,21 @@ public class FirebaseUserService {
         }
     }
 
-    @Async
-    public void mergeFirebaseDetails(UserAuth userAuth, FirebaseToken token) {
-        if (userAuth == null || token == null || !firebaseService.canProceed())
-            return;
+    private void sendEmailChangeNotification(UserAuth recipient, UserAuth claimant, String email) {
+        Notification notification = Notification.builder()
+                .automated(true)
+                .channelType(fromUser(recipient))
+                .recipientChannel(recipient.getUserId())
+                .sender(claimant)
+                .title("Email Claimed")
+                .message(String.format("Your previously set email **%s** is now claimed by `%s` *(%s)*.\n" +
+                        "Please change it or claim it back by verifying it", email, claimant.getName(), claimant.getUserId()))
+                .build();
 
-        if (token.getClaims() != null)
-            userAuth.getDetails().setFirebaseClaims(token.getClaims().toString());
-
-        mergeMail(userAuth, token);
-
-        if (Strings.isNullOrEmpty(userAuth.getDetails().getAvatarUrl()) && !Strings.isNullOrEmpty(token.getPicture())) {
-            userAuth.getDetails().setOriginalAvatarUrl(token.getPicture());
-            userAuth.getDetails().setAvatarUrl(token.getPicture());
-            UserDetailService.updateStaticPrincipal(userAuth);
-        }
-
-        userDetailService.getUserService().save(userAuth);
+        notificationSendingService.sendNotification(notification);
     }
 
-    @Async
-    public void getUser(String uid) {
-        try {
-            UserRecord userRecord = FirebaseAuth.getInstance().getUserAsync(uid).get();
-            log.info(userRecord.toString());
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+    private ChannelType fromUser(UserAuth userAuth) {
+        return userAuth.getType() == Type.STUDENT ? ChannelType.STUDENT : ChannelType.FACULTY;
     }
 }
