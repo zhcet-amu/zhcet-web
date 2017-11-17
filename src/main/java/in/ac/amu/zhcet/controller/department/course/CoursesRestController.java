@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller.department;
+package in.ac.amu.zhcet.controller.department.course;
 
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FloatedCourse;

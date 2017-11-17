@@ -1,5 +1,6 @@
-package in.ac.amu.zhcet.controller.department;
+package in.ac.amu.zhcet.controller.department.session;
 
+import in.ac.amu.zhcet.controller.department.course.CoursesController;
 import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseManagementService;

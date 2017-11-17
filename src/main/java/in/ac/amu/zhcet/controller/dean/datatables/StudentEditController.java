@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller.dean;
+package in.ac.amu.zhcet.controller.dean.datatables;
 
 import com.google.common.base.Strings;
 import in.ac.amu.zhcet.data.model.Student;

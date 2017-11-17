@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller.dean;
+package in.ac.amu.zhcet.controller.dean.datatables;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.base.Strings;

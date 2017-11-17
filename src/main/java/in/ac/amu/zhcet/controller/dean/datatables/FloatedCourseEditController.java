@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller.dean;
+package in.ac.amu.zhcet.controller.dean.datatables;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
