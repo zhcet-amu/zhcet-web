@@ -14,9 +14,14 @@ public class NotificationUtils {
         return page;
     }
 
+    private static int getSafePage(int page, int total) {
+        return Math.max(1, Math.min(page, total));
+    }
+
     public static void prepareNotifications(Model model, Page<?> page, int currentPage) {
-        int minPage = Math.max(1, currentPage - 5);
-        int maxPage = Math.max(1, Math.min(currentPage + 5, page.getTotalPages()));
+        int totalPages = page.getTotalPages();
+        int minPage = getSafePage(currentPage - 5, totalPages);
+        int maxPage = getSafePage(currentPage + 5, totalPages);
 
         model.addAttribute("minPage", minPage);
         model.addAttribute("maxPage", maxPage);
