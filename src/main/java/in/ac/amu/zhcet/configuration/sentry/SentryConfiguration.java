@@ -1,7 +1,6 @@
 package in.ac.amu.zhcet.configuration.sentry;
 
 import in.ac.amu.zhcet.data.model.user.User;
-import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.UserService;
 import io.sentry.Sentry;
 import io.sentry.event.helper.EventBuilderHelper;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class SentryConfiguration {
 
     @Data
-    private static class User {
+    private static class UserContext {
         private String userId;
         private String name;
         private String departmentName;
@@ -28,10 +27,10 @@ public class SentryConfiguration {
     @Autowired
     public SentryConfiguration(UserService userService, ModelMapper modelMapper) {
         EventBuilderHelper myEventBuilderHelper = eventBuilder -> {
-            in.ac.amu.zhcet.data.model.user.User loggedInUser = userService.getLoggedInUser();
+            User loggedInUser = userService.getLoggedInUser();
 
             if (loggedInUser != null) {
-                eventBuilder.withExtra("user", modelMapper.map(loggedInUser, User.class));
+                eventBuilder.withExtra("user", modelMapper.map(loggedInUser, UserContext.class));
             } else {
                 eventBuilder.withExtra("user", "UNAUTHORIZED");
             }

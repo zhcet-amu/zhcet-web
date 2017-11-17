@@ -34,8 +34,8 @@ public class Student extends BaseEntity {
     private Character status = 'A';
 
     @NotNull
+    @PrimaryKeyJoinColumn
     @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn(name = "enrolment_number", referencedColumnName = "user_id")
     private User user = new User();
 
     public Student(User user, String facultyNumber) {

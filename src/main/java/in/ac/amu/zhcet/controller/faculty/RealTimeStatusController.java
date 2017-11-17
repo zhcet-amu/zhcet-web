@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller.user;
+package in.ac.amu.zhcet.controller.faculty;
 
 import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
 import in.ac.amu.zhcet.service.realtime.RealTimeStatusService;
