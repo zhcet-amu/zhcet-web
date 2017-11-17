@@ -11,6 +11,7 @@ import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
 import in.ac.amu.zhcet.service.upload.storage.FileSystemStorageService;
 import in.ac.amu.zhcet.service.upload.storage.FileType;
+import in.ac.amu.zhcet.utils.SecurityUtils;
 import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -35,10 +35,15 @@ public class FacultyUploadService {
     private final FacultyService facultyService;
     private final AbstractUploadService<FacultyUpload, FacultyMember> uploadService;
     private final FileSystemStorageService systemStorageService;
-    private final static int PASS_LENGTH = 6;
+    private final static int PASS_LENGTH = 12;
 
     @Autowired
-    public FacultyUploadService(DepartmentRepository departmentRepository, FacultyService facultyService, AbstractUploadService<FacultyUpload, FacultyMember> uploadService, FileSystemStorageService fileSystemStorageService) {
+    public FacultyUploadService(
+            DepartmentRepository departmentRepository,
+            FacultyService facultyService,
+            AbstractUploadService<FacultyUpload, FacultyMember> uploadService,
+            FileSystemStorageService fileSystemStorageService
+    ) {
         this.departmentRepository = departmentRepository;
         this.facultyService = facultyService;
         this.uploadService = uploadService;
@@ -120,7 +125,7 @@ public class FacultyUploadService {
     }
 
     private static FacultyMember fromFacultyUpload(FacultyUpload facultyUpload) {
-        String password = generatePassword(PASS_LENGTH);
+        String password = SecurityUtils.generatePassword(PASS_LENGTH);
         facultyUpload.setPassword(password);
         FacultyMember facultyMember = new FacultyMember();
         facultyMember.setFacultyId(StringUtils.capitalizeAll(facultyUpload.getFacultyId()));
@@ -142,10 +147,5 @@ public class FacultyUploadService {
         facultyUpload.setPassword(facultyMember.getUser().getPassword());
 
         return facultyUpload;
-    }
-
-    private static String generatePassword(int length){
-        String uuid = UUID.randomUUID().toString();
-        return uuid.replaceAll("-", "").substring(0, Math.min(length, uuid.length()));
     }
 }

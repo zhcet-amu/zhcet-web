@@ -1,8 +1,10 @@
 package in.ac.amu.zhcet.utils;
 
 import com.google.common.hash.Hashing;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.nio.charset.Charset;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,16 @@ public class SecurityUtils {
 
     public static boolean hashMatches(String email, String hash) {
         return getHash(email).equals(hash);
+    }
+
+    public static String generatePassword(int length){
+        char[] possibleCharacters =
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?"
+                        .toCharArray();
+        return RandomStringUtils.random(length,
+                0, possibleCharacters.length - 1,
+                false, false,
+                possibleCharacters, new SecureRandom());
     }
 
 }
