@@ -1,7 +1,8 @@
 package in.ac.amu.zhcet.service;
 
 import com.google.common.base.Strings;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.data.model.user.UserDetail;
 import in.ac.amu.zhcet.data.repository.UserDetailRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
@@ -38,37 +39,37 @@ public class UserService {
     }
 
     @Transactional
-    public void save(UserAuth userAuth) {
-        userRepository.save(userAuth);
+    public void save(User user) {
+        userRepository.save(user);
     }
 
     @Transactional
-    public void save(List<UserAuth> userAuths) {
+    public void save(List<User> users) {
         userDetailRepository.save(
-                userAuths.parallelStream()
-                    .map(UserAuth::getDetails)
+                users.parallelStream()
+                    .map(User::getDetails)
                 .collect(Collectors.toList())
         );
-        userRepository.save(userAuths);
+        userRepository.save(users);
     }
 
-    public UserAuth findById(String id) {
+    public User findById(String id) {
         return userRepository.findByUserId(id);
     }
 
-    public UserAuth getUserByEmail(String email){
+    public User getUserByEmail(String email){
         return userRepository.findByEmail(email);
     }
 
-    boolean throwDuplicateEmail(String email, UserAuth userAuth) {
+    boolean throwDuplicateEmail(String email, User user) {
         if (!Strings.isNullOrEmpty(email)) {
-            UserAuth checkEmailDuplicate = getUserByEmail(email);
-            if (checkEmailDuplicate != null && !checkEmailDuplicate.getUserId().equals(userAuth.getUserId())) {
-                log.error("User with email already exists {} {}", userAuth.getUserId(), email);
+            User checkEmailDuplicate = getUserByEmail(email);
+            if (checkEmailDuplicate != null && !checkEmailDuplicate.getUserId().equals(user.getUserId())) {
+                log.error("User with email already exists {} {}", user.getUserId(), email);
                 throw new DuplicateException("User", "email", email);
             }
             if (!Utils.isValidEmail(email)) {
-                log.error("Invalid Email {} {}", userAuth.getUserId(), email);
+                log.error("Invalid Email {} {}", user.getUserId(), email);
                 throw new RuntimeException("Invalid Email");
             }
         } else {
@@ -78,7 +79,7 @@ public class UserService {
         return false;
     }
 
-    public UserAuth getLoggedInUser() {
+    public User getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null)
             return null;
@@ -87,7 +88,7 @@ public class UserService {
         return findById(userName);
     }
 
-    public String getType(UserAuth user) {
+    public String getType(User user) {
         List<String> roles = user.getRoles();
 
         if (roles.contains(Roles.SUPER_ADMIN))
@@ -106,17 +107,17 @@ public class UserService {
             return "Student";
     }
 
-    public Iterable<UserAuth> getAll() {
+    public Iterable<User> getAll() {
         return userRepository.findAll(new PageRequest(0, 10, Sort.Direction.DESC, "createdAt"));
     }
 
-    public static Stream<UserAuth> verifiedUsers(Stream<UserAuth> users) {
+    public static Stream<User> verifiedUsers(Stream<User> users) {
         return users
                 .filter(userAuth -> userAuth.isEmailVerified() && !userAuth.isEmailUnsubscribed());
     }
 
     @Transactional
-    public void updateDetails(UserAuth user, UserDetail userDetail) {
+    public void updateDetails(User user, UserDetail userDetail) {
         UserDetail details = user.getDetails();
         details.setDescription(userDetail.getDescription());
         details.setAddress(userDetail.getAddress());
@@ -129,15 +130,15 @@ public class UserService {
     }
 
     @Transactional
-    public void changeUserPassword(UserAuth userAuth, String password) {
-        userAuth.setPassword(passwordEncoder.encode(password));
-        userAuth.setPasswordChanged(true);
-        userRepository.save(userAuth);
+    public void changeUserPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        user.setPasswordChanged(true);
+        userRepository.save(user);
     }
 
     @Transactional
-    public void unsubscribeEmail(UserAuth userAuth, boolean unsubscribe) {
-        userAuth.setEmailUnsubscribed(unsubscribe);
-        userRepository.save(userAuth);
+    public void unsubscribeEmail(User user, boolean unsubscribe) {
+        user.setEmailUnsubscribed(unsubscribe);
+        userRepository.save(user);
     }
 }

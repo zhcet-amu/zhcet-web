@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.upload.FacultyUpload;
 import in.ac.amu.zhcet.data.model.dto.upload.StudentUpload;
+import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
 import in.ac.amu.zhcet.service.upload.storage.FileSystemStorageService;
 import in.ac.amu.zhcet.service.upload.csv.FacultyUploadService;
 import in.ac.amu.zhcet.service.upload.csv.StudentUploadService;
@@ -72,7 +73,8 @@ public class RegistrationController {
             attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));
         } else {
             try {
-                studentUploadService.registerStudents(confirmation);
+                RealTimeStatus status = studentUploadService.registerStudents(confirmation);
+                attributes.addFlashAttribute("task_id_student", status.getId());
                 attributes.addFlashAttribute("students_registered", true);
             } catch (Exception e) {
                 log.error("Error registering students", e);
@@ -113,8 +115,9 @@ public class RegistrationController {
             attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));
         } else {
             try {
-                String filename = facultyUploadService.registerFaculty(confirmation);
-                attributes.addFlashAttribute("file_saved", filename);
+                RealTimeStatus status = facultyUploadService.registerFaculty(confirmation);
+                attributes.addFlashAttribute("task_id_faculty", status.getId());
+                attributes.addFlashAttribute("file_saved", status.getMeta());
                 attributes.addFlashAttribute("faculty_registered", true);
             } catch (IOException e) {
                 log.error("Error registering faculty", e);

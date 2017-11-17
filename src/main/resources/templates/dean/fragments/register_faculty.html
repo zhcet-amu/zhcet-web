@@ -1,5 +1,6 @@
 <div xmlns:th="http://www.thymeleaf.org" lang="en">
     <div class="card" th:fragment="register_faculty">
+        <div id="task_id_faculty" th:text="${task_id_faculty}" hidden></div>
         <div class="card-header">
             <h4 class="card-title">Register Faculty</h4>
             <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
@@ -21,7 +22,15 @@
                         <div>Download the <a th:href="@{/csv/faculty_format.csv}">faculty format</a></div>
                         <br/>
                         <div th:replace="fragments/layout :: uploader(id = 'faculty_upload')"></div>
-                        <div th:replace="fragments/layout :: success(condition = ${faculty_registered}, success_title = 'Registered!', message = 'Faculty were successfully registered')"></div>
+                        <div id="faculty-progress" style="display: none">
+                            <div class="md-progress">
+                                <div class="determinate" style="width: 0%"></div>
+                            </div>
+                            <small class="text-muted">
+                                <span class="completed">0</span>/<span class="total">0</span>
+                                <span class="percentage float-xs-right">0%</span>
+                            </small>
+                        </div>
                         <div th:replace="fragments/layout :: success(condition = ${faculty_success}, success_title = 'Uploaded!', message = 'Your file was correctly uploaded. Now, confirm the prompt to register the students')"></div>
                         <div th:each="error : ${faculty_errors}">
                             <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
@@ -124,6 +133,17 @@
                     scrollY:        true,
                     scrollCollapse: true
                 });
+            });
+
+            $('#faculty-progress').initStatusProgress({
+                taskId: $('#task_id_faculty').text(),
+                finished: function (result) {
+                    toastr.success('Faculty Registration Complete in ' + result.duration + ' s')
+                },
+                failed: function (result) {
+                    console.log(result);
+                    toastr.error('Faculty Registration Failed');
+                }
             });
         }());
     </script>

@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.service.user;
 
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.security.login.LoginAttemptService;
 import in.ac.amu.zhcet.service.security.permission.PermissionManager;
@@ -40,7 +41,7 @@ public class UserDetailService implements UserDetailsService {
         return userService;
     }
 
-    private static UserDetails detailsFromUser(UserAuth user, boolean isBlocked) {
+    private static UserDetails detailsFromUser(User user, boolean isBlocked) {
         return new CustomUser(user.getUserId(), user.getPassword(), user.isEnabled(), isBlocked,
                 PermissionManager.authorities(user.getRoles()))
                 .name(user.getName())
@@ -49,24 +50,24 @@ public class UserDetailService implements UserDetailsService {
                 .department(user.getDepartment());
     }
 
-    private UserDetails detailsFromUserAuth(UserAuth user) {
+    private UserDetails detailsFromUserAuth(User user) {
         String ip = Utils.getClientIP(request);
         return detailsFromUser(user, loginAttemptService.isBlocked(ip));
     }
 
-    private static Authentication authenticationFromUserAuth(UserAuth user, UserDetails userDetails) {
+    private static Authentication authenticationFromUserAuth(User user, UserDetails userDetails) {
         return new UsernamePasswordAuthenticationToken(
                 userDetails, user.getPassword(), PermissionManager.authorities(user.getRoles())
         );
     }
 
-    public Authentication authenticationFromUser(UserAuth user) {
+    public Authentication authenticationFromUser(User user) {
         return authenticationFromUserAuth(user, detailsFromUserAuth(user));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserAuth user = userService.findById(username);
+        User user = userService.findById(username);
 
         if (user == null)
             user = userService.getUserByEmail(username);
@@ -77,23 +78,23 @@ public class UserDetailService implements UserDetailsService {
         return detailsFromUserAuth(user);
     }
 
-    public static void updateStaticPrincipal(UserAuth userAuth) {
+    public static void updateStaticPrincipal(User user) {
         SecurityContextHolder.getContext().setAuthentication(
-                authenticationFromUserAuth(userAuth, detailsFromUser(userAuth, false))
+                authenticationFromUserAuth(user, detailsFromUser(user, false))
         );
     }
 
-    public void updatePrincipal(UserAuth userAuth) {
+    public void updatePrincipal(User user) {
         // Update the principal for use throughout the app
-        SecurityContextHolder.getContext().setAuthentication(authenticationFromUser(userAuth));
+        SecurityContextHolder.getContext().setAuthentication(authenticationFromUser(user));
     }
 
-    public UserAuth getLoggedInUser() {
+    public User getLoggedInUser() {
         return userService.getLoggedInUser();
     }
 
     @Transactional
-    public void updateAvatar(UserAuth user, ImageService.Avatar avatar) {
+    public void updateAvatar(User user, ImageService.Avatar avatar) {
         user.getDetails().setAvatarUrl(avatar.getAvatarUrl());
         user.getDetails().setOriginalAvatarUrl(avatar.getOriginalAvatarUrl());
         user.getDetails().setAvatarUpdated(ZonedDateTime.now());

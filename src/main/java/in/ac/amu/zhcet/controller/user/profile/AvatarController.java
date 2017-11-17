@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.controller.user.profile;
 
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.upload.image.ImageService;
 import in.ac.amu.zhcet.service.upload.image.ImageUploadException;
 import in.ac.amu.zhcet.service.user.UserDetailService;
@@ -35,7 +35,7 @@ public class AvatarController {
     public String handleFileUpload(@RequestParam MultipartFile file, RedirectAttributes redirectAttributes) {
         String redirectUrl = "redirect:/profile";
 
-        UserAuth user = userDetailService.getLoggedInUser();
+        User user = userDetailService.getLoggedInUser();
 
         ZonedDateTime lastUpdated = user.getDetails().getAvatarUpdated();
         if (lastUpdated != null) {

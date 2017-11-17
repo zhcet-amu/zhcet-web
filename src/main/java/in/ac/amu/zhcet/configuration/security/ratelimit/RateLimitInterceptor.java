@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class RateLimitInterceptor extends HandlerInterceptorAdapter {
 
-    private static final int POST_LIMIT = 15;
-    private static final int GET_LIMIT = 150;
+    private static final int POST_LIMIT = 30;
+    private static final int GET_LIMIT = 300;
     private static final String POST_METHOD = "POST";
 
     private final RateLimitService rateLimitService;

@@ -3,11 +3,12 @@ package in.ac.amu.zhcet.service;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.user.Type;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
 import in.ac.amu.zhcet.data.repository.FacultyRepository;
 import in.ac.amu.zhcet.data.type.Roles;
+import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,10 +18,10 @@ import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional
 public class FacultyService {
 
     private final FacultyRepository facultyRepository;
@@ -66,20 +67,34 @@ public class FacultyService {
             facultyMember.getUser().setRoles(Collections.singleton(Roles.FACULTY));
 
         facultyMember.getUser().setPassword(passwordEncoder.encode(facultyMember.getUser().getPassword()));
+
+        userService.save(facultyMember.getUser());
+
         return facultyMember;
     }
 
-    @Transactional
-    public void register(Set<FacultyMember> facultyMembers) {
-        List<FacultyMember> memberList = facultyMembers.parallelStream()
-                .map(this::initializeFaculty)
-                .collect(Collectors.toList());
-        List<UserAuth> userAuths = memberList.parallelStream()
-                .map(FacultyMember::getUser)
-                .collect(Collectors.toList());
-        userService.save(userAuths);
-        facultyRepository.save(memberList);
-        log.info("Saved Faculty Members");
+    @Async
+    public void register(Set<FacultyMember> facultyMembers, RealTimeStatus status) {
+        long startTime = System.currentTimeMillis();
+        status.setContext("Faculty Registration");
+        status.setTotal(facultyMembers.size());
+
+        try {
+            final int[] completed = {1};
+            facultyMembers.stream()
+                    .map(this::initializeFaculty)
+                    .forEach(facultyMember -> {
+                        save(facultyMember);
+                        status.setCompleted(completed[0]++);
+                    });
+            float duration = (System.currentTimeMillis() - startTime)/1000f;
+            status.setDuration(duration);
+            status.setFinished(true);
+            log.info("Saved {} Faculty in {} s", facultyMembers.size(), duration);
+        } catch (Exception exception) {
+            log.error("Error while saving faculty", exception);
+            status.setFailed(true);
+        }
     }
 
     @Transactional

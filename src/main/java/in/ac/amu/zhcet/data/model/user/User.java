@@ -26,7 +26,7 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true, exclude="details")
 @ToString(exclude = "password")
-public class UserAuth extends BaseEntity {
+public class User extends BaseEntity {
 
     @Id
     @NotBlank

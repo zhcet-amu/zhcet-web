@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.data.model.notification;
 
 import in.ac.amu.zhcet.data.model.base.BaseIdEntity;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.NotBlank;
@@ -21,7 +21,7 @@ public class NotificationRecipient extends BaseIdEntity {
     private Notification notification;
     @NotBlank
     @OneToOne
-    private UserAuth recipient;
+    private User recipient;
     private boolean favorite;
     private boolean seen;
     private LocalDateTime readTime;

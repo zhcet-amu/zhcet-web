@@ -6,6 +6,8 @@ import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.dto.upload.FacultyUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.service.FacultyService;
+import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
+import in.ac.amu.zhcet.service.realtime.RealTimeStatusService;
 import in.ac.amu.zhcet.service.upload.csv.base.AbstractUploadService;
 import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
@@ -35,19 +37,22 @@ public class FacultyUploadService {
     private final FacultyService facultyService;
     private final AbstractUploadService<FacultyUpload, FacultyMember> uploadService;
     private final FileSystemStorageService systemStorageService;
-    private final static int PASS_LENGTH = 12;
+    private final RealTimeStatusService realTimeStatusService;
+    private final static int PASS_LENGTH = 16;
 
     @Autowired
     public FacultyUploadService(
             DepartmentRepository departmentRepository,
             FacultyService facultyService,
             AbstractUploadService<FacultyUpload, FacultyMember> uploadService,
-            FileSystemStorageService fileSystemStorageService
+            FileSystemStorageService fileSystemStorageService,
+            RealTimeStatusService realTimeStatusService
     ) {
         this.departmentRepository = departmentRepository;
         this.facultyService = facultyService;
         this.uploadService = uploadService;
         this.systemStorageService = fileSystemStorageService;
+        this.realTimeStatusService = realTimeStatusService;
     }
 
     public UploadResult<FacultyUpload> handleUpload(MultipartFile file) throws IOException {
@@ -99,13 +104,14 @@ public class FacultyUploadService {
         return facultyConfirmation;
     }
 
-    public String registerFaculty(Confirmation<FacultyMember> confirmation) throws IOException {
-        String filename = saveFile(confirmation);
-        long started = System.currentTimeMillis();
-        facultyService.register(confirmation.getData());
-        log.warn("Saved {} faculty members in {} ms", confirmation.getData().size(), System.currentTimeMillis() - started);
+    public RealTimeStatus registerFaculty(Confirmation<FacultyMember> confirmation) throws IOException {
+        RealTimeStatus status = realTimeStatusService.install();
 
-        return filename;
+        String filename = saveFile(confirmation);
+        status.setMeta(filename);
+        facultyService.register(confirmation.getData(), status);
+
+        return status;
     }
 
     private String saveFile(Confirmation<FacultyMember> confirmation) throws IOException {

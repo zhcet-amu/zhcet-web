@@ -1,7 +1,8 @@
 package in.ac.amu.zhcet.data.model.notification;
 
 import in.ac.amu.zhcet.data.model.base.BaseIdEntity;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.User;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -24,7 +25,7 @@ import java.util.List;
 public class Notification extends BaseIdEntity {
 
     @OneToOne
-    private UserAuth sender;
+    private User sender;
     @Size(max = 150)
     private String title;
     @NotBlank

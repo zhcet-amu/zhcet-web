@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.controller.user.profile;
 
 import in.ac.amu.zhcet.data.model.dto.PasswordChange;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +33,8 @@ public class PasswordChangeController {
     @GetMapping("/profile/change_password")
     public String changePassword(Model model) {
         String renderUrl = "user/change_password";
-        UserAuth userAuth = userService.getLoggedInUser();
-        if (!userAuth.isEmailVerified()) {
+        User user = userService.getLoggedInUser();
+        if (!user.isEmailVerified()) {
             log.warn("User not verified and tried to change the password!");
             model.addAttribute("error", "The user is not verified, and hence can't change the password");
             return renderUrl;
@@ -48,14 +48,14 @@ public class PasswordChangeController {
     public String savePassword(@Valid PasswordChange passwordChange, RedirectAttributes redirectAttributes) {
         String redirectUrl = "redirect:/profile/change_password";
 
-        UserAuth userAuth = userService.getLoggedInUser();
-        if (!userAuth.isEmailVerified()) {
+        User user = userService.getLoggedInUser();
+        if (!user.isEmailVerified()) {
             log.warn("!!POST!! User not verified and tried to change the password!");
             redirectAttributes.addFlashAttribute("error", "The user is not verified, and hence can't change the password");
             return redirectUrl;
         }
 
-        if (!passwordEncoder.matches(passwordChange.getOldPassword(), userAuth.getPassword())) {
+        if (!passwordEncoder.matches(passwordChange.getOldPassword(), user.getPassword())) {
             log.warn("Current password does not match");
             redirectAttributes.addFlashAttribute("pass_errors", "Current password does not match provided password");
             return redirectUrl;
@@ -73,7 +73,7 @@ public class PasswordChangeController {
             return redirectUrl;
         }
 
-        userService.changeUserPassword(userAuth, passwordChange.getNewPassword());
+        userService.changeUserPassword(user, passwordChange.getNewPassword());
         redirectAttributes.addFlashAttribute("password_change_success", "Password was changed successfully");
         return "redirect:/profile";
     }

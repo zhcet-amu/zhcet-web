@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.controller.dean;
 
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.service.user.UserDetailService;
@@ -84,7 +84,7 @@ public class RoleManagementController {
         facultyMember.getUser().setRoles(newRoles);
         facultyService.save(facultyMember);
 
-        UserAuth loggedIn = userDetailService.getLoggedInUser();
+        User loggedIn = userDetailService.getLoggedInUser();
         if (facultyMember.getUser().getUserId().equals(loggedIn.getUserId()))
             userDetailService.updatePrincipal(loggedIn);
 

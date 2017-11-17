@@ -40,7 +40,7 @@ public class SecurityUtils {
 
     public static String generatePassword(int length){
         char[] possibleCharacters =
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?"
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#_-?%&*"
                         .toCharArray();
         return RandomStringUtils.random(length,
                 0, possibleCharacters.length - 1,

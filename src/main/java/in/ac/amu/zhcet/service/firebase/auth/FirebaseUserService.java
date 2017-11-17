@@ -7,7 +7,8 @@ import com.google.firebase.auth.UserRecord;
 import in.ac.amu.zhcet.data.model.notification.ChannelType;
 import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.data.model.user.Type;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.firebase.FirebaseService;
 import in.ac.amu.zhcet.service.notification.NotificationSendingService;
 import in.ac.amu.zhcet.service.user.CustomUser;
@@ -63,26 +64,26 @@ public class FirebaseUserService {
      * - Updates profile picture from provider data
      *
      * Mail merge and avatar update is done only if the user account information is not already present
-     * @param userAuth User Account the data is to be merged in
+     * @param user User Account the data is to be merged in
      * @param token Decoded Firebase Token containing data
      */
     @Async
-    public void mergeFirebaseDetails(@Nullable UserAuth userAuth, @Nullable FirebaseToken token) {
-        if (userAuth == null || token == null || !firebaseService.canProceed())
+    public void mergeFirebaseDetails(@Nullable User user, @Nullable FirebaseToken token) {
+        if (user == null || token == null || !firebaseService.canProceed())
             return;
 
         if (token.getClaims() != null)
-            userAuth.getDetails().setFirebaseClaims(token.getClaims().toString());
+            user.getDetails().setFirebaseClaims(token.getClaims().toString());
 
-        mergeMail(userAuth, token);
+        mergeMail(user, token);
 
-        if (Strings.isNullOrEmpty(userAuth.getDetails().getAvatarUrl()) && !Strings.isNullOrEmpty(token.getPicture())) {
-            userAuth.getDetails().setOriginalAvatarUrl(token.getPicture());
-            userAuth.getDetails().setAvatarUrl(token.getPicture());
-            UserDetailService.updateStaticPrincipal(userAuth);
+        if (Strings.isNullOrEmpty(user.getDetails().getAvatarUrl()) && !Strings.isNullOrEmpty(token.getPicture())) {
+            user.getDetails().setOriginalAvatarUrl(token.getPicture());
+            user.getDetails().setAvatarUrl(token.getPicture());
+            UserDetailService.updateStaticPrincipal(user);
         }
 
-        userDetailService.getUserService().save(userAuth);
+        userDetailService.getUserService().save(user);
     }
 
     @Async
@@ -104,18 +105,18 @@ public class FirebaseUserService {
      *   Previous user is notified of this revocation
      * - If the provider email is not verified, but account email is null, provider email is saved.
      *   But verification status is set to false
-     * @param userAuth User
+     * @param user User
      * @param token Firebase Token containing email information
      */
-    private void mergeMail(UserAuth userAuth, FirebaseToken token) {
+    private void mergeMail(User user, FirebaseToken token) {
         if (Strings.isNullOrEmpty(token.getEmail()))
             return;
 
-        UserAuth duplicate = userDetailService.getUserService().getUserByEmail(token.getEmail());
+        User duplicate = userDetailService.getUserService().getUserByEmail(token.getEmail());
 
         // Exchange user emails if someone else has access to the email provided
-        if (duplicate != null && !duplicate.getUserId().equals(userAuth.getUserId())) {
-            log.warn("Another user account with same email exists, {} {} : {}", userAuth.getUserId(), duplicate.getUserId(), token.getEmail());
+        if (duplicate != null && !duplicate.getUserId().equals(user.getUserId())) {
+            log.warn("Another user account with same email exists, {} {} : {}", user.getUserId(), duplicate.getUserId(), token.getEmail());
 
             if (token.isEmailVerified()) {
                 log.warn("New user has verified email, unconditionally exchanging emails from previous user");
@@ -125,26 +126,26 @@ public class FirebaseUserService {
 
                 userDetailService.getUserService().save(duplicate);
                 log.info("Cleared email info from duplicate user, {}", userDetailService.getUserService().findById(duplicate.getUserId()).getEmail());
-                sendEmailChangeNotification(duplicate, userAuth, token.getEmail());
+                sendEmailChangeNotification(duplicate, user, token.getEmail());
             }
 
         }
 
-        if (userAuth.isEmailVerified() && userAuth.getEmail() != null && !userAuth.getEmail().equals(token.getEmail())) {
+        if (user.isEmailVerified() && user.getEmail() != null && !user.getEmail().equals(token.getEmail())) {
             log.info("User email is already verified, skipping mail merge");
             return;
         }
 
         if (token.isEmailVerified()) {
-            userAuth.setEmail(token.getEmail());
-            userAuth.setEmailVerified(true);
-        } else if (Strings.isNullOrEmpty(userAuth.getEmail())) {
-            userAuth.setEmail(token.getEmail());
-            userAuth.setEmailVerified(false);
+            user.setEmail(token.getEmail());
+            user.setEmailVerified(true);
+        } else if (Strings.isNullOrEmpty(user.getEmail())) {
+            user.setEmail(token.getEmail());
+            user.setEmailVerified(false);
         }
     }
 
-    private void sendEmailChangeNotification(UserAuth recipient, UserAuth claimant, String email) {
+    private void sendEmailChangeNotification(User recipient, User claimant, String email) {
         Notification notification = Notification.builder()
                 .automated(true)
                 .channelType(fromUser(recipient))
@@ -158,7 +159,7 @@ public class FirebaseUserService {
         notificationSendingService.sendNotification(notification);
     }
 
-    private ChannelType fromUser(UserAuth userAuth) {
-        return userAuth.getType() == Type.STUDENT ? ChannelType.STUDENT : ChannelType.FACULTY;
+    private ChannelType fromUser(User user) {
+        return user.getType() == Type.STUDENT ? ChannelType.STUDENT : ChannelType.FACULTY;
     }
 }

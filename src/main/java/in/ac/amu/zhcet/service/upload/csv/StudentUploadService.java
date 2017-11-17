@@ -6,6 +6,8 @@ import in.ac.amu.zhcet.data.model.dto.upload.StudentUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.service.StudentService;
+import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
+import in.ac.amu.zhcet.service.realtime.RealTimeStatusService;
 import in.ac.amu.zhcet.service.upload.csv.base.AbstractUploadService;
 import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
@@ -29,12 +31,14 @@ public class StudentUploadService {
 
     private final DepartmentRepository departmentRepository;
     private final StudentService studentService;
+    private final RealTimeStatusService realTimeStatusService;
     private final AbstractUploadService<StudentUpload, Student> uploadService;
 
     @Autowired
-    public StudentUploadService(DepartmentRepository departmentRepository, StudentService studentService, AbstractUploadService<StudentUpload, Student> uploadService) {
+    public StudentUploadService(DepartmentRepository departmentRepository, StudentService studentService, RealTimeStatusService realTimeStatusService, AbstractUploadService<StudentUpload, Student> uploadService) {
         this.departmentRepository = departmentRepository;
         this.studentService = studentService;
+        this.realTimeStatusService = realTimeStatusService;
         this.uploadService = uploadService;
     }
 
@@ -113,9 +117,10 @@ public class StudentUploadService {
         return studentConfirmation;
     }
 
-    public void registerStudents(Confirmation<Student> confirmation) {
-        long start = System.currentTimeMillis();
-        studentService.register(confirmation.getData());
-        log.warn("Saved {} students in {} ms", confirmation.getData().size(), System.currentTimeMillis() - start);
+    public RealTimeStatus registerStudents(Confirmation<Student> confirmation) {
+        RealTimeStatus status = realTimeStatusService.install();
+        studentService.register(confirmation.getData(), status);
+
+        return status;
     }
 }

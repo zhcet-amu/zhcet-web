@@ -1,13 +1,12 @@
 package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -20,7 +19,6 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class Student extends BaseEntity {
-    public static final String TYPE = "STUDENT";
 
     @Id
     private String enrolmentNumber;
@@ -35,13 +33,12 @@ public class Student extends BaseEntity {
     private Integer registrationYear = getYear();
     private Character status = 'A';
 
-    @Valid
     @NotNull
-    @PrimaryKeyJoinColumn
     @OneToOne(cascade = CascadeType.ALL)
-    private UserAuth user = new UserAuth();
+    @PrimaryKeyJoinColumn(name = "enrolment_number", referencedColumnName = "user_id")
+    private User user = new User();
 
-    public Student(UserAuth user, String facultyNumber) {
+    public Student(User user, String facultyNumber) {
         this.user = user;
         setFacultyNumber(facultyNumber);
     }

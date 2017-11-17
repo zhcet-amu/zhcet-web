@@ -2,11 +2,13 @@ package in.ac.amu.zhcet.service;
 
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.user.Type;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.data.type.Roles;
+import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,11 +18,11 @@ import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
 @Service
+@Transactional
 public class StudentService {
 
     private final UserService userService;
@@ -57,17 +59,13 @@ public class StudentService {
         return studentRepository.getBySectionAndStatus(section, 'A');
     }
 
-    public List<Student> getByIds(List<String> studentIds) {
-        return studentRepository.getByEnrolmentNumberIn(studentIds);
-    }
-
-    public static Stream<UserAuth> verifiedUsers(Stream<Student> students) {
+    private static Stream<User> verifiedUsers(Stream<Student> students) {
         return UserService.verifiedUsers(students.map(Student::getUser));
     }
 
     public static Stream<String> getEmails(Stream<Student> students) {
         return verifiedUsers(students)
-                .map(UserAuth::getEmail);
+                .map(User::getEmail);
     }
 
     public Student getByFacultyNumber(String userId) {
@@ -86,20 +84,33 @@ public class StudentService {
 
         student.getUser().setPassword(passwordEncoder.encode(student.getUser().getPassword()));
 
+        userService.save(student.getUser());
+
         return student;
     }
 
-    @Transactional
-    public void register(Set<Student> students) {
-        List<Student> studentList = students.parallelStream()
-                .map(this::initializeStudent)
-                .collect(Collectors.toList());
-        List<UserAuth> userAuths = studentList.parallelStream()
-                .map(Student::getUser)
-                .collect(Collectors.toList());
-        userService.save(userAuths);
-        studentRepository.save(studentList);
-        log.info("Saved Students");
+    @Async
+    public void register(Set<Student> students, RealTimeStatus status) {
+        long startTime = System.currentTimeMillis();
+        status.setContext("Student Registration");
+        status.setTotal(students.size());
+
+        try {
+            final int[] completed = {1};
+            students.stream()
+                    .map(this::initializeStudent)
+                    .forEach(student -> {
+                        save(student);
+                        status.setCompleted(completed[0]++);
+                    });
+            float duration = (System.currentTimeMillis() - startTime)/1000f;
+            status.setDuration(duration);
+            status.setFinished(true);
+            log.info("Saved {} Students in {} s", students.size(), duration);
+        } catch (Exception exception) {
+            log.error("Error while saving students", exception);
+            status.setFailed(true);
+        }
     }
 
     @Transactional

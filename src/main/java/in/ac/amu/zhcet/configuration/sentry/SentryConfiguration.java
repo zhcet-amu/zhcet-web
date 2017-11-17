@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.configuration.sentry;
 
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.UserService;
 import io.sentry.Sentry;
 import io.sentry.event.helper.EventBuilderHelper;
@@ -27,7 +28,7 @@ public class SentryConfiguration {
     @Autowired
     public SentryConfiguration(UserService userService, ModelMapper modelMapper) {
         EventBuilderHelper myEventBuilderHelper = eventBuilder -> {
-            UserAuth loggedInUser = userService.getLoggedInUser();
+            in.ac.amu.zhcet.data.model.user.User loggedInUser = userService.getLoggedInUser();
 
             if (loggedInUser != null) {
                 eventBuilder.withExtra("user", modelMapper.map(loggedInUser, User.class));

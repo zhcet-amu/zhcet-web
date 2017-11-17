@@ -1,7 +1,8 @@
 package in.ac.amu.zhcet.controller.user.profile;
 
 import in.ac.amu.zhcet.data.model.token.VerificationToken;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.user.auth.DuplicateEmailException;
 import in.ac.amu.zhcet.service.user.auth.EmailVerificationService;
@@ -56,7 +57,7 @@ public class EmailVerificationController {
 
     @PostMapping("/profile/confirm_email")
     public String registerEmail(RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        UserAuth user = userService.getLoggedInUser();
+        User user = userService.getLoggedInUser();
         String email = user.getEmail();
 
         if (Utils.isValidEmail(user.getEmail())) {

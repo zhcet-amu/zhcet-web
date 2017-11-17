@@ -1,7 +1,8 @@
 package in.ac.amu.zhcet.data.model.token;
 
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class VerificationToken extends BaseEntity {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
-    private UserAuth user;
+    private User user;
 
     @NotNull
     private Date expiry;
@@ -44,8 +45,8 @@ public class VerificationToken extends BaseEntity {
         return new Date(cal.getTime().getTime());
     }
 
-    public VerificationToken(UserAuth userAuth, String token, String email) {
-        this.user = userAuth;
+    public VerificationToken(User user, String token, String email) {
+        this.user = user;
         this.token = token;
         this.email = email;
     }

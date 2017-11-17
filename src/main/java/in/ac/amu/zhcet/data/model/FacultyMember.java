@@ -1,7 +1,8 @@
 package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.User;
 import lombok.*;
 import org.hibernate.envers.Audited;
 
@@ -18,7 +19,6 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class FacultyMember extends BaseEntity {
-    public static final String TYPE = "FACULTY";
 
     @Id
     private String facultyId;
@@ -27,12 +27,12 @@ public class FacultyMember extends BaseEntity {
     @NotNull
     @PrimaryKeyJoinColumn
     @OneToOne(cascade = CascadeType.ALL)
-    private UserAuth user = new UserAuth();
+    private User user = new User();
 
     private boolean working = true;
     private String designation;
 
-    public FacultyMember(UserAuth user) {
+    public FacultyMember(User user) {
         this.user = user;
         this.facultyId = user.getUserId();
     }

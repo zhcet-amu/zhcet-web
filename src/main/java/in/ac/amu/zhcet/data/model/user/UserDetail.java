@@ -28,7 +28,7 @@ public class UserDetail extends BaseEntity {
     @OneToOne
     @PrimaryKeyJoinColumn
     @JsonIgnore
-    UserAuth userAuth;
+    User user;
 
     private String avatarUrl;
     private String originalAvatarUrl;

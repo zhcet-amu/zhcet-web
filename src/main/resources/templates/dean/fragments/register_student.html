@@ -1,5 +1,6 @@
 <div xmlns:th="http://www.thymeleaf.org" lang="en">
     <div class="card" th:fragment="register_student">
+        <div id="task_id_student" th:text="${task_id_student}" hidden></div>
         <div class="card-header">
             <h4 class="card-title">Register Students</h4>
             <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
@@ -20,7 +21,15 @@
                         <div>Download the <a th:href="@{/csv/student_format.csv}">student format</a></div>
                         <br/>
                         <div th:replace="fragments/layout :: uploader(id = 'student_upload')"></div>
-                        <div th:replace="fragments/layout :: success(condition = ${students_registered}, success_title = 'Registered!', message = 'Students were successfully registered')"></div>
+                        <div id="student-progress" style="display: none">
+                            <div class="md-progress">
+                                <div class="determinate" style="width: 0%"></div>
+                            </div>
+                            <small class="text-muted">
+                                <span class="completed">0</span>/<span class="total">0</span>
+                                <span class="percentage float-xs-right">0%</span>
+                            </small>
+                        </div>
                         <div th:replace="fragments/layout :: success(condition = ${students_success}, success_title = 'Uploaded!', message = 'Your file was correctly uploaded. Now, confirm the prompt to register the students')"></div>
                         <div th:replace="fragments/layout :: error(condition = ${student_unknown_error}, error_title = 'Unknown Error!', error = 'We don\'t know what happened. Please contact site admin')"></div>
                         <div th:each="error : ${students_errors}">
@@ -120,6 +129,17 @@
                 $('#studentTable').dataTable({
                     scrollY:        true,
                     scrollCollapse: true
+                });
+
+                $('#student-progress').initStatusProgress({
+                    taskId: $('#task_id_student').text(),
+                    finished: function (result) {
+                        toastr.success('Student Registration Complete in ' + result.duration + ' s')
+                    },
+                    failed: function (result) {
+                        console.log(result);
+                        toastr.error('Student Registration Failed');
+                    }
                 });
             });
         }());

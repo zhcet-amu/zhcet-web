@@ -2,7 +2,8 @@ package in.ac.amu.zhcet.service.notification;
 
 import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.data.model.notification.NotificationRecipient;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.firebase.messaging.FirebaseMessagingService;
 import in.ac.amu.zhcet.service.email.EmailSendingService;
 import lombok.extern.slf4j.Slf4j;
@@ -100,12 +101,12 @@ public class NotificationSendingService {
                 userAuth -> sendUserNotification(notification, userAuth));
     }
 
-    private void sendUserNotification(Notification notification, UserAuth userAuth) {
+    private void sendUserNotification(Notification notification, User user) {
         NotificationRecipient notificationRecipient = new NotificationRecipient();
         notificationRecipient.setNotification(notification);
-        notificationRecipient.setRecipient(userAuth);
+        notificationRecipient.setRecipient(user);
         cachedNotificationService.save(notificationRecipient);
-        cachedNotificationService.resetUnreadCount(userAuth.getUserId());
+        cachedNotificationService.resetUnreadCount(user.getUserId());
         emailSendingService.sendEmailForNotification(notificationRecipient);
         firebaseMessagingService.sendMessage(notificationRecipient);
     }

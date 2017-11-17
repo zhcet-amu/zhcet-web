@@ -1,7 +1,8 @@
 package in.ac.amu.zhcet.service.notification;
 
 import in.ac.amu.zhcet.data.model.*;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.FacultyService;
@@ -30,12 +31,12 @@ class UserExtractor {
         this.facultyService = facultyService;
     }
 
-    private static void sendToCourseRegistrations(List<CourseRegistration> courseRegistrations, Consumer<UserAuth> consumer) {
+    private static void sendToCourseRegistrations(List<CourseRegistration> courseRegistrations, Consumer<User> consumer) {
         for (CourseRegistration courseRegistration : courseRegistrations)
             consumer.accept(courseRegistration.getStudent().getUser());
     }
 
-    void fromFloatedCourse(String floatedCourseId, Consumer<UserAuth> consumer) {
+    void fromFloatedCourse(String floatedCourseId, Consumer<User> consumer) {
         FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(floatedCourseId);
 
         if (floatedCourse == null) {
@@ -47,14 +48,14 @@ class UserExtractor {
         sendToCourseRegistrations(courseRegistrations, consumer);
     }
 
-    void fromSection(String section, Consumer<UserAuth> consumer) {
+    void fromSection(String section, Consumer<User> consumer) {
         List<Student> students = studentService.getBySection(section);
 
         for (Student student : students)
             consumer.accept(student.getUser());
     }
 
-    void fromStudentId(String studentId, Consumer<UserAuth> consumer) {
+    void fromStudentId(String studentId, Consumer<User> consumer) {
         Student recipient = studentService.getByEnrolmentNumber(studentId);
         if (recipient == null)
             recipient = studentService.getByFacultyNumber(studentId);
@@ -67,7 +68,7 @@ class UserExtractor {
         consumer.accept(recipient.getUser());
     }
 
-    void fromFacultyId(String facultyId, Consumer<UserAuth> consumer) {
+    void fromFacultyId(String facultyId, Consumer<User> consumer) {
         FacultyMember recipient = facultyService.getById(facultyId);
 
         if (recipient == null) {
@@ -78,7 +79,7 @@ class UserExtractor {
         consumer.accept(recipient.getUser());
     }
 
-    void fromTaughtCourse(String courseId, String inChargeId, Consumer<UserAuth> consumer) {
+    void fromTaughtCourse(String courseId, String inChargeId, Consumer<User> consumer) {
         FacultyMember facultyMember = facultyService.getById(inChargeId);
 
         if (facultyMember == null) {

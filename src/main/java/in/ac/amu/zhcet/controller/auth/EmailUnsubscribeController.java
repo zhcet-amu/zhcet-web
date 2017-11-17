@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.controller.auth;
 
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +27,11 @@ public class EmailUnsubscribeController {
         if (!SecurityUtils.hashMatches(email, conf))
             return "Invalid Entry";
 
-        UserAuth userAuth = userService.getUserByEmail(email);
-        if (userAuth == null)
+        User user = userService.getUserByEmail(email);
+        if (user == null)
             return "No such user";
 
-        userService.unsubscribeEmail(userAuth, true);
+        userService.unsubscribeEmail(user, true);
         return "Unsubscribed";
     }
 

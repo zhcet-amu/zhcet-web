@@ -1,7 +1,8 @@
 package in.ac.amu.zhcet.service.user.auth;
 
 import in.ac.amu.zhcet.data.model.token.VerificationToken;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.data.repository.VerificationTokenRepository;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.email.LinkMailService;
@@ -29,7 +30,7 @@ public class EmailVerificationService {
     }
 
     private VerificationToken createVerificationToken(String email) {
-        UserAuth user = userService.getLoggedInUser();
+        User user = userService.getLoggedInUser();
         String token = UUID.randomUUID().toString();
 
         VerificationToken verificationToken = new VerificationToken(user, token, email);
@@ -39,8 +40,8 @@ public class EmailVerificationService {
     }
 
     public VerificationToken generate(String email) {
-        UserAuth userAuth = userService.getUserByEmail(email);
-        if (userAuth != null && !userAuth.getEmail().equals(userService.getLoggedInUser().getEmail()))
+        User user = userService.getUserByEmail(email);
+        if (user != null && !user.getEmail().equals(userService.getLoggedInUser().getEmail()))
             throw new DuplicateEmailException(email);
 
         return createVerificationToken(email);
@@ -68,21 +69,21 @@ public class EmailVerificationService {
         verificationToken.setUsed(true);
         verificationTokenRepository.save(verificationToken);
 
-        UserAuth userAuth = verificationToken.getUser();
-        userAuth.setEmail(verificationToken.getEmail());
-        userAuth.setEmailVerified(true);
-        userService.save(userAuth);
+        User user = verificationToken.getUser();
+        user.setEmail(verificationToken.getEmail());
+        user.setEmailVerified(true);
+        userService.save(user);
     }
 
-    private LinkMessage getPayLoad(String recipientEmail, UserAuth userAuth, String url) {
+    private LinkMessage getPayLoad(String recipientEmail, User user, String url) {
         return LinkMessage.builder()
                 .recipientEmail(recipientEmail)
                 .title("Email Verification")
                 .subject("ZHCET Email Verification")
-                .name(userAuth.getName())
+                .name(user.getName())
                 .relativeLink(url)
                 .linkText("Verify Account")
-                .preMessage("You need to verify your email for user ID: " + userAuth.getUserId() +
+                .preMessage("You need to verify your email for user ID: " + user.getUserId() +
                         "<br>Please click the button below to verify your email and account")
                 .postMessage("If you did not request the password reset, please contact website admin")
                 .build();

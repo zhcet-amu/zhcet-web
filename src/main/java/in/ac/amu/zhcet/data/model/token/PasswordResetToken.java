@@ -1,7 +1,8 @@
 package in.ac.amu.zhcet.data.model.token;
 
 import in.ac.amu.zhcet.data.model.base.BaseIdEntity;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,9 +21,9 @@ public class PasswordResetToken extends BaseIdEntity{
     @NotNull
     private String token;
 
-    @OneToOne(targetEntity = UserAuth.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
-    private UserAuth userAuth;
+    private User user;
 
     @NotNull
     private Date expiry;

@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.service.firebase.auth;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.firebase.FirebaseService;
 import in.ac.amu.zhcet.service.user.Auditor;
@@ -96,28 +96,28 @@ public class FirebaseAuthService {
         try {
             FirebaseToken decodedToken = getToken(token);
             log.info(decodedToken.getClaims().toString());
-            UserAuth user = userService.getLoggedInUser();
+            User user = userService.getLoggedInUser();
             firebaseUserService.mergeFirebaseDetails(user, decodedToken);
         } catch (ExecutionException | InterruptedException e) {
             log.error("Error linking data", e);
         }
     }
 
-    private void setUserAuthentication(UserAuth userAuth) {
+    private void setUserAuthentication(User user) {
         SecurityContextHolder
                 .getContext()
-                .setAuthentication(userDetailService.authenticationFromUser(userAuth));
+                .setAuthentication(userDetailService.authenticationFromUser(user));
 
-        log.info("Logged in user using Social Login: {}", userAuth.getUserId());
+        log.info("Logged in user using Social Login: {}", user.getUserId());
     }
 
-    private UserAuth fromFirebaseToken(FirebaseToken token) {
+    private User fromFirebaseToken(FirebaseToken token) {
         if (token == null || token.getUid() == null)
             return null;
 
-        UserAuth userAuth = userService.findById(token.getUid());
-        if (userAuth != null) {
-            return userAuth;
+        User user = userService.findById(token.getUid());
+        if (user != null) {
+            return user;
         }
 
         if (token.getEmail() == null)
@@ -130,15 +130,15 @@ public class FirebaseAuthService {
     }
 
     private boolean authenticate(FirebaseToken token) {
-        UserAuth userAuth = fromFirebaseToken(token);
+        User user = fromFirebaseToken(token);
 
-        if (userAuth == null) {
+        if (user == null) {
             log.warn("Firebase Social Login Failed {}", token.getUid());
             return false;
         }
 
-        setUserAuthentication(userAuth);
-        firebaseUserService.mergeFirebaseDetails(userAuth, token);
+        setUserAuthentication(user);
+        firebaseUserService.mergeFirebaseDetails(user, token);
         return true;
     }
 

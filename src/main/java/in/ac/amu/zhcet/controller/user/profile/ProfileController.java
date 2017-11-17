@@ -3,7 +3,7 @@ package in.ac.amu.zhcet.controller.user.profile;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.user.Type;
-import in.ac.amu.zhcet.data.model.user.UserAuth;
+import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.data.model.user.UserDetail;
 import in.ac.amu.zhcet.data.type.Gender;
 import in.ac.amu.zhcet.service.FacultyService;
@@ -43,18 +43,18 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String profile(Model model, ServletRequest request) {
-        UserAuth userAuth = userService.getLoggedInUser();
-        model.addAttribute("user", userAuth);
+        User user = userService.getLoggedInUser();
+        model.addAttribute("user", user);
 
         if (!model.containsAttribute("user_details"))
-            model.addAttribute("user_details", userAuth.getDetails());
+            model.addAttribute("user_details", user.getDetails());
 
         model.addAttribute("page_title", "Profile");
-        model.addAttribute("page_subtitle", "Profile Settings for " + userAuth.getName());
+        model.addAttribute("page_subtitle", "Profile Settings for " + user.getName());
         model.addAttribute("page_description", "Manage Profile Details and Information");
         model.addAttribute("genders", Gender.values());
 
-        if (userAuth.getType().equals(Type.STUDENT)) {
+        if (user.getType().equals(Type.STUDENT)) {
             Student student = studentService.getLoggedInStudent();
             model.addAttribute("student", student);
         } else {
@@ -63,7 +63,7 @@ public class ProfileController {
         }
 
         if (request.getParameterMap().containsKey("refresh"))
-            userDetailService.updatePrincipal(userAuth);
+            userDetailService.updatePrincipal(user);
 
         return "user/profile";
     }
