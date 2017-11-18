@@ -24,7 +24,7 @@ public class EmailSendingService {
 
     @Async
     public void sendEmailForNotification(NotificationRecipient notificationRecipient) {
-        if (!notificationRecipient.getRecipient().isEmailVerified())
+        if (!notificationRecipient.getRecipient().isEmailVerified() || notificationRecipient.getRecipient().isEmailUnsubscribed())
             return;
 
         LinkMessage payLoad = getPayLoad(notificationRecipient.getNotification());

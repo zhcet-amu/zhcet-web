@@ -49,6 +49,7 @@ public class NotificationManagementController {
         model.addAttribute("page_subtitle", "Notification Manager");
         model.addAttribute("page_description", "View notification receipt");
 
+        notificationManagementService.setSeenCount(notification);
         model.addAttribute("notification", notification);
 
         return "faculty/notification_report";

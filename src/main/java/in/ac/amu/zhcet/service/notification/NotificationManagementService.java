@@ -32,9 +32,11 @@ public class NotificationManagementService {
     }
 
     public void setInformation(List<Notification> notifications) {
-        for (Notification notification : notifications) {
-            notification.setSeenCount(getSeenCount(notification));
-        }
+        notifications.forEach(this::setSeenCount);
+    }
+
+    public void setSeenCount(Notification notification) {
+        notification.setSeenCount(getSeenCount(notification));
     }
 
     private int getSeenCount(Notification notification) {
