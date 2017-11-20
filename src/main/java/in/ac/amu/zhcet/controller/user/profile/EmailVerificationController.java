@@ -2,7 +2,6 @@ package in.ac.amu.zhcet.controller.user.profile;
 
 import in.ac.amu.zhcet.data.model.token.VerificationToken;
 import in.ac.amu.zhcet.data.model.user.User;
-import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.user.auth.DuplicateEmailException;
 import in.ac.amu.zhcet.service.user.auth.EmailVerificationService;

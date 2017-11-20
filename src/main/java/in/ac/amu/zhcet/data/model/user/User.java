@@ -55,7 +55,7 @@ public class User extends BaseEntity {
     private String roles;
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private UserType type;
 
     @Valid
     @NotNull

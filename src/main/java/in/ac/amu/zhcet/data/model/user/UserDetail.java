@@ -19,8 +19,8 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = "userAuth")
-@ToString(exclude = "userAuth")
+@EqualsAndHashCode(callSuper = true, exclude = "user")
+@ToString(exclude = "user")
 public class UserDetail extends BaseEntity {
     @Id
     private String userId;

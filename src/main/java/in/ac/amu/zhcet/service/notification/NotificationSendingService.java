@@ -3,9 +3,8 @@ package in.ac.amu.zhcet.service.notification;
 import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.data.model.notification.NotificationRecipient;
 import in.ac.amu.zhcet.data.model.user.User;
-import in.ac.amu.zhcet.data.model.user.User;
-import in.ac.amu.zhcet.service.firebase.messaging.FirebaseMessagingService;
 import in.ac.amu.zhcet.service.email.EmailSendingService;
+import in.ac.amu.zhcet.service.firebase.messaging.FirebaseMessagingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -78,27 +77,27 @@ public class NotificationSendingService {
 
     private void sendToTaughtCourse(Notification notification) {
         userExtractor.fromTaughtCourse(notification.getRecipientChannel(), notification.getSender().getUserId(),
-                userAuth -> sendUserNotification(notification, userAuth));
+                user -> sendUserNotification(notification, user));
     }
 
     private void sendToFaculty(Notification notification) {
         userExtractor.fromFacultyId(notification.getRecipientChannel(),
-                userAuth -> sendUserNotification(notification, userAuth));
+                user -> sendUserNotification(notification, user));
     }
 
     private void sendToSection(Notification notification) {
         userExtractor.fromSection(notification.getRecipientChannel(),
-                userAuth -> sendUserNotification(notification, userAuth));
+                user -> sendUserNotification(notification, user));
     }
 
     private void sendToCourse(Notification notification) {
         userExtractor.fromFloatedCourse(notification.getRecipientChannel(),
-                userAuth -> sendUserNotification(notification, userAuth));
+                user -> sendUserNotification(notification, user));
     }
 
     private void sendToStudent(Notification notification) {
         userExtractor.fromStudentId(notification.getRecipientChannel(),
-                userAuth -> sendUserNotification(notification, userAuth));
+                user -> sendUserNotification(notification, user));
     }
 
     private void sendUserNotification(Notification notification, User user) {

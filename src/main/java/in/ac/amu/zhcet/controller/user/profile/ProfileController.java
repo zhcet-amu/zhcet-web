@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.controller.user.profile;
 
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.user.Type;
+import in.ac.amu.zhcet.data.model.user.UserType;
 import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.data.model.user.UserDetail;
 import in.ac.amu.zhcet.data.type.Gender;
@@ -54,7 +54,7 @@ public class ProfileController {
         model.addAttribute("page_description", "Manage Profile Details and Information");
         model.addAttribute("genders", Gender.values());
 
-        if (user.getType().equals(Type.STUDENT)) {
+        if (user.getType().equals(UserType.STUDENT)) {
             Student student = studentService.getLoggedInStudent();
             model.addAttribute("student", student);
         } else {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en">
 <head th:fragment="head">
     <title th:text="${page_title}">Home</title>
     <meta charset="UTF-8"/>
@@ -79,6 +79,14 @@
                 <span th:if="${path.link == null || path.active}" th:text="${path.title}"></span>
             </li>
         </ol>
+    </div>
+    <div th:unless="${hide_warnings}" sec:authorize="isAuthenticated()" class="content-header-lead col-xs-12">
+        <div sec:authorize="!principal.emailVerified" class="alert alert-icon-left alert-arrow-left alert-danger bg-danger" role="alert">
+            <strong>Verify Email!</strong> Your email is not verified, and hence we can't allow allow you to do many things including changing your password
+        </div>
+        <div sec:authorize="!principal.passwordChanged" class="alert alert-icon-left alert-arrow-left alert-warning bg-orange" role="alert">
+            <strong>Password Unchanged!</strong> You have not changed your password, and it may lead to your account being hacked!
+        </div>
     </div>
 </div>
 

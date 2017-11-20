@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.service;
 
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.user.Type;
+import in.ac.amu.zhcet.data.model.user.UserType;
 import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.data.type.Roles;
@@ -73,7 +73,7 @@ public class StudentService {
     }
 
     private Student initializeStudent(Student student) {
-        student.getUser().setType(Type.STUDENT);
+        student.getUser().setType(UserType.STUDENT);
 
         if (student.getUser().getUserId() == null)
             student.getUser().setUserId(student.getEnrolmentNumber());

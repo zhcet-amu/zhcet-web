@@ -6,8 +6,7 @@ import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import in.ac.amu.zhcet.data.model.notification.ChannelType;
 import in.ac.amu.zhcet.data.model.notification.Notification;
-import in.ac.amu.zhcet.data.model.user.Type;
-import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.UserType;
 import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.firebase.FirebaseService;
 import in.ac.amu.zhcet.service.notification.NotificationSendingService;
@@ -160,6 +159,6 @@ public class FirebaseUserService {
     }
 
     private ChannelType fromUser(User user) {
-        return user.getType() == Type.STUDENT ? ChannelType.STUDENT : ChannelType.FACULTY;
+        return user.getType() == UserType.STUDENT ? ChannelType.STUDENT : ChannelType.FACULTY;
     }
 }

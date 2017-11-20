@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.service;
 
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.data.model.user.Type;
+import in.ac.amu.zhcet.data.model.user.UserType;
 import in.ac.amu.zhcet.data.repository.FacultyRepository;
 import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
@@ -59,7 +59,7 @@ public class FacultyService {
     }
 
     private FacultyMember initializeFaculty(FacultyMember facultyMember) {
-        facultyMember.getUser().setType(Type.FACULTY);
+        facultyMember.getUser().setType(UserType.FACULTY);
 
         if (facultyMember.getUser().getUserId() == null)
             facultyMember.getUser().setUserId(facultyMember.getFacultyId());

@@ -2,11 +2,11 @@ package in.ac.amu.zhcet.service;
 
 import com.google.common.base.Strings;
 import in.ac.amu.zhcet.data.model.user.User;
-import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.data.model.user.UserDetail;
 import in.ac.amu.zhcet.data.repository.UserDetailRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import in.ac.amu.zhcet.data.type.Roles;
+import in.ac.amu.zhcet.service.user.UserDetailService;
 import in.ac.amu.zhcet.utils.Utils;
 import in.ac.amu.zhcet.utils.exception.DuplicateException;
 import lombok.extern.slf4j.Slf4j;
@@ -113,7 +113,7 @@ public class UserService {
 
     public static Stream<User> verifiedUsers(Stream<User> users) {
         return users
-                .filter(userAuth -> userAuth.isEmailVerified() && !userAuth.isEmailUnsubscribed());
+                .filter(user -> user.isEmailVerified() && !user.isEmailUnsubscribed());
     }
 
     @Transactional
@@ -133,6 +133,7 @@ public class UserService {
     public void changeUserPassword(User user, String password) {
         user.setPassword(passwordEncoder.encode(password));
         user.setPasswordChanged(true);
+        UserDetailService.updateStaticPrincipal(user);
         userRepository.save(user);
     }
 

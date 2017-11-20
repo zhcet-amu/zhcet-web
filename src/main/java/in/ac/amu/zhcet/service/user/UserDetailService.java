@@ -1,7 +1,6 @@
 package in.ac.amu.zhcet.service.user;
 
 import in.ac.amu.zhcet.data.model.user.User;
-import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.security.login.LoginAttemptService;
 import in.ac.amu.zhcet.service.security.permission.PermissionManager;
@@ -47,7 +46,9 @@ public class UserDetailService implements UserDetailsService {
                 .name(user.getName())
                 .avatar(user.getDetails().getAvatarUrl())
                 .type(user.getType())
-                .department(user.getDepartment());
+                .department(user.getDepartment())
+                .emailVerified(user.isEmailVerified())
+                .passwordChanged(user.isPasswordChanged());
     }
 
     private UserDetails detailsFromUserAuth(User user) {

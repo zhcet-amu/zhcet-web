@@ -11,7 +11,7 @@
     <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
     <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.user.User"*/-->
 
-    <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
+    <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2" th:with="hide_warnings = true">
         <div th:replace="fragments/layout :: toolbar"></div>
         <div th:replace="user/fragments/button_panel"></div>
         <div th:replace="user/fragments/password_notice"></div>

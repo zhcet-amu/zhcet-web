@@ -46,7 +46,7 @@
                                         <td th:with="attended = ${attendance.attended}" th:text="${attended}"></td>
                                         <td th:with="delivered = ${attendance.delivered}" th:text="${delivered}"></td>
                                         <td th:text="${attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent, 0, 2)}+'%'"></td>
-                                        <td th:text="${attendance.updatedAt != null ? #temporals.format(attendance.updatedAt, 'hh:mm a | EEE, MMM d, yy') : ''}"></td>
+                                        <td><small th:text="${attendance.updatedAt != null ? #temporals.format(attendance.updatedAt, 'hh:mm a | EEE, MMM d, yy') : ''}"></small></td>
                                     </tr>
                                 </th:block>
                                 </tbody>
