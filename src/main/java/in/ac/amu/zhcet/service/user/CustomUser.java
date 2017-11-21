@@ -15,6 +15,7 @@ public class CustomUser extends User {
 
     private String name;
     private String avatar;
+    private String email;
     private UserType type;
     private Department department;
     private boolean emailVerified;
@@ -31,6 +32,11 @@ public class CustomUser extends User {
 
     public CustomUser avatar(String avatar) {
         setAvatar(avatar);
+        return this;
+    }
+
+    public CustomUser email(String email) {
+        setEmail(email);
         return this;
     }
 

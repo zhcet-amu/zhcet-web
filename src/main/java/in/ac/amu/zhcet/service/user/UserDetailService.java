@@ -45,6 +45,7 @@ public class UserDetailService implements UserDetailsService {
                 PermissionManager.authorities(user.getRoles()))
                 .name(user.getName())
                 .avatar(user.getDetails().getAvatarUrl())
+                .email(user.getEmail())
                 .type(user.getType())
                 .department(user.getDepartment())
                 .emailVerified(user.isEmailVerified())

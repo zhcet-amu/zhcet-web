@@ -16,6 +16,7 @@ import javax.validation.constraints.Size;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -73,10 +74,12 @@ public class User extends BaseEntity {
     }
 
     public List<String> getRoles() {
-        if (roles != null)
-            return Arrays.asList(roles.split(","));
+        if (roles == null)
+            return null;
 
-        return null;
+        return Arrays.stream(roles.split(","))
+                .map(String::trim)
+                .collect(Collectors.toList());
     }
 
     @PrePersist

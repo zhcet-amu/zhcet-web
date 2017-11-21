@@ -29,8 +29,11 @@ public class LoggedInUsers implements Endpoint<List<LoggedInUsers.LoggedUser>> {
         private String username;
         private String name;
         private String avatar;
+        private String email;
         private String type;
         private String departmentName;
+        private boolean emailVerified;
+        private boolean passwordChanged;
         private boolean accountNonExpired;
         private boolean accountNonLocked;
         private boolean credentialsNonExpired;
