@@ -14,7 +14,7 @@
         </div>
         <div class="card-body collapse in">
             <div class="card-block">
-                <form class="mui-form" enctype="multipart/form-data" th:action="@{/dean/register_faculty}"
+                <form class="mui-form" enctype="multipart/form-data" th:action="@{/dean/faculty/register}"
                       method="post">
                     <div class="form-body">
                         <h4 class="form-section"><i class="material-icons md-24 md-dark">import_contacts</i>Faculty CSV
@@ -40,14 +40,14 @@
                         <div th:replace="fragments/layout :: success(condition = ${file_saved}, success_title = 'Saved!', message = 'Password file was successfully saved! Click button below to download the file')"></div>
                         <div th:if="${file_saved}" class="row">
                             <div class="col-xs-12 col-md-3">
-                                <a th:href="|@{/dean/download_password(filename=${file_saved})}|"
+                                <a th:href="|@{/dean/password/download(filename=${file_saved})}|"
                                    target="_blank">
                                     <button type="button" class="btn btn-primary">Download</button>
                                 </a>
                             </div>
                             <div class="col-xs-12 col-md-3" style="margin-right: 20px; margin-bottom: 5px;">
                                 <button type="button" class="btn"
-                                        th:attr="data-clipboard-text=|${@configurationService.getBaseUrl(#httpServletRequest.getRequestURL())}@{/dean/download_password(filename=${file_saved})}">
+                                        th:attr="data-clipboard-text=|${@configurationService.getBaseUrl(#httpServletRequest.getRequestURL())}@{/dean/password/download(filename=${file_saved})}">
                                     Copy Link
                                 </button>
                             </div>
@@ -104,11 +104,11 @@
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <form class="form" th:action="@{/dean/clear_session_faculty}" method="post"
+                            <form class="form" th:action="@{/dean/faculty/register/session/clear}" method="post"
                                   style="display: inline">
                                 <button type="submit" class="btn btn-default">Clear</button>
                             </form>
-                            <form class="form" th:action="@{/dean/register_faculty_confirmed}" method="post"
+                            <form class="form" th:action="@{/dean/faculty/register/confirm}" method="post"
                                   style="display: inline">
                                 <button th:if="${confirmRegistration.errors.isEmpty()}" type="submit"
                                         class="btn btn-primary">Register

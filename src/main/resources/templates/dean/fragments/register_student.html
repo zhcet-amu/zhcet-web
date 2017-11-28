@@ -14,7 +14,7 @@
         </div>
         <div class="card-body collapse in">
             <div class="card-block">
-                <form class="mui-form" enctype="multipart/form-data" th:action="@{/dean/register_students}"
+                <form class="mui-form" enctype="multipart/form-data" th:action="@{/dean/students/register}"
                       method="post">
                     <div class="form-body">
                         <h4 class="form-section"><i class="material-icons md-24 md-dark">book</i>Student CSV</h4>
@@ -106,11 +106,11 @@
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <form class="form" th:action="@{/dean/clear_session_students}" method="post"
+                            <form class="form" th:action="@{/dean/students/register/session/clear}" method="post"
                                   style="display: inline">
                                 <button type="submit" class="btn btn-default">Clear</button>
                             </form>
-                            <form class="form" th:action="@{/dean/register_students_confirmed}" method="post"
+                            <form class="form" th:action="@{/dean/students/register/confirm}" method="post"
                                   style="display: inline">
                                 <button th:if="${confirmRegistration.errors.isEmpty()}" type="submit"
                                         class="btn btn-primary">Register

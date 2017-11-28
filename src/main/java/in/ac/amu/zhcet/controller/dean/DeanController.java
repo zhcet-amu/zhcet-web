@@ -17,7 +17,6 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Slf4j
 @Controller
 public class DeanController {
@@ -45,7 +44,7 @@ public class DeanController {
         return "dean/admin";
     }
 
-    @PostMapping("/dean/add_department")
+    @PostMapping("/dean/departments/add")
     public String addDepartment(@Valid Department department, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {

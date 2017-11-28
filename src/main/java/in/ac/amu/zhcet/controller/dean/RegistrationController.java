@@ -44,7 +44,7 @@ public class RegistrationController {
         this.systemStorageService = systemStorageService;
     }
 
-    @PostMapping("/dean/register_students")
+    @PostMapping("/dean/students/register")
     public String uploadFile(RedirectAttributes attributes, @RequestParam MultipartFile file, HttpSession session, WebRequest webRequest) {
         try {
             UploadResult<StudentUpload> result = studentUploadService.handleUpload(file);
@@ -65,7 +65,7 @@ public class RegistrationController {
         return "redirect:/dean";
     }
 
-    @PostMapping("/dean/register_students_confirmed")
+    @PostMapping("/dean/students/register/confirm")
     public String uploadStudents(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
         Confirmation<Student> confirmation = (Confirmation<Student>) session.getAttribute("confirmStudentRegistration");
 
@@ -87,7 +87,7 @@ public class RegistrationController {
         return "redirect:/dean";
     }
 
-    @PostMapping("/dean/register_faculty")
+    @PostMapping("/dean/faculty/register")
     public String uploadFacultyFile(RedirectAttributes attributes, @RequestParam MultipartFile file, HttpSession session, WebRequest webRequest) throws IOException {
         try {
             UploadResult<FacultyUpload> result = facultyUploadService.handleUpload(file);
@@ -107,7 +107,7 @@ public class RegistrationController {
         return "redirect:/dean";
     }
 
-    @PostMapping("/dean/register_faculty_confirmed")
+    @PostMapping("/dean/faculty/register/confirm")
     public String uploadFaculty(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
         Confirmation<FacultyMember> confirmation = (Confirmation<FacultyMember>) session.getAttribute("confirmFacultyRegistration");
 
@@ -133,21 +133,21 @@ public class RegistrationController {
         return "redirect:/dean";
     }
 
-    @PostMapping("/dean/clear_session_students")
+    @PostMapping("/dean/students/register/session/clear")
     public String clearStudentsRegistrationSession(WebRequest webRequest) {
         webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
 
         return "redirect:/dean";
     }
 
-    @PostMapping("/dean/clear_session_faculty")
+    @PostMapping("/dean/faculty/register/session/clear")
     public String clearFacultyRegistrationSession(WebRequest webRequest) {
         webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);
 
         return "redirect:/dean";
     }
 
-    @GetMapping("/dean/download_password")
+    @GetMapping("/dean/password/download")
     public void downloadCsv(HttpServletResponse response, @RequestParam String filename) throws IOException {
         response.setContentType("text/csv");
 
