@@ -20,7 +20,7 @@ public class SecurityUtils {
 
         if(!pass.equals(repass))
             errors.add("Passwords don't match!");
-        if (repass.length() < 6)
+        if (pass.length() < 6)
             errors.add("Passwords should be at least 6 characters long!");
 
         return errors;

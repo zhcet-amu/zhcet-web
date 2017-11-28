@@ -14,7 +14,7 @@ public class NotificationUtils {
         return page;
     }
 
-    private static int getSafePage(int page, int total) {
+    public static int getSafePage(int page, int total) {
         return Math.max(1, Math.min(page, total));
     }
 
@@ -25,7 +25,7 @@ public class NotificationUtils {
 
         model.addAttribute("minPage", minPage);
         model.addAttribute("maxPage", maxPage);
-        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("currentPage", getSafePage(currentPage, totalPages));
     }
 
 }

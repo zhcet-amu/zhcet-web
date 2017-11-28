@@ -28,12 +28,12 @@ public class Hibernate5DDLExporter {
         return this;
     }
 
-    public Hibernate5DDLExporter entities(String... entityPackage) {
+    private Hibernate5DDLExporter entities(String... entityPackage) {
         this.entityPackages = entityPackage;
         return this;
     }
 
-    public Hibernate5DDLExporter schemaExport(String fileName, String targetDirectory) throws Exception {
+    private Hibernate5DDLExporter schemaExport(String fileName, String targetDirectory) throws Exception {
         if (entityPackages == null && entityPackages.length == 0) {
             System.out.println("Not packages selected");
             System.exit(0);
@@ -66,7 +66,8 @@ public class Hibernate5DDLExporter {
         File exportFile;
         if (targetDirectory != null) {
             final File directory = new File(targetDirectory);
-            directory.mkdirs();
+            boolean created = directory.mkdirs();
+            if (!created) log.error("Couldn't create directories");
             exportFile = new File(directory, fileName);
         } else {
             exportFile = new File(fileName);
