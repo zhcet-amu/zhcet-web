@@ -23,6 +23,8 @@ public interface StorageService {
 
     Resource loadAsResource(FileType fileType, String filename);
 
+    void delete(FileType fileType, String filename);
+
     void deleteAll(FileType fileType);
 
 }

@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -31,10 +33,16 @@ public class DeanController {
     }
 
     @GetMapping("/dean")
-    public String deanAdmin(Model model) {
+    public String deanAdmin(Model model, WebRequest webRequest) {
         model.addAttribute("page_title", "Administration Panel");
         model.addAttribute("page_subtitle", "Dean Administration Panel");
         model.addAttribute("page_description", "Register Students and Faculty, manage roles and users");
+
+        if (!model.containsAttribute("faculty_success"))
+            webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);
+
+        if (!model.containsAttribute("student_success"))
+            webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
 
         model.addAttribute("users", userService.getAll());
         if (!model.containsAttribute("department"))

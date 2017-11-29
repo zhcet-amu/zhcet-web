@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.upload.FacultyUpload;
 import in.ac.amu.zhcet.data.model.dto.upload.StudentUpload;
+import in.ac.amu.zhcet.data.model.file.PasswordFile;
 import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
 import in.ac.amu.zhcet.service.upload.storage.FileSystemStorageService;
 import in.ac.amu.zhcet.service.upload.csv.FacultyUploadService;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestAttributes;
@@ -31,14 +33,14 @@ import java.util.List;
 
 @Slf4j
 @Controller
-public class RegistrationController {
+public class UserRegistrationController {
 
     private final StudentUploadService studentUploadService;
     private final FacultyUploadService facultyUploadService;
     private final FileSystemStorageService systemStorageService;
 
     @Autowired
-    public RegistrationController(StudentUploadService studentUploadService, FacultyUploadService facultyUploadService, FileSystemStorageService systemStorageService) {
+    public UserRegistrationController(StudentUploadService studentUploadService, FacultyUploadService facultyUploadService, FileSystemStorageService systemStorageService) {
         this.studentUploadService = studentUploadService;
         this.facultyUploadService = facultyUploadService;
         this.systemStorageService = systemStorageService;
@@ -147,13 +149,15 @@ public class RegistrationController {
         return "redirect:/dean";
     }
 
-    @GetMapping("/dean/password/download")
-    public void downloadCsv(HttpServletResponse response, @RequestParam String filename) throws IOException {
+    @GetMapping("/dean/password/{id}")
+    public void downloadCsv(HttpServletResponse response, @PathVariable("id") PasswordFile passwordFile) throws IOException {
+        if (passwordFile == null || passwordFile.isExpired()) return;
+
         response.setContentType("text/csv");
 
         response.setHeader("Content-disposition", "attachment;filename=passwords.csv");
 
-        List<String> lines = Files.readAllLines(systemStorageService.load(FileType.CSV, filename));
+        List<String> lines = Files.readAllLines(systemStorageService.load(FileType.CSV, passwordFile.getLink()));
         for (String line : lines) {
             response.getOutputStream().println(line);
         }

@@ -37,18 +37,26 @@
                         </div>
                         <div th:replace="fragments/layout :: error(condition = ${file_error}, success_title = 'Error saving password file!', error = 'Registration wasn\'t successful! Please contact site admin')"></div>
                         <div th:replace="fragments/layout :: error(condition = ${faculty_unknown_error}, error_title = 'Unknown Error!', error = 'We don\'t know what happened. Please contact site admin')"></div>
-                        <div th:replace="fragments/layout :: success(condition = ${file_saved}, success_title = 'Saved!', message = 'Password file was successfully saved! Click button below to download the file')"></div>
-                        <div th:if="${file_saved}" class="row">
-                            <div class="col-xs-12 col-md-3">
-                                <a th:href="|@{/dean/password/download(filename=${file_saved})}|"
-                                   target="_blank">
-                                    <button type="button" class="btn btn-primary">Download</button>
+                        <div th:replace="fragments/layout :: success(condition = ${file_saved}, success_title = 'Saved!', message = 'Password file was successfully saved! Click button below to download the file (will expire after 3 hours)')"></div>
+                        <div th:if="${file_saved}" class="row text-xs-center" th:with="fileUrl = @{|/dean/password/${file_saved}|}">
+                            <div class="col-xs-12" th:with="fullFileUrl = @{|${@configurationService.getBaseUrl(#httpServletRequest.getRequestURL())}${fileUrl}|}">
+                                <div class="form-group">
+                                    <div class="position-relative has-icon-left">
+                                        <input type="text" id="download_password" class="form-control" placeholder="Course Code" th:value="${fullFileUrl}">
+                                        <div class="form-control-position">
+                                            <i class="material-icons gray">code</i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a th:href="${fileUrl}" target="_blank"
+                                   class="mui-btn mui-btn--primary mui-btn--small mui-btn--fab bg-primary p-0"
+                                   data-original-title="Download Passwords" data-toggle="tooltip">
+                                    <i class="material-icons md-light">cloud_download</i>
                                 </a>
-                            </div>
-                            <div class="col-xs-12 col-md-3" style="margin-right: 20px; margin-bottom: 5px;">
-                                <button type="button" class="btn"
-                                        th:attr="data-clipboard-text=|${@configurationService.getBaseUrl(#httpServletRequest.getRequestURL())}@{/dean/password/download(filename=${file_saved})}">
-                                    Copy Link
+                                <button id="passwords" type="button" class="mui-btn mui-btn--primary mui-btn--small mui-btn--fab p-0"
+                                        data-original-title="Copy Passwords Link" data-toggle="tooltip"
+                                        th:attr="data-clipboard-text=${fullFileUrl}">
+                                    <i class="material-icons md-light">link</i>
                                 </button>
                             </div>
                         </div>
@@ -104,10 +112,6 @@
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <form class="form" th:action="@{/dean/faculty/register/session/clear}" method="post"
-                                  style="display: inline">
-                                <button type="submit" class="btn btn-default">Clear</button>
-                            </form>
                             <form class="form" th:action="@{/dean/faculty/register/confirm}" method="post"
                                   style="display: inline">
                                 <button th:if="${confirmRegistration.errors.isEmpty()}" type="submit"
@@ -123,27 +127,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
     <script th:fragment="script">
         (function () {
-            var clipboard = new Clipboard('.btn');
-            clipboard.on('success', function (e) {
-                toastr.success('Link copied!', null, {timeOut: 2000})
-            });
+
             $(document).ready(function () {
                 $('#faculty-registration-modal').modal('show');
                 $('#facultyTable').dataTable({
                     scrollY:        true,
                     scrollCollapse: true
                 });
-            });
 
-            $('#faculty-progress').initStatusProgress({
-                taskId: $('#task_id_faculty').text(),
-                finished: function (result) {
-                    toastr.success('Faculty Registration Complete in ' + result.duration + ' s')
-                },
-                failed: function (result) {
-                    console.log(result);
-                    toastr.error('Faculty Registration Failed');
-                }
+                $('#faculty-progress').initStatusProgress({
+                    taskId: $('#task_id_faculty').text(),
+                    finished: function (result) {
+                        toastr.success('Faculty Registration Complete in ' + result.duration + ' s')
+                    },
+                    failed: function (result) {
+                        console.log(result);
+                        toastr.error('Faculty Registration Failed');
+                    }
+                });
+
+                var clipboard = new Clipboard('#passwords');
+                clipboard.on('success', function () {
+                    toastr.success('Link copied!');
+                });
             });
         }());
     </script>

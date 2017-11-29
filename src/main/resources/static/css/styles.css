@@ -1,3 +1,11 @@
+html,
+body { height: 100%; }
+
+body {
+    display: table;
+    width: 100%;
+}
+
 table td {
     vertical-align: middle !important;
 }
@@ -137,14 +145,6 @@ i.helper {
 .footer-dark a:hover {  color: #D1C4E9;  }
 .footer-dark a:visited {  color: #9575CD;  }
 
-html,
-body { height: 100%; }
-
-body {
-    display: table;
-    width: 100%;
-}
-
 .page-row {
     display: table-row;
     height: 1px;
@@ -173,6 +173,11 @@ blockquote>:last-child {
 
 small > blockquote {
     margin-bottom: 10px;
+}
+
+i.gray {
+    color: #777;
+    margin-bottom: 4px;
 }
 
 #toast-container {

@@ -52,19 +52,14 @@ public class FileSystemStorageService implements StorageService {
         return StringUtils.cleanPath(LocalDateTime.now().toString() + "_" + Auditor.getLoggedInUsername() + "_" + name);
     }
 
-    private void storeAbstract(FileType fileType, String name, boolean empty, InputStream inputStream) {
+    private void storeAbstract(FileType fileType, String name, InputStream inputStream, EmptyChecker emptyChecker) {
         String filename = generateFileName(name);
         try {
-            if (empty) {
+            if (emptyChecker.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + filename);
             }
 
-            if (filename.contains("..")) {
-                String message = "Cannot store file with relative path outside current directory " + filename;
-                // This is a security check
-                log.warn(message);
-                throw new StorageException(message);
-            }
+            checkSecurity(filename);
             Files.copy(inputStream, fromFileType(fileType).resolve(filename), StandardCopyOption.REPLACE_EXISTING);
             log.info("Saved file " + filename);
         } catch (IOException e) {
@@ -76,7 +71,7 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public void store(FileType fileType, File file) {
         try {
-            storeAbstract(fileType, file.getName(), file.length() == 0, new FileInputStream(file));
+            storeAbstract(fileType, file.getName(), new FileInputStream(file), () -> file.length() == 0);
         } catch (FileNotFoundException e) {
             log.error(String.format("Failed storing file %s", file.getName()), e);
             throw new StorageException("Failed to store file " + file.getName(), e);
@@ -86,7 +81,7 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public void store(FileType fileType, MultipartFile file) {
         try {
-            storeAbstract(fileType, file.getOriginalFilename(), file.isEmpty(), file.getInputStream());
+            storeAbstract(fileType, file.getOriginalFilename(), file.getInputStream(), file::isEmpty);
         } catch (IOException e) {
             log.error(String.format("Failed storing file %s", file.getName()), e);
             throw new StorageException("Failed to store file " + file.getName(), e);
@@ -105,16 +100,19 @@ public class FileSystemStorageService implements StorageService {
             log.error("Failed to read files", e);
             throw new StorageException("Failed to read stored files", e);
         }
-
     }
 
     @Override
     public Path load(FileType fileType, String filename) {
+        checkSecurity(filename);
+
         return fromFileType(fileType).resolve(filename);
     }
 
     @Override
     public Resource loadAsResource(FileType fileType, String filename) {
+        checkSecurity(filename);
+
         try {
             Path file = load(fileType, filename);
             Resource resource = new UrlResource(file.toUri());
@@ -127,6 +125,15 @@ public class FileSystemStorageService implements StorageService {
         } catch (MalformedURLException e) {
             log.error(String.format("Failed to read file %s", filename), e);
             throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+        }
+    }
+
+    @Override
+    public void delete(FileType fileType, String filename) {
+        try {
+            Files.delete(load(fileType, filename));
+        } catch (IOException e) {
+            log.error("Error deleting file: {}", filename, e);
         }
     }
 
@@ -145,5 +152,18 @@ public class FileSystemStorageService implements StorageService {
             log.error("Could not initialize storage", e);
             throw new StorageException("Could not initialize storage", e);
         }
+    }
+
+    private static void checkSecurity(String filename) {
+        if (filename.contains("..")) {
+            String message = "Cannot store file with relative path outside current directory " + filename;
+            // This is a security check
+            log.warn(message);
+            throw new StorageException(message);
+        }
+    }
+
+    private interface EmptyChecker {
+        boolean isEmpty();
     }
 }
