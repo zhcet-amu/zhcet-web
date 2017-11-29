@@ -109,7 +109,9 @@ public class StudentService {
             log.info("Saved {} Students in {} s", students.size(), duration);
         } catch (Exception exception) {
             log.error("Error while saving students", exception);
+            status.setMessage(exception.getMessage());
             status.setFailed(true);
+            throw exception;
         }
     }
 

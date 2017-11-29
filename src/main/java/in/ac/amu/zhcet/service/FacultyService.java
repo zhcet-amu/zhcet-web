@@ -93,7 +93,9 @@ public class FacultyService {
             log.info("Saved {} Faculty in {} s", facultyMembers.size(), duration);
         } catch (Exception exception) {
             log.error("Error while saving faculty", exception);
+            status.setMessage(exception.getMessage());
             status.setFailed(true);
+            throw exception;
         }
     }
 
