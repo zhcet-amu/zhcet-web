@@ -1,4 +1,4 @@
-(function () {
+(function (App, firebase) {
     const messaging = firebase.messaging();
 
     function getToken() {
@@ -19,8 +19,7 @@
 
     function sendTokenToServer(currentToken) {
         if (!isTokenSentToServer(currentToken)) {
-            console.log(currentToken);
-            Authentication.postToServer('/profile/api/messaging_token', currentToken, function (result) {
+            App.postToServer('/profile/api/messaging_token', currentToken, function (result) {
                if (result === 'OK')
                    setTokenSentToServer(currentToken);
             });
@@ -81,4 +80,4 @@
         });
     });
 
-}());
+}(App, firebase));

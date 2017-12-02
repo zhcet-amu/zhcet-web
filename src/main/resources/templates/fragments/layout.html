@@ -159,14 +159,11 @@
     <script src="/webjars/jquery-throttle-debounce-plugin/jquery.ba-throttle-debounce.min.js"></script>
 </th:block>
 
+<!-- DataTables -->
 <th:block th:fragment="datatables">
-    <link href="/webjars/toastr/build/toastr.min.css" type="text/css" rel="stylesheet"/>
     <link href="/webjars/datatables/css/dataTables.bootstrap4.min.css" type="text/css" rel="stylesheet"/>
-    <link href="/webjars/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" type="text/css" rel="stylesheet"/>
     <script src="/webjars/datatables/js/jquery.dataTables.min.js"></script>
     <script src="/webjars/datatables/js/dataTables.bootstrap4.min.js"></script>
-    <script src="/webjars/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="/webjars/datatables.net-responsive-bs/js/responsive.bootstrap.min.js"></script>
 </th:block>
 
 <th:block th:fragment="datatables_export">
@@ -187,30 +184,38 @@
     <script src="/webjars/datatables.net-select/js/dataTables.select.min.js"></script>
 </th:block>
 
+<!-- Firebase -->
 <th:block th:fragment="firebase">
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
+</th:block>
+
+<th:block th:fragment="firebase_auth">
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
+</th:block>
+
+<th:block th:fragment="firebase_login">
+    <div th:replace="this :: firebase"></div>
+    <div th:replace="this :: firebase_auth"></div>
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
+    <script th:src="@{/js/config.js}"></script>
+    <script th:src="@{/js/authentication.js}"></script>
+</th:block>
+
+<th:block th:fragment="firebase_messaging">
+    <div th:replace="this :: firebase"></div>
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-messaging.js"></script>
+    <script th:src="@{/js/config.js}"></script>
+    <script th:src="@{/js/messaging.js}"></script>
 </th:block>
 
 <th:block th:fragment="scripts">
     <script src="/webjars/jquery/jquery.min.js" type="text/javascript"></script>
     <script src="/webjars/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="/webjars/tether/js/tether.min.js" type="text/javascript"></script>
-    <script src="/webjars/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js" type="text/javascript"></script>
-    <script src="/webjars/jquery-blockui/jquery.blockUI.js" type="text/javascript"></script>
-    <script src="/webjars/jquery-match-height/jquery.matchHeight-min.js" type="text/javascript"></script>
-    <script src="/webjars/screenfulljs/screenfull.min.js" type="text/javascript"></script>
     <script src="/js/vendor/bundle.min.js" type="text/javascript"></script>
     <script src="/webjars/muicss/dist/js/mui.min.js"></script>
     <script src="/webjars/toastr/build/toastr.min.js"></script>
-    <div th:replace="this :: firebase"></div>
-    <script th:src="@{/js/file-uploader.js}"></script>
-    <script th:src="@{/js/config.js}"></script>
-    <script th:src="@{/js/authentication.js}"></script>
     <script th:src="@{/js/app.js}" type="text/javascript"></script>
-    <script th:src="@{/js/messaging.js}"></script>
+    <div th:replace="this :: firebase_messaging"></div>
 </th:block>
 </body>
 </html>

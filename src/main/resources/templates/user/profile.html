@@ -23,7 +23,9 @@
         <div th:replace="user/fragments/profile_form"></div>
     </div>
 </div>
-<script th:src="@{/js/file-uploader.js}" type="text/javascript"></script>
+<script th:src="@{/js/file-uploader.js}"></script>
+<div th:replace="fragments/layout :: firebase_auth"></div>
+<script th:src="@{/js/authentication.js}"></script>
 <script>
     (function () {
         $(document).ready(function () {
@@ -33,6 +35,8 @@
                     toastr.error(message);
                 }
             });
+
+            Authentication.auth().init();
         });
     }());
 </script>

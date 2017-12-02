@@ -84,8 +84,7 @@
                             </a>
                             <div class="dropdown-divider"></div>
                             <form id="logout-form" th:action="@{/logout}" method="post">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                                <a onclick="App.logout()" class="dropdown-item"><i class="icon-power3"></i> Logout</a>
+                                <button class="dropdown-item"><i class="icon-power3"></i> Logout</button>
                             </form>
                         </div>
                     </li>

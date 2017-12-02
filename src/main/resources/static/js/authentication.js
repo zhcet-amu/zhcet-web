@@ -1,22 +1,6 @@
-var Authentication = (function ($, firebase) {
+var Authentication = (function ($, App, firebase) {
     var googleProvider = new firebase.auth.GoogleAuthProvider();
     var userInformation;
-
-    function postToServer(url, idToken, func) {
-        var header = $("meta[name='_csrf_header']").attr("content");
-        var token = $("meta[name='_csrf']").attr("content");
-
-        $.ajax({
-            type: 'POST',
-            contentType: 'application/json; charset=utf-8',
-            url: url,
-            data: idToken,
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token);
-            },
-            success: func
-        });
-    }
 
     function callIfFunction(func, arg1, arg2) {
         if ($.isFunction(func))
@@ -30,7 +14,7 @@ var Authentication = (function ($, firebase) {
     function google() {
 
         function postToken(idToken) {
-            postToServer("/login/api/token", idToken, function(action) {
+            App.postToServer("/login/api/token", idToken, function(action) {
                 window.location = action;
             });
         }
@@ -75,32 +59,49 @@ var Authentication = (function ($, firebase) {
                 return null;
             }
 
-            function accountLinked(linkCallback, user) {
-                callIfFunction(linkCallback, true);
-                var providerData = getProviderData(user.providerData, googleProvider.providerId);
-
-                if (providerData) {
-                    var updateUser = {};
-                    if (!user.displayName)
-                        updateUser.displayName = providerData.displayName;
-                    if (!user.photoURL)
-                        updateUser.photoURL = providerData.photoURL;
-                    user.updateProfile(updateUser).then(function () {
-                        firebase.auth().currentUser.getIdToken(false).then(function (token) {
-                            postToServer('/profile/api/link', token, function (response) {
-                                if (response === 'OK') {
-                                    setTimeout(function () {
-                                        window.location = '/profile?refresh';
-                                    }, 5000);
-                                }
-                            });
-                        });
-                    });
-                }
-            }
-
             function isProvider(providerData, providerId) {
                 return getProviderData(providerData, providerId) !== null;
+            }
+
+            function updateUser(user, providerData) {
+                if (!providerData)
+                    return;
+
+                var updateUser = {};
+                if (!user.displayName)
+                    updateUser.displayName = providerData.displayName;
+                if (!user.photoURL)
+                    updateUser.photoURL = providerData.photoURL;
+                user.updateProfile(updateUser)
+                    .then(function () {
+                        return firebase.auth().currentUser.getIdToken(false);
+                    })
+                    .then(function (token) {
+                        App.postToServer('/profile/api/link', token, function (response) {
+                            if (response === 'OK') {
+                                setTimeout(function () {
+                                    window.location = '/profile?refresh';
+                                }, 5000);
+                            }
+                        });
+                    });
+            }
+
+            function accountLinked(linkCallback, user) {
+                callIfFunction(linkCallback, true);
+                updateUser(user, getProviderData(user.providerData, googleProvider.providerId));
+            }
+
+            function deletePreviousUser(prevUser, credential) {
+                var auth = firebase.auth();
+                return auth.signInWithCredential(credential)
+                    .then(function(user) {
+                        return user.delete();
+                    }).then(function() {
+                        return prevUser.linkWithCredential(credential);
+                    }).then(function() {
+                        return auth.signInWithCredential(credential);
+                    });
             }
 
             return {
@@ -110,20 +111,14 @@ var Authentication = (function ($, firebase) {
                             accountLinked(linkCallback, result.user);
                         }).catch(function(error) {
                             if (error.code === 'auth/credential-already-in-use') {
-                                var auth = firebase.auth();
-                                var prevUser = auth.currentUser;
+                                var prevUser = firebase.auth().currentUser;
                                 var credential = error.credential;
-                                auth.signInWithCredential(credential).then(function(user) {
-                                    return user.delete().then(function() {
-                                        return prevUser.linkWithCredential(credential);
-                                    }).then(function() {
-                                        return auth.signInWithCredential(credential);
-                                    }).then(function (user) {
+                                deletePreviousUser(prevUser, credential)
+                                    .then(function (user) {
                                         accountLinked(linkCallback, user);
+                                    }).catch(function(error) {
+                                        callIfFunction(linkCallback, false, error);
                                     });
-                                }).catch(function(error) {
-                                    callIfFunction(linkCallback, false, error);
-                                });
                             } else {
                                 callIfFunction(linkCallback, false, error);
                             }
@@ -198,7 +193,6 @@ var Authentication = (function ($, firebase) {
 
     return {
         auth: auth,
-        google: google,
-        postToServer: postToServer
+        google: google
     }
-}(jQuery, firebase));
+}(jQuery, App, firebase));

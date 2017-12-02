@@ -1,4 +1,4 @@
-var config = (function (firebase) {
+(function (firebase) {
     /* Initialize Firebase */
     var config = {
         apiKey: "AIzaSyDPzDrlYgC1GlPooyvCmEOEBeQhLeJuggU",
@@ -9,10 +9,9 @@ var config = (function (firebase) {
         messagingSenderId: "632575632330"
     };
 
-    return {
-        messagingSenderId: config.messagingSenderId,
-        initialize: function () {
-            firebase.initializeApp(config);
-        }
+    try {
+        firebase.initializeApp(config);
+    } catch (e) {
+        console.log('Firebase Initialization Error', e)
     }
 }(firebase));

@@ -71,10 +71,14 @@
         </div>
     </div>
 </th:block>
-<script th:src="@{/js/authentication.js}"></script>
+<script src="/js/vendor/pace.min.js" type="text/javascript"></script>
+<script src="/js/vendor/promise.min.js" type="text/javascript"></script>
+<div th:replace="fragments/layout :: backstretch"></div>
+<script th:src="@{/js/app.js}"></script>
+<div th:replace="fragments/layout :: firebase_login"></div>
+<script th:src="@{/js/login.js}"></script>
 <script>
     (function () {
-        config.initialize();
         Login.startLoginFlow();
     }());
 </script>
