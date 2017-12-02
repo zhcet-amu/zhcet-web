@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" data-textdirection="ltr" class="loading">
-<th:block th:fragment="container" th:include="fragments/login :: login(page_title = 'Login', message = 'Login with ZHCET')">
+<th:block th:fragment="container" th:include="fragments/login :: login(page_title = 'ZHCET Login', message = 'Login with ZHCET')">
     <div class="card-body collapse in">
         <div class="card-block">
             <form class="form-horizontal form-simple" action="#" th:action="@{/login}" method="post">
@@ -64,7 +64,7 @@
                 </div>
                 <div id="login-panel">
                     <button id="google-login" class="btn btn-secondary">
-                        <img class="avatar" src="https://developers.google.com/identity/sign-in/g-normal.png" alt="Google Logo">
+                        <img class="avatar" src="https://developers.google.com/identity/sign-in/g-normal.png" alt="G">
                     </button>
                 </div>
             </div>

@@ -11,10 +11,17 @@
         modal.find('#working').attr('class', 'capsule ' + (data['working'] ? 'bg-success' : 'bg-danger'));
         modal.find('#link').attr('href', '/dean/faculty/' + data['facultyId']);
 
-        if (data['avatar-url'] && data['original-avatar-url'] !== '')
-            modal.find('#avatar').attr('src', data['original-avatar-url']);
-        else
-            modal.find('#avatar').attr('src', 'https://zhcet-backend.firebaseapp.com/static/img/account.svg');
+        modal.find('#avatar').attr('src', 'https://zhcet-backend.firebaseapp.com/static/img/account.svg');
+        if (data['avatar-url'] !== '' || data['original-avatar-url'] !== '') {
+            var avatar = data['original-avatar-url'];
+            if (avatar === '')
+                avatar = data['avatar-url'];
+
+            loadImage(avatar)
+                .then(function () {
+                    modal.find('#avatar').attr('src', avatar);
+                });
+        }
 
         if (data['user_details_gender'] && data['user_details_gender'] !== '') {
             var genderSpan = modal.find('#gender');

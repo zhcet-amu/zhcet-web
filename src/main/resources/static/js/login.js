@@ -1,17 +1,19 @@
 var Login = (function ($) {
-    // Default Slide Images
-    var slides = [];
-
-    function updateSlides(slides) {
-        $('.pattern-bg').hide();
-        $.backstretch(slides, { duration: 2000, fade: 750 });
-    }
 
     function setupSlideShow() {
-        var database = firebase.database();
-        database.ref('login/slides').on('value', function (snapshot) {
-            updateSlides(snapshot.val())
-        });
+        var imageUrls = [];
+        firebase.database()
+            .ref('login/slides')
+            .once('value')
+            .then(function (snapshot) {
+                imageUrls = snapshot.val();
+                return loadImages(imageUrls);
+            }).then(function () {
+                $('.pattern-bg').hide();
+                $.backstretch(imageUrls, { duration: 2000, fade: 750 });
+            }).catch(function (error) {
+                console.log(error);
+            });
     }
 
     function setupLoginFlow() {
@@ -38,9 +40,7 @@ var Login = (function ($) {
         });
     }
 
-    $(document).ready(function() {
-        setupSlideShow();
-    });
+    setupSlideShow();
 
     return {
         startLoginFlow: setupLoginFlow

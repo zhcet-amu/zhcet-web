@@ -2,6 +2,24 @@ var wait = function (ms) {
     return new Promise(function (resolve) { setInterval(resolve, ms); });
 };
 
+var loadImage = function (imageUrl) {
+    return new Promise(function (resolve, reject) {
+        var image = new Image();
+        image.onload = resolve;
+        image.onerror = reject;
+        image.src = imageUrl;
+    });
+};
+
+var loadImages = function (images) {
+    var promises = [];
+    for (var i = 0; i < images.length; i++) {
+        promises.push(loadImage(images[i]));
+    }
+
+    return Promise.all(promises);
+};
+
 var App = (function () {
 
     if (!!window.toastr) {
