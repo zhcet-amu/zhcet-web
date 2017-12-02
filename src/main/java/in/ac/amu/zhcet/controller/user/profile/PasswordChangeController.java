@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class PasswordChangeController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/profile/change_password")
+    @GetMapping("/profile/settings/password")
     public String changePassword(Model model) {
         String renderUrl = "user/change_password";
         User user = userService.getLoggedInUser();
@@ -41,12 +42,17 @@ public class PasswordChangeController {
         }
         PasswordChange passwordChange = new PasswordChange();
         model.addAttribute("password", passwordChange);
+        model.addAttribute("blacklist", Arrays.asList(
+                user.getName(),
+                user.getEmail(),
+                user.getUserId()
+        ));
         return renderUrl;
     }
 
-    @PostMapping("/profile/change_password")
+    @PostMapping("/profile/settings/password/change")
     public String savePassword(@Valid PasswordChange passwordChange, RedirectAttributes redirectAttributes) {
-        String redirectUrl = "redirect:/profile/change_password";
+        String redirectUrl = "redirect:/profile/settings/password";
 
         User user = userService.getLoggedInUser();
         if (!user.isEmailVerified()) {

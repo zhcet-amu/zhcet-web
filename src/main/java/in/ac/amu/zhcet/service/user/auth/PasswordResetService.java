@@ -37,14 +37,14 @@ public class PasswordResetService {
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
 
         if (passwordResetToken == null || !passwordResetToken.getUser().getUserId().equals(id))
-            return "Token: "+ token +" is invalid";
+            return "Token: " + token + " is invalid";
 
         if (passwordResetToken.isUsed())
-            return "Token: "+ token +" is already used! Please generate another reset link!";
+            return "Token: " + token + " is already used! Please generate another reset link!";
 
         Calendar cal = Calendar.getInstance();
         if ((passwordResetToken.getExpiry().getTime() - cal.getTime().getTime()) <= 0) {
-            return "Token: "+token+" for User: "+id+" has locked";
+            return "Token: " + token+" for User: " + id + " has expired";
         }
         User user = passwordResetToken.getUser();
         Authentication auth = new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
@@ -71,7 +71,7 @@ public class PasswordResetService {
 
     public void sendMail(PasswordResetToken token) {
         User user = token.getUser();
-        String relativeUrl = String.format("/login/reset_password?id=%s&auth=%s", user.getUserId(), token.getToken());
+        String relativeUrl = String.format("/login/password/reset?id=%s&auth=%s", user.getUserId(), token.getToken());
         log.info("Password reset link generated : {}", relativeUrl);
 
         LinkMessage linkMessage = getPayLoad(user, relativeUrl);

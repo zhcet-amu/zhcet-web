@@ -2,7 +2,6 @@ package in.ac.amu.zhcet.service.user.auth;
 
 import in.ac.amu.zhcet.data.model.token.VerificationToken;
 import in.ac.amu.zhcet.data.model.user.User;
-import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.data.repository.VerificationTokenRepository;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.email.LinkMailService;
@@ -51,14 +50,14 @@ public class EmailVerificationService {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
 
         if (verificationToken == null)
-            return "Token: "+ token +" is invalid";
+            return "Token: " + token + " is invalid";
 
         if (verificationToken.isUsed())
-            return "Token: "+ token +" is already used! Please request another link!";
+            return "Token: " + token + " is already used! Please request another link!";
 
         Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiry().getTime() - cal.getTime().getTime()) <= 0) {
-            return "Token: "+token+" has locked";
+            return "Token: " + token + " has expired";
         }
 
         return null;

@@ -22,12 +22,12 @@ public class ForgotPasswordController {
         this.passwordResetService = passwordResetService;
     }
 
-    @GetMapping("/login/forgot_password")
+    @GetMapping("/login/password/forgot")
     public String getForgetPassword() {
         return "user/forgot_password";
     }
 
-    @PostMapping("/login/forgot_password")
+    @PostMapping("/login/password/forgot")
     public String sendEmailLink(RedirectAttributes redirectAttributes, @RequestParam String email) {
         try {
             PasswordResetToken token = passwordResetService.generate(email);
@@ -36,7 +36,7 @@ public class ForgotPasswordController {
         } catch(UsernameNotFoundException e){
             log.warn("User not found : Password Forgot : {}", e);
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/login/forgot_password";
+            return "redirect:/login/password/forgot";
         }
 
         return "redirect:/login";

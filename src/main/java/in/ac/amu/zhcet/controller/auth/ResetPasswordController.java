@@ -24,13 +24,13 @@ public class ResetPasswordController {
         this.passwordResetService = passwordResetService;
     }
 
-    @GetMapping("/login/reset_password")
+    @GetMapping("/login/password/reset")
     public String resetPassword(Model model, @RequestParam("id") String id, @RequestParam("auth") String token){
         String result = passwordResetService.validate(id, token);
         if (result != null) {
             log.warn("Token Verification : Password Reset : {}", result);
             model.addAttribute("error", result);
-            return "reset_password";
+            return "user/reset_password";
         }
         PasswordReset passwordReset = new PasswordReset();
         passwordReset.setId(id);
@@ -39,9 +39,9 @@ public class ResetPasswordController {
         return "user/reset_password";
     }
 
-    @PostMapping("/login/reset_password")
+    @PostMapping("/login/password/reset")
     public String savePassword(@Valid PasswordReset passwordReset, RedirectAttributes redirectAttributes) {
-        String redirectUrl = String.format("redirect:/login/reset_password?id=%s&auth=%s", passwordReset.getId(), passwordReset.getToken());
+        String redirectUrl = String.format("redirect:/login/password/reset?id=%s&auth=%s", passwordReset.getId(), passwordReset.getToken());
 
         String result = passwordResetService.validate(passwordReset.getId(), passwordReset.getToken());
         if (result != null) {
