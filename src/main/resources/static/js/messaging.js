@@ -18,12 +18,13 @@
     }
 
     function sendTokenToServer(currentToken) {
-        if (!isTokenSentToServer(currentToken)) {
-            App.postToServer('/profile/api/messaging_token', currentToken, function (result) {
-               if (result === 'OK')
-                   setTokenSentToServer(currentToken);
+        if (isTokenSentToServer(currentToken))
+            return;
+        App.postToServer('/profile/api/messaging_token', currentToken)
+            .then(function (result) {
+                if (result === 'OK')
+                    setTokenSentToServer(currentToken);
             });
-        }
     }
 
     function isTokenSentToServer(token) {

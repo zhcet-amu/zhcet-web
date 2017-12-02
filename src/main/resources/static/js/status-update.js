@@ -7,35 +7,35 @@
     }
 
     function poll(settings) {
-        $.ajax({
+        var ajaxCall = $.ajax({
             url: settings.baseUrl + settings.taskId,
             dataType: 'json',
-            type: 'get',
-            success: function(result) {
-                callIfFunction(settings.each, result);
+            type: 'get'
+        });
 
-                var completed = result.completed;
-                var total = result.total;
-                var percentage = (completed/total*100).toFixed(2) + '%';
-                settings.completedText.text(completed);
-                settings.totalText.text(total);
-                settings.percentageText.text(percentage);
-                settings.progressBar.css('width', percentage);
+        Promise.resolve(ajaxCall).then(function(result) {
+            callIfFunction(settings.each, result);
 
-                if (result.invalid || result.finished || result.failed) {
-                    clearInterval(interval);
-                    callIfFunction(settings.error, result);
-                }
+            var completed = result.completed;
+            var total = result.total;
+            var percentage = (completed/total*100).toFixed(2) + '%';
+            settings.completedText.text(completed);
+            settings.totalText.text(total);
+            settings.percentageText.text(percentage);
+            settings.progressBar.css('width', percentage);
 
-                if (result.finished)
-                    callIfFunction(settings.finished, result);
-                else if(result.failed || result.invalid)
-                    callIfFunction(settings.failed, result);
-            },
-            error: function(error) {
-                callIfFunction(settings.error, error);
+            if (result.invalid || result.finished || result.failed) {
                 clearInterval(interval);
+                callIfFunction(settings.error, result);
             }
+
+            if (result.finished)
+                callIfFunction(settings.finished, result);
+            else if(result.failed || result.invalid)
+                callIfFunction(settings.failed, result);
+        }).catch(function(error) {
+            callIfFunction(settings.error, error);
+            clearInterval(interval);
         });
     }
 

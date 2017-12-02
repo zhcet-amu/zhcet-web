@@ -13,21 +13,6 @@ var Authentication = (function ($, App, firebase) {
      */
     function google() {
 
-        function postToken(idToken) {
-            App.postToServer("/login/api/token", idToken, function(action) {
-                window.location = action;
-            });
-        }
-
-        function checkUser(result) {
-            if (!result || !result.user)
-                return false;
-
-            result.user.getIdToken(false).then(postToken);
-
-            return true;
-        }
-
         /**
          * Google Login Module
          * @param callback
@@ -35,10 +20,18 @@ var Authentication = (function ($, App, firebase) {
         function googleLogin(callback) {
             firebase.auth().signInWithPopup(googleProvider)
                 .then(function (result) {
-                    var check = checkUser(result);
-                    callIfFunction(callback, check);
+                    var userLoggedIn = result && result.user;
+
+                    if (userLoggedIn)
+                        return result.user.getIdToken(false);
+                    else
+                        throw Error();
+                }).then(function (token) {
+                    return App.postToServer("/login/api/token", token);
+                }).then(function (action) {
+                    window.location = action;
                 }).catch(function(error) {
-                    callIfFunction(callback, false, error.message);
+                    callIfFunction(callback, false, error ? error.message: null);
                 });
         }
 
@@ -75,14 +68,14 @@ var Authentication = (function ($, App, firebase) {
                 user.updateProfile(updateUser)
                     .then(function () {
                         return firebase.auth().currentUser.getIdToken(false);
-                    })
-                    .then(function (token) {
-                        App.postToServer('/profile/api/link', token, function (response) {
-                            if (response === 'OK') {
-                                setTimeout(function () {
-                                    window.location = '/profile?refresh';
-                                }, 5000);
-                            }
+                    }).then(function (token) {
+                        return App.postToServer('/profile/api/link', token);
+                    }).then(function (response) {
+                        if (response !== 'OK')
+                            return;
+
+                        wait(5000).then(function () {
+                            window.location = '/profile?refresh';
                         });
                     });
             }
