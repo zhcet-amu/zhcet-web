@@ -36,12 +36,12 @@
                         <li th:text="${student.enrolmentNumber}">EnrolmentNumber</li>
                     </ul>
                     <div id="gender-container" class="mt-1" th:with="gender = ${student.user.details.gender}" th:if="${student.user.details.gender}">
-                        <span id="gender" th:text="${gender}"  th:class="|capsule ${@viewService.getClassForGender(gender)}|">Male</span>
+                        <span id="gender" th:text="${gender}"  th:class="|capsule p-small ${@viewService.getClassForGender(gender)}|">Male</span>
                         <br><br>
                     </div>
                     <div class="row">
                         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
-                            <h5 th:text="${student.user.department.name}" class="capsule"></h5>
+                            <h5 th:text="${student.user.department.name}" class="capsule p-small"></h5>
                             <span>Registration Year : </span><span th:text="${student.registrationYear}"></span></span>
                         </div>
                     </div>
@@ -175,7 +175,7 @@
     </div>
     <div th:unless="${student}" class="row text-xs-center">
         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
-            <h3 class="capsule bg-danger">No such student found</h3>
+            <h3 class="capsule p-small bg-danger">No such student found</h3>
         </div>
     </div>
 </div>

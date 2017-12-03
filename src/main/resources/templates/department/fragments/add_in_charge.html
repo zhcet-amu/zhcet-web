@@ -44,7 +44,7 @@
                             </div>
                             <div class="col-xs-2">
                                 <input type="text" name="facultyId" th:value="${inCharge.facultyMember.facultyId}" hidden>
-                                <span class="capsule faculty-id" th:text="${inCharge.facultyMember.facultyId}"></span>
+                                <span class="capsule p-small faculty-id" th:text="${inCharge.facultyMember.facultyId}"></span>
                             </div>
                             <div class="col-xs-3">
                                 <span th:text="${inCharge.facultyMember.user.name}"></span>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="col-xs-2">
                     <input type="text" name="facultyId" value="{%=o.facultyId%}" hidden>
-                    <span class="capsule faculty-id">{%=o.facultyId%}</span>
+                    <span class="capsule p-small faculty-id">{%=o.facultyId%}</span>
                 </div>
                 <div class="col-xs-3">
                     <span>{%=o.userName%}</span>

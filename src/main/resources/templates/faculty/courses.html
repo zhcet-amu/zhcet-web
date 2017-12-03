@@ -4,26 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="fragments/layout :: head"></head>
 
-<style>
-    .list {
-        list-style-type: none;
-    }
-
-    .type {
-        background-color: #E1BEE7;
-        font-weight:100;
-    }
-
-    .section {
-        background-color: #00BCD4;
-        color: rgba(255, 255, 255, 0.9);
-        padding: 10px;
-    }
-
-    .course-title:hover {
-        color: #304FFE;
-    }
-</style>
+<link rel="stylesheet" th:href="@{/css/courses.css}">
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'faculty_courses')" sec:authorize="hasRole('ROLE_FACULTY')">
@@ -62,12 +43,12 @@
                                 </div>
                                 <ul class="list-group list">
                                     <li th:each="incharge : ${courseInCharges}" class="mb-2" th:with="url = |/faculty/courses/${incharge.floatedCourse.course.code}/attendance?section=${#strings.defaultString(incharge.section, '')}|">
-                                        <a th:href="${url}" style="color: inherit">
-                                            <div class="card">
+                                        <a th:href="${url}" style="color: inherit" th:with="course = ${incharge.floatedCourse.course}">
+                                            <div class="card" th:with="section = ${#strings.defaultString(incharge.section, 'All')}">
                                                 <div class="card-header">
                                                     <h4 class="course-title card-title" id="heading-icon">
-                                                        <strong><span th:class="|code tag tag-pill tag-glow ${@viewService.getClassForCourse(incharge.floatedCourse.course)}|" th:text="${incharge.floatedCourse.course.code}"></span></strong> :
-                                                        <span class="title" th:text="${incharge.floatedCourse.course.title}"></span>
+                                                        <strong><span th:class="|code tag tag-pill tag-glow ${@viewService.getClassForCourse(course)}|" th:text="${course.code}"></span></strong> :
+                                                        <span class="title" th:text="${course.title}"></span>
                                                     </h4>
                                                     <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
                                                     <div class="heading-elements">
@@ -76,20 +57,7 @@
                                                         </ul>
                                                     </div>
                                                 </div>
-                                                <div class="card-body collapse in" style="padding:0">
-                                                    <div class="card-block">
-                                                        <h5 class="card-title">
-                                                            <span class="section capsule" th:text="|Section: ${#strings.defaultString(incharge.section, 'All')}|"></span>&nbsp;
-                                                            <span class="capsule type" th:if="${incharge.floatedCourse.course.type != null}"><i th:class="${incharge.floatedCourse.course.type.name() == 'T' ? 'icon-book' : 'icon-lab'}"></i>&nbsp;<span th:text="${incharge.floatedCourse.course.type}"></span></span>&nbsp;
-                                                        </h5>
-                                                        <hr>
-                                                        <div>
-                                                            <span class="capsule"><span>Semester : </span><span class="semester" th:text="${incharge.floatedCourse.course.semester}"></span></span>
-                                                        </div>
-                                                        <hr>
-                                                        <p class="card-text" th:text="${incharge.floatedCourse.course.description}"></p>
-                                                    </div>
-                                                </div>
+                                                <div th:replace="department/fragments/course_components :: course_card_body"></div>
                                             </div>
                                         </a>
                                     </li>

@@ -38,14 +38,14 @@
                     </h5>
                     <div class="row">
                         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
-                            <h5 th:text="${faculty.user.department.name}" class="capsule"></h5>
+                            <h5 th:text="${faculty.user.department.name}" class="capsule p-small"></h5>
                         </div>
                     </div>
                     <div id="gender-container" class="mt-1" th:with="gender = ${faculty.user.details.gender}" th:if="${faculty.user.details.gender}">
-                        <span id="gender" th:text="${gender}"  th:class="|capsule ${@viewService.getClassForGender(gender)}|">Male</span>
+                        <span id="gender" th:text="${gender}"  th:class="|capsule p-small ${@viewService.getClassForGender(gender)}|">Male</span>
                         <br><br>
                     </div>
-                    <div th:class="|capsule ${faculty.working ? 'bg-success' : 'bg-danger'}|" style="width: 120px;display: inline-block" th:text="${faculty.working ? 'Working' : 'Inactive'}">Active</div>
+                    <div th:class="|capsule p-small ${faculty.working ? 'bg-success' : 'bg-danger'}|" style="width: 120px;display: inline-block" th:text="${faculty.working ? 'Working' : 'Inactive'}">Active</div>
                     <span th:text="${faculty.user.email}"></span><span th:if="${faculty.user.emailVerified}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
                     <br>
                 </div>
@@ -149,7 +149,7 @@
     </div>
     <div th:unless="${faculty}" class="row text-xs-center">
         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
-            <h3 class="capsule bg-danger">No such faculty member found</h3>
+            <h3 class="capsule p-small bg-danger">No such faculty member found</h3>
         </div>
     </div>
 </div>

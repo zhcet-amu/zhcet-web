@@ -1,0 +1,49 @@
+<html xmlns:th="http://www.thymeleaf.org" >
+    <body>
+
+    <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
+
+    <!-- Course Card Body -->
+    <div th:fragment="course_card_body" class="card-body collapse in p-0">
+        <div class="card-block">
+            <h5 class="card-title">
+                <span class="badge"><i class="material-icons">group_work</i>
+                <span th:text="${course.category}"></span></span>&nbsp;
+                <span class="join">
+                    <span class="capsule p-small type" th:if="${course.type != null}"><i th:class="${course.type.name() == 'T' ? 'icon-book' : 'icon-lab'}"></i>&nbsp;<span th:text="${course.type}"></span></span>&nbsp;
+                    <span th:class="|capsule p-small ${(course.compulsory != null && course.compulsory) ? 'bg-primary' : 'bg-info'} text-white|" th:text="${(course.compulsory != null && course.compulsory) ? 'Compulsory' : 'Optional'}"></span>
+                </span>
+            </h5>
+            <blockquote class="card-text" th:text="${course.description}"></blockquote>
+            <div class="badges card-text">
+                <div class="badge badge-info"><span><i class="material-icons">hourglass_empty</i> Semester </span><span class="semester badge-content" th:text="${course.semester}"></span></div>
+                <div class="badge badge-info"><span><i class="material-icons">stars</i> Credits </span><span class="credits badge-content" th:text="${course.credits}"></span></div>
+                <div class="badge badge-info"><span><i class="material-icons">call_split</i> Branch </span><span class="branch badge-content" th:text="${course.branch}"></span></div>
+                <div class="badge badge-danger float-xs-right" th:if="${!course.active}"><i class="material-icons">clear</i> Deactivated</div>
+                <div class="badge badge-success float-xs-right" th:hidden="${course.meta == null}"><i class="material-icons">fiber_manual_record</i> <span th:text="${course.meta}"></span></div>
+                <div class="badge badge-success float-xs-right" th:if="${section}">Section <span class="section badge-content" th:text="${section}"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Card -->
+    <div class="card" th:fragment="course_card">
+        <div th:class="|card-header ${course.meta != null ? 'floated-title' : ''} ${course.active ? '' : 'inactive-title'}|">
+            <h4 class="course-title card-title" id="heading-icon">
+                <strong><span th:class="|code tag tag-pill tag-glow ${@viewService.getClassForCourse(course)}|" th:text="${course.code}"></span></strong> :
+                <span class="title" th:text="${course.title}"></span>
+            </h4>
+            <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+            <div class="heading-elements">
+                <ul class="list-inline mb-0">
+                    <li th:if="${course.meta}"><a th:href="@{|/department/${department.code}/floated/${course.code}|}" data-toggle="tooltip" data-placement="top" data-original-title="Manage Course"><i class="icon-paper"></i></a></li>
+                    <li th:unless="${course.meta}"><a th:href="@{|/department/${department.code}/courses/${course.code}/float|}" data-toggle="tooltip" data-placement="top" data-original-title="Float Course"><i class="icon-layers"></i></a></li>
+                    <li><a th:href="@{|/department/${department.code}/courses/${course.code}/edit|}" data-toggle="tooltip" data-placement="top" data-original-title="Edit Course"><i class="icon-cog3"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div th:replace="this :: course_card_body"></div>
+    </div>
+
+    </body>
+</html>

@@ -11,7 +11,7 @@
             '<span><img src="' + getImageUrl(suggestion._item.userDetailsAvatarUrl) + '" class="avatar-img rounded-circle"/></span>',
             "<span class='pad-top name'>", fuzzyhound.get().highlight(suggestion.userName,"userName") ,"</span> ",
             "<span class='pad-top faculty-id'><i>(", fuzzyhound.get().highlight(suggestion.facultyId, "facultyId"), ")</i></span>",
-            "<span class='pad-top department capsule'>", suggestion._item.userDepartmentName, "</span> ",
+            "<span class='pad-top department capsule p-small'>", suggestion._item.userDepartmentName, "</span> ",
             "</div>"
         ].join("");
     }

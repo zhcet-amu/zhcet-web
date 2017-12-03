@@ -66,7 +66,7 @@
         </div>
     </div>
     <div class="content-header-right col-md-6 col-xs-12" >
-        <h5 class="float-md-right capsule bg-primary text-white text-xs-center" th:text="|Session : ${@configurationService.getSessionName()}|" style="padding: 10px;"></h5>
+        <h5 class="float-md-right capsule p-small bg-primary text-white text-xs-center" th:text="|Session : ${@configurationService.getSessionName()}|"></h5>
     </div>
     <div class="content-header-lead col-xs-12 mt-1" th:if="${page_description}">
         <p class="lead" th:text="${page_description}"></p>
@@ -98,8 +98,8 @@
             <span th:text="${btn_choose == null ? 'Choose' : btn_choose}">Choose</span>
         </label>
         <div>
-            <span class="file-name capsule hidden"></span>
-            <span class="file-size capsule hidden"></span>
+            <span class="file-name capsule p-small hidden"></span>
+            <span class="file-size capsule p-small hidden"></span>
         </div>
     </div>
     <div class="row upload-btn hidden" style="text-align: center;">

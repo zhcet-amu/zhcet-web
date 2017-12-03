@@ -46,7 +46,7 @@
                             <td class="faculty-id" th:text="${member.facultyId}"></td>
                             <td class="name" th:text="${member.user.name}"></td>
                             <td class="active" width="50" style="padding: 0">
-                                <span th:class="|capsule ${member.working ? 'bg-success' : 'bg-danger'}|" th:text="${member.working ? 'Active' : 'Inactive'}"></span>
+                                <span th:class="|capsule p-small ${member.working ? 'bg-success' : 'bg-danger'}|" th:text="${member.working ? 'Active' : 'Inactive'}"></span>
                             </td>
                             <td>
                                 <table class="table table-column" style="background-color: white">

@@ -4,10 +4,10 @@
             "<div " + (suggestion._item.floated ? "class='bg-danger'" : "") + ">",
             "<span class='code'>", fuzzyhound.get().highlight(suggestion.code, "code"), " - </span>",
             "<span class='title'><i>", fuzzyhound.get().highlight(suggestion.title,"title") ,"</i></span> ",
-            "<span class='category capsule'>", suggestion._item.category, "</span> ",
+            "<span class='category capsule p-small'>", suggestion._item.category, "</span> ",
             "<span class='semester'>Sem: ", suggestion._item.semester, " - </span>",
             "<span class='credits'>Credits: ", suggestion._item.credits, "</span>",
-            (suggestion._item.floated ? "  <span class='capsule category'>Floated</span>" : ""),
+            (suggestion._item.floated ? "  <span class='capsule p-small category'>Floated</span>" : ""),
             "</div>"
         ].join("");
     }
@@ -20,7 +20,7 @@
             '<div class="card-block">',
             '<h4 class="card-title"><strong>' + item.code + '</strong> - ' + item.title + '</h4>',
             '<p class="card-text">',
-            '<span class="capsule category">' + item._item.category + '</span>  ',
+            '<span class="capsule p-small category">' + item._item.category + '</span>  ',
             '<span class="semester">Semester : ' + item._item.semester + '</span> - ',
             '<span class="credits">Credits : ' + item._item.credits + '</span></p>',
             '<button class="remove btn btn-outline-danger float-xs-right">Remove</button>',
@@ -52,7 +52,7 @@
         $.each(courses, function (index, course) {
             if (course.floated || (added.indexOf(course.code) !== -1))
                 return;
-            list.append("<li style='padding: 5px;'><input name='to-float' type='checkbox' style='margin-right: 10px; vertical-align: middle'><strong id='c-code'>"+course.code+"</strong> - "+course.title+" - <span class='capsule'>Semester: " + course.semester + "</span></li>");
+            list.append("<li style='padding: 5px;'><input name='to-float' type='checkbox' style='margin-right: 10px; vertical-align: middle'><strong id='c-code'>"+course.code+"</strong> - "+course.title+" - <span class='capsule p-small'>Semester: " + course.semester + "</span></li>");
         });
     }
 

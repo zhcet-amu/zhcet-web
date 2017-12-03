@@ -1,5 +1,8 @@
 html,
-body { height: 100%; }
+body {
+    height: 100%;
+    font-size: 16px;
+}
 
 body {
     display: table;
@@ -25,9 +28,70 @@ table td {
 }
 
 .capsule {
-    padding: 7px;
     background-color: #ddd;
-    border-radius: 30px;
+    border-radius: 1.8rem;
+    display: inline-block;
+}
+
+.capsule.p-small {
+    padding: 0.4375rem;
+}
+
+.capsule.p-medium {
+    padding: 0.625rem;
+}
+
+.badge {
+    padding: 0 0.3rem;
+    margin: 0.1rem;
+    display: inline-block;
+    border-radius: 0.4rem;
+    font-weight: 600;
+    color: #607D8B;
+    background-color: #ECEFF1;
+    border: 2px solid #607D8B;
+}
+
+.badge > .badge-content {
+    padding: 0.8rem 0.5rem;
+    color: white;
+    border-radius: .3rem;
+}
+
+.badge.badge-info {
+    color: #03A9F4;
+    background-color: #E1F5FE;
+    border: 2px solid #03A9F4;
+}
+
+.badge.badge-info > .badge-content {
+    background-color: #03A9F4;
+}
+
+.badge.badge-success {
+    color: #00E676;
+    background-color: #d5ffe2;
+    border: 2px solid #00E676;
+}
+
+.badge.badge-success > .badge-content {
+    background-color: #00E676;
+}
+
+.badge.badge-danger {
+    color: #f44336;
+    background-color: #ffebee;
+    border: 2px solid #f44336;
+}
+
+.badges > .badge > i {
+    margin-bottom: 0.1rem;
+}
+
+.join {
+    padding: 0.4375rem 0;
+    border-radius: 2rem;
+    background-color: rgba(206, 147, 216, 0.3)
 }
 
 .align-middle {

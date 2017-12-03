@@ -25,7 +25,7 @@
             var genderSpan = modal.find('#gender');
             var gender = data['user_details_gender'];
             genderSpan.html(gender);
-            genderSpan.attr('class', 'capsule ' + (gender === 'Male' ? 'blue' : 'pink') + '-dark');
+            genderSpan.attr('class', 'capsule p-small ' + (gender === 'Male' ? 'blue' : 'pink') + '-dark');
         } else {
             modal.find('#gender-container').hide();
         }

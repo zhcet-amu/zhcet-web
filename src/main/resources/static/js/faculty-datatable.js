@@ -8,7 +8,7 @@
         modal.find('#designation').html(data['designation']);
         modal.find('#department').html(data['user_department_name']);
         modal.find('#working').html(data['working'] ? 'Working' : 'Inactive');
-        modal.find('#working').attr('class', 'capsule ' + (data['working'] ? 'bg-success' : 'bg-danger'));
+        modal.find('#working').attr('class', 'capsule p-small ' + (data['working'] ? 'bg-success' : 'bg-danger'));
         modal.find('#link').attr('href', '/dean/faculty/' + data['facultyId']);
 
         modal.find('#avatar').attr('src', 'https://zhcet-backend.firebaseapp.com/static/img/account.svg');
@@ -27,7 +27,7 @@
             var genderSpan = modal.find('#gender');
             var gender = data['user_details_gender'];
             genderSpan.html(gender);
-            genderSpan.attr('class', 'capsule ' + (gender === 'Male' ? 'blue' : 'pink') + '-dark');
+            genderSpan.attr('class', 'capsule p-small ' + (gender === 'Male' ? 'blue' : 'pink') + '-dark');
         } else {
             modal.find('#gender-container').hide();
         }
@@ -110,7 +110,7 @@
                         css = 'bg-danger';
                     }
 
-                    return '<span class="capsule '+css+'">'+text+'</span>';
+                    return '<span class="capsule p-small '+css+'">'+text+'</span>';
                 }
             }, {
                 data: 'user_email'
