@@ -11,7 +11,6 @@ import in.ac.amu.zhcet.utils.page.Path;
 import in.ac.amu.zhcet.utils.page.PathChain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,10 +57,15 @@ public class FloatedCourseController {
                         .build());
     }
 
-    @PreAuthorize("isOfDepartment(#department, #course)")
     @GetMapping("department/{department}/floated/{course}")
     public String courseDetail(Model model, @PathVariable Department department, @PathVariable Course course, WebRequest webRequest) {
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
+        String templateUrl = "department/floated_course";
+        if (department == null)
+            return templateUrl;
+
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourse(course);
+        if (floatedCourse == null)
+            return templateUrl;
 
         if (!model.containsAttribute("success"))
             webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
@@ -81,32 +85,42 @@ public class FloatedCourseController {
         model.addAttribute("sections", courseInChargeService.getSections(floatedCourse));
         model.addAttribute("email_list", emails);
 
-        return "department/floated_course";
+        return templateUrl;
     }
 
-    @PreAuthorize("isOfDepartment(#department, #course)")
     @GetMapping("department/{department}/floated/{course}/unfloat")
     public String unfloat(RedirectAttributes redirectAttributes, @PathVariable Department department, @PathVariable Course course) {
-        courseManagementService.unfloatCourse(courseManagementService.getFloatedCourseByCourse(course));
+        String redirectUrl = "redirect:/department/{department}/courses?active=true";
+
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourse(course);
+        if (floatedCourse == null)
+            return redirectUrl;
+        courseManagementService.unfloatCourse(floatedCourse);
         redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " unfloated successfully!");
 
-        return "redirect:/department/{department}/courses?active=true";
+        return redirectUrl;
     }
 
-    @PreAuthorize("isOfDepartment(#department, #course)")
     @PostMapping("department/{department}/floated/{course}/register")
     public String uploadFile(RedirectAttributes attributes, @PathVariable Department department, @PathVariable Course course, @RequestParam MultipartFile file, HttpSession session) {
+        String redirectUrl = "redirect:/department/{department}/floated/{course}";
+        if (course == null)
+            return redirectUrl;
+
         registrationUploadService.upload(course, file, attributes, session);
 
-        return "redirect:/department/{department}/floated/{course}";
+        return redirectUrl;
     }
 
-    @PreAuthorize("isOfDepartment(#department, #course)")
     @PostMapping("department/{department}/floated/{course}/register/confirm")
     public String confirmRegistration(RedirectAttributes attributes, @PathVariable Department department, @PathVariable Course course, HttpSession session) {
+        String redirectUrl = "redirect:/department/{department}/floated/{course}";
+        if (course == null)
+            return redirectUrl;
+
         registrationUploadService.register(course, attributes, session);
 
-        return "redirect:/department/{department}/floated/{course}";
+        return redirectUrl;
     }
 
     private CourseInCharge create(String facultyId, String section) {
@@ -133,9 +147,12 @@ public class FloatedCourseController {
         return courseInCharges;
     }
 
-    @PreAuthorize("isOfDepartment(#department, #course)")
     @PostMapping("department/{department}/floated/{course}/in_charge")
     public String addInCharge(RedirectAttributes redirectAttributes, @PathVariable Department department, @PathVariable Course course, @RequestParam(required = false) List<String> facultyId, @RequestParam(required = false) List<String> section) {
+        String redirectUrl = "redirect:/department/{department}/floated/{course}";
+        if (course == null)
+            return redirectUrl;
+
         if (facultyId == null) {
             log.warn("Removed all course in charges : Course-{} Sections-{}", course.getCode(), section);
             courseInChargeService.setInCharge(course, Collections.emptyList());
@@ -144,13 +161,14 @@ public class FloatedCourseController {
         }
 
         redirectAttributes.addFlashAttribute("incharge_success", "Course In-Charge saved successfully");
-        return "redirect:/department/{department}/floated/{course}";
+        return redirectUrl;
     }
 
-    @PreAuthorize("isOfDepartment(#department, #course)")
     @GetMapping("department/{department}/floated/{course}/attendance/download")
     public void downloadAttendance(@PathVariable Department department, @PathVariable Course course, HttpServletResponse response) throws IOException {
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourse(course);
+        if (floatedCourse == null)
+            return;
         attendanceDownloadService.download(course.getCode(), "department", floatedCourse.getCourseRegistrations(), response);
     }
 

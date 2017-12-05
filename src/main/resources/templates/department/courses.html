@@ -10,7 +10,9 @@
     <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
     <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
     <div class="container">
-        <div class="row">
+
+        <!-- Show if Department Found -->
+        <div class="row" th:if="${department}">
             <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
                 <div th:replace="fragments/layout :: toolbar"></div>
                 <div class="card" style="background-color:#f5f5f5;">
@@ -67,6 +69,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Show if Department not Found -->
+        <div th:unless="${department}" class="row">
+            <div th:replace="department/fragments/department_not_found"></div>
         </div>
     </div>
 </div>

@@ -52,7 +52,11 @@ public class FloatedCourseEditController {
 
     @GetMapping("dean/floated/{course}")
     public String courseDetail(Model model, @PathVariable Course course, WebRequest webRequest) {
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
+        String templateUrl = "dean/floated_course";
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourse(course);
+
+        if (floatedCourse == null)
+            return templateUrl;
 
         if (!model.containsAttribute("success"))
             webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
@@ -71,26 +75,34 @@ public class FloatedCourseEditController {
         model.addAttribute("deanOverride", "dean");
         model.addAttribute("email_list", emails);
 
-        return "dean/floated_course";
+        return templateUrl;
     }
 
     @PostMapping("dean/floated/{course}/register")
     public String uploadFile(RedirectAttributes attributes, @PathVariable Course course, @RequestParam MultipartFile file, HttpSession session) {
+        String redirectUrl = "redirect:/dean/floated/{course}";
+        if (course == null)
+            return redirectUrl;
         registrationUploadService.upload(course, file, attributes, session);
 
-        return "redirect:/dean/floated/{course}";
+        return redirectUrl;
     }
 
     @PostMapping("dean/floated/{course}/register/confirm")
     public String confirmRegistration(RedirectAttributes attributes, @PathVariable Course course, HttpSession session) {
+        String redirectUrl = "redirect:/dean/floated/{course}";
+        if (course == null)
+            return redirectUrl;
         registrationUploadService.register(course, attributes, session);
 
-        return "redirect:/dean/floated/{course}";
+        return redirectUrl;
     }
 
     @GetMapping("dean/floated/{course}/attendance/download")
     public void downloadAttendance(@PathVariable Course course, HttpServletResponse response) throws IOException {
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
+        FloatedCourse floatedCourse = courseManagementService.getFloatedCourse(course);
+        if (floatedCourse == null)
+            return;
         attendanceDownloadService.download(course.getCode(), "dean", floatedCourse.getCourseRegistrations(), response);
     }
 

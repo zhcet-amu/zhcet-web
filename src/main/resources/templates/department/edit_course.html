@@ -6,8 +6,9 @@
 
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'department', subPage = 'courses')" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
-    <div class="row">
-        <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
+
+    <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
+    <div class="row" th:if="${course}">
         <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
             <div th:replace="fragments/layout :: toolbar"></div>
             <div class="text-xs-right">
@@ -79,6 +80,10 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div th:unless="${course}" class="row">
+        <div th:replace="department/fragments/course_not_found"></div>
     </div>
 </div>
 <script>

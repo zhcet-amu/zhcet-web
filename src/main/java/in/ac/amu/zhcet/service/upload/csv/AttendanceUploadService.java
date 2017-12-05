@@ -59,8 +59,7 @@ public class AttendanceUploadService {
         return exists ? "exists" : null;
     }
 
-    public Confirmation<AttendanceUpload> confirmUpload(Course course, String section, UploadResult<AttendanceUpload> uploadResult) {
-        CourseInCharge courseInCharge  = courseInChargeService.getCourseInCharge(course, section);
+    public Confirmation<AttendanceUpload> confirmUpload(CourseInCharge courseInCharge, UploadResult<AttendanceUpload> uploadResult) {
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
 
         existsError = false;
@@ -80,22 +79,21 @@ public class AttendanceUploadService {
     }
 
     @Transactional
-    public void updateAttendance(Course course, String section, List<AttendanceUpload> uploadList) {
-        CourseInCharge courseInCharge  = courseInChargeService.getCourseInCharge(course, section);
+    public void updateAttendance(CourseInCharge courseInCharge, List<AttendanceUpload> uploadList) {
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
 
         for (AttendanceUpload attendanceUpload : uploadList) {
             if (studentExists(attendanceUpload, courseRegistrations) == null) {
-                log.error("Force updating attendance of invalid student {} {} {}", course, section, attendanceUpload.getEnrolment_no());
+                log.error("Force updating attendance of invalid student {} {} {}", courseInCharge.getCode(), attendanceUpload.getEnrolment_no());
                 throw new RuntimeException("Invalid DataBody : " + attendanceUpload);
             }
         }
 
         for (AttendanceUpload attendance : uploadList) {
-            courseRegistrationService.setAttendance(course, attendance);
+            courseRegistrationService.setAttendance(courseInCharge.getFloatedCourse().getCourse(), attendance);
         }
 
-        sendNotification(courseInCharge.getFacultyMember(), course);
+        sendNotification(courseInCharge.getFacultyMember(), courseInCharge.getFloatedCourse().getCourse());
     }
 
     private static Notification fromStudent(FacultyMember sender, Course course) {

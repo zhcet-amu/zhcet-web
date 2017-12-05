@@ -7,10 +7,10 @@ import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.service.config.ConfigurationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -38,7 +38,7 @@ public class CourseInChargeService {
         if (courseInCharges == null)
             return;
 
-        FloatedCourse stored = courseManagementService.getFloatedCourseByCourse(course);
+        FloatedCourse stored = courseManagementService.getFloatedCourse(course);
         if (stored == null)
             return;
 
@@ -60,7 +60,7 @@ public class CourseInChargeService {
             return;
         }
 
-        CourseInCharge inCharge = courseInChargeRepository.findByFloatedCourseAndFacultyMemberAndSection(stored, facultyMember, section);
+        CourseInCharge inCharge = getCourseInCharge(stored, facultyMember, section);
         if (inCharge != null) {
             log.error("No such in charge : {} {} {}", stored.getCourse().getCode(), facultyMember.getFacultyId(), section);
             return;
@@ -79,11 +79,24 @@ public class CourseInChargeService {
         return courseInChargeRepository.findByFacultyMemberAndFloatedCourse_Session(facultyMember, ConfigurationService.getDefaultSessionCode());
     }
 
-    @PostAuthorize("isCourseInCharge(returnObject)")
-    public CourseInCharge getCourseInCharge(Course course, String section) {
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCourse(course);
+    public CourseInCharge getCourseInCharge(FloatedCourse floatedCourse, FacultyMember facultyMember, String section) {
+        if (floatedCourse == null || facultyMember == null)
+            return null;
         return courseInChargeRepository.findByFloatedCourseAndFacultyMemberAndSection
-                (floatedCourse, facultyService.getLoggedInMember(), Strings.emptyToNull(section));
+                (floatedCourse, facultyMember, Strings.emptyToNull(section));
+    }
+
+    public CourseInCharge getCourseInCharge(String inChargeCode) {
+        List<String> tokens = Arrays.asList(inChargeCode.trim().split(":"));
+        if (tokens.size() == 1) {
+            FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(tokens.get(0));
+            return getCourseInCharge(floatedCourse, facultyService.getLoggedInMember(), null);
+        } else if (tokens.size() > 1) {
+            FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(tokens.get(0));
+            return getCourseInCharge(floatedCourse, facultyService.getLoggedInMember(), tokens.get(1));
+        }
+
+        return null;
     }
 
     public List<CourseRegistration> getCourseRegistrations(CourseInCharge courseInCharge) {

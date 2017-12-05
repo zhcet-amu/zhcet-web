@@ -6,7 +6,6 @@ import in.ac.amu.zhcet.utils.NotificationUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,8 +64,7 @@ public class NotificationController {
         return "redirect:/notifications?page=" + currentPage;
     }
 
-    @PreAuthorize("hasNotificationPermission(#notification)")
-    @GetMapping("/notifications/mark/favorite/{notification}")
+    @GetMapping("/notifications/{notification}/mark/favorite")
     public String markFavorite(@RequestParam(required = false) Integer page, @PathVariable NotificationRecipient notification, RedirectAttributes redirectAttributes) {
         int currentPage = NotificationUtils.normalizePage(page);
 
@@ -75,8 +73,7 @@ public class NotificationController {
         return "redirect:/notifications?page=" + currentPage;
     }
 
-    @PreAuthorize("hasNotificationPermission(#notification)")
-    @GetMapping("/notifications/unmark/favorite/{notification}")
+    @GetMapping("/notifications/{notification}/unmark/favorite")
     public String unmarkFavorite(@RequestParam(required = false) Integer page, @PathVariable NotificationRecipient notification, RedirectAttributes redirectAttributes) {
         int currentPage = NotificationUtils.normalizePage(page);
 

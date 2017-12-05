@@ -6,7 +6,6 @@ import in.ac.amu.zhcet.service.CourseManagementService;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,9 +40,11 @@ public class CoursesRestController {
         return courseDto;
     }
 
-    @PreAuthorize("isDepartment(#department)")
     @GetMapping("/department/{department}/api/courses")
     public List<CourseDto> courses(@PathVariable Department department) {
+        if (department == null)
+            return null;
+
         List<FloatedCourse> floatedCourses = courseManagementService.getCurrentFloatedCourses(department);
         return courseManagementService.getAllActiveCourse(department, true)
                 .stream()

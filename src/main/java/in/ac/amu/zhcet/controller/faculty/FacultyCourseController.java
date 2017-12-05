@@ -1,6 +1,5 @@
 package in.ac.amu.zhcet.controller.faculty;
 
-import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.FacultyMember;
@@ -55,11 +54,14 @@ public class FacultyCourseController {
         return "faculty/courses";
     }
 
-    @GetMapping("faculty/courses/{course}/attendance")
-    public String attendance(Model model, @PathVariable Course course, @RequestParam(required = false) String section) {
-        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(course, section);
+    @GetMapping("faculty/courses/{code}/attendance")
+    public String attendance(Model model, @PathVariable String code) {
+        String templateUrl = "faculty/course_attendance";
+        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(code);
+        if (courseInCharge == null)
+            return templateUrl;
 
-        model.addAttribute("page_title", course.getCode() + " - " + course.getTitle());
+        model.addAttribute("page_title", courseInCharge.getFloatedCourse().getCourse().getCode() + " - " + courseInCharge.getFloatedCourse().getCourse().getTitle());
         model.addAttribute("page_subtitle", "Attendance management for " + courseInCharge.getFloatedCourse().getCourse().getCode());
         model.addAttribute("page_description", "Upload attendance for the floated course");
 
@@ -69,18 +71,21 @@ public class FacultyCourseController {
                 .collect(Collectors.toList());
         SortUtils.sortCourseAttendance(courseRegistrations);
 
+        model.addAttribute("incharge", courseInCharge);
         model.addAttribute("courseRegistrations", courseRegistrations);
-        model.addAttribute("course", course);
+        model.addAttribute("course", courseInCharge.getFloatedCourse().getCourse());
         model.addAttribute("email_list", emails);
 
-        return "faculty/course_attendance";
+        return templateUrl;
     }
 
-    @GetMapping("faculty/courses/{course}/attendance/download")
-    public void getStudents(HttpServletResponse response, @PathVariable Course course, @RequestParam(required = false) String section) throws IOException {
-        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(course, section);
+    @GetMapping("faculty/courses/{code}/attendance/download")
+    public void getStudents(HttpServletResponse response, @PathVariable String code, @RequestParam(required = false) String section) throws IOException {
+        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(code);
+        if (courseInCharge == null)
+            return;
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-        attendanceDownloadService.download(course.getCode() + "_" +
+        attendanceDownloadService.download(courseInCharge.getFloatedCourse().getCourse().getCode() + "_" +
                 StringUtils.defaultString(section, "all"), "faculty", courseRegistrations, response);
     }
 }

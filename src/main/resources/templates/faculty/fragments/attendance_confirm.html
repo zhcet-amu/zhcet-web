@@ -6,8 +6,7 @@
                 <h4 class="modal-title">Course Attendance</h4>
             </div>
             <div class="modal-body">
-                <form th:object="${attendanceModel}" th:action="|/faculty/courses/${course.code}/attendance/edit/confirm|" method="post" class="card-block">
-                    <input type="text" name="section" th:value="${param.section}" hidden>
+                <form th:object="${attendanceModel}" th:action="|/faculty/courses/${incharge.code}/attendance/edit/confirm|" method="post" class="card-block">
                     <div class="row">
                         <div class="table-responsive">
                             <table class="table" id="confirmation">

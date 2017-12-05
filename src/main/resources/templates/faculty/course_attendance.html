@@ -8,7 +8,8 @@
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'faculty_courses')" sec:authorize="hasRole('ROLE_FACULTY')">
     <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
-    <div class="row">
+    <!--/*@thymesVar id="incharge" type="in.ac.amu.zhcet.data.model.CourseInCharge"*/-->
+    <div class="row" th:if="${incharge}">
         <div class="col-xs-12">
             <div th:replace="fragments/layout :: toolbar"></div>
         </div>
@@ -17,12 +18,16 @@
         </div>
         <div class="col-xs-12 col-xl-3">
             <div th:replace="faculty/fragments/email_list"></div>
-            <div th:with="attendance_download_url = @{|/faculty/courses/${course.code}/attendance/download?section=${param.section}|}"
+            <div th:with="attendance_download_url = @{|/faculty/courses/${incharge.code}/attendance/download|}"
                  th:insert="faculty/fragments/attendance_download"></div>
             <div th:replace="faculty/fragments/attendance_upload"></div>
             <div th:replace="faculty/fragments/attendance_errors"></div>
             <div th:replace="faculty/fragments/attendance_confirm"></div>
         </div>
+    </div>
+
+    <div class="row" th:unless="${incharge}">
+        <div th:replace="department/fragments/course_not_found"></div>
     </div>
 </div>
 <script th:inline="javascript">

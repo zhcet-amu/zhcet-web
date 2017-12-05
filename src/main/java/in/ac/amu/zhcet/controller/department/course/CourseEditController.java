@@ -9,7 +9,6 @@ import in.ac.amu.zhcet.utils.page.Path;
 import in.ac.amu.zhcet.utils.page.PathChain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,9 +39,12 @@ public class CourseEditController {
                         .build());
     }
 
-    @PreAuthorize("isOfDepartment(#department, #course)")
     @GetMapping("/department/{department}/courses/{course}/edit")
     public String addCourse(Model model, @PathVariable Department department, @PathVariable Course course) {
+        String templateUrl = "department/edit_course";
+        if (course == null)
+            return templateUrl;
+
         model.addAttribute("page_description", "Edit course details and manage other settings");
         model.addAttribute("department", department);
         model.addAttribute("page_title", "Edit Course : " + department.getName() + " Department");
@@ -57,12 +59,15 @@ public class CourseEditController {
 
         model.addAttribute("floated", courseManagementService.isFloated(course));
 
-        return "department/edit_course";
+        return templateUrl;
     }
 
-    @PreAuthorize("isOfDepartment(#department, #course)")
     @PostMapping("/department/{department}/courses/{course}/edit")
     public String postCourse(@PathVariable Department department, @PathVariable Course course, @Valid Course courseEdit, BindingResult result, RedirectAttributes redirectAttributes) {
+        String redirectUrl = "redirect:/department/{department}/courses/{course}/edit";
+        if (course == null)
+            return redirectUrl;
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("course", courseEdit);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.course", result);
@@ -72,7 +77,7 @@ public class CourseEditController {
                 courseManagementService.saveCourse(course, courseEdit);
                 redirectAttributes.addFlashAttribute("course_success", "Course saved successfully!");
 
-                return "redirect:/department/{department}/courses/{course}/edit";
+                return redirectUrl;
             } catch (UpdateException e) {
                 log.warn("Course Save Error", e);
                 courseEdit.setCode(course.getCode());
@@ -81,10 +86,9 @@ public class CourseEditController {
             }
         }
 
-        return "redirect:/department/{department}/courses/{course}/edit";
+        return redirectUrl;
     }
 
-    @PreAuthorize("isOfDepartment(#department, #course)")
     @GetMapping("/department/{department}/courses/{course}/delete")
     public String deleteCourse(@PathVariable Department department, @PathVariable Course course, RedirectAttributes redirectAttributes) {
         if (course == null) {

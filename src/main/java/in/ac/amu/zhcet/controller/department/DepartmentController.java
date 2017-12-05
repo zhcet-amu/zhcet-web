@@ -5,7 +5,6 @@ import in.ac.amu.zhcet.service.user.Auditor;
 import in.ac.amu.zhcet.utils.page.Path;
 import in.ac.amu.zhcet.utils.page.PathChain;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +16,7 @@ public class DepartmentController {
 
     @GetMapping("/department")
     public String department() {
-        return "redirect:/department/" + Auditor.getLoggedInUser().getDepartment().getCode();
+        return String.format("redirect:/department/%s", Auditor.getLoggedInUser().getDepartment().getCode());
     }
 
     public static PathChain getPath(Department department) {
@@ -28,16 +27,19 @@ public class DepartmentController {
                         .build());
     }
 
-    @PreAuthorize("isDepartment(#department)")
     @GetMapping("/department/{department}")
     public String departmentPage(Model model, @PathVariable Department department) {
+        String templateUrl = "department/admin";
+        if (department == null)
+            return templateUrl;
+
         model.addAttribute("page_description", "Manage and float courses for the session");
         model.addAttribute("department", department);
-        model.addAttribute("page_title", department.getName() + " Department Panel");
         model.addAttribute("page_subtitle", "Course management for Department");
+        model.addAttribute("page_title", department.getName() + " Department Panel");
         model.addAttribute("page_path", getPath(department));
 
-        return "department/admin";
+        return templateUrl;
     }
 
 }

@@ -9,7 +9,6 @@ import in.ac.amu.zhcet.utils.page.Path;
 import in.ac.amu.zhcet.utils.page.PathChain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,9 +37,12 @@ public class CoursesController {
                     .build());
     }
 
-    @PreAuthorize("isDepartment(#department)")
     @GetMapping("/department/{department}/courses")
     public String getCourses(Model model, @PathVariable Department department, @RequestParam(value = "active", required = false) Boolean active) {
+        String templateUrl = "department/courses";
+        if (department == null)
+            return templateUrl;
+
         if (active == null)
             return "redirect:/department/{department}/courses?active=true";
 
@@ -50,25 +52,22 @@ public class CoursesController {
         model.addAttribute("page_subtitle", "Course Management");
         model.addAttribute("page_path", getPath(department));
 
-        List<Course> courses = courseManagementService.getAllActiveCourse(department, active);
-        courses.sort(Comparator.comparing(Course::getCode));
-
         List<Course> floatedCourses = courseManagementService.getCurrentFloatedCourses(department)
                 .stream()
                 .map(FloatedCourse::getCourse)
                 .collect(Collectors.toList());
 
-        courses = courses.stream()
-                .map(course -> {
-                    if (floatedCourses.contains(course))
-                        course.setMeta("Floated");
+        List<Course> courses = courseManagementService.getAllActiveCourse(department, active);
+        courses.forEach(course -> {
+            if (floatedCourses.contains(course))
+                course.setMeta("Floated");
+        });
 
-                    return course;
-                }).collect(Collectors.toList());
+        courses.sort(Comparator.comparing(Course::getCode));
 
         model.addAttribute("courses", courses);
 
-        return "department/courses";
+        return templateUrl;
     }
 
 }

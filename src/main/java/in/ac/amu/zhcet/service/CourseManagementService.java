@@ -1,6 +1,9 @@
 package in.ac.amu.zhcet.service;
 
-import in.ac.amu.zhcet.data.model.*;
+import in.ac.amu.zhcet.data.model.Course;
+import in.ac.amu.zhcet.data.model.CourseRegistration;
+import in.ac.amu.zhcet.data.model.Department;
+import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.service.config.ConfigurationService;
@@ -9,7 +12,6 @@ import in.ac.amu.zhcet.utils.exception.UpdateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,6 +29,10 @@ public class CourseManagementService {
     public CourseManagementService(FloatedCourseRepository floatedCourseRepository, CourseRepository courseRepository) {
         this.floatedCourseRepository = floatedCourseRepository;
         this.courseRepository = courseRepository;
+    }
+
+    public Course getCourse(String code) {
+        return courseRepository.findOne(code);
     }
 
     public List<Course> getAllActiveCourse(Department department, boolean active) {
@@ -74,30 +80,12 @@ public class CourseManagementService {
         return getFloatedCourse(course) != null;
     }
 
-    /**
-     * Protected method for getting floated course, throws AccessDenied exception if floated course does not exist
-     * @param course Course
-     * @return FloatedCourse for the corresponding course
-     */
-    @PostAuthorize("isFloated(returnObject)")
-    public FloatedCourse getFloatedCourseByCourse(Course course){
-        return getFloatedCourse(course);
-    }
-
-    /**
-     * Unprotected method for getting the floated course, allows null return value
-     * @param course Course
-     * @return FloatedCourse for the corresponding course
-     */
-    private FloatedCourse getFloatedCourse(Course course){
+    public FloatedCourse getFloatedCourse(Course course) {
+        if (course == null)
+            return null;
         return floatedCourseRepository.getBySessionAndCourse(ConfigurationService.getDefaultSessionCode(), course);
     }
 
-    /**
-     * Unprotected method for getting the floated course, allows null return value
-     * @param courseCode String course code to be searched
-     * @return FloatedCourse for the corresponding code
-     */
     public FloatedCourse getFloatedCourseByCode(String courseCode) {
         return floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseCode);
     }

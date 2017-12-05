@@ -7,7 +7,8 @@
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'department', subPage = 'add_course')" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
-    <div class="row">
+    <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
+    <div class="row" th:if="${department}">
         <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
             <div th:replace="fragments/layout :: toolbar"></div>
             <!-- Creation of new Course here-->
@@ -37,6 +38,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Show if Department not Found -->
+    <div th:unless="${department}" class="row">
+        <div th:replace="department/fragments/department_not_found"></div>
     </div>
 </div>
 </body>

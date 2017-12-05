@@ -5,7 +5,6 @@ import in.ac.amu.zhcet.service.notification.NotificationManagementService;
 import in.ac.amu.zhcet.utils.NotificationUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,7 +27,6 @@ public class NotificationEditController {
         this.notificationManagementService = notificationManagementService;
     }
 
-    @PreAuthorize("createdNotification(#notification)")
     @GetMapping("/notification/{notification}/edit")
     public String editNotification(@PathVariable Notification notification, Model model) {
         model.addAttribute("page_title", "Edit Notification");
@@ -40,7 +38,6 @@ public class NotificationEditController {
         return "faculty/edit_notification";
     }
 
-    @PreAuthorize("createdNotification(#notification)")
     @PostMapping("/notification/{notification}/edit")
     public String saveEditNotification(@RequestParam(required = false) Integer page, @PathVariable Notification notification,
                                        @Valid Notification edited, BindingResult result,

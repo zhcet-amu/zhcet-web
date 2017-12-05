@@ -6,13 +6,22 @@ import org.springframework.security.access.expression.method.MethodSecurityExpre
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PermissionExpressionHandler extends DefaultMethodSecurityExpressionHandler {
+
+    private final PermissionManager permissionManager;
+
     private AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
+
+    public PermissionExpressionHandler(PermissionManager permissionManager) {
+        this.permissionManager = permissionManager;
+    }
 
     @Override
     protected MethodSecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, MethodInvocation invocation) {
-        DomainPermissionExpression root = new DomainPermissionExpression(authentication);
+        DomainPermissionExpression root = new DomainPermissionExpression(authentication, permissionManager);
         root.setPermissionEvaluator(getPermissionEvaluator());
         root.setTrustResolver(this.trustResolver);
         root.setRoleHierarchy(getRoleHierarchy());

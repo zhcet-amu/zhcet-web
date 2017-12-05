@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.data.model;
 
+import com.google.common.base.Strings;
 import in.ac.amu.zhcet.data.model.base.BaseIdEntity;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,13 @@ public class CourseInCharge extends BaseIdEntity {
     private FacultyMember facultyMember;
 
     private String section;
+
+    public String getCode() {
+        String course = getFloatedCourse().getCourse().getCode();
+        String section = getSection();
+        String suffix = Strings.emptyToNull(section) == null ? "" : ":" + section;
+        return course + suffix;
+    }
 
     @Override
     public boolean equals(Object o) {

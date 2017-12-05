@@ -9,7 +9,6 @@ import in.ac.amu.zhcet.utils.page.Path;
 import in.ac.amu.zhcet.utils.page.PathChain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,9 +39,12 @@ public class FloatCourseController {
                         .build());
     }
 
-    @PreAuthorize("isOfDepartment(#department, #course)")
     @GetMapping("department/{department}/courses/{course}/float")
     public String floatCourse(@PathVariable Department department, @PathVariable Course course, RedirectAttributes redirectAttributes) {
+        String redirectUrl = "redirect:/department/{department}/course/float";
+        if (course == null)
+            return redirectUrl;
+
         if (courseManagementService.isFloated(course)) {
             log.warn("Course is already floated {}", course.getCode());
             redirectAttributes.addFlashAttribute("float_error", "Course is already floated");
@@ -50,25 +52,30 @@ public class FloatCourseController {
             redirectAttributes.addFlashAttribute("courses", Collections.singletonList(course));
         }
 
-        return "redirect:/department/{department}/course/float";
+        return redirectUrl;
     }
 
-    @PreAuthorize("isDepartment(#department)")
     @GetMapping("/department/{department}/course/float")
     public String floatCourse(Model model, @PathVariable Department department) {
+        String templateUrl = "department/float_course";
+        if (department == null)
+            return templateUrl;
+
         model.addAttribute("page_title", "Float Course : " + department.getName() + " Department");
         model.addAttribute("page_subtitle", "Floated Course Management");
         model.addAttribute("page_description", "Float and manage course and faculty in-charge for this session");
         model.addAttribute("department", department);
         model.addAttribute("page_path", getPath(department));
 
-        return "department/float_course";
+        return templateUrl;
     }
 
-    @PreAuthorize("isDepartment(#department)")
     @PostMapping("/department/{department}/course/float")
     public String floatCourses(RedirectAttributes redirectAttributes, @PathVariable Department department, @RequestParam("code") List<String> codes) {
         String redirectLink = "redirect:/department/{department}/course/float";
+        if (department == null)
+            return redirectLink;
+
         List<Course> courses = courseManagementService.getAllActiveCourse(department, true);
 
         if (!courses.stream().map(Course::getCode).collect(Collectors.toList()).containsAll(codes)) {

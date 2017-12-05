@@ -1,22 +1,38 @@
 package in.ac.amu.zhcet.service.security.permission;
 
 import in.ac.amu.zhcet.data.model.Course;
-import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.data.model.notification.NotificationRecipient;
+import in.ac.amu.zhcet.data.repository.NotificationRecipientRepository;
+import in.ac.amu.zhcet.data.repository.NotificationRepository;
 import in.ac.amu.zhcet.data.type.Roles;
+import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.user.CustomUser;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Slf4j
+@Service
 public class PermissionManager {
+
+    private final CourseManagementService courseManagementService;
+    private final NotificationRepository notificationRepository;
+    private final NotificationRecipientRepository notificationRecipientRepository;
+
+    @Autowired
+    public PermissionManager(CourseManagementService courseManagementService, NotificationRepository notificationRepository, NotificationRecipientRepository notificationRecipientRepository) {
+        this.courseManagementService = courseManagementService;
+        this.notificationRepository = notificationRepository;
+        this.notificationRecipientRepository = notificationRecipientRepository;
+    }
 
     public static List<GrantedAuthority> authorities(List<String> roles) {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
@@ -53,29 +69,38 @@ public class PermissionManager {
         return permissions;
     }
 
-    public static boolean hasPermission(Collection<? extends GrantedAuthority> authorities, String permission) {
+    public boolean hasPermission(Collection<? extends GrantedAuthority> authorities, String permission) {
         return authorities.stream().map(GrantedAuthority::getAuthority).anyMatch(authority -> authority.equals(permission));
     }
 
-    public static boolean hasPermissionOfDepartment(Authentication user, Department department) {
+    public boolean checkDepartment(Authentication user, String departmentCode) {
         if (hasPermission(user.getAuthorities(), Roles.DEPARTMENT_SUPER_ADMIN))
             return true;
 
-        return ((CustomUser) user.getPrincipal()).getDepartment().equals(department);
+        return ((CustomUser) user.getPrincipal()).getDepartment().getCode().equals(departmentCode);
     }
 
-    public static boolean hasPermissionOfDepartmentAndCourse(Authentication user, Department department, Course course) {
-        if (!department.equals(course.getDepartment()))
-            return false;
-
-        return hasPermissionOfDepartment(user, department);
+    public boolean checkCourse(String departmentCode, String courseCode) {
+        Course course = courseManagementService.getCourse(courseCode);
+        return course == null || course.getDepartment().getCode().equals(departmentCode);
     }
 
-    public static boolean hasPermissionOfNotification(Authentication user, NotificationRecipient notificationRecipient) {
-        return notificationRecipient.getRecipient().getUserId().equals(user.getName());
+    public boolean checkNotificationCreator(Authentication user, String notificationId) {
+        try {
+            Notification notification = notificationRepository.findOne(Long.parseLong(notificationId));
+            return notification != null && notification.getSender().getUserId().equals(user.getName());
+        } catch (NumberFormatException nfe) {
+            return true;
+        }
     }
 
-    public static boolean createdNotification(Authentication user, Notification notification) {
-        return notification.getSender().getUserId().equals(user.getName());
+    public boolean checkNotificationRecipient(Authentication user, String notificationId) {
+        try {
+            NotificationRecipient notification = notificationRecipientRepository.findOne(Long.parseLong(notificationId));
+            return notification != null && notification.getRecipient().getUserId().equals(user.getName());
+        } catch (NumberFormatException nfe) {
+            return true;
+        }
     }
+
 }

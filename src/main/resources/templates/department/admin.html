@@ -8,7 +8,7 @@
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'department', subPage = 'department_admin')" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
-    <div class="row">
+    <div class="row" th:if="${department}">
         <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
             <div th:replace="fragments/layout :: toolbar"></div>
             <div class="row" sec:authorize="hasRole('ROLE_DEPARTMENT_SUPER_ADMIN')">
@@ -27,7 +27,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+
+            <!-- Show if department was supplied -->
+            <div class="row" th:if="${department}">
                 <div class="col-xs-12 col-lg-6">
                     <div class="card">
                         <div class="card-body">
@@ -66,6 +68,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Show if Department not Found -->
+    <div th:unless="${department}" class="row">
+        <div th:replace="department/fragments/department_not_found"></div>
     </div>
 </div>
 </body>

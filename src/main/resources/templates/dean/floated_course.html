@@ -10,22 +10,28 @@
 <!--/*@thymesVar id="inCharge" type="in.ac.amu.zhcet.data.model.CourseInCharge"*/-->
 <!--/*@thymesVar id="registration" type="in.ac.amu.zhcet.data.model.CourseRegistration"*/-->
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean_admin', subPage = 'floated_page')">
-    <div th:replace="fragments/layout :: toolbar"></div>
-    <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Unknown Error!</strong>
-        <div>This can only happen if you tried to POST invalid data by force!</div>
+    <div class="row" th:if="${floatedCourse}">
+        <div th:replace="fragments/layout :: toolbar"></div>
+        <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Unknown Error!</strong>
+            <div>This can only happen if you tried to POST invalid data by force!</div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-xl-4">
+                <div th:replace="faculty/fragments/email_list"></div>
+                <div th:with="attendance_download_url = @{|/dean/floated/${floatedCourse.course.code}/attendance/download|}"
+                     th:insert="faculty/fragments/attendance_download"></div>
+                <div th:replace="department/fragments/register_students"></div>
+            </div>
+            <div class="col-xs-12 col-xl-8">
+                <div th:replace="department/fragments/registered_students"></div>
+            </div>
+        </div>
     </div>
-    <div class="row">
-        <div class="col-xs-12 col-xl-4">
-            <div th:replace="faculty/fragments/email_list"></div>
-            <div th:with="attendance_download_url = @{|/dean/floated/${floatedCourse.course.code}/attendance/download|}"
-                 th:insert="faculty/fragments/attendance_download"></div>
-            <div th:replace="department/fragments/register_students"></div>
-        </div>
-        <div class="col-xs-12 col-xl-8">
-            <div th:replace="department/fragments/registered_students"></div>
-        </div>
+
+    <div th:unless="${floatedCourse}" class="row">
+        <div th:replace="department/fragments/course_not_found"></div>
     </div>
 </div>
 <script>

@@ -7,7 +7,7 @@
                 </div>
                 <div class="p-2 bg-cyan text-white media-body" th:if="${courseRegistrations != null}" style="background-color: #00BCD4">
                     <h5>Download Attendance</h5>
-                    <h5 class="text-bold-600" th:if="${!#strings.isEmpty(param.section)}" th:text="|Section : ${param.section}|"></h5>
+                    <h5 class="text-bold-600" th:if="${incharge.section}" th:text="|Section : ${incharge.section}|"></h5>
                     <h5 class="text-bold-400" th:text="|${courseRegistrations.size()} Students|"></h5>
                 </div>
             </div>

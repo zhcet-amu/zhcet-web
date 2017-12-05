@@ -5,7 +5,6 @@ import in.ac.amu.zhcet.service.notification.NotificationManagementService;
 import in.ac.amu.zhcet.utils.NotificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +41,6 @@ public class NotificationManagementController {
         return "faculty/manage_notifications";
     }
 
-    @PreAuthorize("createdNotification(#notification)")
     @GetMapping("/notification/{notification}/report")
     public String notificationReport(@RequestParam(required = false) Integer page, @PathVariable Notification notification, Model model) {
         model.addAttribute("page_title", "Notification Report");
@@ -55,7 +53,6 @@ public class NotificationManagementController {
         return "faculty/notification_report";
     }
 
-    @PreAuthorize("createdNotification(#notification)")
     @GetMapping("/notification/{notification}/delete")
     public String deleteNotification(@RequestParam(required = false) Integer page, @PathVariable Notification notification, RedirectAttributes redirectAttributes) {
         int currentPage = NotificationUtils.normalizePage(page);

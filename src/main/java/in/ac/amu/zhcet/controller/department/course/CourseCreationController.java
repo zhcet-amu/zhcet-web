@@ -9,7 +9,6 @@ import in.ac.amu.zhcet.utils.page.Path;
 import in.ac.amu.zhcet.utils.page.PathChain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,9 +37,12 @@ public class CourseCreationController {
                         .build());
     }
 
-    @PreAuthorize("isDepartment(#department)")
     @GetMapping("/department/{department}/course/add")
     public String addCourse(Model model, @PathVariable Department department) {
+        String templateUrl = "department/add_course";
+        if (department == null)
+            return templateUrl;
+
         model.addAttribute("page_description", "Create new global course for the Department");
         model.addAttribute("department", department);
         model.addAttribute("page_title", "Add Course : " + department.getName() + " Department");
@@ -55,12 +57,15 @@ public class CourseCreationController {
             model.addAttribute("course", course);
         }
 
-        return "department/add_course";
+        return templateUrl;
     }
 
-    @PreAuthorize("isOfDepartment(#department, #course)")
     @PostMapping("/department/{department}/course/add")
     public String postCourse(@PathVariable Department department, @Valid Course course, BindingResult result, RedirectAttributes redirectAttributes) {
+        String templateUrl = "redirect:/department/{department}/course/add";
+        if (department == null)
+            return templateUrl;
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("course", course);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.course", result);
@@ -78,7 +83,7 @@ public class CourseCreationController {
             }
         }
 
-        return "redirect:/department/{department}/course/add";
+        return templateUrl;
     }
 
 }

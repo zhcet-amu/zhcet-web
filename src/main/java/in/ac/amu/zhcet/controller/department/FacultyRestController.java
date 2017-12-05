@@ -6,7 +6,6 @@ import in.ac.amu.zhcet.service.FacultyService;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,8 +34,6 @@ public class FacultyRestController {
         this.facultyService = facultyService;
     }
 
-
-    @PreAuthorize("isDepartment(#department)")
     @GetMapping("/department/{department}/api/faculty")
     public List<FacultyDto> faculty(@PathVariable Department department, @RequestParam(required = false) Boolean all) {
         List<FacultyMember> facultyMembers;
