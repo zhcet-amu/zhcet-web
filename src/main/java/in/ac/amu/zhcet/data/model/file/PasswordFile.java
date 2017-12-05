@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
@@ -18,7 +17,6 @@ import java.time.temporal.TemporalUnit;
 
 @Data
 @Entity
-@Audited
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class PasswordFile extends BaseEntity {
