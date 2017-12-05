@@ -1,8 +1,8 @@
 package in.ac.amu.zhcet.controller.dean;
 
-import in.ac.amu.zhcet.data.model.Configuration;
+import in.ac.amu.zhcet.service.config.Configuration;
 import in.ac.amu.zhcet.data.model.dto.Config;
-import in.ac.amu.zhcet.service.ConfigurationService;
+import in.ac.amu.zhcet.service.config.ConfigurationService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class ConfigurationController {
         model.addAttribute("page_description", "Manage site wide configurations and parameters");
 
         if (!model.containsAttribute("config"))
-            model.addAttribute("config", toConfig(ConfigurationService.getConfiguration()));
+            model.addAttribute("config", toConfig(configurationService.getConfigCache()));
         return "dean/configuration";
     }
 

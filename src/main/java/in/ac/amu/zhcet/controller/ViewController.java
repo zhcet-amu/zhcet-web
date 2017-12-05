@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.configuration.security.login.RoleWiseSuccessHandler;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.user.Auditor;
 import in.ac.amu.zhcet.service.security.login.LoginAttemptService;
+import in.ac.amu.zhcet.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -32,9 +33,9 @@ public class ViewController {
     @RequestMapping("/login")
     public String getLoginPage(Model model, @RequestParam(required = false) String error, HttpServletRequest request) {
         Authentication authentication = Auditor.getLoggedInAuthentication();
-        if (loginAttemptService.isRememberMe(authentication))
+        if (SecurityUtils.isRememberMe(authentication))
             model.addAttribute("remember_error", "Please refresh your login");
-        else if (loginAttemptService.isFullyAuthenticated(authentication))
+        else if (SecurityUtils.isFullyAuthenticated(authentication))
             return homePage();
 
         if (error != null) {

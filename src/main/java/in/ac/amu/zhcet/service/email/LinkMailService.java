@@ -1,6 +1,6 @@
 package in.ac.amu.zhcet.service.email;
 
-import in.ac.amu.zhcet.service.ConfigurationService;
+import in.ac.amu.zhcet.service.config.ConfigurationService;
 import in.ac.amu.zhcet.service.markdown.MarkDownService;
 import in.ac.amu.zhcet.service.email.data.LinkMessage;
 import in.ac.amu.zhcet.utils.SecurityUtils;

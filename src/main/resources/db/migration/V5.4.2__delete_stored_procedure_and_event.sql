@@ -1,0 +1,2 @@
+DROP EVENT IF EXISTS CleanConfig;
+DROP PROCEDURE IF EXISTS delete_config;

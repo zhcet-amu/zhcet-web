@@ -1,0 +1,1 @@
+ALTER TABLE configuration MODIFY id BIGINT(20) NOT NULL;

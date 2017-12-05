@@ -2,6 +2,9 @@ package in.ac.amu.zhcet.utils;
 
 import com.google.common.hash.Hashing;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.RememberMeAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 import java.nio.charset.Charset;
 import java.security.SecureRandom;
@@ -46,6 +49,18 @@ public class SecurityUtils {
                 0, possibleCharacters.length - 1,
                 false, false,
                 possibleCharacters, new SecureRandom());
+    }
+
+    public static boolean isRememberMe(Authentication authentication) {
+        return authentication != null && authentication.getClass().isAssignableFrom(RememberMeAuthenticationToken.class);
+    }
+
+    public static boolean isAnonymous(Authentication authentication) {
+        return authentication != null && authentication.getClass().isAssignableFrom(AnonymousAuthenticationToken.class);
+    }
+
+    public static boolean isFullyAuthenticated(Authentication authentication) {
+        return !(isRememberMe(authentication) || isAnonymous(authentication));
     }
 
 }

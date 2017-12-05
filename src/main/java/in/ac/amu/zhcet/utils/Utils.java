@@ -1,10 +1,13 @@
 package in.ac.amu.zhcet.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
 import java.time.LocalDate;
 
+@Slf4j
 public class Utils {
 
     // Prevent instantiation of Util class
@@ -45,6 +48,20 @@ public class Utils {
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+
+    public static String getBaseUrl(String urlString) {
+        if(urlString == null) {
+            return null;
+        }
+
+        try {
+            URL url = new URL(urlString);
+            return url.getProtocol() + "://" + url.getAuthority() + "/";
+        } catch (Exception e) {
+            log.error("Can't parse URL", e);
+            return null;
+        }
     }
 
     public static String getClientIP(HttpServletRequest request) {

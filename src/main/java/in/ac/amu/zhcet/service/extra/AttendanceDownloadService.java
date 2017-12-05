@@ -4,7 +4,7 @@ import com.j256.simplecsv.processor.CsvProcessor;
 import in.ac.amu.zhcet.data.model.Attendance;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
-import in.ac.amu.zhcet.service.ConfigurationService;
+import in.ac.amu.zhcet.service.config.ConfigurationService;
 import in.ac.amu.zhcet.service.upload.storage.FileSystemStorageService;
 import in.ac.amu.zhcet.service.upload.storage.FileType;
 import in.ac.amu.zhcet.utils.SortUtils;

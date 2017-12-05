@@ -4,7 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.RemovalListener;
 import in.ac.amu.zhcet.configuration.security.login.listener.PathAuthorizationAuditListener;
-import in.ac.amu.zhcet.service.ConfigurationService;
+import in.ac.amu.zhcet.service.config.ConfigurationService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,8 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.actuate.security.AuthenticationAuditListener;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
@@ -48,11 +49,11 @@ public class LoginAttemptService {
     }
 
     private int getMaxRetries() {
-        return configurationService.getMaxRetries();
+        return configurationService.getConfigCache().getMaxRetries();
     }
 
     private int getBlockDuration() {
-        return configurationService.getBlockDuration();
+        return configurationService.getConfigCache().getBlockDuration();
     }
 
     public String getErrorMessage(HttpServletRequest request) {
@@ -125,18 +126,6 @@ public class LoginAttemptService {
 
     private int triesLeft(String key) {
         return getMaxRetries() - getFromCache(key);
-    }
-
-    public boolean isRememberMe(Authentication authentication) {
-        return authentication != null && authentication.getClass().isAssignableFrom(RememberMeAuthenticationToken.class);
-    }
-
-    public boolean isAnonymous(Authentication authentication) {
-        return authentication != null && authentication.getClass().isAssignableFrom(AnonymousAuthenticationToken.class);
-    }
-
-    public boolean isFullyAuthenticated(Authentication authentication) {
-        return !(isRememberMe(authentication) || isAnonymous(authentication));
     }
 
     @Data
