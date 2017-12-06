@@ -1,18 +1,16 @@
 package in.ac.amu.zhcet.configuration;
 
-import in.ac.amu.zhcet.service.config.Configuration;
 import in.ac.amu.zhcet.data.repository.ConfigurationRepository;
-import in.ac.amu.zhcet.service.config.ConfigurationService;
+import in.ac.amu.zhcet.service.config.Configuration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.PriorityOrdered;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Priority;
 
 @Slf4j
 @Component
-@Priority(PriorityOrdered.HIGHEST_PRECEDENCE)
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ConfigurationComponent {
 
     @Autowired
@@ -27,10 +25,8 @@ public class ConfigurationComponent {
             defaultConfiguration.setUrl(applicationProperties.getUrl());
             configurationRepository.save(defaultConfiguration);
             log.warn("Saved default configuration : " + defaultConfiguration);
-            ConfigurationService.updateConfiguration(defaultConfiguration);
         } else {
             log.info("Configuration already present : " + configuration);
-            ConfigurationService.updateConfiguration(configuration);
         }
     }
 

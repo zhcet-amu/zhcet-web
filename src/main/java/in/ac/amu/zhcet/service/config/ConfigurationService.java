@@ -4,12 +4,16 @@ import com.google.common.base.Strings;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 @Slf4j
 @Service
+@Order(2)
+@DependsOn("configurationComponent")
 public class ConfigurationService {
 
     private final ConfigurationCacheService configurationCacheService;
@@ -21,7 +25,7 @@ public class ConfigurationService {
         updateConfiguration(getConfigCache());
     }
 
-    public static void updateConfiguration(Configuration configurationModel) {
+    private void updateConfiguration(Configuration configurationModel) {
         configuration = configurationModel;
         log.info("Static Configuration Set : {}", configuration);
     }
