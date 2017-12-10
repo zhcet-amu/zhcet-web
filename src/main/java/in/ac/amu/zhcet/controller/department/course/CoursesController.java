@@ -38,19 +38,19 @@ public class CoursesController {
     }
 
     @GetMapping("/department/{department}/courses")
-    public String getCourses(Model model, @PathVariable Department department, @RequestParam(value = "active", required = false) Boolean active) {
+    public String getCourses(Model model, @PathVariable Department department, @RequestParam(value = "all", required = false) Boolean all) {
         String templateUrl = "department/courses";
         if (department == null)
             return templateUrl;
 
-        if (active == null)
-            return "redirect:/department/{department}/courses?active=true";
+        boolean active = !(all != null && all);
 
         model.addAttribute("page_description", "View and manage courses for the Department");
         model.addAttribute("department", department);
         model.addAttribute("page_title", "Courses : " + department.getName() + " Department");
         model.addAttribute("page_subtitle", "Course Management");
         model.addAttribute("page_path", getPath(department));
+        model.addAttribute("all", !active);
 
         List<Course> floatedCourses = courseManagementService.getCurrentFloatedCourses(department)
                 .stream()

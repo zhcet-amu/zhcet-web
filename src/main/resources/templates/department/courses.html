@@ -36,8 +36,8 @@
                             <a th:href="@{|/department/${department.code}/course/float|}">
                                 <button class="btn btn-info btn-round text-white">Float Course</button>
                             </a>
-                            <a th:with="toggle = ${!param.active}" th:href="@{|/department/${department.code}/courses|(active=${toggle})}">
-                                <button th:class="|btn btn-round btn-${toggle ? 'primary' : 'danger'}|" th:text="${toggle ? 'Active Courses' : 'All Courses'}"></button>
+                            <a th:href="@{|/department/${department.code}/courses|(all=${!all})}">
+                                <button th:class="|btn btn-round btn-${all ? 'primary' : 'danger'}|" th:text="${all ? 'Active Courses' : 'All Courses'}"></button>
                             </a>
                             <button id="toggle-floated" class="btn btn-secondary btn-round">Floated Course</button>
                             <hr>

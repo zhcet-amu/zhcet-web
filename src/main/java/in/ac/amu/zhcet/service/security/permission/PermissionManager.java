@@ -77,6 +77,8 @@ public class PermissionManager {
         if (hasPermission(user.getAuthorities(), Roles.DEPARTMENT_SUPER_ADMIN))
             return true;
 
+        if (!(user.getPrincipal() instanceof CustomUser))
+            return false;
         return ((CustomUser) user.getPrincipal()).getDepartment().getCode().equals(departmentCode);
     }
 
