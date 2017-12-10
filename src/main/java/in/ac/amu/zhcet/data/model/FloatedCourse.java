@@ -48,6 +48,6 @@ public class FloatedCourse extends BaseEntity implements Serializable {
         if (session == null)
             session = ConfigurationService.getDefaultSessionCode();
 
-        id = session + "_" + course.getCode();
+        id = session + ":" + course.getCode();
     }
 }
