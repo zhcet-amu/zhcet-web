@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller.faculty.notification;
+package in.ac.amu.zhcet.controller.management.notification;
 
 import in.ac.amu.zhcet.data.model.notification.ChannelType;
 import in.ac.amu.zhcet.data.model.notification.Notification;
@@ -27,7 +27,7 @@ public class NotificationSendingController {
         this.notificationSendingService = notificationSendingService;
     }
 
-    @GetMapping("/notification/send")
+    @GetMapping("/management/notification/send")
     public String sendNotification(Model model) {
         model.addAttribute("page_title", "Send Notifications");
         model.addAttribute("page_subtitle", "Notification Manager");
@@ -44,12 +44,12 @@ public class NotificationSendingController {
             model.addAttribute("notification", notification);
         }
 
-        return "faculty/send_notification";
+        return "management/send_notification";
     }
 
-    @PostMapping("/notification/send")
+    @PostMapping("/management/notification/send")
     public String handleSentNotification(@Valid Notification notification, BindingResult bindingResult, RedirectAttributes redirectAttribute) {
-        String redirectUrl = "redirect:/notification/send";
+        String redirectUrl = "redirect:/management/notification/send";
 
         if (bindingResult.hasErrors()) {
             redirectAttribute.addFlashAttribute("notification", notification);

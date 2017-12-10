@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller.faculty;
+package in.ac.amu.zhcet.controller.management;
 
 import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
 import in.ac.amu.zhcet.service.realtime.RealTimeStatusService;
@@ -17,7 +17,7 @@ public class RealTimeStatusController {
         this.realTimeStatusService = realTimeStatusService;
     }
 
-    @GetMapping("/task/status/{id}")
+    @GetMapping("/management/task/status/{id}")
     public RealTimeStatus realTimeStatus(@PathVariable String id) {
         return realTimeStatusService.get(id);
     }

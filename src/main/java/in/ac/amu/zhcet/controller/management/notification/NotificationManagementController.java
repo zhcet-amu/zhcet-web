@@ -1,8 +1,9 @@
-package in.ac.amu.zhcet.controller.faculty.notification;
+package in.ac.amu.zhcet.controller.management.notification;
 
 import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.service.notification.NotificationManagementService;
 import in.ac.amu.zhcet.utils.NotificationUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 public class NotificationManagementController {
 
@@ -24,7 +26,7 @@ public class NotificationManagementController {
         this.notificationManagementService = notificationManagementService;
     }
 
-    @GetMapping("/notification/manage")
+    @GetMapping("/management/notifications")
     public String manageNotifications(@RequestParam(required = false) Integer page, Model model) {
         model.addAttribute("page_title", "Manage Notifications");
         model.addAttribute("page_subtitle", "Notification Manager");
@@ -38,11 +40,15 @@ public class NotificationManagementController {
         notificationManagementService.setInformation(notifications);
         model.addAttribute("notifications", notifications);
 
-        return "faculty/manage_notifications";
+        return "management/manage_notifications";
     }
 
-    @GetMapping("/notification/{notification}/report")
+    @GetMapping("/management/notifications/{notification}/report")
     public String notificationReport(@RequestParam(required = false) Integer page, @PathVariable Notification notification, Model model) {
+        String templateUrl = "management/notification_report";
+        if (notification == null)
+            return templateUrl;
+
         model.addAttribute("page_title", "Notification Report");
         model.addAttribute("page_subtitle", "Notification Manager");
         model.addAttribute("page_description", "View notification receipt");
@@ -50,16 +56,20 @@ public class NotificationManagementController {
         notificationManagementService.setSeenCount(notification);
         model.addAttribute("notification", notification);
 
-        return "faculty/notification_report";
+        return templateUrl;
     }
 
-    @GetMapping("/notification/{notification}/delete")
+    @GetMapping("/management/notifications/{notification}/delete")
     public String deleteNotification(@RequestParam(required = false) Integer page, @PathVariable Notification notification, RedirectAttributes redirectAttributes) {
         int currentPage = NotificationUtils.normalizePage(page);
+        String redirectUrl = "redirect:/management/notifications?page=" + currentPage;
+
+        if (notification == null)
+            return redirectUrl;
 
         notificationManagementService.deleteNotification(notification);
         redirectAttributes.addFlashAttribute("notification_success", "Notification Deleted");
-        return "redirect:/notification/manage?page=" + currentPage;
+        return redirectUrl;
     }
 
 }

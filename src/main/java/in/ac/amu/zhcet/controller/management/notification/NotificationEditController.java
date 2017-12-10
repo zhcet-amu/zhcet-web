@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.controller.faculty.notification;
+package in.ac.amu.zhcet.controller.management.notification;
 
 import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.service.notification.NotificationManagementService;
@@ -27,24 +27,31 @@ public class NotificationEditController {
         this.notificationManagementService = notificationManagementService;
     }
 
-    @GetMapping("/notification/{notification}/edit")
+    @GetMapping("/management/notifications/{notification}/edit")
     public String editNotification(@PathVariable Notification notification, Model model) {
+        String templateUrl = "management/edit_notification";
+        if (notification == null)
+            return templateUrl;
+
         model.addAttribute("page_title", "Edit Notification");
         model.addAttribute("page_subtitle", "Notification Manager");
         model.addAttribute("page_description", "Edit sent notifications");
 
         if (!model.containsAttribute("notification"))
             model.addAttribute("notification", notification);
-        return "faculty/edit_notification";
+        return templateUrl;
     }
 
-    @PostMapping("/notification/{notification}/edit")
+    @PostMapping("/management/notifications/{notification}/edit")
     public String saveEditNotification(@RequestParam(required = false) Integer page, @PathVariable Notification notification,
                                        @Valid Notification edited, BindingResult result,
                                        RedirectAttributes redirectAttributes)
     {
         int currentPage = NotificationUtils.normalizePage(page);
-        String redirectUrl = String.format("redirect:/notification/edit/%d?page=%d", notification.getId(), currentPage);
+        if (notification == null)
+            return "redirect:/management/notifications?page=" + currentPage;
+
+        String redirectUrl = String.format("redirect:/management/notifications/%d/edit?page=%d", notification.getId(), currentPage);
 
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("notification", edited);
@@ -56,7 +63,7 @@ public class NotificationEditController {
         notification.setMessage(edited.getMessage());
         notificationManagementService.saveNotification(notification);
         redirectAttributes.addFlashAttribute("notification_success", "Notification Edited");
-        return "redirect:/notification/manage?page=" + currentPage;
+        return "redirect:/management/notifications?page=" + currentPage;
     }
 
 }

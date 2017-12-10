@@ -9,14 +9,15 @@
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification', subPage='manage_notification')" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
-    <div class="container-fluid">
+
+    <!--/*@thymesVar id="notification" type="in.ac.amu.zhcet.data.model.notification.Notification"*/-->
+
+    <div class="container-fluid" th:if="${notification}">
         <div class="row">
             <div class="col-xs-12">
                 <div th:replace="fragments/layout :: toolbar"></div>
             </div>
         </div>
-
-        <!--/*@thymesVar id="notification" type="in.ac.amu.zhcet.data.model.notification.Notification"*/-->
 
         <div class="row">
             <div class="col-lg-8">
@@ -118,6 +119,14 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="container" th:unless="${notification}">
+        <div class="row">
+            <div class="col-xs-12 col-lg-6 offset-lg-3">
+                <div th:replace="management/fragments/notification_not_found"></div>
+            </div>
+        </div>
     </div>
 </div>
 <script>

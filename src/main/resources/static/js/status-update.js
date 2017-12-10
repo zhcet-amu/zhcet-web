@@ -42,7 +42,7 @@
     $.fn.initStatusProgress = function (options) {
         var settings = $.extend({
             taskId: '',
-            baseUrl: '/task/status/',
+            baseUrl: '/management/task/status/',
             delay: 2000,
             each: null,
             error: null,

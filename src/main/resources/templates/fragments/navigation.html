@@ -52,8 +52,8 @@
                     <span data-i18n="nav.project.main" class="menu-title">Notification</span>
                 </a>
                 <ul class="menu-content">
-                    <li th:class="${subPage == 'manage_notification' ? 'active' : ''}" ><a th:href="@{/notification/manage}" class="menu-item">Manage Notifications</a></li>
-                    <li th:class="${subPage == 'send_notification' ? 'active' : ''}" ><a th:href="@{/notification/send}" class="menu-item">Send Notification</a></li>
+                    <li th:class="${subPage == 'manage_notification' ? 'active' : ''}" ><a th:href="@{/management/notifications}" class="menu-item">Manage Notifications</a></li>
+                    <li th:class="${subPage == 'send_notification' ? 'active' : ''}" ><a th:href="@{/management/notification/send}" class="menu-item">Send Notification</a></li>
                 </ul>
             </li>
             <li th:class="|nav-item ${pageId == 'profile' ? 'active' : ''} |" sec:authorize="isAuthenticated()">

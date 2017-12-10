@@ -22,7 +22,7 @@
                 <div th:replace="fragments/layout :: toolbar"></div>
 
                 <!--/*@thymesVar id="notification" type="in.ac.amu.zhcet.data.model.notification.Notification"*/-->
-                <form id="notification" th:action="@{/notification/send}" method="post" th:object="${notification}">
+                <form id="notification" th:action="@{/management/notification/send}" method="post" th:object="${notification}">
                     <div th:each="error : ${#fields.detailedErrors('*')}">
                         <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
                     </div>

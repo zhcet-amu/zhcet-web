@@ -44,7 +44,7 @@
             <div class="col-xs-12">
                 <div th:replace="fragments/layout :: toolbar"></div>
                 <div th:replace="fragments/layout :: success(condition = ${notification_success}, message = ${notification_success})"></div>
-                <div th:replace="fragments/layout :: pagination(pageUrl = 'notification/manage')"></div>
+                <div th:replace="fragments/layout :: pagination(pageUrl = 'management/notifications')"></div>
 
                 <!--/*@thymesVar id="notification" type="in.ac.amu.zhcet.data.model.notification.Notification"*/-->
 
@@ -69,7 +69,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
-                                <a id="delete-link" href="/notification/">
+                                <a id="delete-link" href="/management/notifications/">
                                     <button type="button" id="delete-button" class="btn btn-outline-danger">Delete</button>
                                 </a>
                             </div>
@@ -85,7 +85,7 @@
                             <div class="heading-elements">
                                 <ul class="list-inline mb-0">
                                     <li>
-                                        <form method="get" th:action="@{|/notification/${notification.id}/edit|}">
+                                        <form method="get" th:action="@{|/management/notifications/${notification.id}/edit|}">
                                             <input type="text" name="page" th:value="${currentPage}" hidden>
                                             <button type="submit" class="head-icon btn btn-icon btn-pure">
                                                 <i data-toggle="tooltip" data-original-title="Edit Notification" class="icon-android-create"></i>
@@ -132,7 +132,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td><i class="icon-paper"></i></td>
-                                                    <td><a th:href="@{|/notification/${notification.id}/report|}">Report</a></td>
+                                                    <td><a th:href="@{|/management/notifications/${notification.id}/report|}">Report</a></td>
                                                     <td></td>
                                                 </tr>
                                             </table>
@@ -152,7 +152,7 @@
                         </blockquote>
                     </div>
                 </div>
-                <div th:replace="fragments/layout :: pagination(pageUrl = 'notification/manage')"></div>
+                <div th:replace="fragments/layout :: pagination(pageUrl = 'management/notifications')"></div>
             </div>
         </div>
     </div>
@@ -164,7 +164,7 @@
         function deleteNotification(id) {
             var deleteLink = $('#delete-link');
             var baseUrl = deleteLink.attr('href');
-            baseUrl += id + '/delete?' + $.param({ page: page });
+            baseUrl += id + '/delete';
             deleteLink.attr('href', baseUrl);
             $('#delete').modal();
         }
