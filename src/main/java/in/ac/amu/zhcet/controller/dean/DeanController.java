@@ -41,7 +41,7 @@ public class DeanController {
         if (!model.containsAttribute("faculty_success"))
             webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);
 
-        if (!model.containsAttribute("student_success"))
+        if (!model.containsAttribute("students_success"))
             webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
 
         model.addAttribute("users", userService.getAll());
