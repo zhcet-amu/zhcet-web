@@ -30,7 +30,6 @@ table td {
 .capsule {
     background-color: #ddd;
     border-radius: 1.8rem;
-    display: inline-block;
 }
 
 .capsule.p-small {

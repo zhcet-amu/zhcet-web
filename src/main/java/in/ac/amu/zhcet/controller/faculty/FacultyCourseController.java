@@ -2,7 +2,6 @@ package in.ac.amu.zhcet.controller.faculty;
 
 import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
-import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.FacultyService;
@@ -44,48 +43,50 @@ public class FacultyCourseController {
         model.addAttribute("page_subtitle", "Faculty Floated Course Management");
         model.addAttribute("page_description", "Manage and upload attendance for currently floated courses");
 
-        FacultyMember facultyMember = facultyService.getLoggedInMember();
-        List<CourseInCharge> courseInCharges = courseInChargeService.getCourseByFaculty(facultyMember);
-        courseInCharges.sort(Comparator.comparing(o -> {
-            Integer compared = o.getFloatedCourse().getCourse().getSemester();
-            return compared != null ? compared : 0;
-        }));
-        model.addAttribute("courseInCharges", courseInCharges);
+        facultyService.getLoggedInMember().ifPresent(facultyMember -> {
+            List<CourseInCharge> courseInCharges = courseInChargeService.getCourseByFaculty(facultyMember);
+            courseInCharges.sort(Comparator.comparing(o -> {
+                Integer compared = o.getFloatedCourse().getCourse().getSemester();
+                return compared != null ? compared : 0;
+            }));
+            model.addAttribute("courseInCharges", courseInCharges);
+        });
+
         return "faculty/courses";
     }
 
     @GetMapping("faculty/courses/{code}/attendance")
     public String attendance(Model model, @PathVariable String code) {
-        String templateUrl = "faculty/course_attendance";
-        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(code);
-        if (courseInCharge == null)
-            return templateUrl;
+        courseInChargeService.getCourseInCharge(code).ifPresent(courseInCharge -> {
+            model.addAttribute("page_title", courseInCharge.getFloatedCourse().getCourse().getCode() + " - " + courseInCharge.getFloatedCourse().getCourse().getTitle());
+            model.addAttribute("page_subtitle", "Attendance management for " + courseInCharge.getFloatedCourse().getCourse().getCode());
+            model.addAttribute("page_description", "Upload attendance for the floated course");
 
-        model.addAttribute("page_title", courseInCharge.getFloatedCourse().getCourse().getCode() + " - " + courseInCharge.getFloatedCourse().getCourse().getTitle());
-        model.addAttribute("page_subtitle", "Attendance management for " + courseInCharge.getFloatedCourse().getCourse().getCode());
-        model.addAttribute("page_description", "Upload attendance for the floated course");
+            List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
+            List<String> emails = CourseManagementService
+                    .getEmailsFromCourseRegistrations(courseRegistrations.stream())
+                    .collect(Collectors.toList());
+            SortUtils.sortCourseAttendance(courseRegistrations);
 
-        List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-        List<String> emails = CourseManagementService
-                .getEmailsFromCourseRegistrations(courseRegistrations.stream())
-                .collect(Collectors.toList());
-        SortUtils.sortCourseAttendance(courseRegistrations);
+            model.addAttribute("incharge", courseInCharge);
+            model.addAttribute("courseRegistrations", courseRegistrations);
+            model.addAttribute("course", courseInCharge.getFloatedCourse().getCourse());
+            model.addAttribute("email_list", emails);
+        });
 
-        model.addAttribute("incharge", courseInCharge);
-        model.addAttribute("courseRegistrations", courseRegistrations);
-        model.addAttribute("course", courseInCharge.getFloatedCourse().getCourse());
-        model.addAttribute("email_list", emails);
-
-        return templateUrl;
+        return "faculty/course_attendance";
     }
 
     @GetMapping("faculty/courses/{code}/attendance/download")
     public void getStudents(HttpServletResponse response, @PathVariable String code, @RequestParam(required = false) String section) throws IOException {
-        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(code);
-        if (courseInCharge == null)
-            return;
-        List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-        attendanceDownloadService.download(courseInCharge.getFloatedCourse().getCourse().getCode() + "_" +
-                StringUtils.defaultString(section, "all"), "faculty", courseRegistrations, response);
+        courseInChargeService.getCourseInCharge(code).ifPresent(courseInCharge -> {
+            List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
+            try {
+                String suffix = courseInCharge.getFloatedCourse().getCourse().getCode() + "_" + StringUtils.defaultString(section, "all");
+                attendanceDownloadService.download(suffix, "faculty", courseRegistrations, response);
+            } catch (IOException e) {
+                log.error("Attendance Download", e);
+            }
+        });
     }
 }

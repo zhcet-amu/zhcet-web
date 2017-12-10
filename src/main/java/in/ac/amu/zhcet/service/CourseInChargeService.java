@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,65 +35,70 @@ public class CourseInChargeService {
         if (courseInCharges == null)
             return;
 
-        FloatedCourse stored = courseManagementService.getFloatedCourse(course);
-        if (stored == null)
-            return;
+        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
+            for (CourseInCharge inCharge : floatedCourse.getInCharge()) {
+                if (!courseInCharges.contains(inCharge))
+                    courseInChargeRepository.delete(inCharge.getId());
+            }
 
-        for (CourseInCharge inCharge : stored.getInCharge()) {
-            if (!courseInCharges.contains(inCharge))
-                courseInChargeRepository.delete(inCharge.getId());
-        }
+            floatedCourse.getInCharge().clear();
 
-        stored.getInCharge().clear();
-
-        for (CourseInCharge courseInCharge : courseInCharges)
-            addInCharge(stored, courseInCharge.getFacultyMember().getFacultyId(), Strings.emptyToNull(courseInCharge.getSection()));
+            for (CourseInCharge courseInCharge : courseInCharges)
+                addInCharge(floatedCourse, courseInCharge.getFacultyMember().getFacultyId(), Strings.emptyToNull(courseInCharge.getSection()));
+        });
     }
 
     private void addInCharge(FloatedCourse stored, String facultyId, String section) {
-        FacultyMember facultyMember = facultyService.getById(facultyId);
-        if (facultyMember == null) {
+        Optional<FacultyMember> facultyMemberOptional = facultyService.getById(facultyId);
+        facultyMemberOptional.ifPresent(facultyMember -> {
+            Optional<CourseInCharge> inChargeOptional = getCourseInCharge(stored, facultyMember, section);
+            inChargeOptional.ifPresent(courseInCharge -> log.error("In-charge already present : {} {} {}",
+                    stored.getCourse().getCode(), facultyMember.getFacultyId(), section));
+            inChargeOptional.orElseGet(() -> {
+                CourseInCharge courseInCharge = new CourseInCharge();
+                courseInCharge.setFacultyMember(facultyMember);
+                courseInCharge.setFloatedCourse(stored);
+                courseInCharge.setSection(section);
+
+                stored.getInCharge().add(courseInCharge);
+                floatedCourseRepository.save(stored);
+
+                return courseInCharge;
+            });
+        });
+        if (!facultyMemberOptional.isPresent()) {
             log.error("No such faculty member : {}", facultyId);
-            return;
         }
-
-        CourseInCharge inCharge = getCourseInCharge(stored, facultyMember, section);
-        if (inCharge != null) {
-            log.error("No such in charge : {} {} {}", stored.getCourse().getCode(), facultyMember.getFacultyId(), section);
-            return;
-        }
-
-        CourseInCharge courseInCharge = new CourseInCharge();
-        courseInCharge.setFacultyMember(facultyMember);
-        courseInCharge.setFloatedCourse(stored);
-        courseInCharge.setSection(section);
-
-        stored.getInCharge().add(courseInCharge);
-        floatedCourseRepository.save(stored);
     }
 
     public List<CourseInCharge> getCourseByFaculty(FacultyMember facultyMember) {
         return courseInChargeRepository.findByFacultyMemberAndFloatedCourse_Session(facultyMember, ConfigurationService.getDefaultSessionCode());
     }
 
-    public CourseInCharge getCourseInCharge(FloatedCourse floatedCourse, FacultyMember facultyMember, String section) {
+    public Optional<CourseInCharge> getCourseInCharge(FloatedCourse floatedCourse, FacultyMember facultyMember, String section) {
         if (floatedCourse == null || facultyMember == null)
-            return null;
-        return courseInChargeRepository.findByFloatedCourseAndFacultyMemberAndSection
-                (floatedCourse, facultyMember, Strings.emptyToNull(section));
+            return Optional.empty();
+        return courseInChargeRepository.findByFloatedCourseAndFacultyMemberAndSection(floatedCourse, facultyMember, Strings.emptyToNull(section));
     }
 
-    public CourseInCharge getCourseInCharge(String inChargeCode) {
+    public Optional<CourseInCharge> getCourseInCharge(String inChargeCode) {
         List<String> tokens = Arrays.asList(inChargeCode.trim().split(":"));
-        if (tokens.size() == 1) {
-            FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(tokens.get(0));
-            return getCourseInCharge(floatedCourse, facultyService.getLoggedInMember(), null);
-        } else if (tokens.size() > 1) {
-            FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(tokens.get(0));
-            return getCourseInCharge(floatedCourse, facultyService.getLoggedInMember(), tokens.get(1));
-        }
 
-        return null;
+        if (tokens.size() < 1)
+            return Optional.empty();
+
+        String courseCode = tokens.get(0);
+        Optional<FacultyMember> facultyMemberOptional = facultyService.getLoggedInMember();
+        Optional<FloatedCourse> floatedCourseOptional = courseManagementService.getFloatedCourseByCode(courseCode);
+        if (!facultyMemberOptional.isPresent() || !floatedCourseOptional.isPresent())
+            return Optional.empty();
+
+        if (tokens.size() == 1) {
+            return getCourseInCharge(floatedCourseOptional.get(), facultyMemberOptional.get(), null);
+        } else {
+            String section = tokens.get(1);
+            return getCourseInCharge(floatedCourseOptional.get(), facultyMemberOptional.get(), section);
+        }
     }
 
     public List<CourseRegistration> getCourseRegistrations(CourseInCharge courseInCharge) {

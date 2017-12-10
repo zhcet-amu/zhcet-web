@@ -63,27 +63,25 @@ public class FloatedCourseController {
         if (department == null)
             return templateUrl;
 
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourse(course);
-        if (floatedCourse == null)
-            return templateUrl;
+        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
+            if (!model.containsAttribute("success"))
+                webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
 
-        if (!model.containsAttribute("success"))
-            webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
+            model.addAttribute("page_title", course.getCode() + " - " + course.getTitle());
+            model.addAttribute("page_subtitle", "Course management for " + course.getCode());
+            model.addAttribute("page_description", "Register Students and add Faculty In-Charge for the course");
+            model.addAttribute("page_path", getPath(department, course));
 
-        model.addAttribute("page_title", course.getCode() + " - " + course.getTitle());
-        model.addAttribute("page_subtitle", "Course management for " + course.getCode());
-        model.addAttribute("page_description", "Register Students and add Faculty In-Charge for the course");
-        model.addAttribute("page_path", getPath(department, course));
-
-        List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-        List<String> emails = CourseManagementService
-                .getEmailsFromCourseRegistrations(courseRegistrations.stream())
-                .collect(Collectors.toList());
-        SortUtils.sortCourseAttendance(courseRegistrations);
-        model.addAttribute("courseRegistrations", courseRegistrations);
-        model.addAttribute("floatedCourse", floatedCourse);
-        model.addAttribute("sections", courseInChargeService.getSections(floatedCourse));
-        model.addAttribute("email_list", emails);
+            List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
+            List<String> emails = CourseManagementService
+                    .getEmailsFromCourseRegistrations(courseRegistrations.stream())
+                    .collect(Collectors.toList());
+            SortUtils.sortCourseAttendance(courseRegistrations);
+            model.addAttribute("courseRegistrations", courseRegistrations);
+            model.addAttribute("floatedCourse", floatedCourse);
+            model.addAttribute("sections", courseInChargeService.getSections(floatedCourse));
+            model.addAttribute("email_list", emails);
+        });
 
         return templateUrl;
     }
@@ -92,11 +90,10 @@ public class FloatedCourseController {
     public String unfloat(RedirectAttributes redirectAttributes, @PathVariable Department department, @PathVariable Course course) {
         String redirectUrl = "redirect:/department/{department}/courses?active=true";
 
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourse(course);
-        if (floatedCourse == null)
-            return redirectUrl;
-        courseManagementService.unfloatCourse(floatedCourse);
-        redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " unfloated successfully!");
+        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
+            courseManagementService.unfloatCourse(floatedCourse);
+            redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " unfloated successfully!");
+        });
 
         return redirectUrl;
     }
@@ -166,10 +163,13 @@ public class FloatedCourseController {
 
     @GetMapping("department/{department}/floated/{course}/attendance/download")
     public void downloadAttendance(@PathVariable Department department, @PathVariable Course course, HttpServletResponse response) throws IOException {
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourse(course);
-        if (floatedCourse == null)
-            return;
-        attendanceDownloadService.download(course.getCode(), "department", floatedCourse.getCourseRegistrations(), response);
+        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
+            try {
+                attendanceDownloadService.download(course.getCode(), "department", floatedCourse.getCourseRegistrations(), response);
+            } catch (IOException e) {
+                log.error("Attendance Download", e);
+            }
+        });
     }
 
 }

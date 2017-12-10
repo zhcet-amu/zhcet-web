@@ -3,10 +3,12 @@ package in.ac.amu.zhcet.data.repository;
 import in.ac.amu.zhcet.data.model.user.User;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Optional;
+
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
-    User findByUserId(String userId);
+    Optional<User> findByUserId(String userId);
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
 }

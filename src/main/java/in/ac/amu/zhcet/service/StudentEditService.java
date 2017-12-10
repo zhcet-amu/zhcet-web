@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -38,70 +40,81 @@ public class StudentEditService {
 
     @Transactional
     public void saveStudent(String id, StudentEditModel studentEditModel) {
-        Student student = studentService.getByEnrolmentNumber(id);
+        Optional<Student> studentOptional = studentService.getByEnrolmentNumber(id);
 
-        if (student == null) {
+        studentOptional.orElseThrow(() -> {
             log.error("Tried saving non-existent student {}", id);
-            throw new UsernameNotFoundException("Invalid Request");
-        }
+            return new UsernameNotFoundException("Invalid Request");
+        });
 
-        String departmentName = studentEditModel.getUserDepartmentName();
-        Department department = departmentService.findByName(departmentName);
-        if (department == null) {
-            log.error("Tried saving student with non-existent department {} {}", id, departmentName);
-            throw new RuntimeException("No such department : " + departmentName);
-        }
+        studentOptional.ifPresent(student -> {
+            String departmentName = studentEditModel.getUserDepartmentName();
+            Optional<Department> departmentOptional = departmentService.findByName(departmentName);
+            departmentOptional.orElseThrow(() -> {
+                log.error("Tried saving student with non-existent department {} {}", id, departmentName);
+                return new RuntimeException("No such department : " + departmentName);
+            });
 
-        Student checkDuplicate = studentService.getByFacultyNumber(studentEditModel.getFacultyNumber());
-        if (checkDuplicate != null && !checkDuplicate.getUser().getUserId().equals(student.getUser().getUserId())) {
-            log.error("Tried to save student with duplicate faculty number {} {}", id, studentEditModel.getFacultyNumber());
-            throw new DuplicateException("Student", "Faculty Number", studentEditModel.getFacultyNumber(), studentEditModel);
-        }
+            departmentOptional.ifPresent(department -> {
+                Optional<Student> checkDuplicate = studentService.getByFacultyNumber(studentEditModel.getFacultyNumber());
+                if (checkDuplicate.isPresent() && !checkDuplicate.get().getUser().getUserId().equals(student.getUser().getUserId())) {
+                    log.error("Tried to save student with duplicate faculty number {} {}", id, studentEditModel.getFacultyNumber());
+                    throw new DuplicateException("Student", "Faculty Number", studentEditModel.getFacultyNumber(), studentEditModel);
+                }
 
-        if (!studentEditModel.getUserEmail().equals(student.getUser().getEmail())) {
-            if (userService.throwDuplicateEmail(studentEditModel.getUserEmail(), student.getUser()))
-                studentEditModel.setUserEmail(null);
-            student.getUser().setEmailVerified(false);
-        }
+                if (!studentEditModel.getUserEmail().equals(student.getUser().getEmail())) {
+                    if (userService.throwDuplicateEmail(studentEditModel.getUserEmail(), student.getUser()))
+                        studentEditModel.setUserEmail(null);
+                    student.getUser().setEmailVerified(false);
+                }
 
-        if (!Strings.isNullOrEmpty(studentEditModel.getHallCode()) && !EnumUtils.isValidEnum(HallCode.class, studentEditModel.getHallCode())) {
-            log.error("Tried to save student with invalid hall code {} {}", id, studentEditModel.getHallCode());
-            throw new RuntimeException("Invalid Hall : " + studentEditModel.getHallCode() + ". Must be within " + EnumUtils.getEnumMap(HallCode.class).keySet());
-        }
+                if (!Strings.isNullOrEmpty(studentEditModel.getHallCode()) && !EnumUtils.isValidEnum(HallCode.class, studentEditModel.getHallCode())) {
+                    log.error("Tried to save student with invalid hall code {} {}", id, studentEditModel.getHallCode());
+                    throw new RuntimeException("Invalid Hall : " + studentEditModel.getHallCode() + ". Must be within " + EnumUtils.getEnumMap(HallCode.class).keySet());
+                }
 
-        if (studentEditModel.getStatus() != null && !EnumUtils.isValidEnum(StudentStatus.class, studentEditModel.getStatus()+"")) {
-            log.error("Tried to save student with invalid status {} {}", id, studentEditModel.getStatus());
-            throw new RuntimeException("Invalid Status : " + studentEditModel.getStatus() + ". Must be within " + EnumUtils.getEnumMap(StudentStatus.class).keySet());
-        }
+                if (studentEditModel.getStatus() != null && !EnumUtils.isValidEnum(StudentStatus.class, studentEditModel.getStatus()+"")) {
+                    log.error("Tried to save student with invalid status {} {}", id, studentEditModel.getStatus());
+                    throw new RuntimeException("Invalid Status : " + studentEditModel.getStatus() + ". Must be within " + EnumUtils.getEnumMap(StudentStatus.class).keySet());
+                }
 
-        student.getUser().setDepartment(department);
-        modelMapper.map(studentEditModel, student);
-        studentService.save(student);
+                student.getUser().setDepartment(department);
+                modelMapper.map(studentEditModel, student);
+                studentService.save(student);
+            });
+        });
+    }
+
+    private void studentConsumer(List<String> enrolments, Consumer<Student> consumer) {
+        enrolments.stream()
+                .map(studentService::getByEnrolmentNumber)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(student -> {
+                    consumer.accept(student);
+                    studentService.save(student);
+                });
     }
 
     @Transactional
     public void changeSections(List<String> enrolments, String section) {
+        if (section == null || section.length() < 3)
+            throw new IllegalStateException("Section should be of at least 3 characters");
         if (enrolments.size() > 200)
             throw new IllegalStateException("Cannot update more than 200 students at a time");
 
         log.info("Changing sections of {} to {}", enrolments, section);
-        for (String enrolment : enrolments) {
-            Student student = studentService.getByEnrolmentNumber(enrolment);
-            student.setSection(section);
-            studentService.save(student);
-        }
+        studentConsumer(enrolments, student -> student.setSection(section));
     }
 
     @Transactional
     public void changeStatuses(List<String> enrolments, String status) {
+        if (status == null || status.length() < 1)
+            throw new IllegalStateException("Status should be of 1 character");
         if (enrolments.size() > 200)
             throw new IllegalStateException("Cannot update more than 200 students at a time");
 
         log.info("Changing statuses of {} to {}", enrolments, status);
-        for (String enrolment : enrolments) {
-            Student student = studentService.getByEnrolmentNumber(enrolment);
-            student.setStatus(status.charAt(0));
-            studentService.save(student);
-        }
+        studentConsumer(enrolments, student -> student.setStatus(status.charAt(0)));
     }
 }

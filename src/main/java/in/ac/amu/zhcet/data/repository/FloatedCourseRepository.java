@@ -6,12 +6,13 @@ import in.ac.amu.zhcet.data.model.FloatedCourse;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FloatedCourseRepository extends DataTablesRepository<FloatedCourse, String> {
 
-    FloatedCourse getBySessionAndCourse(String session, Course course);
+    Optional<FloatedCourse> getBySessionAndCourse(String session, Course course);
 
-    FloatedCourse getBySessionAndCourse_Code(String session, String courseCode);
+    Optional<FloatedCourse> getBySessionAndCourse_Code(String session, String courseCode);
 
     List<FloatedCourse> getBySessionAndCourse_Department(String session, Department department);
 

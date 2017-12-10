@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -33,27 +34,30 @@ public class CourseRegistrationService {
         this.attendanceRepository = attendanceRepository;
     }
 
-    private CourseRegistration getByStudentAndCourse(String enrolment, Course course) {
-        FloatedCourse floatedCourse = floatedCourseRepository.getBySessionAndCourse(ConfigurationService.getDefaultSessionCode(), course);
-        return courseRegistrationRepository.findByStudent_EnrolmentNumberAndFloatedCourse(enrolment, floatedCourse);
+    private Optional<CourseRegistration> getByStudentAndCourse(String enrolment, Course course) {
+        Optional<FloatedCourse> floatedCourseOptional = floatedCourseRepository.getBySessionAndCourse(ConfigurationService.getDefaultSessionCode(), course);
+        return floatedCourseOptional.flatMap(floatedCourse ->
+                courseRegistrationRepository.findByStudent_EnrolmentNumberAndFloatedCourse(enrolment, floatedCourse));
     }
 
     @Transactional
     public void setAttendance(Course course, AttendanceUpload attendanceUpload) {
-        CourseRegistration registration = getByStudentAndCourse(attendanceUpload.getEnrolment_no(), course);
+        Optional<CourseRegistration> registrationOptional = getByStudentAndCourse(attendanceUpload.getEnrolment_no(), course);
 
-        Attendance storedAttendance = registration.getAttendance();
-        if (storedAttendance == null) {
-            log.warn("Attendance for {} and {} was null!", course, attendanceUpload.getEnrolment_no());
-            storedAttendance = new Attendance(registration, attendanceUpload.getDelivered(), attendanceUpload.getAttended());
+        registrationOptional.ifPresent(registration -> {
+            Attendance storedAttendance = registration.getAttendance();
+            if (storedAttendance == null) {
+                log.warn("Attendance for {} and {} was null!", course, attendanceUpload.getEnrolment_no());
+                storedAttendance = new Attendance(registration, attendanceUpload.getDelivered(), attendanceUpload.getAttended());
 
-            registration.setAttendance(storedAttendance);
-            storedAttendance.setCourseRegistration(registration);
-            courseRegistrationRepository.save(registration);
-        }
+                registration.setAttendance(storedAttendance);
+                storedAttendance.setCourseRegistration(registration);
+                courseRegistrationRepository.save(registration);
+            }
 
-        storedAttendance.setDelivered(attendanceUpload.getDelivered());
-        storedAttendance.setAttended(attendanceUpload.getAttended());
+            storedAttendance.setDelivered(attendanceUpload.getDelivered());
+            storedAttendance.setAttended(attendanceUpload.getAttended());
+        });
     }
 
     @Transactional
@@ -63,17 +67,17 @@ public class CourseRegistrationService {
 
     @Transactional
     public void registerStudents(Course course, Set<CourseRegistration> courseRegistrations) {
-        FloatedCourse stored = floatedCourseRepository.getBySessionAndCourse(ConfigurationService.getDefaultSessionCode(), course);
+        floatedCourseRepository.getBySessionAndCourse(ConfigurationService.getDefaultSessionCode(), course).ifPresent(floatedCourse -> {
+            List<CourseRegistration> registrations = new ArrayList<>();
 
-        List<CourseRegistration> registrations = new ArrayList<>();
+            for (CourseRegistration registration : courseRegistrations) {
+                registration.setFloatedCourse(floatedCourse);
+                registration.getAttendance().setId(registration.generateId());
+                registrations.add(registration);
+            }
 
-        for (CourseRegistration registration : courseRegistrations) {
-            registration.setFloatedCourse(stored);
-            registration.getAttendance().setId(registration.generateId());
-            registrations.add(registration);
-        }
-
-        stored.getCourseRegistrations().addAll(registrations);
-        floatedCourseRepository.save(stored);
+            floatedCourse.getCourseRegistrations().addAll(registrations);
+            floatedCourseRepository.save(floatedCourse);
+        });
     }
 }

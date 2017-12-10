@@ -58,9 +58,7 @@ public class PasswordResetService {
 
     public PasswordResetToken generate(String email) {
         PasswordResetToken passwordResetToken = new PasswordResetToken();
-        User user = userService.getUserByEmail(email);
-        if (user == null)
-            throw new UsernameNotFoundException("User with the email " + email + " not found");
+        User user = userService.getUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User with the email " + email + " not found"));
         if (!user.isEmailVerified())
             throw new UsernameNotFoundException("User with the email " + email + " has not verified its account!");
         passwordResetToken.setUser(user);

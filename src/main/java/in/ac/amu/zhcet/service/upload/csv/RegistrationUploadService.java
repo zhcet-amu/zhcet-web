@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -73,10 +74,8 @@ public class RegistrationUploadService {
     }
 
     private CourseRegistration fromRegistrationUpload(RegistrationUpload upload) {
-        Student student = studentService.getByFacultyNumber(StringUtils.capitalizeAll(upload.getFacultyNo()));
-
-        if (student == null)
-            student = Student.builder().facultyNumber(upload.getFacultyNo()).build();
+        Student student = studentService.getByFacultyNumber(StringUtils.capitalizeAll(upload.getFacultyNo()))
+                .orElseGet(() -> Student.builder().facultyNumber(upload.getFacultyNo()).build());
 
         CourseRegistration courseRegistration = new CourseRegistration();
         courseRegistration.setMode(upload.getMode());
@@ -105,24 +104,26 @@ public class RegistrationUploadService {
         invalidEnrolment = false;
         alreadyEnrolled = false;
 
-        List<CourseRegistration> registrations = courseManagementService.getFloatedCourse(course).getCourseRegistrations();
+        Optional<Confirmation<CourseRegistration>> registrationConfirmationOptional = courseManagementService.getFloatedCourse(course)
+                .flatMap(floatedCourse -> Optional.of(floatedCourse.getCourseRegistrations()))
+                .flatMap(registrations -> Optional.of(uploadService.confirmUpload(
+                        uploadResult,
+                        this::fromRegistrationUpload,
+                        courseRegistration -> getMappedValue(courseRegistration.getStudent(), course, registrations)
+                )));
 
-        Confirmation<CourseRegistration> registrationConfirmation = uploadService.confirmUpload(
-                uploadResult,
-                this::fromRegistrationUpload,
-                courseRegistration -> getMappedValue(courseRegistration.getStudent(), course, registrations)
-        );
+        registrationConfirmationOptional.ifPresent(registrationConfirmation -> {
+            if (invalidEnrolment)
+                registrationConfirmation.getErrors().add("Invalid student faculty number found");
+            if (alreadyEnrolled)
+                registrationConfirmation.getErrors().add("Students already enrolled in course found");
 
-        if (invalidEnrolment)
-            registrationConfirmation.getErrors().add("Invalid student faculty number found");
-        if (alreadyEnrolled)
-            registrationConfirmation.getErrors().add("Students already enrolled in course found");
+            if (!registrationConfirmation.getErrors().isEmpty()) {
+                log.warn(registrationConfirmation.getErrors().toString());
+            }
+        });
 
-        if (!registrationConfirmation.getErrors().isEmpty()) {
-            log.warn(registrationConfirmation.getErrors().toString());
-        }
-
-        return registrationConfirmation;
+        return registrationConfirmationOptional.orElseGet(null);
     }
 
     @Transactional

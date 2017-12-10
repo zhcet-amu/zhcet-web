@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -34,19 +35,21 @@ public class PasswordChangeController {
     @GetMapping("/profile/settings/password")
     public String changePassword(Model model) {
         String renderUrl = "user/change_password";
-        User user = userService.getLoggedInUser();
-        if (!user.isEmailVerified()) {
-            log.warn("User not verified and tried to change the password!");
-            model.addAttribute("error", "The user is not verified, and hence can't change the password");
-            return renderUrl;
-        }
-        PasswordChange passwordChange = new PasswordChange();
-        model.addAttribute("password", passwordChange);
-        model.addAttribute("blacklist", Arrays.asList(
-                user.getName(),
-                user.getEmail(),
-                user.getUserId()
-        ));
+        userService.getLoggedInUser().ifPresent(user -> {
+            if (!user.isEmailVerified()) {
+                log.warn("User not verified and tried to change the password!");
+                model.addAttribute("error", "The user is not verified, and hence can't change the password");
+            } else {
+                PasswordChange passwordChange = new PasswordChange();
+                model.addAttribute("password", passwordChange);
+                model.addAttribute("blacklist", Arrays.asList(
+                        user.getName(),
+                        user.getEmail(),
+                        user.getUserId()
+                ));
+            }
+        });
+
         return renderUrl;
     }
 
@@ -54,7 +57,12 @@ public class PasswordChangeController {
     public String savePassword(@Valid PasswordChange passwordChange, RedirectAttributes redirectAttributes) {
         String redirectUrl = "redirect:/profile/settings/password";
 
-        User user = userService.getLoggedInUser();
+        Optional<User> userOptional = userService.getLoggedInUser();
+        if (!userOptional.isPresent())
+            return redirectUrl;
+
+        User user = userOptional.get();
+
         if (!user.isEmailVerified()) {
             log.warn("!!POST!! User not verified and tried to change the password!");
             redirectAttributes.addFlashAttribute("error", "The user is not verified, and hence can't change the password");

@@ -5,24 +5,24 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 
+import java.util.Optional;
+
 public class Auditor implements AuditorAware<String> {
 
-    public static Authentication getLoggedInAuthentication() {
-        return SecurityContextHolder.getContext().getAuthentication();
+    public static Optional<Authentication> getLoggedInAuthentication() {
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication());
     }
 
-    public static CustomUser getLoggedInUser() {
-        if (getLoggedInAuthentication() == null) return null;
-        return (CustomUser) getLoggedInAuthentication().getPrincipal();
+    public static Optional<CustomUser> getLoggedInUser() {
+        return getLoggedInAuthentication().flatMap(authentication -> Optional.of((CustomUser) authentication.getPrincipal()));
     }
 
     public static String getLoggedInUsername() {
-        Authentication authentication = getLoggedInAuthentication();
-        if (authentication == null || !(authentication.getPrincipal() instanceof User))
+        Optional<Authentication> authenticationOptional = getLoggedInAuthentication();
+        if (!authenticationOptional.isPresent() || !(authenticationOptional.get().getPrincipal() instanceof User))
             return "UNAUTHENTICATED";
 
-        String username = ((User) authentication.getPrincipal()).getUsername();
-
+        String username = ((User) authenticationOptional.get().getPrincipal()).getUsername();
         return username == null ? "UNAUTHENTICATED" : username;
     }
 

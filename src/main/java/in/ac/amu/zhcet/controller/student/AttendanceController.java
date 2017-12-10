@@ -1,6 +1,5 @@
 package in.ac.amu.zhcet.controller.student;
 
-import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.service.CourseRegistrationService;
 import in.ac.amu.zhcet.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,13 @@ public class AttendanceController {
 
     @GetMapping("/student/attendance")
     public String attendance(Model model) {
-        Student student = studentService.getLoggedInStudent();
-        model.addAttribute("page_title", "Attendance");
-        model.addAttribute("page_subtitle", "Attendance Panel for " + student.getEnrolmentNumber() + " | " + student.getUser().getName());
-        model.addAttribute("page_description", "View attendance of floated courses this session");
-        model.addAttribute("attendances", courseRegistrationService.getAttendanceByStudent(student.getEnrolmentNumber()));
+        studentService.getLoggedInStudent().ifPresent(student -> {
+            model.addAttribute("page_title", "Attendance");
+            model.addAttribute("page_subtitle", "Attendance Panel for " + student.getEnrolmentNumber() + " | " + student.getUser().getName());
+            model.addAttribute("page_description", "View attendance of floated courses this session");
+            model.addAttribute("attendances", courseRegistrationService.getAttendanceByStudent(student.getEnrolmentNumber()));
+        });
+
         return "student/attendance";
     }
 

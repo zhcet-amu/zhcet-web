@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
@@ -111,21 +112,24 @@ public class FirebaseUserService {
         if (Strings.isNullOrEmpty(token.getEmail()))
             return;
 
-        User duplicate = userDetailService.getUserService().getUserByEmail(token.getEmail());
+        Optional<User> duplicate = userDetailService.getUserService().getUserByEmail(token.getEmail());
 
         // Exchange user emails if someone else has access to the email provided
-        if (duplicate != null && !duplicate.getUserId().equals(user.getUserId())) {
-            log.warn("Another user account with same email exists, {} {} : {}", user.getUserId(), duplicate.getUserId(), token.getEmail());
+        if (duplicate.isPresent() && !duplicate.get().getUserId().equals(user.getUserId())) {
+            User duplicateUser = duplicate.get();
+            log.warn("Another user account with same email exists, {} {} : {}", user.getUserId(), duplicateUser.getUserId(), token.getEmail());
 
             if (token.isEmailVerified()) {
                 log.warn("New user has verified email, unconditionally exchanging emails from previous user");
 
-                duplicate.setEmail(null);
-                duplicate.setEmailVerified(false);
+                duplicateUser.setEmail(null);
+                duplicateUser.setEmailVerified(false);
 
-                userDetailService.getUserService().save(duplicate);
-                log.info("Cleared email info from duplicate user, {}", userDetailService.getUserService().findById(duplicate.getUserId()).getEmail());
-                sendEmailChangeNotification(duplicate, user, token.getEmail());
+                userDetailService.getUserService().save(duplicateUser);
+                userDetailService.getUserService().findById(duplicateUser.getUserId()).ifPresent(dupe -> {
+                    log.info("Cleared email info from duplicate user, {}", dupe.getEmail());
+                });
+                sendEmailChangeNotification(duplicateUser, user, token.getEmail());
             }
 
         }

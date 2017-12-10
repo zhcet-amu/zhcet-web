@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -36,14 +37,14 @@ public class StudentService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Student getLoggedInStudent() {
+    public Optional<Student> getLoggedInStudent() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
         return getByEnrolmentNumber(userName);
     }
 
-    public Student getByEnrolmentNumber(String userId) {
+    public Optional<Student> getByEnrolmentNumber(String userId) {
         return studentRepository.getByEnrolmentNumber(userId);
     }
 
@@ -68,7 +69,7 @@ public class StudentService {
                 .map(User::getEmail);
     }
 
-    public Student getByFacultyNumber(String userId) {
+    public Optional<Student> getByFacultyNumber(String userId) {
         return studentRepository.getByFacultyNumber(userId);
     }
 

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,36 +54,35 @@ public class UserService {
         userRepository.save(users);
     }
 
-    public User findById(String id) {
-        return userRepository.findByUserId(id);
+    public Optional<User> findById(String id) {
+        return userRepository.findByUserId(id.toUpperCase());
     }
 
-    public User getUserByEmail(String email){
-        return userRepository.findByEmail(email);
+    public Optional<User> getUserByEmail(String email) {
+        if (Strings.isNullOrEmpty(email))
+            return Optional.empty();
+        return userRepository.findByEmail(email.toLowerCase());
     }
 
     boolean throwDuplicateEmail(String email, User user) {
-        if (!Strings.isNullOrEmpty(email)) {
-            User checkEmailDuplicate = getUserByEmail(email);
-            if (checkEmailDuplicate != null && !checkEmailDuplicate.getUserId().equals(user.getUserId())) {
-                log.error("User with email already exists {} {}", user.getUserId(), email);
-                throw new DuplicateException("User", "email", email);
-            }
-            if (!Utils.isValidEmail(email)) {
-                log.error("Invalid Email {} {}", user.getUserId(), email);
-                throw new RuntimeException("Invalid Email");
-            }
-        } else {
-            return true;
+        Optional<User> checkEmailDuplicate = getUserByEmail(email);
+        if (checkEmailDuplicate.isPresent() && !checkEmailDuplicate.get().getUserId().equals(user.getUserId())) {
+            log.error("User with email already exists {} {}", user.getUserId(), email);
+            throw new DuplicateException("User", "email", email);
+        }
+
+        if (!Utils.isValidEmail(email)) {
+            log.error("Invalid Email {} {}", user.getUserId(), email);
+            throw new RuntimeException("Invalid Email");
         }
 
         return false;
     }
 
-    public User getLoggedInUser() {
+    public Optional<User> getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null)
-            return null;
+            return Optional.empty();
 
         String userName = authentication.getName();
         return findById(userName);

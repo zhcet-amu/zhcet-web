@@ -1,6 +1,5 @@
 package in.ac.amu.zhcet.controller.user.profile;
 
-import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.upload.image.ImageService;
 import in.ac.amu.zhcet.service.upload.image.ImageUploadException;
 import in.ac.amu.zhcet.service.user.UserDetailService;
@@ -35,33 +34,33 @@ public class AvatarController {
     public String handleFileUpload(@RequestParam MultipartFile file, RedirectAttributes redirectAttributes) {
         String redirectUrl = "redirect:/profile";
 
-        User user = userDetailService.getLoggedInUser();
+       userDetailService.getLoggedInUser().ifPresent(user -> {
+           ZonedDateTime lastUpdated = user.getDetails().getAvatarUpdated();
+           if (lastUpdated != null) {
+               log.info("User {} last updated its avatar at {}", user.getUserId(), lastUpdated.toString());
 
-        ZonedDateTime lastUpdated = user.getDetails().getAvatarUpdated();
-        if (lastUpdated != null) {
-            log.info("User {} last updated its avatar at {}", user.getUserId(), lastUpdated.toString());
+               long timeElapsed = ChronoUnit.HOURS.between(lastUpdated, ZonedDateTime.now());
+               if (timeElapsed < AVATAR_TIMEOUT_HOURS) {
+                   log.warn("Trying to update avatar before cool down : {} hours elapsed and {}  hours remaining", timeElapsed, AVATAR_TIMEOUT_HOURS - timeElapsed);
 
-            long timeElapsed = ChronoUnit.HOURS.between(lastUpdated, ZonedDateTime.now());
-            if (timeElapsed < AVATAR_TIMEOUT_HOURS) {
-                log.warn("Trying to update avatar before cool down : {} hours elapsed and {}  hours remaining", timeElapsed, AVATAR_TIMEOUT_HOURS - timeElapsed);
+                   redirectAttributes.addFlashAttribute("avatar_errors",
+                           Collections.singletonList(
+                                   String.format("You can only update profile picture once in %d hours. %d hours remaining for cooldown",
+                                           AVATAR_TIMEOUT_HOURS, AVATAR_TIMEOUT_HOURS - timeElapsed)
+                           )
+                   );
+                   return;
+               }
+           }
 
-                redirectAttributes.addFlashAttribute("avatar_errors",
-                        Collections.singletonList(
-                                String.format("You can only update profile picture once in %d hours. %d hours remaining for cooldown",
-                                        AVATAR_TIMEOUT_HOURS, AVATAR_TIMEOUT_HOURS - timeElapsed)
-                        )
-                );
-                return redirectUrl;
-            }
-        }
-
-        try {
-            log.warn("Uploading photo " + file.getOriginalFilename() + " for " + user.getUserId());
-            userDetailService.updateAvatar(user, imageService.uploadAvatar("profile/" + user.getUserId() + "/profile", file));
-            redirectAttributes.addFlashAttribute("avatar_success", Collections.singletonList("Profile Picture Updated"));
-        } catch (ImageUploadException ex) {
-            redirectAttributes.addFlashAttribute("avatar_errors", Collections.singletonList(ex.getMessage()));
-        }
+           try {
+               log.warn("Uploading photo " + file.getOriginalFilename() + " for " + user.getUserId());
+               userDetailService.updateAvatar(user, imageService.uploadAvatar("profile/" + user.getUserId() + "/profile", file));
+               redirectAttributes.addFlashAttribute("avatar_success", Collections.singletonList("Profile Picture Updated"));
+           } catch (ImageUploadException ex) {
+               redirectAttributes.addFlashAttribute("avatar_errors", Collections.singletonList(ex.getMessage()));
+           }
+       });
 
         return redirectUrl;
     }

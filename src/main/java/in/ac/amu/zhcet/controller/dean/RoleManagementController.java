@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -54,41 +55,42 @@ public class RoleManagementController {
         if (department == null)
             throw new AccessDeniedException("403");
 
-        FacultyMember facultyMember = facultyService.getById(facultyId);
+        Optional<FacultyMember> facultyMemberOptional = facultyService.getById(facultyId);
 
-        if (facultyMember == null)
-            return "redirect:/dean/roles/{department}";
+        facultyMemberOptional.ifPresent(facultyMember -> {
+            Set<String> newRoles = new HashSet<>();
 
-        Set<String> newRoles = new HashSet<>();
+            if (roles != null)
+                for (String role : roles) {
+                    switch (role) {
+                        case "dean":
+                            newRoles.add(Roles.DEAN_ADMIN);
+                            break;
+                        case "department_super":
+                            newRoles.add(Roles.DEPARTMENT_SUPER_ADMIN);
+                            break;
+                        case "department":
+                            newRoles.add(Roles.DEPARTMENT_ADMIN);
+                            break;
+                        case "faculty":
+                            newRoles.add(Roles.FACULTY);
+                            break;
+                        default:
+                            // Skip
+                    }
+                }
 
-        if (roles != null)
-        for (String role : roles) {
-            switch (role) {
-                case "dean":
-                    newRoles.add(Roles.DEAN_ADMIN);
-                    break;
-                case "department_super":
-                    newRoles.add(Roles.DEPARTMENT_SUPER_ADMIN);
-                    break;
-                case "department":
-                    newRoles.add(Roles.DEPARTMENT_ADMIN);
-                    break;
-                case "faculty":
-                    newRoles.add(Roles.FACULTY);
-                    break;
-                default:
-                    // Skip
-            }
-        }
+            facultyMember.getUser().setRoles(newRoles);
+            facultyService.save(facultyMember);
 
-        facultyMember.getUser().setRoles(newRoles);
-        facultyService.save(facultyMember);
+            Optional<User> userOptional = userDetailService.getLoggedInUser();
+            userOptional.ifPresent(loggedIn -> {
+                if (facultyMember.getUser().getUserId().equals(loggedIn.getUserId()))
+                    userDetailService.updatePrincipal(loggedIn);
+            });
 
-        User loggedIn = userDetailService.getLoggedInUser();
-        if (facultyMember.getUser().getUserId().equals(loggedIn.getUserId()))
-            userDetailService.updatePrincipal(loggedIn);
-
-        redirectAttributes.addFlashAttribute("saved", true);
+            redirectAttributes.addFlashAttribute("saved", true);
+        });
 
         return "redirect:/dean/roles/{department}";
     }

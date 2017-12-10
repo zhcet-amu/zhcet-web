@@ -32,7 +32,7 @@ public class ViewController {
 
     @RequestMapping("/login")
     public String getLoginPage(Model model, @RequestParam(required = false) String error, HttpServletRequest request) {
-        Authentication authentication = Auditor.getLoggedInAuthentication();
+        Authentication authentication = Auditor.getLoggedInAuthentication().get();
         if (SecurityUtils.isRememberMe(authentication))
             model.addAttribute("remember_error", "Please refresh your login");
         else if (SecurityUtils.isFullyAuthenticated(authentication))

@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -32,29 +33,32 @@ public class FacultyEditService {
 
     @Transactional
     public void saveFacultyMember(String id, FacultyEditModel facultyEditModel) {
-        FacultyMember facultyMember = facultyService.getById(id);
-
-        if (facultyMember == null) {
+        Optional<FacultyMember> facultyMemberOptional = facultyService.getById(id);
+        facultyMemberOptional.orElseThrow(() -> {
             log.error("Tried saving non-existent faculty member {}", id);
-            throw new UsernameNotFoundException("Invalid Request");
-        }
+            return new UsernameNotFoundException("Invalid Request");
+        });
 
-        String departmentName = facultyEditModel.getUserDepartmentName();
-        Department department = departmentService.findByName(departmentName);
-        if (department == null) {
-            log.error("Tried saving faculty with non-existent department {} {}", id, departmentName);
-            throw new RuntimeException("No such department : " + departmentName);
-        }
+        facultyMemberOptional.ifPresent(facultyMember -> {
+            String departmentName = facultyEditModel.getUserDepartmentName();
+            Optional<Department> departmentOptional = departmentService.findByName(departmentName);
+            departmentOptional.orElseThrow(() -> {
+                log.error("Tried saving faculty with non-existent department {} {}", id, departmentName);
+                return new RuntimeException("No such department : " + departmentName);
+            });
 
-        if (!facultyEditModel.getUserEmail().equals(facultyMember.getUser().getEmail())) {
-            if (userService.throwDuplicateEmail(facultyEditModel.getUserEmail(), facultyMember.getUser()))
-                facultyEditModel.setUserEmail(null);
-            facultyMember.getUser().setEmailVerified(false);
-        }
+            departmentOptional.ifPresent(department -> {
+                if (!facultyEditModel.getUserEmail().equals(facultyMember.getUser().getEmail())) {
+                    if (userService.throwDuplicateEmail(facultyEditModel.getUserEmail(), facultyMember.getUser()))
+                        facultyEditModel.setUserEmail(null);
+                    facultyMember.getUser().setEmailVerified(false);
+                }
 
-        facultyMember.getUser().setDepartment(department);
-        modelMapper.map(facultyEditModel, facultyMember);
-        facultyService.save(facultyMember);
+                facultyMember.getUser().setDepartment(department);
+                modelMapper.map(facultyEditModel, facultyMember);
+                facultyService.save(facultyMember);
+            });
+        });
     }
 
 }

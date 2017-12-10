@@ -4,17 +4,18 @@ import in.ac.amu.zhcet.data.model.Student;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface StudentRepository extends DataTablesRepository<Student, Long> {
+public interface StudentRepository extends DataTablesRepository<Student, String> {
 
     interface Identifier {
         String getFacultyNumber();
         String getEnrolmentNumber();
     }
 
-    Student getByEnrolmentNumber(String enrolmentNumber);
+    Optional<Student> getByEnrolmentNumber(String enrolmentNumber);
 
-    Student getByFacultyNumber(String facultyNumber);
+    Optional<Student> getByFacultyNumber(String facultyNumber);
 
     List<Student> getBySectionAndStatus(String section, Character status);
 

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -35,7 +36,7 @@ public class FacultyService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public FacultyMember getById(String facultyId) {
+    public Optional<FacultyMember> getById(String facultyId) {
         return facultyRepository.getByFacultyId(facultyId);
     }
 
@@ -51,7 +52,7 @@ public class FacultyService {
         return facultyRepository.getByUser_Department(department);
     }
 
-    public FacultyMember getLoggedInMember() {
+    public Optional<FacultyMember> getLoggedInMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 

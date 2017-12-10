@@ -6,9 +6,10 @@ import in.ac.amu.zhcet.data.model.FacultyMember;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface FacultyRepository extends DataTablesRepository<FacultyMember, Long> {
-    FacultyMember getByFacultyId(String facultyId);
+public interface FacultyRepository extends DataTablesRepository<FacultyMember, String> {
+    Optional<FacultyMember> getByFacultyId(String facultyId);
 
     List<FacultyMember> getByFacultyIdIn(List<String> facultyIds);
 

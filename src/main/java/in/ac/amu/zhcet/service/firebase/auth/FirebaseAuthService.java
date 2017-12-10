@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.service.firebase.auth;
 
+import com.google.common.base.Strings;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import in.ac.amu.zhcet.data.model.user.User;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
@@ -71,8 +73,9 @@ public class FirebaseAuthService {
             return null;
 
         try {
-            CustomUser user = Auditor.getLoggedInUser();
-            if (user == null) return FirebaseUserService.getUnauthenticated();
+            Optional<CustomUser> userOptional = Auditor.getLoggedInUser();
+            if (!userOptional.isPresent()) return FirebaseUserService.getUnauthenticated();
+            CustomUser user = userOptional.get();
             Map<String, Object> claims = new HashMap<>();
             claims.put("type", user.getType().toString());
             claims.put("department", user.getDepartment().getName());
@@ -96,8 +99,7 @@ public class FirebaseAuthService {
         try {
             FirebaseToken decodedToken = getToken(token);
             log.info(decodedToken.getClaims().toString());
-            User user = userService.getLoggedInUser();
-            firebaseUserService.mergeFirebaseDetails(user, decodedToken);
+            userService.getLoggedInUser().ifPresent(user -> firebaseUserService.mergeFirebaseDetails(user, decodedToken));
         } catch (ExecutionException | InterruptedException e) {
             log.error("Error linking data", e);
         }
@@ -111,17 +113,17 @@ public class FirebaseAuthService {
         log.info("Logged in user using Social Login: {}", user.getUserId());
     }
 
-    private User fromFirebaseToken(FirebaseToken token) {
-        if (token == null || token.getUid() == null)
-            return null;
+    private Optional<User> fromFirebaseToken(FirebaseToken token) {
+        if (token == null || Strings.isNullOrEmpty(token.getUid()))
+            return Optional.empty();
 
-        User user = userService.findById(token.getUid());
-        if (user != null) {
-            return user;
+        Optional<User> userOptional = userService.findById(token.getUid());
+        if (userOptional.isPresent()) {
+            return userOptional;
         }
 
-        if (token.getEmail() == null)
-            return null;
+        if (Strings.isNullOrEmpty(token.getEmail()))
+            return Optional.empty();
 
         if (!token.isEmailVerified())
             log.warn("Unverified Email Login {}", token.getEmail());
@@ -130,15 +132,15 @@ public class FirebaseAuthService {
     }
 
     private boolean authenticate(FirebaseToken token) {
-        User user = fromFirebaseToken(token);
+        Optional<User> userOptional = fromFirebaseToken(token);
 
-        if (user == null) {
+        if (!userOptional.isPresent()) {
             log.warn("Firebase Social Login Failed {}", token.getUid());
             return false;
         }
 
-        setUserAuthentication(user);
-        firebaseUserService.mergeFirebaseDetails(user, token);
+        setUserAuthentication(userOptional.get());
+        firebaseUserService.mergeFirebaseDetails(userOptional.get(), token);
         return true;
     }
 

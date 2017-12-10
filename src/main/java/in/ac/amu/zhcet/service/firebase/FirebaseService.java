@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.URL;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -28,7 +29,6 @@ public class FirebaseService {
         ApplicationProperties.Firebase firebase = applicationProperties.getFirebase();
         disabled = firebase.isDisabled();
         messagingServerKey = firebase.getMessagingServerKey();
-        InputStream serviceAccount = getServiceAccountJson();
 
         if (disabled) {
             log.warn("CONFIG (Firebase): Firebase is disabled");
@@ -38,6 +38,7 @@ public class FirebaseService {
             log.error("CONFIG (Firebase Messaging): Firebase Messaging Server Key not found!");
         }
 
+        InputStream serviceAccount = getServiceAccountJson().orElseGet(null);
         if (serviceAccount == null) {
             log.error("CONFIG (Firebase): Firebase Service Account JSON not found anywhere. Any Firebase interaction may throw exception");
             uninitialized = true;
@@ -59,7 +60,7 @@ public class FirebaseService {
         }
     }
 
-    private InputStream getServiceAccountJson() {
+    private Optional<InputStream> getServiceAccountJson() {
         String fileName = "service-account.json";
         try {
             InputStream is = getClass().getResourceAsStream("/" + fileName);
@@ -74,13 +75,13 @@ public class FirebaseService {
 
                 is = new FileInputStream(url.getFile());
             }
-            return is;
+            return Optional.of(is);
         } catch (FileNotFoundException e) {
             log.warn("service-account.json not found in storage system... Attempting to load from environment...");
             String property = System.getenv("FIREBASE_JSON");
             if (property == null)
-                return null;
-            return new ByteArrayInputStream(System.getenv("FIREBASE_JSON").getBytes());
+                return Optional.empty();
+            return Optional.of(new ByteArrayInputStream(System.getenv("FIREBASE_JSON").getBytes()));
         }
     }
 

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -53,9 +54,10 @@ public class CourseManagementService {
 
     @Transactional
     public void addCourse(Course course) {
-        Course duplicate = courseRepository.findByCode(course.getCode());
-        if (duplicate != null)
+        Optional<Course> duplicateOptional = courseRepository.findByCode(course.getCode());
+        duplicateOptional.ifPresent(duplicate -> {
             throw new DuplicateException("Course", "code", duplicate.getCode(), duplicate);
+        });
         courseRepository.save(course);
     }
 
@@ -80,13 +82,13 @@ public class CourseManagementService {
         return getFloatedCourse(course) != null;
     }
 
-    public FloatedCourse getFloatedCourse(Course course) {
+    public Optional<FloatedCourse> getFloatedCourse(Course course) {
         if (course == null)
-            return null;
+            return Optional.empty();
         return floatedCourseRepository.getBySessionAndCourse(ConfigurationService.getDefaultSessionCode(), course);
     }
 
-    public FloatedCourse getFloatedCourseByCode(String courseCode) {
+    public Optional<FloatedCourse> getFloatedCourseByCode(String courseCode) {
         return floatedCourseRepository.getBySessionAndCourse_Code(ConfigurationService.getDefaultSessionCode(), courseCode);
     }
 

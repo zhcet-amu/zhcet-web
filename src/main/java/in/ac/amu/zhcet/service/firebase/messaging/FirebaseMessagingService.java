@@ -6,7 +6,6 @@ import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.data.model.notification.NotificationRecipient;
-import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.firebase.FirebaseService;
 import in.ac.amu.zhcet.service.firebase.messaging.data.SendRequest;
@@ -55,15 +54,11 @@ public class FirebaseMessagingService {
         if (userId == null || token == null)
             return;
 
-        User user = userService.findById(userId);
-        if (user == null) {
-            log.warn("User with ID {} not found", userId);
-            return;
-        }
-
-        user.getDetails().setFcmToken(token);
-        log.info("Added FCM token {} to user : {}", token, user.getUserId());
-        userService.save(user);
+        userService.findById(userId).ifPresent(user -> {
+            user.getDetails().setFcmToken(token);
+            log.info("Added FCM token {} to user : {}", token, user.getUserId());
+            userService.save(user);
+        });
     }
 
     /**

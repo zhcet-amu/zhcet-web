@@ -2,7 +2,6 @@ package in.ac.amu.zhcet.controller.dean.datatables;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.extra.AttendanceDownloadService;
 import in.ac.amu.zhcet.service.upload.csv.RegistrationUploadService;
@@ -53,27 +52,24 @@ public class FloatedCourseEditController {
     @GetMapping("dean/floated/{course}")
     public String courseDetail(Model model, @PathVariable Course course, WebRequest webRequest) {
         String templateUrl = "dean/floated_course";
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourse(course);
+        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
+            if (!model.containsAttribute("success"))
+                webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
 
-        if (floatedCourse == null)
-            return templateUrl;
+            model.addAttribute("page_title", course.getCode() + " - " + course.getTitle());
+            model.addAttribute("page_subtitle", "Course management for " + course.getCode());
+            model.addAttribute("page_description", "Register Students for the Floated course");
 
-        if (!model.containsAttribute("success"))
-            webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
-
-        model.addAttribute("page_title", course.getCode() + " - " + course.getTitle());
-        model.addAttribute("page_subtitle", "Course management for " + course.getCode());
-        model.addAttribute("page_description", "Register Students for the Floated course");
-
-        List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-        List<String> emails = CourseManagementService
-                .getEmailsFromCourseRegistrations(courseRegistrations.stream())
-                .collect(Collectors.toList());
-        SortUtils.sortCourseAttendance(courseRegistrations);
-        model.addAttribute("courseRegistrations", courseRegistrations);
-        model.addAttribute("floatedCourse", floatedCourse);
-        model.addAttribute("deanOverride", "dean");
-        model.addAttribute("email_list", emails);
+            List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
+            List<String> emails = CourseManagementService
+                    .getEmailsFromCourseRegistrations(courseRegistrations.stream())
+                    .collect(Collectors.toList());
+            SortUtils.sortCourseAttendance(courseRegistrations);
+            model.addAttribute("courseRegistrations", courseRegistrations);
+            model.addAttribute("floatedCourse", floatedCourse);
+            model.addAttribute("deanOverride", "dean");
+            model.addAttribute("email_list", emails);
+        });
 
         return templateUrl;
     }
@@ -100,10 +96,13 @@ public class FloatedCourseEditController {
 
     @GetMapping("dean/floated/{course}/attendance/download")
     public void downloadAttendance(@PathVariable Course course, HttpServletResponse response) throws IOException {
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourse(course);
-        if (floatedCourse == null)
-            return;
-        attendanceDownloadService.download(course.getCode(), "dean", floatedCourse.getCourseRegistrations(), response);
+        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
+            try {
+                attendanceDownloadService.download(course.getCode(), "dean", floatedCourse.getCourseRegistrations(), response);
+            } catch (IOException e) {
+                log.error("Attendance Download", e);
+            }
+        });
     }
 
 }

@@ -1,10 +1,7 @@
 package in.ac.amu.zhcet.controller.user.profile;
 
-import in.ac.amu.zhcet.data.model.FacultyMember;
-import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.user.UserType;
-import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.data.model.user.UserDetail;
+import in.ac.amu.zhcet.data.model.user.UserType;
 import in.ac.amu.zhcet.data.type.Gender;
 import in.ac.amu.zhcet.service.FacultyService;
 import in.ac.amu.zhcet.service.StudentService;
@@ -43,51 +40,48 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String profile(Model model, ServletRequest request) {
-        User user = userService.getLoggedInUser();
-        model.addAttribute("user", user);
+        userService.getLoggedInUser().ifPresent(user -> {
+            model.addAttribute("user", user);
 
-        if (!model.containsAttribute("user_details"))
-            model.addAttribute("user_details", user.getDetails());
+            if (!model.containsAttribute("user_details"))
+                model.addAttribute("user_details", user.getDetails());
 
-        model.addAttribute("page_title", "Profile");
-        model.addAttribute("page_subtitle", "Profile Settings for " + user.getName());
-        model.addAttribute("page_description", "Manage Profile Details and Information");
-        model.addAttribute("genders", Gender.values());
+            model.addAttribute("page_title", "Profile");
+            model.addAttribute("page_subtitle", "Profile Settings for " + user.getName());
+            model.addAttribute("page_description", "Manage Profile Details and Information");
+            model.addAttribute("genders", Gender.values());
 
-        if (user.getType().equals(UserType.STUDENT)) {
-            Student student = studentService.getLoggedInStudent();
-            model.addAttribute("student", student);
-        } else {
-            FacultyMember facultyMember = facultyService.getLoggedInMember();
-            model.addAttribute("faculty", facultyMember);
-        }
+            if (user.getType().equals(UserType.STUDENT)) {
+                studentService.getLoggedInStudent().ifPresent(student -> model.addAttribute("student", student));
+            } else {
+                facultyService.getLoggedInMember().ifPresent(facultyMember -> model.addAttribute("faculty", facultyMember));
+            }
 
-        if (request.getParameterMap().containsKey("refresh"))
-            userDetailService.updatePrincipal(user);
+            if (request.getParameterMap().containsKey("refresh"))
+                userDetailService.updatePrincipal(user);
+        });
 
         return "user/profile";
     }
 
     @PostMapping("/profile/details")
     public String saveProfile(@ModelAttribute @Valid UserDetail userDetail, BindingResult result, RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user_details", result);
-            redirectAttributes.addFlashAttribute("user_details", userDetail);
-        } else {
-            userService.updateDetails(userService.getLoggedInUser(), userDetail);
-            redirectAttributes.addFlashAttribute("success", true);
-        }
+        userService.getLoggedInUser().ifPresent(user -> {
+            if (result.hasErrors()) {
+                redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user_details", result);
+                redirectAttributes.addFlashAttribute("user_details", userDetail);
+            } else {
+                userService.updateDetails(user, userDetail);
+                redirectAttributes.addFlashAttribute("success", true);
+            }
+        });
 
         return "redirect:/profile";
     }
 
     @GetMapping("/profile/email")
     public String unsubscribeEmail(@RequestParam(required = false) Boolean unsubscribe) {
-        if (unsubscribe == null)
-            return "redirect:/profile/email?unsubscribe=false";
-
-        userService.unsubscribeEmail(userService.getLoggedInUser(), unsubscribe);
-
+        userService.getLoggedInUser().ifPresent(user -> userService.unsubscribeEmail(user, unsubscribe != null && unsubscribe));
         return "redirect:/profile";
     }
 

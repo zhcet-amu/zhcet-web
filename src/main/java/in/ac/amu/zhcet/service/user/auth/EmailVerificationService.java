@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -29,7 +30,7 @@ public class EmailVerificationService {
     }
 
     private VerificationToken createVerificationToken(String email) {
-        User user = userService.getLoggedInUser();
+        User user = userService.getLoggedInUser().orElseThrow(() -> new IllegalStateException("No user logged in"));
         String token = UUID.randomUUID().toString();
 
         VerificationToken verificationToken = new VerificationToken(user, token, email);
@@ -39,8 +40,9 @@ public class EmailVerificationService {
     }
 
     public VerificationToken generate(String email) {
-        User user = userService.getUserByEmail(email);
-        if (user != null && !user.getEmail().equals(userService.getLoggedInUser().getEmail()))
+        Optional<User> userOptional = userService.getUserByEmail(email);
+        if (userOptional.isPresent() && !userOptional.get().getEmail().equals(userService.getLoggedInUser()
+                .orElseThrow(() -> new IllegalStateException("No user logged in")).getEmail()))
             throw new DuplicateEmailException(email);
 
         return createVerificationToken(email);

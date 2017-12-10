@@ -29,20 +29,22 @@ public class NotificationSendingController {
 
     @GetMapping("/management/notification/send")
     public String sendNotification(Model model) {
-        model.addAttribute("page_title", "Send Notifications");
-        model.addAttribute("page_subtitle", "Notification Manager");
-        model.addAttribute("page_description", "Send notifications to students, sections or departments");
+        userService.getLoggedInUser().ifPresent(user -> {
+            model.addAttribute("page_title", "Send Notifications");
+            model.addAttribute("page_subtitle", "Notification Manager");
+            model.addAttribute("page_description", "Send notifications to students, sections or departments");
 
-        model.addAttribute("channel_types", Arrays.asList(
-                ChannelType.STUDENT, ChannelType.COURSE, ChannelType.TAUGHT_COURSE,
-                ChannelType.SECTION, ChannelType.FACULTY
-        ));
+            model.addAttribute("channel_types", Arrays.asList(
+                    ChannelType.STUDENT, ChannelType.COURSE, ChannelType.TAUGHT_COURSE,
+                    ChannelType.SECTION, ChannelType.FACULTY
+            ));
 
-        if (!model.containsAttribute("notification")) {
-            Notification notification = new Notification();
-            notification.setSender(userService.getLoggedInUser());
-            model.addAttribute("notification", notification);
-        }
+            if (!model.containsAttribute("notification")) {
+                Notification notification = new Notification();
+                notification.setSender(user);
+                model.addAttribute("notification", notification);
+            }
+        });
 
         return "management/send_notification";
     }
@@ -57,9 +59,12 @@ public class NotificationSendingController {
             return redirectUrl;
         }
 
-        notification.setSender(userService.getLoggedInUser());
-        notificationSendingService.sendNotification(notification);
-        redirectAttribute.addFlashAttribute("notification_success", "Notification sending in background");
+        userService.getLoggedInUser().ifPresent(user -> {
+            notification.setSender(user);
+            notificationSendingService.sendNotification(notification);
+            redirectAttribute.addFlashAttribute("notification_success", "Notification sending in background");
+
+        });
 
         return redirectUrl;
     }

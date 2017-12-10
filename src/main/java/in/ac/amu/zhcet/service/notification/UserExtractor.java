@@ -1,7 +1,9 @@
 package in.ac.amu.zhcet.service.notification;
 
-import in.ac.amu.zhcet.data.model.*;
-import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.CourseRegistration;
+import in.ac.amu.zhcet.data.model.FacultyMember;
+import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseManagementService;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 @Slf4j
@@ -36,63 +39,51 @@ class UserExtractor {
             consumer.accept(courseRegistration.getStudent().getUser());
     }
 
+    private <T> void reportMissing(Optional<T> optional, String type, String id) {
+        if (!optional.isPresent())
+            log.warn("No {} found with ID {}", type, id);
+    }
+
     void fromFloatedCourse(String floatedCourseId, Consumer<User> consumer) {
-        FloatedCourse floatedCourse = courseManagementService.getFloatedCourseByCode(floatedCourseId);
-
-        if (floatedCourse == null) {
-            log.warn("No such floated course exists {}", floatedCourseId);
-            return;
-        }
-
-        List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-        sendToCourseRegistrations(courseRegistrations, consumer);
+        Optional<FloatedCourse> floatedCourseOptional = courseManagementService.getFloatedCourseByCode(floatedCourseId);
+        floatedCourseOptional.ifPresent(floatedCourse -> {
+            List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
+            sendToCourseRegistrations(courseRegistrations, consumer);
+        });
+        reportMissing(floatedCourseOptional, "floated course", floatedCourseId);
     }
 
     void fromSection(String section, Consumer<User> consumer) {
-        List<Student> students = studentService.getBySection(section);
-
-        for (Student student : students)
-            consumer.accept(student.getUser());
+        studentService.getBySection(section)
+                .forEach(student -> consumer.accept(student.getUser()));
     }
 
     void fromStudentId(String studentId, Consumer<User> consumer) {
-        Student recipient = studentService.getByEnrolmentNumber(studentId);
-        if (recipient == null)
+        Optional<Student> recipient = studentService.getByEnrolmentNumber(studentId);
+        if (!recipient.isPresent())
             recipient = studentService.getByFacultyNumber(studentId);
 
-        if (recipient == null) {
-            log.warn("No student found with ID {}", studentId);
-            return;
-        }
-
-        consumer.accept(recipient.getUser());
+        recipient.ifPresent(student -> consumer.accept(student.getUser()));
+        reportMissing(recipient, "student", studentId);
     }
 
     void fromFacultyId(String facultyId, Consumer<User> consumer) {
-        FacultyMember recipient = facultyService.getById(facultyId);
-
-        if (recipient == null) {
-            log.warn("No faculty found with ID {}", facultyId);
-            return;
-        }
-
-        consumer.accept(recipient.getUser());
+        Optional<FacultyMember> recipientOptional = facultyService.getById(facultyId);
+        recipientOptional.ifPresent(facultyMember -> consumer.accept(facultyMember.getUser()));
+        reportMissing(recipientOptional, "faculty", facultyId);
     }
 
     void fromTaughtCourse(String courseId, String inChargeId, Consumer<User> consumer) {
-        FacultyMember facultyMember = facultyService.getById(inChargeId);
-
-        if (facultyMember == null) {
-            log.warn("No faculty member found for {}", inChargeId);
-            return;
-        }
-
-        courseInChargeService.getCourseByFaculty(facultyMember)
-                .stream()
-                .filter(inCharge ->
-                        inCharge.getFloatedCourse().getCourse().getCode().equals(courseId))
-                .forEach(inCharge ->
-                        sendToCourseRegistrations(courseInChargeService.getCourseRegistrations(inCharge), consumer));
+        Optional<FacultyMember> recipientOptional = facultyService.getById(inChargeId);
+        recipientOptional.ifPresent(facultyMember -> {
+            courseInChargeService.getCourseByFaculty(facultyMember)
+                    .stream()
+                    .filter(inCharge ->
+                            inCharge.getFloatedCourse().getCourse().getCode().equals(courseId))
+                    .forEach(inCharge ->
+                            sendToCourseRegistrations(courseInChargeService.getCourseRegistrations(inCharge), consumer));
+        });
+        reportMissing(recipientOptional, "faculty", inChargeId);
     }
 
 }

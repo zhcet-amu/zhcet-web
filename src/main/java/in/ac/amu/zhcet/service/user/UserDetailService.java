@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -69,10 +70,11 @@ public class UserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findById(username);
+        String normalisedUsername = username.toUpperCase();
 
-        if (user == null)
-            user = userService.getUserByEmail(username);
+        User user = userService.findById(normalisedUsername)
+                .orElseGet(() -> userService.getUserByEmail(normalisedUsername)
+                        .orElse(null));
 
         if (user == null)
             throw new UsernameNotFoundException(username);
@@ -91,7 +93,7 @@ public class UserDetailService implements UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(authenticationFromUser(user));
     }
 
-    public User getLoggedInUser() {
+    public Optional<User> getLoggedInUser() {
         return userService.getLoggedInUser();
     }
 

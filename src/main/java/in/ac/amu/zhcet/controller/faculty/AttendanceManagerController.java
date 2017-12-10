@@ -1,6 +1,5 @@
 package in.ac.amu.zhcet.controller.faculty;
 
-import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.upload.csv.AttendanceUploadService;
@@ -44,60 +43,52 @@ public class AttendanceManagerController {
 
     @PostMapping("faculty/courses/{code}/attendance/edit")
     public String uploadFile(RedirectAttributes attributes, @PathVariable String code, @RequestParam MultipartFile file) {
-        String redirectUrl = "redirect:/faculty/courses/{code}/attendance";
+        courseInChargeService.getCourseInCharge(code).ifPresent(courseInCharge -> {
+            try {
+                UploadResult<AttendanceUpload> result = attendanceUploadService.handleUpload(file);
 
-        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(code);
-
-        if (courseInCharge == null)
-            return redirectUrl;
-
-        try {
-            UploadResult<AttendanceUpload> result = attendanceUploadService.handleUpload(file);
-
-            if (!result.getErrors().isEmpty()) {
-                attributes.addFlashAttribute("errors", result.getErrors());
-            } else {
-                attributes.addFlashAttribute("success", true);
-                Confirmation<AttendanceUpload> confirmation = attendanceUploadService.confirmUpload(courseInCharge, result);
-
-                if (confirmation.getErrors().isEmpty()) {
-                    AttendanceModel attendanceModel = new AttendanceModel();
-                    List<AttendanceUpload> attendanceUploads = new ArrayList<>();
-                    attendanceUploads.addAll(confirmation.getData());
-                    SortUtils.sortAttendanceUpload(attendanceUploads);
-                    attendanceModel.setUploadList(attendanceUploads);
-                    attributes.addFlashAttribute("attendanceModel", attendanceModel);
+                if (!result.getErrors().isEmpty()) {
+                    attributes.addFlashAttribute("errors", result.getErrors());
                 } else {
-                    attributes.addFlashAttribute("confirmAttendanceErrors", confirmation);
-                }
-            }
-        } catch (IOException ioe) {
-            log.error("Attendance Upload", ioe);
-        }
+                    attributes.addFlashAttribute("success", true);
+                    Confirmation<AttendanceUpload> confirmation = attendanceUploadService.confirmUpload(courseInCharge, result);
 
-        return redirectUrl;
+                    if (confirmation.getErrors().isEmpty()) {
+                        AttendanceModel attendanceModel = new AttendanceModel();
+                        List<AttendanceUpload> attendanceUploads = new ArrayList<>();
+                        attendanceUploads.addAll(confirmation.getData());
+                        SortUtils.sortAttendanceUpload(attendanceUploads);
+                        attendanceModel.setUploadList(attendanceUploads);
+                        attributes.addFlashAttribute("attendanceModel", attendanceModel);
+                    } else {
+                        attributes.addFlashAttribute("confirmAttendanceErrors", confirmation);
+                    }
+                }
+            } catch (IOException ioe) {
+                log.error("Attendance Upload", ioe);
+            }
+        });
+
+        return "redirect:/faculty/courses/{code}/attendance";
     }
 
     @PostMapping("faculty/courses/{code}/attendance/edit/confirm")
     public String uploadAttendance(RedirectAttributes attributes, @PathVariable String code, @Valid @ModelAttribute AttendanceModel attendanceModel, BindingResult bindingResult) {
-        String redirectUrl = "redirect:/faculty/courses/{course}/attendance";
-        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(code);
-        if (courseInCharge == null)
-            return redirectUrl;
-
-        if (bindingResult.hasErrors()) {
-            attributes.addFlashAttribute("attendanceModel", attendanceModel);
-            attributes.addFlashAttribute("org.springframework.validation.BindingResult.attendanceModel", bindingResult);
-        } else {
-            try {
-                attendanceUploadService.updateAttendance(courseInCharge, attendanceModel.getUploadList());
-                attributes.addFlashAttribute("updated", true);
-            } catch (Exception e) {
-                log.error("Attendance Confirm", e);
+        courseInChargeService.getCourseInCharge(code).ifPresent(courseInCharge -> {
+            if (bindingResult.hasErrors()) {
                 attributes.addFlashAttribute("attendanceModel", attendanceModel);
-                attributes.addFlashAttribute("unknown_error", true);
+                attributes.addFlashAttribute("org.springframework.validation.BindingResult.attendanceModel", bindingResult);
+            } else {
+                try {
+                    attendanceUploadService.updateAttendance(courseInCharge, attendanceModel.getUploadList());
+                    attributes.addFlashAttribute("updated", true);
+                } catch (Exception e) {
+                    log.error("Attendance Confirm", e);
+                    attributes.addFlashAttribute("attendanceModel", attendanceModel);
+                    attributes.addFlashAttribute("unknown_error", true);
+                }
             }
-        }
+        });
 
         return "redirect:/faculty/courses/{code}/attendance";
     }
