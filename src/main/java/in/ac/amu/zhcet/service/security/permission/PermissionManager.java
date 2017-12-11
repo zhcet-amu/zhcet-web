@@ -79,18 +79,23 @@ public class PermissionManager {
 
         if (!(user.getPrincipal() instanceof CustomUser))
             return false;
-        return ((CustomUser) user.getPrincipal()).getDepartment().getCode().equals(departmentCode);
+        return hasPermission(user.getAuthorities(), Roles.DEPARTMENT_ADMIN) &&
+                ((CustomUser) user.getPrincipal()).getDepartment().getCode().equals(departmentCode);
     }
 
-    public boolean checkCourse(String departmentCode, String courseCode) {
+    public boolean checkCourse(Authentication user, String departmentCode, String courseCode) {
         Course course = courseManagementService.getCourse(courseCode);
-        return course == null || course.getDepartment().getCode().equals(departmentCode);
+        return checkDepartment(user, departmentCode) && (course == null || course.getDepartment().getCode().equals(departmentCode));
     }
 
     public boolean checkNotificationCreator(Authentication user, String notificationId) {
+        boolean hasSendingPermission = hasPermission(user.getAuthorities(), Roles.DEAN_ADMIN) ||
+                hasPermission(user.getAuthorities(), Roles.DEPARTMENT_ADMIN) ||
+                hasPermission(user.getAuthorities(), Roles.FACULTY) ||
+                hasPermission(user.getAuthorities(), Roles.MANAGEMENT_ADMIN);
         try {
             Notification notification = notificationRepository.findOne(Long.parseLong(notificationId));
-            return notification != null && notification.getSender().getUserId().equals(user.getName());
+            return notification != null && hasSendingPermission && notification.getSender().getUserId().equals(user.getName());
         } catch (NumberFormatException nfe) {
             return true;
         }
