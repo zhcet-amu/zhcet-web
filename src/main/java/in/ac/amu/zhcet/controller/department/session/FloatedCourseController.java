@@ -4,8 +4,10 @@ import in.ac.amu.zhcet.controller.department.course.CoursesController;
 import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseManagementService;
+import in.ac.amu.zhcet.service.CourseRegistrationService;
 import in.ac.amu.zhcet.service.extra.AttendanceDownloadService;
 import in.ac.amu.zhcet.service.upload.csv.RegistrationUploadService;
+import in.ac.amu.zhcet.utils.Flash;
 import in.ac.amu.zhcet.utils.SortUtils;
 import in.ac.amu.zhcet.utils.page.Path;
 import in.ac.amu.zhcet.utils.page.PathChain;
@@ -35,13 +37,21 @@ import java.util.stream.Collectors;
 public class FloatedCourseController {
 
     private final CourseInChargeService courseInChargeService;
+    private final CourseRegistrationService courseRegistrationService;
     private final CourseManagementService courseManagementService;
     private final AttendanceDownloadService attendanceDownloadService;
     private final RegistrationUploadService registrationUploadService;
 
     @Autowired
-    public FloatedCourseController(CourseInChargeService courseInChargeService, CourseManagementService courseManagementService, AttendanceDownloadService attendanceDownloadService, RegistrationUploadService registrationUploadService) {
+    public FloatedCourseController(
+            CourseInChargeService courseInChargeService,
+            CourseRegistrationService courseRegistrationService,
+            CourseManagementService courseManagementService,
+            AttendanceDownloadService attendanceDownloadService,
+            RegistrationUploadService registrationUploadService
+    ) {
         this.courseInChargeService = courseInChargeService;
+        this.courseRegistrationService = courseRegistrationService;
         this.courseManagementService = courseManagementService;
         this.attendanceDownloadService = attendanceDownloadService;
         this.registrationUploadService = registrationUploadService;
@@ -84,6 +94,16 @@ public class FloatedCourseController {
         });
 
         return templateUrl;
+    }
+
+    @PostMapping("department/{department}/floated/{course}/remove/{student}")
+    public String removeStudent(RedirectAttributes attributes, @PathVariable Department department, @PathVariable Course course, @PathVariable Student student) {
+        if (course != null && student != null) {
+            courseRegistrationService.removeRegistration(course, student);
+            attributes.addFlashAttribute("flash_messages", Flash.success("Student removed from course"));
+        }
+
+        return "redirect:/department/{department}/floated/{course}";
     }
 
     @GetMapping("department/{department}/floated/{course}/unfloat")
