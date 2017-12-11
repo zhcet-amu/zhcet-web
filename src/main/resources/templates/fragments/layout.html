@@ -86,6 +86,17 @@
             <strong>Password Unchanged!</strong> You have not changed your password, and it may lead to your account being hacked!
         </div>
     </div>
+    <!--/*@thymesVar id="flash_messages" type="java.util.List"*/-->
+    <div class="container" th:if="${flash_messages}">
+        <div class="row">
+            <!--/*@thymesVar id="flash" type="in.ac.amu.zhcet.utils.Flash"*/-->
+            <div th:each="flash : ${flash_messages}" th:class="|col-xs-12 alert alert-dismissible alert-${flash.css}|">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong th:if="${flash.title}" th:text="${flash.title}"></strong>
+                <span th:utext="${flash.message}">Fix this and try and try again</span>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div th:fragment="uploader" class="file-uploader text-xs-center">

@@ -23,7 +23,7 @@
             <div class="col-xs-12 col-xl-5">
                 <div th:replace="department/fragments/add_in_charge"></div>
                 <div th:replace="faculty/fragments/email_list"></div>
-                <div th:with="attendance_download_url = @{|/department/${department.code}/floated/${floatedCourse.course.code}/attendance/download|}"
+                <div th:with="attendance_download_url = @{|./${floatedCourse.course.code}/attendance/download|}"
                      th:insert="faculty/fragments/attendance_download"></div>
                 <div th:replace="department/fragments/register_students"></div>
             </div>
@@ -49,6 +49,7 @@
 <div th:replace="fragments/layout :: typeahead"></div>
 <script th:src="@{/js/fuzzyhound.js}"></script>
 <script th:src="@{/js/floated-course.js}"></script>
+<script th:src="@{/js/floated-course-common.js}"></script>
 <div th:replace="fragments/layout :: datatables"></div>
 <div th:replace="fragments/layout :: datatables_export"></div>
 </body>

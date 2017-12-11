@@ -185,6 +185,11 @@ td.avatar-cell {
     padding: 5px;
 }
 
+th.avatar-cell {
+    padding: 0;
+    width: 0;
+}
+
 td.date-cell {
     font-size: 0.8rem;
 }

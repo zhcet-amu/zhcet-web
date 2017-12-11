@@ -4,6 +4,7 @@
       data-textdirection="ltr"
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
+<link rel="stylesheet" th:href="@{/css/floated-course.css}">
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
 <!--/*@thymesVar id="floatedCourse" type="in.ac.amu.zhcet.data.model.FloatedCourse"*/-->
@@ -15,12 +16,12 @@
         <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Unknown Error!</strong>
-            <div>This can only happen if you tried to POST invalid data by force!</div>
+            <div>We don't know what happened!</div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-xl-4">
                 <div th:replace="faculty/fragments/email_list"></div>
-                <div th:with="attendance_download_url = @{|/dean/floated/${floatedCourse.course.code}/attendance/download|}"
+                <div th:with="attendance_download_url = @{|./${floatedCourse.course.code}/attendance/download|}"
                      th:insert="faculty/fragments/attendance_download"></div>
                 <div th:replace="department/fragments/register_students"></div>
             </div>
@@ -34,25 +35,7 @@
         <div th:replace="department/fragments/course_not_found"></div>
     </div>
 </div>
-<script>
-    (function () {
-        $(document).ready(function () {
-            $('#registration-modal').modal('show');
-            $('#registrationTable').dataTable({
-                scrollY:        true,
-                scrollCollapse: true,
-                "order": [],
-                dom: 'lBfrtip',
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
-            });
-            $('#confirmRegistrationTable').dataTable({
-                scrollY:        true,
-                scrollCollapse: true,
-                "order": []
-            });
-        });
-    }());
-</script>
+<script th:src="@{/js/floated-course-common.js}"></script>
 <div th:replace="fragments/layout :: datatables"></div>
 <div th:replace="fragments/layout :: datatables_export"></div>
 </body>

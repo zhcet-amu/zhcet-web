@@ -2,9 +2,12 @@ package in.ac.amu.zhcet.controller.dean.datatables;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
+import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.service.CourseManagementService;
+import in.ac.amu.zhcet.service.CourseRegistrationService;
 import in.ac.amu.zhcet.service.extra.AttendanceDownloadService;
 import in.ac.amu.zhcet.service.upload.csv.RegistrationUploadService;
+import in.ac.amu.zhcet.utils.Flash;
 import in.ac.amu.zhcet.utils.SortUtils;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +34,14 @@ import java.util.stream.Collectors;
 public class FloatedCourseEditController {
 
     private final CourseManagementService courseManagementService;
+    private final CourseRegistrationService courseRegistrationService;
     private final AttendanceDownloadService attendanceDownloadService;
     private final RegistrationUploadService registrationUploadService;
 
     @Autowired
-    public FloatedCourseEditController(CourseManagementService courseManagementService, AttendanceDownloadService attendanceDownloadService, RegistrationUploadService registrationUploadService) {
+    public FloatedCourseEditController(CourseManagementService courseManagementService, CourseRegistrationService courseRegistrationService, AttendanceDownloadService attendanceDownloadService, RegistrationUploadService registrationUploadService) {
         this.courseManagementService = courseManagementService;
+        this.courseRegistrationService = courseRegistrationService;
         this.attendanceDownloadService = attendanceDownloadService;
         this.registrationUploadService = registrationUploadService;
     }
@@ -72,6 +77,16 @@ public class FloatedCourseEditController {
         });
 
         return templateUrl;
+    }
+
+    @PostMapping("dean/floated/{course}/remove/{student}")
+    public String removeStudent(RedirectAttributes attributes, @PathVariable Course course, @PathVariable Student student) {
+        if (course != null && student != null) {
+            courseRegistrationService.removeRegistration(course, student);
+            attributes.addFlashAttribute("flash_messages", Flash.success("Student removed from course"));
+        }
+
+        return "redirect:/dean/floated/{course}";
     }
 
     @PostMapping("dean/floated/{course}/register")

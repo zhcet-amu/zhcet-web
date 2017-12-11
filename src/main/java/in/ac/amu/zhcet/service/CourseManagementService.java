@@ -1,9 +1,6 @@
 package in.ac.amu.zhcet.service;
 
-import in.ac.amu.zhcet.data.model.Course;
-import in.ac.amu.zhcet.data.model.CourseRegistration;
-import in.ac.amu.zhcet.data.model.Department;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.service.config.ConfigurationService;
@@ -98,5 +95,9 @@ public class CourseManagementService {
 
     public void unfloatCourse(FloatedCourse floatedCourse) {
         floatedCourseRepository.delete(floatedCourse.getId());
+    }
+
+    public void save(FloatedCourse floatedCourse) {
+        floatedCourseRepository.save(floatedCourse);
     }
 }

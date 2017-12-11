@@ -54,3 +54,32 @@ hr {
 .new {
     background-color: #DCEDC8;
 }
+
+i.remove-student {
+    margin-left: 1rem;
+    display: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #f55a4e;
+}
+
+i.remove-student:hover {
+    background-color: rgba(33, 33, 33, 0.1);
+    border-radius: 2rem;
+}
+
+.student-row:hover {
+    background-color: rgba(33, 33, 33, 0.05);
+    border-radius: 0.3rem;
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(119,119,119,0.25);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(119,119,119,0.25);
+    box-shadow: 0px 0px 5px 1px rgba(119,119,119,0.25);
+}
+
+.student-row:hover i.remove-student {
+    display: inline-block;
+}
+
+#delete-link {
+    display: inline-block;
+}

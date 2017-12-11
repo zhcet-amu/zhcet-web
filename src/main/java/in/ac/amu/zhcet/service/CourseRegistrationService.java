@@ -1,13 +1,9 @@
 package in.ac.amu.zhcet.service;
 
-import in.ac.amu.zhcet.data.model.Attendance;
-import in.ac.amu.zhcet.data.model.Course;
-import in.ac.amu.zhcet.data.model.CourseRegistration;
-import in.ac.amu.zhcet.data.model.FloatedCourse;
+import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.data.repository.AttendanceRepository;
 import in.ac.amu.zhcet.data.repository.CourseRegistrationRepository;
-import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.service.config.ConfigurationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +19,19 @@ import java.util.Set;
 @Service
 public class CourseRegistrationService {
 
-    private final FloatedCourseRepository floatedCourseRepository;
+    private final CourseManagementService courseManagementService;
     private final CourseRegistrationRepository courseRegistrationRepository;
     private final AttendanceRepository attendanceRepository;
 
     @Autowired
-    public CourseRegistrationService(FloatedCourseRepository floatedCourseRepository, CourseRegistrationRepository courseRegistrationRepository, AttendanceRepository attendanceRepository) {
-        this.floatedCourseRepository = floatedCourseRepository;
+    public CourseRegistrationService(CourseManagementService courseManagementService, CourseRegistrationRepository courseRegistrationRepository, AttendanceRepository attendanceRepository) {
+        this.courseManagementService = courseManagementService;
         this.courseRegistrationRepository = courseRegistrationRepository;
         this.attendanceRepository = attendanceRepository;
     }
 
     private Optional<CourseRegistration> getByStudentAndCourse(String enrolment, Course course) {
-        Optional<FloatedCourse> floatedCourseOptional = floatedCourseRepository.getBySessionAndCourse(ConfigurationService.getDefaultSessionCode(), course);
+        Optional<FloatedCourse> floatedCourseOptional = courseManagementService.getFloatedCourse(course);
         return floatedCourseOptional.flatMap(floatedCourse ->
                 courseRegistrationRepository.findByStudent_EnrolmentNumberAndFloatedCourse(enrolment, floatedCourse));
     }
@@ -67,7 +63,7 @@ public class CourseRegistrationService {
 
     @Transactional
     public void registerStudents(Course course, Set<CourseRegistration> courseRegistrations) {
-        floatedCourseRepository.getBySessionAndCourse(ConfigurationService.getDefaultSessionCode(), course).ifPresent(floatedCourse -> {
+        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
             List<CourseRegistration> registrations = new ArrayList<>();
 
             for (CourseRegistration registration : courseRegistrations) {
@@ -77,7 +73,14 @@ public class CourseRegistrationService {
             }
 
             floatedCourse.getCourseRegistrations().addAll(registrations);
-            floatedCourseRepository.save(floatedCourse);
+            courseManagementService.save(floatedCourse);
         });
     }
+
+    public void removeRegistration(Course course, Student student) {
+        courseManagementService.getFloatedCourse(course)
+                .flatMap(floatedCourse -> courseRegistrationRepository.findByStudentAndFloatedCourse(student, floatedCourse))
+                .ifPresent(courseRegistrationRepository::delete);
+    }
+
 }
