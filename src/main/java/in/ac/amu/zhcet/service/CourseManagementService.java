@@ -76,7 +76,7 @@ public class CourseManagementService {
     }
 
     public boolean isFloated(Course course){
-        return getFloatedCourse(course) != null;
+        return getFloatedCourse(course).isPresent();
     }
 
     public Optional<FloatedCourse> getFloatedCourse(Course course) {
