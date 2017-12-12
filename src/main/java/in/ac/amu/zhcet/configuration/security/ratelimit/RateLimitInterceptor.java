@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.service.security.ratelimit.RateLimitService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -31,7 +32,7 @@ public class RateLimitInterceptor extends HandlerInterceptorAdapter {
     private ScheduledFuture<?> scheduledFuture;
 
     @Autowired
-    public RateLimitInterceptor(RateLimitService rateLimitService, TaskScheduler scheduler) {
+    public RateLimitInterceptor(RateLimitService rateLimitService, @Lazy TaskScheduler scheduler) {
         this.rateLimitService = rateLimitService;
         this.scheduler = scheduler;
     }
