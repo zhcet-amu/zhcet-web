@@ -8,9 +8,9 @@ import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import in.ac.amu.zhcet.service.StudentService;
 import in.ac.amu.zhcet.service.UserService;
-import in.ac.amu.zhcet.service.upload.csv.base.AbstractUploadService;
-import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
-import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
+import in.ac.amu.zhcet.service.upload.csv.AbstractUploadService;
+import in.ac.amu.zhcet.service.upload.csv.Confirmation;
+import in.ac.amu.zhcet.service.upload.csv.UploadResult;
 import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -73,11 +73,11 @@ public class StudentRegistrationAdapter {
         log.warn("Duplicate enrolments : {}", existingUserIds.toString());
         log.warn("Duplicate facultyNumbers : {}", existingFacultyNumbers.toString());
 
-        Confirmation<Student> studentConfirmation = uploadService.confirmUpload(
-                uploadResult,
-                StudentRegistrationAdapter::fromStudentUpload,
-                student -> getMappedValue(student, departments, existingUserIds, existingFacultyNumbers, conditions)
-        );
+        Confirmation<Student> studentConfirmation =
+                uploadService.confirmUpload(uploadResult)
+                        .convert(StudentRegistrationAdapter::fromStudentUpload)
+                        .map(student -> getMappedValue(student, departments, existingUserIds, existingFacultyNumbers, conditions))
+                        .get();
 
         if (conditions.isInvalidDepartment())
             studentConfirmation.getErrors().add("Students with invalid department found");

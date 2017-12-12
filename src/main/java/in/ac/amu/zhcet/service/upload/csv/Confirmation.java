@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.upload.csv.base;
+package in.ac.amu.zhcet.service.upload.csv;
 
 import in.ac.amu.zhcet.data.model.base.Meta;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.util.Set;
 @Data
 public class Confirmation<T extends Meta> {
     @NonNull
-    private Set<String> errors = new HashSet<>();
+    private final Set<String> errors = new HashSet<>();
     @NonNull
-    private Set<T> data = new HashSet<>();
+    private final Set<T> data = new HashSet<>();
 }

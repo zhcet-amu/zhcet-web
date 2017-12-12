@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.upload.csv.base;
+package in.ac.amu.zhcet.service.upload.csv;
 
 import com.j256.simplecsv.processor.CsvProcessor;
 import com.j256.simplecsv.processor.ParseError;
@@ -26,6 +26,44 @@ public class AbstractUploadService<T, U extends Meta> {
 
     private final FileSystemStorageService systemStorageService;
     private final List<String> allowedCsvTypes;
+
+    public static class ConfirmationAdapter<T, U extends Meta> {
+        private final Confirmation<U> confirmation = new Confirmation<>();
+        private final UploadResult<T> uploadResult;
+        private Function<T, U> converter;
+        private Function<U, String> mapper;
+
+        private ConfirmationAdapter(UploadResult<T> uploadResult) {
+            this.uploadResult = uploadResult;
+        }
+
+        public ConfirmationAdapter<T, U> convert(Function<T, U> converter) {
+            this.converter = converter;
+            return this;
+        }
+
+        public ConfirmationAdapter<T, U> map(Function<U, String> mapper) {
+            this.mapper = mapper;
+            return this;
+        }
+
+        public Confirmation<U> get() {
+            if (mapper == null)
+                throw new IllegalStateException("Mapper cannot be null");
+
+            uploadResult
+                    .getUploads()
+                    .stream()
+                    .map(converter)
+                    .forEach(item -> {
+                        item.setMeta(mapper.apply(item));
+                        confirmation.getData().add(item);
+                    });
+
+            return confirmation;
+        }
+
+    }
 
     @Autowired
     public AbstractUploadService(@Named("allowedCsvTypes") List<String> allowedCsvTypes, FileSystemStorageService systemStorageService) {
@@ -93,19 +131,8 @@ public class AbstractUploadService<T, U extends Meta> {
         return uploadResult;
     }
 
-    public Confirmation<U> confirmUpload(UploadResult<T> uploadResult, Function<T, U> converter, Function<U, String> infer) {
-        Confirmation<U> confirmation = new Confirmation<>();
-
-        uploadResult
-                .getUploads()
-                .stream()
-                .map(converter)
-                .forEach(item -> {
-                    item.setMeta(infer.apply(item));
-                    confirmation.getData().add(item);
-                });
-
-        return confirmation;
+    public ConfirmationAdapter<T, U> confirmUpload(UploadResult<T> uploadResult) {
+        return new ConfirmationAdapter<>(uploadResult);
     }
 
 }

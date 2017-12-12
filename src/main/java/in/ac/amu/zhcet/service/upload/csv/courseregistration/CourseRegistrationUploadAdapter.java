@@ -2,13 +2,14 @@ package in.ac.amu.zhcet.service.upload.csv.courseregistration;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
+import in.ac.amu.zhcet.data.model.FloatedCourse;
 import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.data.model.dto.upload.RegistrationUpload;
 import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.StudentService;
-import in.ac.amu.zhcet.service.upload.csv.base.AbstractUploadService;
-import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
-import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
+import in.ac.amu.zhcet.service.upload.csv.AbstractUploadService;
+import in.ac.amu.zhcet.service.upload.csv.Confirmation;
+import in.ac.amu.zhcet.service.upload.csv.UploadResult;
 import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -48,26 +48,24 @@ public class CourseRegistrationUploadAdapter {
     Confirmation<CourseRegistration> uploadToConfirmation(Course course, UploadResult<RegistrationUpload> uploadResult) {
         ErrorConditions conditions = new ErrorConditions();
 
-        Optional<Confirmation<CourseRegistration>> registrationConfirmationOptional = courseManagementService.getFloatedCourse(course)
-                .flatMap(floatedCourse -> Optional.of(floatedCourse.getCourseRegistrations()))
-                .flatMap(registrations -> Optional.of(uploadService.confirmUpload(
-                        uploadResult,
-                        this::fromRegistrationUpload,
-                        courseRegistration -> getMappedValue(courseRegistration.getStudent(), course, registrations, conditions)
-                )));
+        return courseManagementService.getFloatedCourse(course)
+                .map(FloatedCourse::getCourseRegistrations)
+                .map(registrations -> uploadService.confirmUpload(uploadResult)
+                        .convert(this::fromRegistrationUpload)
+                        .map(courseRegistration -> getMappedValue(courseRegistration.getStudent(), course, registrations, conditions))
+                        .get()
+                ).map(registrationConfirmation -> {
+                    if (conditions.isInvalidEnrolment())
+                        registrationConfirmation.getErrors().add("Invalid student faculty number found");
+                    if (conditions.isAlreadyEnrolled())
+                        registrationConfirmation.getErrors().add("Students already enrolled in course found");
 
-        registrationConfirmationOptional.ifPresent(registrationConfirmation -> {
-            if (conditions.isInvalidEnrolment())
-                registrationConfirmation.getErrors().add("Invalid student faculty number found");
-            if (conditions.isAlreadyEnrolled())
-                registrationConfirmation.getErrors().add("Students already enrolled in course found");
+                    if (!registrationConfirmation.getErrors().isEmpty()) {
+                        log.warn(registrationConfirmation.getErrors().toString());
+                    }
 
-            if (!registrationConfirmation.getErrors().isEmpty()) {
-                log.warn(registrationConfirmation.getErrors().toString());
-            }
-        });
-
-        return registrationConfirmationOptional.orElseGet(null);
+                    return registrationConfirmation;
+                }).orElse(null);
     }
 
     private CourseRegistration fromRegistrationUpload(RegistrationUpload upload) {

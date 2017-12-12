@@ -4,9 +4,9 @@ import in.ac.amu.zhcet.data.model.CourseInCharge;
 import in.ac.amu.zhcet.data.model.CourseRegistration;
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.service.CourseInChargeService;
-import in.ac.amu.zhcet.service.upload.csv.base.AbstractUploadService;
-import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
-import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
+import in.ac.amu.zhcet.service.upload.csv.AbstractUploadService;
+import in.ac.amu.zhcet.service.upload.csv.Confirmation;
+import in.ac.amu.zhcet.service.upload.csv.UploadResult;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +44,11 @@ public class AttendanceUploadAdapter {
 
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
 
-        Confirmation<AttendanceUpload> attendanceConfirmation = uploadService.confirmUpload(
-                uploadResult,
-                item -> item,
-                upload -> studentExists(upload, courseRegistrations, conditions)
-        );
+        Confirmation<AttendanceUpload> attendanceConfirmation =
+                uploadService.confirmUpload(uploadResult)
+                    .convert(item -> item)
+                    .map(upload -> studentExists(upload, courseRegistrations, conditions))
+                    .get();
 
         if (!conditions.isExists()) {
             log.warn(attendanceConfirmation.getData().toString());

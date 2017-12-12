@@ -6,9 +6,9 @@ import in.ac.amu.zhcet.data.model.dto.upload.FacultyUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import in.ac.amu.zhcet.service.UserService;
-import in.ac.amu.zhcet.service.upload.csv.base.AbstractUploadService;
-import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
-import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
+import in.ac.amu.zhcet.service.upload.csv.AbstractUploadService;
+import in.ac.amu.zhcet.service.upload.csv.Confirmation;
+import in.ac.amu.zhcet.service.upload.csv.UploadResult;
 import in.ac.amu.zhcet.utils.SecurityUtils;
 import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.Data;
@@ -87,11 +87,11 @@ public class FacultyRegistrationAdapter {
 
         log.warn("Duplicate enrolments : {}", existingUserIds.toString());log.warn("Duplicate enrolments : {}", existingUserIds.toString());
 
-        Confirmation<FacultyMember> facultyConfirmation = uploadService.confirmUpload(
-                uploadResult,
-                FacultyRegistrationAdapter::fromFacultyUpload,
-                facultyMember -> getMappedValue(facultyMember, departments, existingUserIds, conditions)
-        );
+        Confirmation<FacultyMember> facultyConfirmation =
+                uploadService.confirmUpload(uploadResult)
+                    .convert(FacultyRegistrationAdapter::fromFacultyUpload)
+                    .map(facultyMember -> getMappedValue(facultyMember, departments, existingUserIds, conditions))
+                    .get();
 
         if (conditions.isInvalidDepartment())
             facultyConfirmation.getErrors().add("Faculty Member with invalid department found");
@@ -105,7 +105,7 @@ public class FacultyRegistrationAdapter {
         return facultyConfirmation;
     }
 
-    static FacultyMember fromFacultyUpload(FacultyUpload facultyUpload) {
+    private static FacultyMember fromFacultyUpload(FacultyUpload facultyUpload) {
         String password = SecurityUtils.generatePassword(PASS_LENGTH);
         facultyUpload.setPassword(password);
         FacultyMember facultyMember = new FacultyMember();
