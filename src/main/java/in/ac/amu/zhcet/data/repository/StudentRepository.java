@@ -23,6 +23,8 @@ public interface StudentRepository extends DataTablesRepository<Student, String>
 
     List<Identifier> findAllProjectedBy();
 
+    List<Identifier> getByFacultyNumberIn(List<String> facultyNumbers);
+
     List<Student> findAll();
 
 }

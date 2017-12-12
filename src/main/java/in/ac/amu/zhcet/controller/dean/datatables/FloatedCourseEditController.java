@@ -6,7 +6,7 @@ import in.ac.amu.zhcet.data.model.Student;
 import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.CourseRegistrationService;
 import in.ac.amu.zhcet.service.extra.AttendanceDownloadService;
-import in.ac.amu.zhcet.service.upload.csv.RegistrationUploadService;
+import in.ac.amu.zhcet.service.upload.csv.courseregistration.CourseRegistrationUploadService;
 import in.ac.amu.zhcet.utils.Flash;
 import in.ac.amu.zhcet.utils.SortUtils;
 import in.ac.amu.zhcet.utils.Utils;
@@ -36,14 +36,14 @@ public class FloatedCourseEditController {
     private final CourseManagementService courseManagementService;
     private final CourseRegistrationService courseRegistrationService;
     private final AttendanceDownloadService attendanceDownloadService;
-    private final RegistrationUploadService registrationUploadService;
+    private final CourseRegistrationUploadService courseRegistrationUploadService;
 
     @Autowired
-    public FloatedCourseEditController(CourseManagementService courseManagementService, CourseRegistrationService courseRegistrationService, AttendanceDownloadService attendanceDownloadService, RegistrationUploadService registrationUploadService) {
+    public FloatedCourseEditController(CourseManagementService courseManagementService, CourseRegistrationService courseRegistrationService, AttendanceDownloadService attendanceDownloadService, CourseRegistrationUploadService courseRegistrationUploadService) {
         this.courseManagementService = courseManagementService;
         this.courseRegistrationService = courseRegistrationService;
         this.attendanceDownloadService = attendanceDownloadService;
-        this.registrationUploadService = registrationUploadService;
+        this.courseRegistrationUploadService = courseRegistrationUploadService;
     }
 
     @GetMapping("/dean/floated")
@@ -94,7 +94,7 @@ public class FloatedCourseEditController {
         String redirectUrl = "redirect:/dean/floated/{course}";
         if (course == null)
             return redirectUrl;
-        registrationUploadService.upload(course, file, attributes, session);
+        courseRegistrationUploadService.upload(course, file, attributes, session);
 
         return redirectUrl;
     }
@@ -104,7 +104,7 @@ public class FloatedCourseEditController {
         String redirectUrl = "redirect:/dean/floated/{course}";
         if (course == null)
             return redirectUrl;
-        registrationUploadService.register(course, attributes, session);
+        courseRegistrationUploadService.register(course, attributes, session);
 
         return redirectUrl;
     }

@@ -1,8 +1,8 @@
 package in.ac.amu.zhcet.service;
 
 import in.ac.amu.zhcet.data.model.Student;
-import in.ac.amu.zhcet.data.model.user.UserType;
 import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.model.user.UserType;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
@@ -50,6 +50,10 @@ public class StudentService {
 
     public List<StudentRepository.Identifier> getAllIdentifiers() {
         return studentRepository.findAllProjectedBy();
+    }
+
+    public List<StudentRepository.Identifier> getIdentifiersByFacultyNummbers(List<String> facultyNumbers) {
+        return studentRepository.getByFacultyNumberIn(facultyNumbers);
     }
 
     public List<Student> getAll() {

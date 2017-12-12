@@ -1,18 +1,17 @@
-package in.ac.amu.zhcet.service.upload.csv;
+package in.ac.amu.zhcet.service.upload.csv.faculty;
 
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.dto.upload.FacultyUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
-import in.ac.amu.zhcet.service.FacultyService;
-import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
-import in.ac.amu.zhcet.service.realtime.RealTimeStatusService;
+import in.ac.amu.zhcet.data.repository.UserRepository;
+import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.upload.csv.base.AbstractUploadService;
 import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
-import in.ac.amu.zhcet.service.extra.PasswordFileService;
 import in.ac.amu.zhcet.utils.SecurityUtils;
 import in.ac.amu.zhcet.utils.StringUtils;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,37 +24,33 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class FacultyUploadService {
-    private boolean invalidDepartment;
-    private boolean duplicateFacultyId;
+public class FacultyRegistrationAdapter {
 
-    private final DepartmentRepository departmentRepository;
-    private final FacultyService facultyService;
-    private final AbstractUploadService<FacultyUpload, FacultyMember> uploadService;
-    private final PasswordFileService passwordFileService;
-    private final RealTimeStatusService realTimeStatusService;
     private final static int PASS_LENGTH = 16;
 
+    private final DepartmentRepository departmentRepository;
+    private final UserService userService;
+    private final AbstractUploadService<FacultyUpload, FacultyMember> uploadService;
+
+    @Data
+    private static class ErrorConditions {
+        private boolean invalidDepartment;
+        private boolean duplicateFacultyId;
+    }
+
     @Autowired
-    public FacultyUploadService(
-            DepartmentRepository departmentRepository,
-            FacultyService facultyService,
-            AbstractUploadService<FacultyUpload, FacultyMember> uploadService,
-            PasswordFileService passwordFileService,
-            RealTimeStatusService realTimeStatusService
-    ) {
+    public FacultyRegistrationAdapter(DepartmentRepository departmentRepository, UserService userService, AbstractUploadService<FacultyUpload, FacultyMember> uploadService) {
         this.departmentRepository = departmentRepository;
-        this.facultyService = facultyService;
+        this.userService = userService;
         this.uploadService = uploadService;
-        this.realTimeStatusService = realTimeStatusService;
-        this.passwordFileService = passwordFileService;
     }
 
-    public UploadResult<FacultyUpload> handleUpload(MultipartFile file) throws IOException {
-        return uploadService.handleUpload(FacultyUpload.class, file);
-    }
-
-    private String getMappedValue(FacultyMember facultyMember, List<Department> departments) {
+    private String getMappedValue(
+            FacultyMember facultyMember,
+            List<Department> departments,
+            List<UserRepository.Identifier> userIds,
+            ErrorConditions conditions
+    ) {
         String departmentName = facultyMember.getUser().getDepartment().getName();
 
         Optional<Department> optional = departments.stream()
@@ -63,12 +58,10 @@ public class FacultyUploadService {
                 .findFirst();
 
         if (!optional.isPresent()) {
-            invalidDepartment = true;
-            log.info("Faculty Registration : Invalid Department {}", departmentName);
+            conditions.setInvalidDepartment(true);
             return "No such department: " + departmentName;
-        } else if (facultyService.getById(facultyMember.getFacultyId()) != null) {
-            duplicateFacultyId = true;
-            log.info("Duplicate Faculty ID {}", facultyMember.getFacultyId());
+        } else if (userIds.parallelStream().anyMatch(identifier -> identifier.getUserId().equals(facultyMember.getFacultyId()))) {
+            conditions.setDuplicateFacultyId(true);
             return "Duplicate Faculty ID";
         } else {
             facultyMember.getUser().setDepartment(optional.get());
@@ -76,21 +69,33 @@ public class FacultyUploadService {
         }
     }
 
-    public Confirmation<FacultyMember> confirmUpload(UploadResult<FacultyUpload> uploadResult) {
-        invalidDepartment = false;
-        duplicateFacultyId = false;
+    UploadResult<FacultyUpload> fileToUpload(MultipartFile file) throws IOException {
+        return uploadService.handleUpload(FacultyUpload.class, file);
+    }
+
+    Confirmation<FacultyMember> uploadToConfirmation(UploadResult<FacultyUpload> uploadResult) {
+        ErrorConditions conditions = new ErrorConditions();
 
         List<Department> departments = departmentRepository.findAll();
 
+        List<String> ids = uploadResult.getUploads()
+                .stream()
+                .map(FacultyUpload::getFacultyId)
+                .collect(Collectors.toList());
+
+        List<UserRepository.Identifier> existingUserIds = userService.getUserIdentifiers(ids);
+
+        log.warn("Duplicate enrolments : {}", existingUserIds.toString());log.warn("Duplicate enrolments : {}", existingUserIds.toString());
+
         Confirmation<FacultyMember> facultyConfirmation = uploadService.confirmUpload(
                 uploadResult,
-                FacultyUploadService::fromFacultyUpload,
-                facultyMember -> getMappedValue(facultyMember, departments)
+                FacultyRegistrationAdapter::fromFacultyUpload,
+                facultyMember -> getMappedValue(facultyMember, departments, existingUserIds, conditions)
         );
 
-        if (invalidDepartment)
+        if (conditions.isInvalidDepartment())
             facultyConfirmation.getErrors().add("Faculty Member with invalid department found");
-        if (duplicateFacultyId)
+        if (conditions.isDuplicateFacultyId())
             facultyConfirmation.getErrors().add("Faculty Member with duplicate Faculty ID found");
 
         if (!facultyConfirmation.getErrors().isEmpty()) {
@@ -100,25 +105,7 @@ public class FacultyUploadService {
         return facultyConfirmation;
     }
 
-    public RealTimeStatus registerFaculty(Confirmation<FacultyMember> confirmation) throws IOException {
-        RealTimeStatus status = realTimeStatusService.install();
-
-        String fileId = saveFile(confirmation);
-        status.setMeta(fileId);
-        facultyService.register(confirmation.getData(), status);
-
-        return status;
-    }
-
-    private String saveFile(Confirmation<FacultyMember> confirmation) throws IOException {
-        List<FacultyUpload> facultyUploads = confirmation.getData().stream()
-                .map(FacultyUploadService::fromFacultyMember)
-                .collect(Collectors.toList());
-
-        return passwordFileService.create(facultyUploads).getId();
-    }
-
-    private static FacultyMember fromFacultyUpload(FacultyUpload facultyUpload) {
+    static FacultyMember fromFacultyUpload(FacultyUpload facultyUpload) {
         String password = SecurityUtils.generatePassword(PASS_LENGTH);
         facultyUpload.setPassword(password);
         FacultyMember facultyMember = new FacultyMember();
@@ -132,7 +119,7 @@ public class FacultyUploadService {
         return facultyMember;
     }
 
-    private static FacultyUpload fromFacultyMember(FacultyMember facultyMember) {
+    static FacultyUpload fromFacultyMember(FacultyMember facultyMember) {
         FacultyUpload facultyUpload = new FacultyUpload();
         facultyUpload.setFacultyId(facultyMember.getFacultyId());
         facultyUpload.setName(facultyMember.getUser().getName());
@@ -142,4 +129,5 @@ public class FacultyUploadService {
 
         return facultyUpload;
     }
+
 }

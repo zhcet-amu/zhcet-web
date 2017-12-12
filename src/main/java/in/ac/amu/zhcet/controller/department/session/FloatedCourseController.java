@@ -6,7 +6,7 @@ import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.CourseRegistrationService;
 import in.ac.amu.zhcet.service.extra.AttendanceDownloadService;
-import in.ac.amu.zhcet.service.upload.csv.RegistrationUploadService;
+import in.ac.amu.zhcet.service.upload.csv.courseregistration.CourseRegistrationUploadService;
 import in.ac.amu.zhcet.utils.Flash;
 import in.ac.amu.zhcet.utils.SortUtils;
 import in.ac.amu.zhcet.utils.page.Path;
@@ -40,7 +40,7 @@ public class FloatedCourseController {
     private final CourseRegistrationService courseRegistrationService;
     private final CourseManagementService courseManagementService;
     private final AttendanceDownloadService attendanceDownloadService;
-    private final RegistrationUploadService registrationUploadService;
+    private final CourseRegistrationUploadService courseRegistrationUploadService;
 
     @Autowired
     public FloatedCourseController(
@@ -48,13 +48,13 @@ public class FloatedCourseController {
             CourseRegistrationService courseRegistrationService,
             CourseManagementService courseManagementService,
             AttendanceDownloadService attendanceDownloadService,
-            RegistrationUploadService registrationUploadService
+            CourseRegistrationUploadService courseRegistrationUploadService
     ) {
         this.courseInChargeService = courseInChargeService;
         this.courseRegistrationService = courseRegistrationService;
         this.courseManagementService = courseManagementService;
         this.attendanceDownloadService = attendanceDownloadService;
-        this.registrationUploadService = registrationUploadService;
+        this.courseRegistrationUploadService = courseRegistrationUploadService;
     }
 
     public static PathChain getPath(Department department, Course course) {
@@ -124,7 +124,7 @@ public class FloatedCourseController {
         if (course == null)
             return redirectUrl;
 
-        registrationUploadService.upload(course, file, attributes, session);
+        courseRegistrationUploadService.upload(course, file, attributes, session);
 
         return redirectUrl;
     }
@@ -135,7 +135,7 @@ public class FloatedCourseController {
         if (course == null)
             return redirectUrl;
 
-        registrationUploadService.register(course, attributes, session);
+        courseRegistrationUploadService.register(course, attributes, session);
 
         return redirectUrl;
     }

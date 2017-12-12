@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.upload.csv;
+package in.ac.amu.zhcet.service.upload.csv.attendance;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.CourseInCharge;
@@ -9,9 +9,8 @@ import in.ac.amu.zhcet.data.model.notification.ChannelType;
 import in.ac.amu.zhcet.data.model.notification.Notification;
 import in.ac.amu.zhcet.service.CourseInChargeService;
 import in.ac.amu.zhcet.service.CourseRegistrationService;
-import in.ac.amu.zhcet.service.notification.NotificationSendingService;
 import in.ac.amu.zhcet.service.email.EmailSendingService;
-import in.ac.amu.zhcet.service.upload.csv.base.AbstractUploadService;
+import in.ac.amu.zhcet.service.notification.NotificationSendingService;
 import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
 import lombok.extern.slf4j.Slf4j;
@@ -27,55 +26,30 @@ import java.util.List;
 @Service
 public class AttendanceUploadService {
 
-    private boolean existsError;
-
-    private final AbstractUploadService<AttendanceUpload, AttendanceUpload> uploadService;
     private final CourseInChargeService courseInChargeService;
     private final CourseRegistrationService courseRegistrationService;
     private final NotificationSendingService notificationSendingService;
+    private final AttendanceUploadAdapter attendanceUploadAdapter;
 
     @Autowired
-    public AttendanceUploadService(AbstractUploadService<AttendanceUpload, AttendanceUpload> uploadService, CourseInChargeService courseInChargeService, CourseRegistrationService courseRegistrationService, NotificationSendingService notificationSendingService) {
-        this.uploadService = uploadService;
+    public AttendanceUploadService(
+            CourseInChargeService courseInChargeService,
+            CourseRegistrationService courseRegistrationService,
+            NotificationSendingService notificationSendingService,
+            AttendanceUploadAdapter attendanceUploadAdapter
+    ) {
+        this.attendanceUploadAdapter = attendanceUploadAdapter;
         this.courseInChargeService = courseInChargeService;
         this.courseRegistrationService = courseRegistrationService;
         this.notificationSendingService = notificationSendingService;
     }
 
     public UploadResult<AttendanceUpload> handleUpload(MultipartFile file) throws IOException {
-        return uploadService.handleUpload(AttendanceUpload.class, file);
-    }
-
-    private String studentExists(AttendanceUpload upload, List<CourseRegistration> registrations) {
-        boolean exists = registrations.stream()
-                .map(registration -> registration.getStudent().getEnrolmentNumber())
-                .anyMatch(enrolment -> enrolment.equals(upload.getEnrolment_no()));
-
-        if (!exists) {
-            log.info("Student does not exist for course in-charge {}", upload.getEnrolment_no());
-            existsError = true;
-        }
-
-        return exists ? "exists" : null;
+        return attendanceUploadAdapter.fileToUpload(file);
     }
 
     public Confirmation<AttendanceUpload> confirmUpload(CourseInCharge courseInCharge, UploadResult<AttendanceUpload> uploadResult) {
-        List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-
-        existsError = false;
-
-        Confirmation<AttendanceUpload> attendanceConfirmation = uploadService.confirmUpload(
-                uploadResult,
-                item -> item,
-                upload -> studentExists(upload, courseRegistrations)
-        );
-
-        if (existsError) {
-            log.warn(attendanceConfirmation.getData().toString());
-            attendanceConfirmation.getErrors().add("The students highlighted in red are not registered for this course");
-        }
-
-        return attendanceConfirmation;
+        return attendanceUploadAdapter.uploadToConfirmation(courseInCharge, uploadResult);
     }
 
     @Transactional
@@ -83,7 +57,7 @@ public class AttendanceUploadService {
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
 
         for (AttendanceUpload attendanceUpload : uploadList) {
-            if (studentExists(attendanceUpload, courseRegistrations) == null) {
+            if (AttendanceUploadAdapter.studentExists(attendanceUpload, courseRegistrations, null) == null) {
                 log.error("Force updating attendance of invalid student {} {} {}", courseInCharge.getCode(), attendanceUpload.getEnrolment_no());
                 throw new RuntimeException("Invalid DataBody : " + attendanceUpload);
             }

@@ -142,4 +142,9 @@ public class UserService {
         user.setEmailUnsubscribed(unsubscribe);
         userRepository.save(user);
     }
+
+    public List<UserRepository.Identifier> getUserIdentifiers(List<String> ids) {
+        return userRepository.getByUserIdIn(ids);
+    }
+
 }

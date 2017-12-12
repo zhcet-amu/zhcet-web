@@ -7,8 +7,8 @@ import in.ac.amu.zhcet.data.model.dto.upload.StudentUpload;
 import in.ac.amu.zhcet.data.model.file.PasswordFile;
 import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
 import in.ac.amu.zhcet.service.upload.storage.FileSystemStorageService;
-import in.ac.amu.zhcet.service.upload.csv.FacultyUploadService;
-import in.ac.amu.zhcet.service.upload.csv.StudentUploadService;
+import in.ac.amu.zhcet.service.upload.csv.faculty.FacultyUploadService;
+import in.ac.amu.zhcet.service.upload.csv.student.StudentUploadService;
 import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
 import in.ac.amu.zhcet.service.upload.storage.FileType;
@@ -46,7 +46,7 @@ public class UserRegistrationController {
         this.systemStorageService = systemStorageService;
     }
 
-    @PostMapping("/dean/students/register")
+    @PostMapping("/dean/register/students")
     public String uploadFile(RedirectAttributes attributes, @RequestParam MultipartFile file, HttpSession session, WebRequest webRequest) {
         try {
             UploadResult<StudentUpload> result = studentUploadService.handleUpload(file);
@@ -67,7 +67,7 @@ public class UserRegistrationController {
         return "redirect:/dean";
     }
 
-    @PostMapping("/dean/students/register/confirm")
+    @PostMapping("/dean/register/students/confirm")
     public String uploadStudents(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
         Confirmation<Student> confirmation = (Confirmation<Student>) session.getAttribute("confirmStudentRegistration");
 
@@ -89,7 +89,7 @@ public class UserRegistrationController {
         return "redirect:/dean";
     }
 
-    @PostMapping("/dean/faculty/register")
+    @PostMapping("/dean/register/faculty")
     public String uploadFacultyFile(RedirectAttributes attributes, @RequestParam MultipartFile file, HttpSession session, WebRequest webRequest) throws IOException {
         try {
             UploadResult<FacultyUpload> result = facultyUploadService.handleUpload(file);
@@ -109,7 +109,7 @@ public class UserRegistrationController {
         return "redirect:/dean";
     }
 
-    @PostMapping("/dean/faculty/register/confirm")
+    @PostMapping("/dean/register/faculty/confirm")
     public String uploadFaculty(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
         Confirmation<FacultyMember> confirmation = (Confirmation<FacultyMember>) session.getAttribute("confirmFacultyRegistration");
 
@@ -131,20 +131,6 @@ public class UserRegistrationController {
 
             webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);
         }
-
-        return "redirect:/dean";
-    }
-
-    @PostMapping("/dean/students/register/session/clear")
-    public String clearStudentsRegistrationSession(WebRequest webRequest) {
-        webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
-
-        return "redirect:/dean";
-    }
-
-    @PostMapping("/dean/faculty/register/session/clear")
-    public String clearFacultyRegistrationSession(WebRequest webRequest) {
-        webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);
 
         return "redirect:/dean";
     }

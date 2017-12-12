@@ -2,7 +2,7 @@ package in.ac.amu.zhcet.controller.faculty;
 
 import in.ac.amu.zhcet.data.model.dto.upload.AttendanceUpload;
 import in.ac.amu.zhcet.service.CourseInChargeService;
-import in.ac.amu.zhcet.service.upload.csv.AttendanceUploadService;
+import in.ac.amu.zhcet.service.upload.csv.attendance.AttendanceUploadService;
 import in.ac.amu.zhcet.service.upload.csv.base.Confirmation;
 import in.ac.amu.zhcet.service.upload.csv.base.UploadResult;
 import in.ac.amu.zhcet.utils.SortUtils;

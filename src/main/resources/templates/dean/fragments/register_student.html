@@ -14,7 +14,7 @@
         </div>
         <div class="card-body collapse in">
             <div class="card-block">
-                <form class="mui-form" enctype="multipart/form-data" th:action="@{/dean/students/register}"
+                <form class="mui-form" enctype="multipart/form-data" th:action="@{/dean/register/students}"
                       method="post">
                     <div class="form-body">
                         <h4 class="form-section"><i class="material-icons md-24 md-dark">book</i>Student CSV</h4>
@@ -30,7 +30,6 @@
                                 <span class="percentage float-xs-right">0%</span>
                             </small>
                         </div>
-                        <div th:replace="fragments/layout :: success(condition = ${students_success}, success_title = 'Uploaded!', message = 'Your file was correctly uploaded. Now, confirm the prompt to register the students')"></div>
                         <div th:replace="fragments/layout :: error(condition = ${student_unknown_error}, error_title = 'Unknown Error!', error = 'We don\'t know what happened. Please contact site admin')"></div>
                         <div th:each="error : ${students_errors}">
                             <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
@@ -106,7 +105,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <form class="form" th:action="@{/dean/students/register/confirm}" method="post"
+                            <form class="form" th:action="@{/dean/register/students/confirm}" method="post"
                                   style="display: inline">
                                 <button th:if="${confirmRegistration.errors.isEmpty()}" type="submit"
                                         class="btn btn-primary">Register
