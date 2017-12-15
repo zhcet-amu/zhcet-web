@@ -97,7 +97,7 @@ public class StudentService {
 
     @Async
     public void register(Set<Student> students, RealTimeStatus status) {
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         status.setContext("Student Registration");
         status.setTotal(students.size());
 
@@ -109,7 +109,7 @@ public class StudentService {
                         save(student);
                         status.setCompleted(completed[0]++);
                     });
-            float duration = (System.currentTimeMillis() - startTime)/1000f;
+            float duration = (System.nanoTime() - startTime)/1000000f;
             status.setDuration(duration);
             status.setFinished(true);
             log.info("Saved {} Students in {} s", students.size(), duration);

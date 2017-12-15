@@ -77,8 +77,7 @@ public class FacultyService {
 
     @Async
     public void register(Set<FacultyMember> facultyMembers, RealTimeStatus status) {
-        // TODO: Use nano time
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         status.setContext("Faculty Registration");
         status.setTotal(facultyMembers.size());
 
@@ -90,7 +89,7 @@ public class FacultyService {
                         save(facultyMember);
                         status.setCompleted(completed[0]++);
                     });
-            float duration = (System.currentTimeMillis() - startTime)/1000f;
+            float duration = (System.nanoTime() - startTime)/1000000f;
             status.setDuration(duration);
             status.setFinished(true);
             log.info("Saved {} Faculty in {} s", facultyMembers.size(), duration);
