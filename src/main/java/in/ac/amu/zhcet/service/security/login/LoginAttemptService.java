@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.RemovalListener;
 import in.ac.amu.zhcet.configuration.security.login.listener.PathAuthorizationAuditListener;
+import in.ac.amu.zhcet.configuration.security.login.listener.UsernameAuthenticationFailureHandler;
 import in.ac.amu.zhcet.service.config.ConfigurationService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.boot.actuate.security.AuthenticationAuditListener;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
@@ -59,19 +61,22 @@ public class LoginAttemptService {
     public String getErrorMessage(HttpServletRequest request) {
         String defaultMessage = "Username or Password is incorrect!";
 
-        Object object = request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
-        if (object == null)
+        Object exception = request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+        Object rawUsername = request.getSession().getAttribute(UsernameAuthenticationFailureHandler.USERNAME);
+        if (exception == null)
             return defaultMessage;
 
         String ip = Utils.getClientIP(request);
         String coolDownPeriod = getBlockDuration() + " " + LoginAttemptService.TIME_UNIT;
-        if(object instanceof LockedException || isBlocked(ip)) {
+        if(exception instanceof LockedException || isBlocked(ip)) {
             return "IP blocked for <strong>" + coolDownPeriod + "</strong> since last wrong login attempt";
-        } else if (object instanceof BadCredentialsException) {
-            String tries = String.format("%d out of %d tries left!" , triesLeft(ip), getMaxRetries());
+        } else if (exception instanceof BadCredentialsException && rawUsername instanceof String) {
+            String username = (String) rawUsername;
+            String key = getKey(ip, username);
+            String tries = String.format("%d out of %d tries left!" , triesLeft(key), getMaxRetries());
             String message = "IP will be blocked for " + coolDownPeriod + " after all tries are exhausted";
             return defaultMessage + "<br><strong>" + tries  + "</strong> " + message;
-        } else if (object instanceof DisabledException) {
+        } else if (exception instanceof DisabledException) {
             return "User is disabled from site";
         }
 
@@ -90,14 +95,18 @@ public class LoginAttemptService {
             Object type = auditEvent.getData().get("type");
             if (type != null && type.toString().equals(BadCredentialsException.class.getName())) {
                 log.info("Login Failed. Incrementing Attempts");
-                loginFailed(details.getRemoteAddress());
+                loginFailed(details.getRemoteAddress(), auditEvent.getPrincipal());
             } else if(type != null) {
                 log.info("Login Failed due to {}", type.toString());
             }
         } else if (auditEvent.getType().equals(PathAuthorizationAuditListener.SUCCESS)) {
             log.info("Login Succeeded. Invalidating");
-            loginSucceeded(details.getRemoteAddress());
+            loginSucceeded(details.getRemoteAddress(), auditEvent.getPrincipal());
         }
+    }
+
+    public static String getKey(String ip, String username) {
+        return ip + "~" + username;
     }
 
     private int getFromCache(String key) {
@@ -105,11 +114,13 @@ public class LoginAttemptService {
         return attempts != null ? attempts : 0;
     }
 
-    private void loginSucceeded(String key) {
+    private void loginSucceeded(String ip, String username) {
+        String key = getKey(ip, username);
         attemptsCache.invalidate(key);
     }
 
-    private void loginFailed(String key) {
+    private void loginFailed(String ip, String username) {
+        String key = getKey(ip, username);
         if (isBlocked(key)) {
             log.info("IP {} is already blocked, even correct attempts will be marked wrong, hence ignoring", key);
             return;
@@ -133,14 +144,14 @@ public class LoginAttemptService {
     public static class BlockedIp {
         private String ip;
         private int attempts;
+        private boolean blocked;
     }
 
     public List<BlockedIp> getBlockedIps() {
         return attemptsCache.asMap()
                 .entrySet()
                 .stream()
-                .filter(stringIntegerEntry -> stringIntegerEntry.getValue() >= getMaxRetries())
-                .map(entry -> new BlockedIp(entry.getKey(), entry.getValue()))
+                .map(entry -> new BlockedIp(entry.getKey(), entry.getValue(), isBlocked(entry.getKey())))
                 .collect(Collectors.toList());
     }
 }

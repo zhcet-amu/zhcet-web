@@ -55,7 +55,7 @@ public class UserDetailService implements UserDetailsService {
 
     private UserDetails detailsFromUserAuth(User user) {
         String ip = Utils.getClientIP(request);
-        return detailsFromUser(user, loginAttemptService.isBlocked(ip));
+        return detailsFromUser(user, loginAttemptService.isBlocked(LoginAttemptService.getKey(ip, user.getUserId())));
     }
 
     private static Authentication authenticationFromUserAuth(User user, UserDetails userDetails) {

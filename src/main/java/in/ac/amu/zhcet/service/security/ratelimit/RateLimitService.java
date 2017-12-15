@@ -3,12 +3,11 @@ package in.ac.amu.zhcet.service.security.ratelimit;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Service
+/* Decommissioned */
 public class RateLimitService {
 
     private static final int EXPIRE_TIME = 30;

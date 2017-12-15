@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.configuration.security;
 
 import in.ac.amu.zhcet.configuration.security.login.CustomAuthenticationDetails;
-import in.ac.amu.zhcet.configuration.security.login.RoleWiseSuccessHandler;
+import in.ac.amu.zhcet.configuration.security.login.listener.UsernameAuthenticationFailureHandler;
 import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.user.Auditor;
 import in.ac.amu.zhcet.service.user.UserDetailService;
@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,11 +47,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    RoleWiseSuccessHandler roleWiseSuccessHandler() {
-        return new RoleWiseSuccessHandler();
-    }
-
-    @Bean
     AuditorAware<String> auditorAware() {
         return new Auditor();
     }
@@ -58,6 +54,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
+    }
+
+    @Bean
+    AuthenticationFailureHandler authenticationFailureHandler() {
+        return new UsernameAuthenticationFailureHandler();
     }
 
     @Bean
@@ -91,9 +92,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .formLogin()
                     .authenticationDetailsSource(authenticationDetailsSource())
                     .loginPage("/login").permitAll()
-                    .failureUrl("/login?error")
-                    .usernameParameter("username").passwordParameter("password")
-                    .successHandler(roleWiseSuccessHandler())
+                    .failureHandler(new UsernameAuthenticationFailureHandler("/login?error"))
+                    .usernameParameter("username")
+                    .passwordParameter("password")
                 .and()
                     .logout().logoutSuccessUrl("/login?logout").permitAll()
                 .and()

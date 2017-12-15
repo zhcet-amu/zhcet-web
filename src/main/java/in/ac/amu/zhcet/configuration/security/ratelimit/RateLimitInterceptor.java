@@ -3,10 +3,8 @@ package in.ac.amu.zhcet.configuration.security.ratelimit;
 import in.ac.amu.zhcet.service.security.ratelimit.RateLimitService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +14,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
+/**
+ * This class was a naive implementation of rate limiting which would
+ * have failed for proxied networks which is very much the case with AMU,
+ * thus, it has been disabled till a better implementation is thought of
+ */
 @Slf4j
-@Component
+//@Component
 public class RateLimitInterceptor extends HandlerInterceptorAdapter {
 
     private static final int POST_LIMIT = 30;
@@ -31,7 +34,7 @@ public class RateLimitInterceptor extends HandlerInterceptorAdapter {
     private long lastWarning;
     private ScheduledFuture<?> scheduledFuture;
 
-    @Autowired
+    //@Autowired
     public RateLimitInterceptor(RateLimitService rateLimitService, @Lazy TaskScheduler scheduler) {
         this.rateLimitService = rateLimitService;
         this.scheduler = scheduler;
