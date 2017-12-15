@@ -52,9 +52,8 @@ class CsvParser<T> {
             if (items != null)
                 result.getItems().addAll(items);
 
-            log.warn(result.getParseErrors().toString());
         } catch (ParseException e) {
-            log.error(String.format("Error Parsing file %s", file.getOriginalFilename()), e);
+            log.warn(String.format("Error Parsing file %s", file.getOriginalFilename()), e);
             ParseError parseError = new ParseError();
             parseError.setErrorType(ParseError.ErrorType.INVALID_HEADER);
             parseError.setMessage(e.getMessage());

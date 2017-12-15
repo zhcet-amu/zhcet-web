@@ -82,8 +82,10 @@ public class StudentRegistrationAdapter {
         List<UserRepository.Identifier> existingUserIds = userService.getUserIdentifiers(enrolments);
         List<StudentRepository.Identifier> existingFacultyNumbers = studentService.getIdentifiersByFacultyNummbers(facultyNumbers);
 
-        log.warn("Duplicate enrolments : {}", existingUserIds.toString());
-        log.warn("Duplicate facultyNumbers : {}", existingFacultyNumbers.toString());
+        if (!existingUserIds.isEmpty())
+            log.warn("Duplicate enrolments : {}", existingUserIds.toString());
+        if (!existingFacultyNumbers.isEmpty())
+            log.warn("Duplicate facultyNumbers : {}", existingFacultyNumbers.toString());
 
         Confirmation<Student> studentConfirmation =
                 uploadService.confirmUpload(uploadResult)

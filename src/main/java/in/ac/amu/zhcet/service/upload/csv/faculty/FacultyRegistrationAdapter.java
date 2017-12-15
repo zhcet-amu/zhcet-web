@@ -85,7 +85,8 @@ public class FacultyRegistrationAdapter {
 
         List<UserRepository.Identifier> existingUserIds = userService.getUserIdentifiers(ids);
 
-        log.warn("Duplicate enrolments : {}", existingUserIds.toString());log.warn("Duplicate enrolments : {}", existingUserIds.toString());
+        if (!existingUserIds.isEmpty())
+            log.warn("Duplicate faculty ids : {}", existingUserIds.toString());log.warn("Duplicate enrolments : {}", existingUserIds.toString());
 
         Confirmation<FacultyMember> facultyConfirmation =
                 uploadService.confirmUpload(uploadResult)
