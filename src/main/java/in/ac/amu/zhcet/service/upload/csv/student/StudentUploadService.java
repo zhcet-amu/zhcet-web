@@ -30,7 +30,7 @@ public class StudentUploadService {
     }
 
     public UploadResult<StudentUpload> handleUpload(MultipartFile file) throws IOException {
-        return studentRegistrationAdapter.fileToUppload(file);
+        return studentRegistrationAdapter.fileToUpload(file);
     }
 
     public Confirmation<Student> confirmUpload(UploadResult<StudentUpload> uploadResult) {

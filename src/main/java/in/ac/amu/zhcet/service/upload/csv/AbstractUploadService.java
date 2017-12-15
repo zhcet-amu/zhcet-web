@@ -1,24 +1,23 @@
 package in.ac.amu.zhcet.service.upload.csv;
 
-import com.j256.simplecsv.processor.CsvProcessor;
 import com.j256.simplecsv.processor.ParseError;
 import in.ac.amu.zhcet.data.model.base.Meta;
 import in.ac.amu.zhcet.service.upload.storage.FileSystemStorageService;
 import in.ac.amu.zhcet.service.upload.storage.FileType;
 import in.ac.amu.zhcet.service.upload.storage.StorageException;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Named;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,42 +26,11 @@ public class AbstractUploadService<T, U extends Meta> {
     private final FileSystemStorageService systemStorageService;
     private final List<String> allowedCsvTypes;
 
-    public static class ConfirmationAdapter<T, U extends Meta> {
-        private final Confirmation<U> confirmation = new Confirmation<>();
-        private final UploadResult<T> uploadResult;
-        private Function<T, U> converter;
-        private Function<U, String> mapper;
-
-        private ConfirmationAdapter(UploadResult<T> uploadResult) {
-            this.uploadResult = uploadResult;
-        }
-
-        public ConfirmationAdapter<T, U> convert(Function<T, U> converter) {
-            this.converter = converter;
-            return this;
-        }
-
-        public ConfirmationAdapter<T, U> map(Function<U, String> mapper) {
-            this.mapper = mapper;
-            return this;
-        }
-
-        public Confirmation<U> get() {
-            if (mapper == null)
-                throw new IllegalStateException("Mapper cannot be null");
-
-            uploadResult
-                    .getUploads()
-                    .stream()
-                    .map(converter)
-                    .forEach(item -> {
-                        item.setMeta(mapper.apply(item));
-                        confirmation.getData().add(item);
-                    });
-
-            return confirmation;
-        }
-
+    @Data
+    @RequiredArgsConstructor
+    public static class ParseErrorWrapper {
+        private final ParseError parseError;
+        private final List<String> columns;
     }
 
     @Autowired
@@ -71,12 +39,14 @@ public class AbstractUploadService<T, U extends Meta> {
         this.allowedCsvTypes = allowedCsvTypes;
     }
 
-    private void storeFile(UploadResult<T> uploadResult, MultipartFile file) {
+    private boolean storeFile(MultipartFile file, UploadResult<T> uploadResult) {
         try {
             systemStorageService.store(FileType.CSV, file);
+            return true;
         } catch (StorageException fileException) {
             uploadResult.getErrors().add(fileException.getMessage());
             log.error(String.format("Error storing file %s", file.getOriginalFilename()), fileException);
+            return false;
         }
     }
 
@@ -90,43 +60,51 @@ public class AbstractUploadService<T, U extends Meta> {
         return true;
     }
 
-    private void parseFile(Class<T> uploadClass, MultipartFile file, UploadResult<T> uploadResult) throws IOException {
-        CsvProcessor<T> csvProcessor = new CsvProcessor<>(uploadClass)
-                .withAlwaysTrimInput(true)
-                .withIgnoreUnknownColumns(true)
-                .withFlexibleOrder(true);
-        try {
-            List<ParseError> parseErrors = new ArrayList<>();
-            List<T> uploads = csvProcessor.readAll(new InputStreamReader(file.getInputStream()), parseErrors);
+    private static ParseErrorWrapper fromParseError(ParseError parseError, CsvParser.Result<?> result) {
+        return new ParseErrorWrapper(parseError, result.getColumns());
+    }
 
-            if (uploads != null) {
-                uploadResult.getUploads().addAll(uploads);
-            }
+    private void parseFile(
+            @Nonnull
+            Class<T> uploadClass,
+            @Nonnull
+            MultipartFile file,
+            @Nonnull
+            UploadResult<T> uploadResult,
+            @Nullable
+            Function<ParseErrorWrapper, String> errorHandler
+    ) throws IOException {
+        CsvParser.Result<T> result = CsvParser.of(uploadClass, file).parse();
 
-            List<String> errors = parseErrors.stream().map(parseError -> {
-                String message = parseError.getMessage().replace("suppled", "supplied") +
-                        "<br>Line Number: " + parseError.getLineNumber() + " Position: " + parseError.getLinePos();
+        Function<ParseErrorWrapper, String> handler = errorHandler != null ? errorHandler : CsvParseErrorHandler::handleError;
 
-                if (parseError.getLine() != null)
-                    message += "<br>Line: " + parseError.getLine();
+        uploadResult.getUploads().addAll(result.getItems());
+        if (!result.isParsedSuccessfully()) {
+            result.getParseErrors()
+                    .stream()
+                    .map(parseError -> fromParseError(parseError, result))
+                    .map(handler)
+                    .forEach(message -> uploadResult.getErrors().add(message));
 
-                return message;
-            }).collect(Collectors.toList());
-            if (!errors.isEmpty())
-                log.warn(String.format("CSV Parsing Errors %s %s", file.getOriginalFilename(), errors.toString()));
-            uploadResult.getErrors().addAll(errors);
-        } catch (ParseException e) {
-            log.error(String.format("Error Parsing file %s", file.getOriginalFilename()), e);
-            uploadResult.getErrors().add(e.getMessage());
+            log.warn(String.format("CSV Parsing Errors %s %s", file.getOriginalFilename(), uploadResult.getErrors()));
         }
     }
 
     public UploadResult<T> handleUpload(Class<T> uploadClass, MultipartFile file) throws IOException {
+        return handleUpload(uploadClass, file, null);
+    }
+
+    public UploadResult<T> handleUpload(
+            Class<T> uploadClass,
+            MultipartFile file,
+            Function<ParseErrorWrapper,String> errorHandler
+    )
+            throws IOException
+    {
         UploadResult<T> uploadResult = new UploadResult<>();
 
-        storeFile(uploadResult, file);
-        if (validateType(file, uploadResult))
-            parseFile(uploadClass, file, uploadResult);
+        if (storeFile(file, uploadResult) && validateType(file, uploadResult))
+            parseFile(uploadClass, file, uploadResult, errorHandler);
 
         return uploadResult;
     }

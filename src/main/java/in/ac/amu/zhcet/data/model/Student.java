@@ -2,13 +2,13 @@ package in.ac.amu.zhcet.data.model;
 
 import in.ac.amu.zhcet.data.model.base.BaseEntity;
 import in.ac.amu.zhcet.data.model.user.User;
+import in.ac.amu.zhcet.data.type.HallCode;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Data
 @Entity
@@ -27,8 +27,8 @@ public class Student extends BaseEntity {
     @Column(unique = true)
     private String facultyNumber;
 
-    @Size(max = 2)
-    private String hallCode;
+    @Enumerated(EnumType.STRING)
+    private HallCode hallCode;
     private String section;
     private Integer registrationYear = getYear();
     private Character status = 'A';

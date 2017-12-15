@@ -6,10 +6,12 @@ import in.ac.amu.zhcet.data.model.dto.upload.StudentUpload;
 import in.ac.amu.zhcet.data.repository.DepartmentRepository;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
+import in.ac.amu.zhcet.data.type.HallCode;
 import in.ac.amu.zhcet.service.StudentService;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.upload.csv.AbstractUploadService;
 import in.ac.amu.zhcet.service.upload.csv.Confirmation;
+import in.ac.amu.zhcet.service.upload.csv.CsvParseErrorHandler;
 import in.ac.amu.zhcet.service.upload.csv.UploadResult;
 import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.Data;
@@ -48,8 +50,18 @@ public class StudentRegistrationAdapter {
         this.uploadService = uploadService;
     }
 
-    UploadResult<StudentUpload> fileToUppload(MultipartFile file) throws IOException {
-        return uploadService.handleUpload(StudentUpload.class, file);
+    UploadResult<StudentUpload> fileToUpload(MultipartFile file) throws IOException {
+        return uploadService.handleUpload(StudentUpload.class, file, parseErrorWrapper ->
+                Optional.ofNullable(parseErrorWrapper)
+                .flatMap(parseWrapper -> CsvParseErrorHandler.getInvalidFormatColumn(parseErrorWrapper))
+                .map(column -> {
+                    if (column.equals("hall")) {
+                        return CsvParseErrorHandler.generateEnumError(parseErrorWrapper.getParseError(),
+                                "Hall", HallCode.values());
+                    }
+
+                    return CsvParseErrorHandler.handleError(parseErrorWrapper);
+                }).orElse(CsvParseErrorHandler.handleError(parseErrorWrapper)));
     }
 
     Confirmation<Student> confirmUpload(UploadResult<StudentUpload> uploadResult) {
@@ -59,12 +71,12 @@ public class StudentRegistrationAdapter {
 
         List<String> enrolments = uploadResult.getUploads()
                 .stream()
-                .map(StudentUpload::getEnrolmentNo)
+                .map(StudentUpload::getEnrolmentNumber)
                 .collect(Collectors.toList());
 
         List<String> facultyNumbers = uploadResult.getUploads()
                 .stream()
-                .map(StudentUpload::getFacultyNo)
+                .map(StudentUpload::getFacultyNumber)
                 .collect(Collectors.toList());
 
         List<UserRepository.Identifier> existingUserIds = userService.getUserIdentifiers(enrolments);
@@ -110,16 +122,13 @@ public class StudentRegistrationAdapter {
 
         if (!optional.isPresent()) {
             conditions.setInvalidDepartment(true);
-            return  "No such department: " + departmentName;
+            return "No such department: " + departmentName;
         } else if (userIds.parallelStream().anyMatch(identifier -> identifier.getUserId().equals(student.getEnrolmentNumber()))) {
             conditions.setDuplicateEnrolmentNo(true);
             return  "Duplicate enrolment number";
         } else if (facultyNumbers.parallelStream().anyMatch(identifier -> identifier.getFacultyNumber().equals(student.getFacultyNumber()))) {
             conditions.setDuplicateFacultyNo(true);
             return "Duplicate faculty number";
-        } else if (student.getHallCode().length() > 2) {
-            conditions.setInvalidHallCode(true);
-            return "Invalid Hall Code : " + student.getHallCode();
         } else {
             student.getUser().setDepartment(optional.get());
             return null;
@@ -128,12 +137,12 @@ public class StudentRegistrationAdapter {
 
     private static Student fromStudentUpload(StudentUpload studentUpload) {
         Student student = new Student();
-        student.setEnrolmentNumber(StringUtils.capitalizeAll(studentUpload.getEnrolmentNo()));
-        student.setFacultyNumber(StringUtils.capitalizeAll(studentUpload.getFacultyNo()));
-        student.getUser().setName(StringUtils.capitalizeFirst(studentUpload.getName()));
+        student.setEnrolmentNumber(studentUpload.getEnrolmentNumber());
+        student.setFacultyNumber(studentUpload.getFacultyNumber());
+        student.getUser().setName(studentUpload.getName());
         student.getUser().setDepartment(Department.builder().name(StringUtils.capitalizeFirst(studentUpload.getDepartment())).build());
-        student.setSection(StringUtils.capitalizeAll(studentUpload.getSection()));
-        student.setHallCode(StringUtils.capitalizeAll(studentUpload.getHall()));
+        student.setSection(studentUpload.getSection());
+        student.setHallCode(studentUpload.getHall());
         student.setRegistrationYear(studentUpload.getRegistrationYear());
         student.setStatus(studentUpload.getStatus());
         student.getUser().getDetails().setGender(studentUpload.getGender());
