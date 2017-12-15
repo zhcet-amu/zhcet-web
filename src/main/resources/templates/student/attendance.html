@@ -58,19 +58,16 @@
         </div>
     </div>
 </div>
-<script>
-    (function () {
-        $(document).ready(function () {
-            $('#attendance_table').DataTable({
-                dom: 'lBfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ]
-            });
-        });
-    }());
-</script>
+
 <div th:replace="fragments/layout :: datatables"></div>
 <div th:replace="fragments/layout :: datatables_export"></div>
+<script>
+    $('#attendance_table').DataTable({
+        dom: 'lBfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    });
+</script>
 </body>
 </html>

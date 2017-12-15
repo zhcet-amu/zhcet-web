@@ -3,7 +3,6 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="fragments/layout :: head"></head>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 <style>
     .editor-toolbar.fullscreen, .CodeMirror-fullscreen, .editor-preview-side {
         z-index: 1200
@@ -77,5 +76,6 @@
         // TODO: Add autosave feature
     }());
 </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 </body>
 </html>

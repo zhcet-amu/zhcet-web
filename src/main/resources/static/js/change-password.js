@@ -123,7 +123,7 @@
 
     loadScript('https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js');
 
-    $(document).ready(function () {
+    /* main */ (function () {
         var oldPass = $('#old-passord');
         var newPass = $('#password');
         var confirmPass = $('#confirm-password');
@@ -170,5 +170,5 @@
 
         meter = document.getElementById('password-strength-meter');
         suggestionElement = $('.password-suggestions');
-    });
+    })();
 }());

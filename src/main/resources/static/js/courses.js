@@ -17,7 +17,7 @@
         pagination: true
     };
 
-    $(document).ready(function () {
+    /* main */ (function () {
         var courseList = new List('courses', options);
         $('#toggle-floated').click(function (event) {
             showFloatedOnly = !showFloatedOnly;
@@ -26,5 +26,5 @@
             btn.toggleClass('btn-secondary');
             btn.toggleClass('btn-outline-success');
         });
-    });
+    })();
 }(jQuery, List));

@@ -129,20 +129,18 @@
         </div>
     </div>
 </div>
+<div th:replace="fragments/layout :: datatables"></div>
+<div th:replace="fragments/layout :: datatables_export"></div>
 <script>
     (function () {
-        $(document).ready(function () {
-            $('#report').DataTable({
-                order: [],
-                dom: 'lBfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ]
-            });
+        $('#report').DataTable({
+            order: [],
+            dom: 'lBfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
         });
     }());
 </script>
-<div th:replace="fragments/layout :: datatables"></div>
-<div th:replace="fragments/layout :: datatables_export"></div>
 </body>
 </html>

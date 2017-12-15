@@ -8,7 +8,7 @@
         $('#default-session').attr('hidden', hide);
     }
 
-    $(document).ready(function () {
+    /* main */ (function () {
         var auto = $('#auto');
         disableInput(auto.is(':checked'));
 
@@ -23,5 +23,5 @@
                 $(this).removeAttr('disabled');
             })
         });
-    });
+    })();
 }(jQuery));

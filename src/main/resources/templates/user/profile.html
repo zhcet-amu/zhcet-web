@@ -27,18 +27,14 @@
 <div th:replace="fragments/layout :: firebase_auth"></div>
 <script th:src="@{/js/authentication.js}"></script>
 <script>
-    (function () {
-        $(document).ready(function () {
-            $('.file-uploader').initUpload({
-                fileTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'],
-                error: function (message) {
-                    toastr.error(message);
-                }
-            });
+    $('.file-uploader').initUpload({
+        fileTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'],
+        error: function (message) {
+            toastr.error(message);
+        }
+    });
 
-            Authentication.auth().init();
-        });
-    }());
+    Authentication.auth().init();
 </script>
 <script th:src="@{/js/link-account.js}"></script>
 </body>

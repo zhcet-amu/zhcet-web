@@ -56,7 +56,7 @@
         addNotification(payload);
     }
 
-    $(document).ready(function () {
+    /* main */ (function () {
         messaging.requestPermission()
             .then(function() {
                 getToken();
@@ -79,6 +79,6 @@
         messaging.onMessage(function(payload) {
             showNotification(payload);
         });
-    });
+    })();
 
 }(App, firebase));

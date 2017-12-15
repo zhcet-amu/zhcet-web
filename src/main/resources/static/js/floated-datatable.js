@@ -30,7 +30,7 @@
             modal.find('#floated-by').html('No Record');
     }
 
-    $(document).ready(function () {
+    /* main */ (function () {
         var header = $("meta[name='_csrf_header']").attr("content");
         var token = $("meta[name='_csrf']").attr("content");
 
@@ -88,5 +88,5 @@
         floatedCourseTable.find('tbody').on( 'click', 'tr', function () {
             showCourse(table.row(this).data());
         } );
-    });
+    })();
 }(jQuery));

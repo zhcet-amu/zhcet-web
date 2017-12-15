@@ -170,12 +170,12 @@
         </div>
     </div>
 </div>
-</body>
-<script th:src="@{/js/data-utils.js}"></script>
-<script th:src="@{/js/students-datatable.js}"></script>
-<div th:replace="fragments/layout :: data_details"></div>
 <div th:replace="fragments/layout :: datatables"></div>
 <div th:replace="fragments/layout :: datatables_export"></div>
 <div th:replace="fragments/layout :: datatables_select"></div>
+<script th:src="@{/js/data-utils.js}"></script>
+<script th:src="@{/js/students-datatable.js}"></script>
+<div th:replace="fragments/layout :: data_details"></div>
 <link rel="stylesheet" th:href="@{/css/datatables-select.css}">
+</body>
 </html>

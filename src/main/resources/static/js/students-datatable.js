@@ -77,7 +77,7 @@
         $('#section-modal').modal('show');
     }
 
-    $(document).ready(function () {
+    /* main */ (function () {
         var header = $("meta[name='_csrf_header']").attr("content");
         var token = $("meta[name='_csrf']").attr("content");
 
@@ -183,5 +183,5 @@
                 return;
             showStudent(table.row(this).data());
         } );
-    });
+    })();
 }(jQuery));

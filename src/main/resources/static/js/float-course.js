@@ -85,7 +85,7 @@
 
     fuzzyhound.setSource("/department/" + department + "/api/courses", ["code", "title"]);
 
-    $(document).ready(function () {
+    /* main */ (function () {
         var searchBox = $('.courses');
         searchBox.typeahead({
             highlight: false,
@@ -122,5 +122,5 @@
                 })[0]);
             });
         });
-    });
+    })();
 }(jQuery, fuzzyhound));

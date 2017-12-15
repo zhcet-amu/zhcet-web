@@ -53,7 +53,7 @@
             modal.find('#registered-by').html('No Record');
     }
 
-    $(document).ready(function () {
+    /* main */ (function () {
         var header = $("meta[name='_csrf_header']").attr("content");
         var token = $("meta[name='_csrf']").attr("content");
 
@@ -132,5 +132,5 @@
         facultyTable.find('tbody').on( 'click', 'tr', function () {
             showFaculty(table.row(this).data());
         } );
-    });
+    })() ;
 }(jQuery));

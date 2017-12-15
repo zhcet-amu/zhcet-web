@@ -34,7 +34,7 @@
     var baseUrl = "/department/" + department + "/api/faculty";
     fuzzyhound.setSource(baseUrl, index);
 
-    $(document).ready(function () {
+    /* main */ (function () {
         $('#faculty-modal').modal('show');
 
         var inChargeTemplate = $('#in-charge-template').html();
@@ -72,5 +72,5 @@
         });
 
         attachRemove();
-    });
+    })();
 }(jQuery, fuzzyhound));
