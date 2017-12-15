@@ -62,13 +62,14 @@ public class StudentEditService {
                     throw new DuplicateException("Student", "Faculty Number", studentEditModel.getFacultyNumber(), studentEditModel);
                 }
 
-                if (!studentEditModel.getUserEmail().equals(student.getUser().getEmail())) {
+                studentEditModel.setUserEmail(Strings.emptyToNull(studentEditModel.getUserEmail().trim().toLowerCase()));
+                if (studentEditModel.getUserEmail() != null && !studentEditModel.getUserEmail().equals(student.getUser().getEmail())) {
                     if (userService.throwDuplicateEmail(studentEditModel.getUserEmail(), student.getUser()))
                         studentEditModel.setUserEmail(null);
                     student.getUser().setEmailVerified(false);
                 }
 
-                if (!Strings.isNullOrEmpty(studentEditModel.getHallCode()) && !EnumUtils.isValidEnum(HallCode.class, studentEditModel.getHallCode())) {
+                if (studentEditModel.getHallCode() == null) {
                     log.error("Tried to save student with invalid hall code {} {}", id, studentEditModel.getHallCode());
                     throw new RuntimeException("Invalid Hall : " + studentEditModel.getHallCode() + ". Must be within " + EnumUtils.getEnumMap(HallCode.class).keySet());
                 }

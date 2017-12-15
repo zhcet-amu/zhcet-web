@@ -6,6 +6,7 @@ import in.ac.amu.zhcet.data.model.user.UserType;
 import in.ac.amu.zhcet.data.repository.StudentRepository;
 import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
+import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -120,8 +121,16 @@ public class StudentService {
         }
     }
 
+    private static void sanitizeStudent(Student student) {
+        UserService.sanitizeUser(student.getUser());
+        student.setEnrolmentNumber(StringUtils.capitalizeAll(student.getEnrolmentNumber()));
+        student.setFacultyNumber(StringUtils.capitalizeAll(student.getFacultyNumber()));
+        student.setSection(StringUtils.capitalizeAll(student.getSection()));
+    }
+
     @Transactional
     public void save(Student student) {
+        sanitizeStudent(student);
         studentRepository.save(student);
     }
 

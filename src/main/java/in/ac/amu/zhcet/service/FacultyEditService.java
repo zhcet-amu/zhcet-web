@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.service;
 
+import com.google.common.base.Strings;
 import in.ac.amu.zhcet.data.model.Department;
 import in.ac.amu.zhcet.data.model.FacultyMember;
 import in.ac.amu.zhcet.data.model.dto.datatables.FacultyEditModel;
@@ -48,7 +49,8 @@ public class FacultyEditService {
             });
 
             departmentOptional.ifPresent(department -> {
-                if (!facultyEditModel.getUserEmail().equals(facultyMember.getUser().getEmail())) {
+                facultyEditModel.setUserEmail(Strings.emptyToNull(facultyEditModel.getUserEmail().trim().toLowerCase()));
+                if (facultyEditModel.getUserEmail() != null && !facultyEditModel.getUserEmail().equals(facultyMember.getUser().getEmail())) {
                     if (userService.throwDuplicateEmail(facultyEditModel.getUserEmail(), facultyMember.getUser()))
                         facultyEditModel.setUserEmail(null);
                     facultyMember.getUser().setEmailVerified(false);

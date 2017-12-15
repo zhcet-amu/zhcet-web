@@ -3,10 +3,10 @@ package in.ac.amu.zhcet.service;
 import com.google.common.base.Strings;
 import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.data.model.user.UserDetail;
-import in.ac.amu.zhcet.data.repository.UserDetailRepository;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.user.UserDetailService;
+import in.ac.amu.zhcet.utils.StringUtils;
 import in.ac.amu.zhcet.utils.Utils;
 import in.ac.amu.zhcet.utils.exception.DuplicateException;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -29,39 +28,34 @@ import java.util.stream.Stream;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserDetailRepository userDetailRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserDetailRepository userDetailRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.userDetailRepository = userDetailRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    static void sanitizeUser(User user) {
+        user.setName(StringUtils.capitalizeFirst(user.getName()));
+        if (user.getEmail() != null)
+            user.setEmail(Strings.emptyToNull(user.getEmail().trim().toLowerCase()));
     }
 
     @Transactional
     public void save(User user) {
+        sanitizeUser(user);
         userRepository.save(user);
     }
 
-    @Transactional
-    public void save(List<User> users) {
-        userDetailRepository.save(
-                users.parallelStream()
-                    .map(User::getDetails)
-                .collect(Collectors.toList())
-        );
-        userRepository.save(users);
-    }
-
     public Optional<User> findById(String id) {
-        return userRepository.findByUserId(id.toUpperCase());
+        return userRepository.findByUserId(id);
     }
 
     public Optional<User> getUserByEmail(String email) {
         if (Strings.isNullOrEmpty(email))
             return Optional.empty();
-        return userRepository.findByEmail(email.toLowerCase());
+        return userRepository.findByEmail(email);
     }
 
     boolean throwDuplicateEmail(String email, User user) {

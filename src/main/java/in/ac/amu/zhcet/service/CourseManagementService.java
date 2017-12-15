@@ -4,6 +4,7 @@ import in.ac.amu.zhcet.data.model.*;
 import in.ac.amu.zhcet.data.repository.CourseRepository;
 import in.ac.amu.zhcet.data.repository.FloatedCourseRepository;
 import in.ac.amu.zhcet.service.config.ConfigurationService;
+import in.ac.amu.zhcet.utils.StringUtils;
 import in.ac.amu.zhcet.utils.exception.DuplicateException;
 import in.ac.amu.zhcet.utils.exception.UpdateException;
 import lombok.extern.slf4j.Slf4j;
@@ -49,12 +50,19 @@ public class CourseManagementService {
                 .map(CourseRegistration::getStudent));
     }
 
+    private static void sanitizeCourse(Course course) {
+        course.setCode(StringUtils.capitalizeAll(course.getCode()));
+        course.setCategory(StringUtils.capitalizeAll(course.getCategory()));
+        course.setBranch(StringUtils.capitalizeAll(course.getBranch()));
+    }
+
     @Transactional
     public void addCourse(Course course) {
         Optional<Course> duplicateOptional = courseRepository.findByCode(course.getCode());
         duplicateOptional.ifPresent(duplicate -> {
             throw new DuplicateException("Course", "code", duplicate.getCode(), duplicate);
         });
+        sanitizeCourse(course);
         courseRepository.save(course);
     }
 
@@ -66,6 +74,7 @@ public class CourseManagementService {
         }
 
         BeanUtils.copyProperties(course, original);
+        sanitizeCourse(original);
         courseRepository.save(original);
     }
 

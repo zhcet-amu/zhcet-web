@@ -70,14 +70,11 @@ public class UserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String normalisedUsername = username.toUpperCase();
-
-        User user = userService.findById(normalisedUsername)
-                .orElseGet(() -> userService.getUserByEmail(normalisedUsername)
-                        .orElse(null));
-
-        if (user == null)
-            throw new UsernameNotFoundException(username);
+        User user = userService
+                .findById(username)
+                .orElseGet(() -> userService
+                        .getUserByEmail(username)
+                        .orElseThrow(() -> new UsernameNotFoundException(username)));
 
         return detailsFromUserAuth(user);
     }

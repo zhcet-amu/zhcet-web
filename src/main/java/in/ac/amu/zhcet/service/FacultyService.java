@@ -6,6 +6,7 @@ import in.ac.amu.zhcet.data.model.user.UserType;
 import in.ac.amu.zhcet.data.repository.FacultyRepository;
 import in.ac.amu.zhcet.data.type.Roles;
 import in.ac.amu.zhcet.service.realtime.RealTimeStatus;
+import in.ac.amu.zhcet.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -76,6 +77,7 @@ public class FacultyService {
 
     @Async
     public void register(Set<FacultyMember> facultyMembers, RealTimeStatus status) {
+        // TODO: Use nano time
         long startTime = System.currentTimeMillis();
         status.setContext("Faculty Registration");
         status.setTotal(facultyMembers.size());
@@ -100,8 +102,15 @@ public class FacultyService {
         }
     }
 
+    private static void sanitizeFaculty(FacultyMember facultyMember) {
+        UserService.sanitizeUser(facultyMember.getUser());
+        facultyMember.setFacultyId(StringUtils.capitalizeAll(facultyMember.getFacultyId()));
+        facultyMember.setDesignation(StringUtils.capitalizeFirst(facultyMember.getDesignation()));
+    }
+
     @Transactional
     public void save(FacultyMember facultyMember) {
+        sanitizeFaculty(facultyMember);
         facultyRepository.save(facultyMember);
     }
 
