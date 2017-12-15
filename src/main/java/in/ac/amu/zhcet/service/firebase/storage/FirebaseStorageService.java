@@ -6,16 +6,14 @@ import com.google.cloud.storage.Bucket;
 import in.ac.amu.zhcet.service.firebase.FirebaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -36,10 +34,10 @@ public class FirebaseStorageService {
      * @return Public facing URL of the uploaded file
      * @throws UnsupportedEncodingException if the file type is unsupported
      */
-    @Nullable
-    public String uploadFile(String path, String contentType, InputStream fileStream) throws UnsupportedEncodingException {
+    @Async
+    public CompletableFuture<Optional<String>> uploadFile(String path, String contentType, InputStream fileStream) throws UnsupportedEncodingException {
         if (!firebaseService.canProceed())
-            return null;
+            return CompletableFuture.completedFuture(Optional.empty());
 
         log.info("Uploading file '{}' of type {}...", path, contentType);
         Bucket bucket = firebaseService.getBucket();
@@ -64,7 +62,7 @@ public class FirebaseStorageService {
                 uploaded.getBucket(), URLEncoder.encode(uploaded.getName(), "UTF-8"), uuid);
         log.info("Firebase Link : {}", link);
 
-        return link;
+        return CompletableFuture.completedFuture(Optional.of(link));
     }
 
 }

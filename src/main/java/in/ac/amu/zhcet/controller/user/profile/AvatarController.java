@@ -3,6 +3,7 @@ package in.ac.amu.zhcet.controller.user.profile;
 import in.ac.amu.zhcet.service.upload.image.ImageService;
 import in.ac.amu.zhcet.service.upload.image.ImageUploadException;
 import in.ac.amu.zhcet.service.user.UserDetailService;
+import in.ac.amu.zhcet.utils.Flash;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Controller
@@ -55,7 +57,11 @@ public class AvatarController {
 
            try {
                log.warn("Uploading photo " + file.getOriginalFilename() + " for " + user.getUserId());
-               userDetailService.updateAvatar(user, imageService.uploadAvatar("profile/" + user.getUserId() + "/profile", file));
+               try {
+                   userDetailService.updateAvatar(user, imageService.uploadAvatar("profile/" + user.getUserId() + "/profile", file));
+               } catch (InterruptedException | ExecutionException e) {
+                   redirectAttributes.addFlashAttribute("flash_messages", Flash.error("Failed to upload avatar"));
+               }
                redirectAttributes.addFlashAttribute("avatar_success", Collections.singletonList("Profile Picture Updated"));
            } catch (ImageUploadException ex) {
                redirectAttributes.addFlashAttribute("avatar_errors", Collections.singletonList(ex.getMessage()));

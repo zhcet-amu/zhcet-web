@@ -13,13 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Service
@@ -125,8 +127,7 @@ public class ImageService {
         return toUpload;
     }
 
-    @Nullable
-    public String upload(String pathWithoutExtension, MultipartFile file, Integer size) {
+    public CompletableFuture<Optional<String>> upload(String pathWithoutExtension, MultipartFile file, Integer size) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 
         try {
@@ -138,11 +139,12 @@ public class ImageService {
         }
     }
 
-    public Avatar uploadAvatar(String pathWithoutExtension, MultipartFile file) {
-        String originalAvatarLink = upload(pathWithoutExtension, file, ORIGINAL_AVATAR_SIZE);
-        String avatarLink = upload(pathWithoutExtension + "_thumb", file, AVATAR_SIZE);
+    public Avatar uploadAvatar(String pathWithoutExtension, MultipartFile file) throws ExecutionException, InterruptedException {
+        CompletableFuture<Optional<String>> originalAvatarLink = upload(pathWithoutExtension, file, ORIGINAL_AVATAR_SIZE);
+        CompletableFuture<Optional<String>> avatarLink = upload(pathWithoutExtension + "_thumb", file, AVATAR_SIZE);
 
-        return new Avatar(avatarLink, originalAvatarLink);
+        CompletableFuture.allOf(originalAvatarLink, avatarLink).join();
+        return new Avatar(avatarLink.get().get(), originalAvatarLink.get().get());
     }
 
 }
