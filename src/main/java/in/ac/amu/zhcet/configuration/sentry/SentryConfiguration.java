@@ -3,11 +3,15 @@ package in.ac.amu.zhcet.configuration.sentry;
 import in.ac.amu.zhcet.service.UserService;
 import io.sentry.Sentry;
 import io.sentry.event.helper.EventBuilderHelper;
+import io.sentry.spring.SentryExceptionResolver;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.util.Optional;
 
@@ -42,6 +46,16 @@ public class SentryConfiguration {
         };
 
         Sentry.getStoredClient().addBuilderHelper(myEventBuilderHelper);
+    }
+
+    @Bean
+    public HandlerExceptionResolver sentryExceptionResolver() {
+        return new SentryExceptionResolver();
+    }
+
+    @Bean
+    public ServletContextInitializer sentryServletContextInitializer() {
+        return new io.sentry.spring.SentryServletContextInitializer();
     }
 
 }
