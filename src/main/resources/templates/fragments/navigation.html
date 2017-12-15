@@ -47,7 +47,7 @@
                 </a>
             </li>
             <li th:class="|nav-item ${pageId == 'notification_management' ? 'active' : ''} |" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
-                <a th:href="@{/notification/send}" href="department.html">
+                <a th:href="@{/management/notification/send}">
                     <i class="icon-bell4"></i>
                     <span data-i18n="nav.project.main" class="menu-title">Notification</span>
                 </a>
