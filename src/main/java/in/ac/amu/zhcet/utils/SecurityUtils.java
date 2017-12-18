@@ -29,16 +29,16 @@ public class SecurityUtils {
         return errors;
     }
 
-    public static String getHash(String email) {
+    public static String getHash(String string) {
         return Hashing.sha256()
                 .newHasher()
-                .putString(SALT+email+SALT, Charset.defaultCharset())
+                .putString(SALT+string+SALT, Charset.defaultCharset())
                 .hash()
                 .toString();
     }
 
-    public static boolean hashMatches(String email, String hash) {
-        return getHash(email).equals(hash);
+    public static boolean hashMatches(String string, String hash) {
+        return getHash(string).equals(hash);
     }
 
     public static String generatePassword(int length){

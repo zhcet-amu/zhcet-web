@@ -6,6 +6,7 @@ import in.ac.amu.zhcet.data.repository.PasswordResetTokenRepository;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.email.LinkMailService;
 import in.ac.amu.zhcet.service.email.data.LinkMessage;
+import in.ac.amu.zhcet.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,10 +34,10 @@ public class PasswordResetService {
         this.linkMailService = linkMailService;
     }
 
-    public String validate(String id, String token) {
+    public String validate(String hash, String token) {
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
 
-        if (passwordResetToken == null || !passwordResetToken.getUser().getUserId().equals(id))
+        if (passwordResetToken == null || !SecurityUtils.hashMatches(passwordResetToken.getUser().getUserId(), hash))
             return "Token: " + token + " is invalid";
 
         if (passwordResetToken.isUsed())
@@ -44,7 +45,7 @@ public class PasswordResetService {
 
         Calendar cal = Calendar.getInstance();
         if ((passwordResetToken.getExpiry().getTime() - cal.getTime().getTime()) <= 0) {
-            return "Token: " + token+" for User: " + id + " has expired";
+            return "Token: " + token+" for User: " + passwordResetToken.getUser().getUserId() + " has expired";
         }
         User user = passwordResetToken.getUser();
         Authentication auth = new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
@@ -69,7 +70,7 @@ public class PasswordResetService {
 
     public void sendMail(PasswordResetToken token) {
         User user = token.getUser();
-        String relativeUrl = String.format("/login/password/reset?id=%s&auth=%s", user.getUserId(), token.getToken());
+        String relativeUrl = String.format("/login/password/reset?hash=%s&auth=%s", SecurityUtils.getHash(user.getUserId()), token.getToken());
         log.info("Password reset link generated : {}", relativeUrl);
 
         LinkMessage linkMessage = getPayLoad(user, relativeUrl);
