@@ -86,6 +86,7 @@ public class FacultyService {
             facultyMembers.stream()
                     .map(this::initializeFaculty)
                     .forEach(facultyMember -> {
+                        sanitizeFaculty(facultyMember);
                         save(facultyMember);
                         status.setCompleted(completed[0]++);
                     });
@@ -109,7 +110,6 @@ public class FacultyService {
 
     @Transactional
     public void save(FacultyMember facultyMember) {
-        sanitizeFaculty(facultyMember);
         facultyRepository.save(facultyMember);
     }
 

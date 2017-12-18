@@ -106,6 +106,7 @@ public class StudentService {
             students.stream()
                     .map(this::initializeStudent)
                     .forEach(student -> {
+                        sanitizeStudent(student);
                         save(student);
                         status.setCompleted(completed[0]++);
                     });

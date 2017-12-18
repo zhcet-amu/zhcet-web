@@ -44,7 +44,6 @@ public class UserService {
 
     @Transactional
     public void save(User user) {
-        sanitizeUser(user);
         userRepository.save(user);
     }
 
