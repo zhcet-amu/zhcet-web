@@ -34,7 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final PersistentTokenService persistentTokenService;
 
     @Autowired
-    public SecurityConfiguration(@Lazy UserDetailService userDetailsService, PersistentTokenService persistentTokenService) {
+    public SecurityConfiguration(@Lazy UserDetailService userDetailsService, @Lazy PersistentTokenService persistentTokenService) {
         this.userDetailsService = userDetailsService;
         this.persistentTokenService = persistentTokenService;
     }

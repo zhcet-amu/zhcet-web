@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.8.RELEASE'
+        springBootVersion = '1.5.9.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -11,7 +11,6 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'war'
 apply plugin: 'org.springframework.boot'
 
 group 'in.ac.amu'
@@ -30,6 +29,10 @@ springBoot  {
 def hibernate_version = "5.2.12.Final"
 def flexmark_version = "0.28.2"
 
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile("org.springframework.boot:spring-boot-starter-test")
@@ -40,6 +43,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-devtools")
     compile("org.springframework.boot:spring-boot-starter-mail")
     compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-starter-undertow")
     compile("org.thymeleaf:thymeleaf:3.0.8.RELEASE")
     compile("org.thymeleaf:thymeleaf-spring4:3.0.8.RELEASE")
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.2.RELEASE")
@@ -95,5 +99,4 @@ dependencies {
     compile 'org.webjars:webjars-locator:0.32-1'
 
     compileOnly "org.projectlombok:lombok:1.16.18"
-    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 }
