@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.utils;
 
+import in.ac.amu.zhcet.service.security.password.PasswordChangeService;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -10,21 +11,21 @@ public class SecurityUtilsTest {
 
     @Test
     public void testPasswordCheckCorrect() {
-        assertThat(SecurityUtils.validatePassword("testpassword", "testpassword"),
+        assertThat(PasswordChangeService.validatePasswordLength("testpassword", "testpassword"),
                 is(emptyCollectionOf(String.class)));
     }
 
     @Test
     public void testPasswordCheckWrongPasswordLength() {
-        String expected = "Passwords should be at least 6 characters long!";
+        String expected = "Passwords should be at least 8 characters long!";
 
-        assertThat(SecurityUtils.validatePassword("test", "test"),
+        assertThat(PasswordChangeService.validatePasswordLength("test", "test"),
                 hasItem(expected));
 
-        assertThat(SecurityUtils.validatePassword("test", "tester"),
+        assertThat(PasswordChangeService.validatePasswordLength("test", "tester"),
                 hasItem(expected));
 
-        assertThat(SecurityUtils.validatePassword("teste", "tes"),
+        assertThat(PasswordChangeService.validatePasswordLength("teste", "tes"),
                 hasItem(expected));
     }
 
@@ -32,13 +33,13 @@ public class SecurityUtilsTest {
     public void testPasswordCheckWrongNonMatching() {
         String expected = "Passwords don't match!";
 
-        assertThat(SecurityUtils.validatePassword("testing", "testnig"),
+        assertThat(PasswordChangeService.validatePasswordLength("testing", "testnig"),
                 hasItem(expected));
 
-        assertThat(SecurityUtils.validatePassword("test", "tester"),
+        assertThat(PasswordChangeService.validatePasswordLength("test", "tester"),
                 hasItem(expected));
 
-        assertThat(SecurityUtils.validatePassword("tester", "tes"),
+        assertThat(PasswordChangeService.validatePasswordLength("tester", "tes"),
                 hasItem(expected));
     }
 

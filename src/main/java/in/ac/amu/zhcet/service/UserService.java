@@ -5,7 +5,6 @@ import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.data.model.user.UserDetail;
 import in.ac.amu.zhcet.data.repository.UserRepository;
 import in.ac.amu.zhcet.data.type.Roles;
-import in.ac.amu.zhcet.service.user.UserDetailService;
 import in.ac.amu.zhcet.utils.StringUtils;
 import in.ac.amu.zhcet.utils.Utils;
 import in.ac.amu.zhcet.utils.exception.DuplicateException;
@@ -120,14 +119,6 @@ public class UserService {
         details.setDob(userDetail.getDob());
 
         save(user);
-    }
-
-    @Transactional
-    public void changeUserPassword(User user, String password) {
-        user.setPassword(passwordEncoder.encode(password));
-        user.setPasswordChanged(true);
-        UserDetailService.updateStaticPrincipal(user);
-        userRepository.save(user);
     }
 
     @Transactional

@@ -8,8 +8,6 @@ import org.springframework.security.core.Authentication;
 
 import java.nio.charset.Charset;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SecurityUtils {
 
@@ -17,17 +15,6 @@ public class SecurityUtils {
 
     // Prevent instantiation of Util class
     private SecurityUtils() {}
-
-    public static List<String> validatePassword(String pass, String repass) {
-        List<String> errors = new ArrayList<>();
-
-        if(!pass.equals(repass))
-            errors.add("Passwords don't match!");
-        if (pass.length() < 6)
-            errors.add("Passwords should be at least 6 characters long!");
-
-        return errors;
-    }
 
     public static String getHash(String string) {
         return Hashing.sha256()

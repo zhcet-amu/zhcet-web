@@ -55,7 +55,7 @@
         var suggestions = [];
         var warning;
 
-        if (zxcvbn && passwordObj.new && passwordObj.new !== newPass) {
+        if (window.zxcvbn && passwordObj.new && passwordObj.new !== newPass) {
             var analysis = zxcvbn(passwordObj.new, blacklist);
             meter.value = analysis.score;
             suggestions = analysis.feedback.suggestions;
@@ -69,7 +69,7 @@
              return;
 
         if (!passwordObj.hasEnoughLength()) {
-            showError('Passwords should be at least 6 characters');
+            showError('Passwords should be at least 8 characters');
             return;
         }
 
@@ -79,7 +79,7 @@
         }
 
 
-        if (meter.value < 2) {
+        if (window.zxcvbn && meter.value < 2) {
             showError('Password is very weak');
             return;
         }
@@ -142,9 +142,9 @@
 
             hasEnoughLength: function () {
                 return !this.isEmpty() &&
-                    (skip || this.old.length >= 6) &&
-                    this.new.length >= 6 &&
-                    this.confirm.length >= 6
+                    (skip || this.old.length >= 8) &&
+                    this.new.length >= 8 &&
+                    this.confirm.length >= 8
             },
 
             passwordsMatch: function () {

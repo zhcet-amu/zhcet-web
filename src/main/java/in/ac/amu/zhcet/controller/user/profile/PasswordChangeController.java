@@ -1,12 +1,11 @@
 package in.ac.amu.zhcet.controller.user.profile;
 
-import in.ac.amu.zhcet.data.model.dto.PasswordChange;
-import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.UserService;
-import in.ac.amu.zhcet.utils.SecurityUtils;
+import in.ac.amu.zhcet.service.security.password.PasswordChange;
+import in.ac.amu.zhcet.service.security.password.PasswordChangeService;
+import in.ac.amu.zhcet.service.security.password.PasswordVerificationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,21 +14,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Controller
 public class PasswordChangeController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordChangeService passwordChangeService;
 
     @Autowired
-    public PasswordChangeController(UserService userService, PasswordEncoder passwordEncoder) {
+    public PasswordChangeController(UserService userService, PasswordChangeService passwordChangeService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
+        this.passwordChangeService = passwordChangeService;
     }
 
     @GetMapping("/profile/settings/password")
@@ -57,39 +53,25 @@ public class PasswordChangeController {
     public String savePassword(@Valid PasswordChange passwordChange, RedirectAttributes redirectAttributes) {
         String redirectUrl = "redirect:/profile/settings/password";
 
-        Optional<User> userOptional = userService.getLoggedInUser();
-        if (!userOptional.isPresent())
-            return redirectUrl;
+        return userService.getLoggedInUser()
+                .map(user -> {
 
-        User user = userOptional.get();
+                    if (!user.isEmailVerified()) {
+                        log.warn("!!POST!! User not verified and tried to change the password!");
+                        redirectAttributes.addFlashAttribute("error", "The user is not verified, and hence can't change the password");
+                    } else {
+                        try {
+                            passwordChangeService.changePassword(passwordChange, user);
+                            redirectAttributes.addFlashAttribute("password_change_success", "Password was changed successfully");
+                            return "redirect:/profile";
+                        } catch (PasswordVerificationException pve) {
+                            log.info("Password Change Error", pve);
+                            redirectAttributes.addFlashAttribute("pass_errors", pve.getErrors());
+                        }
+                    }
 
-        if (!user.isEmailVerified()) {
-            log.warn("!!POST!! User not verified and tried to change the password!");
-            redirectAttributes.addFlashAttribute("error", "The user is not verified, and hence can't change the password");
-            return redirectUrl;
-        }
-
-        if (!passwordEncoder.matches(passwordChange.getOldPassword(), user.getPassword())) {
-            log.warn("Current password does not match");
-            redirectAttributes.addFlashAttribute("pass_errors", "Current password does not match provided password");
-            return redirectUrl;
-        }
-
-        List<String> errors = SecurityUtils.validatePassword(passwordChange.getNewPassword(), passwordChange.getConfirmPassword());
-
-        if (!errors.isEmpty()) {
-            redirectAttributes.addFlashAttribute("pass_errors", errors);
-            return redirectUrl;
-        }
-
-        if (passwordChange.getOldPassword().equals(passwordChange.getNewPassword())) {
-            redirectAttributes.addFlashAttribute("pass_errors", Collections.singletonList("New and old password cannot be same"));
-            return redirectUrl;
-        }
-
-        userService.changeUserPassword(user, passwordChange.getNewPassword());
-        redirectAttributes.addFlashAttribute("password_change_success", "Password was changed successfully");
-        return "redirect:/profile";
+                    return redirectUrl;
+                }).orElse(redirectUrl);
     }
 
 }

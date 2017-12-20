@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.controller.auth;
 
 import in.ac.amu.zhcet.data.model.token.PasswordResetToken;
-import in.ac.amu.zhcet.service.user.auth.PasswordResetService;
+import in.ac.amu.zhcet.service.security.password.PasswordResetService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

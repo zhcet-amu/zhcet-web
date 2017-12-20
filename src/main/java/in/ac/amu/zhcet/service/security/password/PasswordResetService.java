@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.user.auth;
+package in.ac.amu.zhcet.service.security.password;
 
 import in.ac.amu.zhcet.data.model.token.PasswordResetToken;
 import in.ac.amu.zhcet.data.model.user.User;
@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.UUID;
@@ -23,34 +24,60 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class PasswordResetService {
+
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final UserService userService;
+    private final PasswordChangeService passwordChangeService;
     private final LinkMailService linkMailService;
 
     @Autowired
-    public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository, UserService userService, LinkMailService linkMailService) {
+    public PasswordResetService(
+            PasswordResetTokenRepository passwordResetTokenRepository,
+            UserService userService,
+            PasswordChangeService passwordChangeService,
+            LinkMailService linkMailService
+    ) {
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userService = userService;
+        this.passwordChangeService = passwordChangeService;
         this.linkMailService = linkMailService;
     }
 
-    public String validate(String hash, String token) {
+    public void resetPassword(@Valid PasswordReset passwordReset) throws TokenValidationException, PasswordVerificationException {
+        validate(passwordReset.getHash(), passwordReset.getToken(), false);
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        passwordChangeService.resetPassword(passwordReset, user);
+
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(passwordReset.getToken());
+        passwordResetToken.setUsed(true);
+        passwordResetTokenRepository.save(passwordResetToken);
+        SecurityContextHolder.getContext().setAuthentication(null);
+    }
+
+    private void validate(String hash, String token, boolean setAuth) throws TokenValidationException {
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
 
         if (passwordResetToken == null || !SecurityUtils.hashMatches(passwordResetToken.getUser().getUserId(), hash))
-            return "Token: " + token + " is invalid";
+            throw new TokenValidationException("Token: " + token + " is invalid");
 
         if (passwordResetToken.isUsed())
-            return "Token: " + token + " is already used! Please generate another reset link!";
+            throw new TokenValidationException("Token: " + token + " is already used! Please generate another reset link!");
 
         Calendar cal = Calendar.getInstance();
         if ((passwordResetToken.getExpiry().getTime() - cal.getTime().getTime()) <= 0) {
-            return "Token: " + token+" for User: " + passwordResetToken.getUser().getUserId() + " has expired";
+            throw new TokenValidationException("Token: " + token+" for User: " + passwordResetToken.getUser().getUserId() + " has expired");
         }
-        User user = passwordResetToken.getUser();
-        Authentication auth = new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        return null;
+
+        if (setAuth) {
+            User user = passwordResetToken.getUser();
+            Authentication auth = new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        }
+    }
+
+    public void validate(String hash, String token) throws TokenValidationException {
+        validate(hash, token, true);
     }
 
     private String generateToken() {
@@ -89,14 +116,5 @@ public class PasswordResetService {
                         "<br>Please click the button below to reset your password")
                 .postMessage("If you did not request the password reset, please contact website admin")
                 .build();
-    }
-
-    public void resetPassword(String newPassword, String token) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        userService.changeUserPassword(user, newPassword);
-
-        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
-        passwordResetToken.setUsed(true);
-        passwordResetTokenRepository.save(passwordResetToken);
     }
 }
