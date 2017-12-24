@@ -195,24 +195,24 @@
 
 <!-- Firebase -->
 <th:block th:fragment="firebase">
-    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js"></script>
 </th:block>
 
 <th:block th:fragment="firebase_auth">
-    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-auth.js"></script>
 </th:block>
 
 <th:block th:fragment="firebase_login">
     <div th:replace="this :: firebase"></div>
     <div th:replace="this :: firebase_auth"></div>
-    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-database.js"></script>
     <script th:src="@{/js/config.js}"></script>
     <script th:src="@{/js/authentication.js}"></script>
 </th:block>
 
 <th:block th:fragment="firebase_messaging">
     <div th:replace="this :: firebase"></div>
-    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js"></script>
     <script th:src="@{/js/config.js}"></script>
     <script th:src="@{/js/messaging.js}"></script>
 </th:block>
