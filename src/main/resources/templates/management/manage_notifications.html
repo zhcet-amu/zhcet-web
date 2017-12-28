@@ -41,7 +41,7 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
                 <div th:replace="fragments/layout :: toolbar"></div>
                 <div th:replace="fragments/layout :: success(condition = ${notification_success}, message = ${notification_success})"></div>
                 <div th:replace="fragments/layout :: pagination(pageUrl = 'management/notifications')"></div>
@@ -69,7 +69,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
-                                <a id="delete-link" href="/management/notifications/">
+                                <a id="delete-link" th:href="@{/management/notifications/}">
                                     <button type="button" id="delete-button" class="btn btn-outline-danger">Delete</button>
                                 </a>
                             </div>
@@ -92,9 +92,11 @@
                                             </button>
                                         </form>
                                     </li>
-                                    <li><button class="head-icon btn btn-icon btn-pure" th:onclick="|NotificationManager.deleteNotification(${notification.id})|">
-                                        <i data-toggle="tooltip" data-original-title="Delete Notification" class="icon-trash4"></i>
-                                    </button></li>
+                                    <li>
+                                        <button class="head-icon btn btn-icon btn-pure" th:onclick="|NotificationManager.deleteNotification(${notification.id})|">
+                                            <i data-toggle="tooltip" data-original-title="Delete Notification" class="icon-trash4"></i>
+                                        </button>
+                                    </li>
                                     <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
                                     <li><a data-action="reload"><i class="icon-reload"></i></a></li>
                                     <li><a data-action="expand"><i class="icon-expand2"></i></a></li>

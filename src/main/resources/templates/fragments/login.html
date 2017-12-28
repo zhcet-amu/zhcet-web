@@ -18,7 +18,7 @@
 
     <link rel="shortcut icon" href="https://zhcet-backend.firebaseapp.com/static/img/icon.png" />
 
-    <link href="/css/vendor/bundle.min.css" type="text/css" rel="stylesheet"/>
+    <link th:href="@{/css/vendor/bundle.min.css}" type="text/css" rel="stylesheet"/>
     <link th:href="@{/css/styles.css}" type="text/css" rel="stylesheet"/>
     <style>
         .transparent {  background-color: transparent;  }
@@ -54,14 +54,14 @@
     <p class="clearfix text-muted text-sm-center mb-0 px-2">
         <span class="float-md-left d-xs-block d-md-inline-block" th:text="|Copyright &copy; ${#temporals.year(#temporals.createNow())} ZHCET, All rights reserved.|"></span>
         <span class="float-md-right d-xs-block d-md-inline-block">
-            <a href="/terms" target="_blank">Terms of Services</a> |
-            <a href="/privacy" target="_blank">Privacy Policy</a> |
+            <a th:href="@{/terms}" target="_blank">Terms of Services</a> |
+            <a th:href="@{/privacy}" target="_blank">Privacy Policy</a> |
             <a href="https://github.com/zhcet-amu/zhcet-web" target="_blank"><i class="icon-github"></i> View Source</a> |
             <a href="https://github.com/zhcet-amu/zhcet-web/graphs/contributors" target="_blank">Developers</a>
         </span>
     </p>
 </footer>
-<script src="/webjars/jquery/jquery.min.js" type="text/javascript"></script>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script th:src="@{/webjars/jquery/jquery.min.js}" type="text/javascript"></script>
+<link th:href="@{https://fonts.googleapis.com/icon?family=Material+Icons}" rel="stylesheet">
 </body>
 </html>
