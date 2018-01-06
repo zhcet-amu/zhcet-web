@@ -22,7 +22,7 @@ import java.util.Properties;
 @Configuration
 public class EmailConfiguration {
 
-    private static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
+    private static Boolean EMAIL_ENABLED;
 
     @Bean
     @Primary
@@ -31,18 +31,14 @@ public class EmailConfiguration {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        if (!Strings.isNullOrEmpty(applicationProperties.getSalt()) && !applicationProperties.getSalt().equals(SecurityUtils.SALT)) {
-            SecurityUtils.SALT = applicationProperties.getSalt();
-            log.info("Applied salt to application");
-        } else {
-            log.error("Using default salt for app, this is dangerous and can lead to hacking into system");
-        }
-
         String username = applicationProperties.getEmail().getAddress();
         String password = applicationProperties.getEmail().getPassword();
 
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
             log.error("CONFIG (Email): Email or Password not found : {} {}", username, password);
+            EMAIL_ENABLED = false;
+        } else {
+            EMAIL_ENABLED = true;
         }
 
         mailSender.setUsername(username);
@@ -56,48 +52,8 @@ public class EmailConfiguration {
         return mailSender;
     }
 
-    @Bean(name = "emailEngine")
-    public TemplateEngine emailTemplateEngine() {
-        final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        // Resolver for TEXT emails
-        templateEngine.addTemplateResolver(textTemplateResolver());
-        // Resolver for HTML emails (except the editable one)
-        templateEngine.addTemplateResolver(htmlTemplateResolver());
-        // Resolver for HTML editable emails (which will be treated as a String)
-        templateEngine.addTemplateResolver(stringTemplateResolver());
-        return templateEngine;
+    public static Boolean isEmailSet() {
+        return EMAIL_ENABLED;
     }
 
-    private ITemplateResolver textTemplateResolver() {
-        final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setOrder(1);
-        templateResolver.setResolvablePatterns(Collections.singleton("text/*"));
-        templateResolver.setPrefix("/mail/");
-        templateResolver.setSuffix(".txt");
-        templateResolver.setTemplateMode(TemplateMode.TEXT);
-        templateResolver.setCharacterEncoding(EMAIL_TEMPLATE_ENCODING);
-        templateResolver.setCacheable(false);
-        return templateResolver;
-    }
-
-    private ITemplateResolver htmlTemplateResolver() {
-        final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setOrder(2);
-        templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
-        templateResolver.setPrefix("/mail/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCharacterEncoding(EMAIL_TEMPLATE_ENCODING);
-        templateResolver.setCacheable(false);
-        return templateResolver;
-    }
-
-    private ITemplateResolver stringTemplateResolver() {
-        final StringTemplateResolver templateResolver = new StringTemplateResolver();
-        templateResolver.setOrder(3);
-        // No resolvable pattern, will simply process as a String template everything not previously matched
-        templateResolver.setTemplateMode("HTML5");
-        templateResolver.setCacheable(false);
-        return templateResolver;
-    }
 }

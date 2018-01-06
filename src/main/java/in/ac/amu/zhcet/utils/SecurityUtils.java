@@ -11,7 +11,7 @@ import java.security.SecureRandom;
 
 public class SecurityUtils {
 
-    public static String SALT = "some_nice_salt";
+    public static String PEPPER = "some_nice_pepper";
 
     // Prevent instantiation of Util class
     private SecurityUtils() {}
@@ -19,7 +19,7 @@ public class SecurityUtils {
     public static String getHash(String string) {
         return Hashing.sha256()
                 .newHasher()
-                .putString(SALT+string+SALT, Charset.defaultCharset())
+                .putString(PEPPER+string+PEPPER, Charset.defaultCharset())
                 .hash()
                 .toString();
     }

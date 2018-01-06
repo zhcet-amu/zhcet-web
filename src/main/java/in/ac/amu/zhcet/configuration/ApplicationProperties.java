@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "zhcet")
 public class ApplicationProperties {
 
-    private String salt = SecurityUtils.SALT;
+    private String pepper = SecurityUtils.PEPPER;
     private String url = "http://localhost:8080/";
     private final Email email = new Email();
     private final Firebase firebase = new Firebase();

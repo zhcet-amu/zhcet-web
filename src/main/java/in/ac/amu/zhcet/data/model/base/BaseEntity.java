@@ -12,12 +12,13 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.persistence.Version;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity implements Meta {
+public abstract class BaseEntity implements Meta, Serializable {
     @Transient
     private String meta; // For storing temporary info
 

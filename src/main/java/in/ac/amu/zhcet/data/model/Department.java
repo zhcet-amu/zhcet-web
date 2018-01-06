@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Data
 @Entity
@@ -17,7 +18,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Department extends BaseEntity {
+public class Department extends BaseEntity implements Serializable {
     @Id
     @NotBlank
     @Size(max = 2)

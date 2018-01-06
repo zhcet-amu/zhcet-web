@@ -38,14 +38,14 @@ public class FirebaseService {
             log.error("CONFIG (Firebase Messaging): Firebase Messaging Server Key not found!");
         }
 
-        InputStream serviceAccount = getServiceAccountJson().orElseGet(null);
-        if (serviceAccount == null) {
+        Optional<InputStream> serviceAccountOptional = getServiceAccountJson();
+        if (!serviceAccountOptional.isPresent()) {
             log.error("CONFIG (Firebase): Firebase Service Account JSON not found anywhere. Any Firebase interaction may throw exception");
             uninitialized = true;
             return;
         }
 
-        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(serviceAccount);
+        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(serviceAccountOptional.get());
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(googleCredentials)
                 .setDatabaseUrl(firebase.getDatabaseUrl())
@@ -90,7 +90,7 @@ public class FirebaseService {
     }
 
     public boolean canProceed() {
-        boolean unproceedable = uninitialized || disabled;
+        boolean unproceedable = isUninitialized() || isDisabled();
         if (unproceedable)
             log.error("Cannot proceed as Firebase is uninitialized");
 
@@ -98,11 +98,23 @@ public class FirebaseService {
     }
 
     public boolean canSendMessage() {
-        boolean unsendable = messagingServerKey == null || disabled;
+        boolean unsendable = !hasMessagingServerKey() || isDisabled();
         if (unsendable)
             log.error("Cannot broadcast as Firebase Messaging Server Key is not found");
 
         return !unsendable;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public boolean isUninitialized() {
+        return uninitialized;
+    }
+
+    public boolean hasMessagingServerKey() {
+        return getMessagingServerKey() != null;
     }
 
     public String getMessagingServerKey() {
