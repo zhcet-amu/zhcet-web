@@ -137,7 +137,7 @@
                 $('#faculty-progress').initStatusProgress({
                     taskId: $('#task_id_faculty').text(),
                     finished: function (result) {
-                        toastr.success('Faculty Registration Complete in ' + result.duration + ' s')
+                        toastr.success('Faculty Registration Complete in ' + result.duration/1000 + ' s')
                     },
                     failed: function (result) {
                         console.log(result);
