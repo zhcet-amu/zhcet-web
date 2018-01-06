@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.security.permission;
+package in.ac.amu.zhcet.service.security;
 
 import in.ac.amu.zhcet.data.model.Course;
 import in.ac.amu.zhcet.data.model.notification.Notification;
@@ -10,63 +10,38 @@ import in.ac.amu.zhcet.service.CourseManagementService;
 import in.ac.amu.zhcet.service.user.CustomUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
+
 @Slf4j
 @Service
 public class PermissionManager {
 
+    private final RoleHierarchy roleHierarchy;
     private final CourseManagementService courseManagementService;
     private final NotificationRepository notificationRepository;
     private final NotificationRecipientRepository notificationRecipientRepository;
 
     @Autowired
-    public PermissionManager(CourseManagementService courseManagementService, NotificationRepository notificationRepository, NotificationRecipientRepository notificationRecipientRepository) {
+    public PermissionManager(RoleHierarchy roleHierarchy, CourseManagementService courseManagementService, NotificationRepository notificationRepository, NotificationRecipientRepository notificationRecipientRepository) {
+        this.roleHierarchy = roleHierarchy;
         this.courseManagementService = courseManagementService;
         this.notificationRepository = notificationRepository;
         this.notificationRecipientRepository = notificationRecipientRepository;
     }
 
-    public static List<GrantedAuthority> authorities(List<String> roles) {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-
-        // Add normal stored roles
-        for (String role: roles) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role));
-            grantedAuthorities.addAll(getExtraPermissions(role));
-        }
-
-        return grantedAuthorities;
-    }
-
-    private static List<GrantedAuthority> getExtraPermissions(String role) {
-        List<GrantedAuthority> permissions = new ArrayList<>();
-
-        switch (role) {
-            case Roles.SUPER_ADMIN:
-                permissions.add(new SimpleGrantedAuthority(Roles.DEAN_ADMIN));
-                permissions.add(new SimpleGrantedAuthority(Roles.MANAGEMENT_ADMIN));
-                permissions.add(new SimpleGrantedAuthority(Roles.DEPARTMENT_SUPER_ADMIN));
-                permissions.add(new SimpleGrantedAuthority(Roles.DEPARTMENT_ADMIN));
-                permissions.add(new SimpleGrantedAuthority(Roles.SUPER_FACULTY));
-                permissions.add(new SimpleGrantedAuthority(Roles.FACULTY));
-                break;
-            case Roles.DEPARTMENT_SUPER_ADMIN:
-                permissions.add(new SimpleGrantedAuthority(Roles.DEPARTMENT_ADMIN));
-                break;
-            case Roles.SUPER_FACULTY:
-                permissions.add(new SimpleGrantedAuthority(Roles.FACULTY));
-                break;
-        }
-
-        return permissions;
+    public List<GrantedAuthority> authorities(List<String> roles) {
+        return roles.stream()
+                .map(role -> roleHierarchy.getReachableGrantedAuthorities(createAuthorityList(role)))
+                .collect(ArrayList::new, List::addAll, List::addAll);
     }
 
     public boolean hasPermission(Collection<? extends GrantedAuthority> authorities, String permission) {
@@ -89,10 +64,8 @@ public class PermissionManager {
     }
 
     public boolean checkNotificationCreator(Authentication user, String notificationId) {
-        boolean hasSendingPermission = hasPermission(user.getAuthorities(), Roles.DEAN_ADMIN) ||
-                hasPermission(user.getAuthorities(), Roles.DEPARTMENT_ADMIN) ||
-                hasPermission(user.getAuthorities(), Roles.FACULTY) ||
-                hasPermission(user.getAuthorities(), Roles.MANAGEMENT_ADMIN);
+        boolean hasSendingPermission = hasPermission(user.getAuthorities(), Roles.TEACHING_STAFF) ||
+                hasPermission(user.getAuthorities(), Roles.DEVELOPMENT_ADMIN);
         try {
             Notification notification = notificationRepository.findOne(Long.parseLong(notificationId));
             return notification != null && hasSendingPermission && notification.getSender().getUserId().equals(user.getName());

@@ -1,0 +1,81 @@
+spring:
+  profiles:
+    active: secrets
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50
+          batch_versioned_data: true
+
+  http:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  thymeleaf:
+    mode: HTML5
+
+server:
+  http2:
+    enabled: true
+  use-forward-headers: true
+  compression:
+    enabled: true
+  undertow:
+    accesslog:
+      enabled: true
+      pattern: '%t %a "%r" %s (%D ms)'
+
+management:
+  security:
+    enabled: true
+    roles: ROLE_DEVELOPMENT_ADMIN
+  context-path: /actuator
+  info:
+    build:
+      enabled: true
+    git:
+      mode: full
+
+logging:
+  file: logs/spring.log
+
+flyway:
+  baseline-on-migrate: true
+
+zhcet:
+  url: http://localhost:8080/
+  email:
+    disabled: true
+  firebase:
+    disabled: true
+  security:
+    pepper: some_nice_pepper
+    roles:
+      hierarchy:
+        ROLE_DEVELOPMENT_SUPER_ADMIN: ROLE_SUPER_ADMIN, ROLE_DEVELOPMENT_ADMIN
+        ROLE_SUPER_ADMIN: ROLE_DEAN_ADMIN, ROLE_SUPER_FACULTY, ROLE_DEPARTMENT_SUPER_ADMIN
+        ROLE_SUPER_FACULTY: ROLE_FACULTY
+        ROLE_DEPARTMENT_SUPER_ADMIN: ROLE_DEPARTMENT_ADMIN
+        ROLE_DEAN_ADMIN: ROLE_TEACHING_STAFF
+        ROLE_DEPARTMENT_ADMIN: ROLE_TEACHING_STAFF
+        ROLE_FACULTY: ROLE_TEACHING_STAFF

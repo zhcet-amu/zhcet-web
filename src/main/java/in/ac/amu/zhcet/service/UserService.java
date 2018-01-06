@@ -87,7 +87,7 @@ public class UserService {
             return "Super Admin";
         else if (roles.contains(Roles.DEAN_ADMIN))
             return "Dean Admin";
-        else if (roles.contains(Roles.MANAGEMENT_ADMIN))
+        else if (roles.contains(Roles.DEVELOPMENT_ADMIN))
             return "Management Admin";
         else if (roles.contains(Roles.DEPARTMENT_SUPER_ADMIN))
             return "Department Super Admin";

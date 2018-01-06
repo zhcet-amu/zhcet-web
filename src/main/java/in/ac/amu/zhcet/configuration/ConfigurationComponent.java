@@ -1,5 +1,6 @@
 package in.ac.amu.zhcet.configuration;
 
+import in.ac.amu.zhcet.configuration.properties.ApplicationProperties;
 import in.ac.amu.zhcet.data.repository.ConfigurationRepository;
 import in.ac.amu.zhcet.service.config.Configuration;
 import lombok.extern.slf4j.Slf4j;

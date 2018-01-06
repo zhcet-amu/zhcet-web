@@ -20,11 +20,13 @@ public class PasswordChangeService {
     public static int MIN_PASSWORD_LENGTH = 8;
 
     private final UserService userService;
+    private final UserDetailService userDetailService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public PasswordChangeService(UserService userService, PasswordEncoder passwordEncoder) {
+    public PasswordChangeService(UserService userService, UserDetailService userDetailService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.userDetailService = userDetailService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -44,7 +46,7 @@ public class PasswordChangeService {
     private void changeUserPassword(User user, String password) {
         user.setPassword(passwordEncoder.encode(password));
         user.setPasswordChanged(true);
-        UserDetailService.updateStaticPrincipal(user);
+        userDetailService.updatePrincipal(user);
         userService.save(user);
     }
 

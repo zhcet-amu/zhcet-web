@@ -17,8 +17,8 @@ public class RoleWiseSuccessHandler extends SavedRequestAwareAuthenticationSucce
 
         if (authorities.contains(Roles.DEAN_ADMIN))
             return "/dean";
-        else if (authorities.contains(Roles.MANAGEMENT_ADMIN))
-            return "/manage/health";
+        else if (authorities.contains(Roles.DEVELOPMENT_ADMIN))
+            return "/actuator/health";
         else if (authorities.contains(Roles.DEPARTMENT_ADMIN))
             return "/department";
         else if (authorities.contains(Roles.FACULTY))

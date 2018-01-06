@@ -3,7 +3,7 @@ package in.ac.amu.zhcet.service.user;
 import in.ac.amu.zhcet.data.model.user.User;
 import in.ac.amu.zhcet.service.UserService;
 import in.ac.amu.zhcet.service.security.login.LoginAttemptService;
-import in.ac.amu.zhcet.service.security.permission.PermissionManager;
+import in.ac.amu.zhcet.service.security.PermissionManager;
 import in.ac.amu.zhcet.service.upload.image.ImageService;
 import in.ac.amu.zhcet.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -26,14 +26,16 @@ import java.util.Optional;
 public class UserDetailService implements UserDetailsService {
 
     private final UserService userService;
+    private final PermissionManager permissionManager;
     private final LoginAttemptService loginAttemptService;
 
     @Autowired // Field injection is required as the value will change on each request
     private HttpServletRequest request;
 
     @Autowired
-    public UserDetailService(UserService userService, LoginAttemptService loginAttemptService) {
+    public UserDetailService(UserService userService, PermissionManager permissionManager, LoginAttemptService loginAttemptService) {
         this.userService = userService;
+        this.permissionManager = permissionManager;
         this.loginAttemptService = loginAttemptService;
     }
 
@@ -41,9 +43,9 @@ public class UserDetailService implements UserDetailsService {
         return userService;
     }
 
-    private static UserDetails detailsFromUser(User user, boolean isBlocked) {
+    private UserDetails detailsFromUser(User user, boolean isBlocked) {
         return new CustomUser(user.getUserId(), user.getPassword(), user.isEnabled(), isBlocked,
-                PermissionManager.authorities(user.getRoles()))
+                permissionManager.authorities(user.getRoles()))
                 .name(user.getName())
                 .avatar(user.getDetails().getAvatarUrl())
                 .email(user.getEmail())
@@ -58,9 +60,9 @@ public class UserDetailService implements UserDetailsService {
         return detailsFromUser(user, loginAttemptService.isBlocked(LoginAttemptService.getKey(ip, user.getUserId())));
     }
 
-    private static Authentication authenticationFromUserAuth(User user, UserDetails userDetails) {
+    private Authentication authenticationFromUserAuth(User user, UserDetails userDetails) {
         return new UsernamePasswordAuthenticationToken(
-                userDetails, user.getPassword(), PermissionManager.authorities(user.getRoles())
+                userDetails, user.getPassword(), permissionManager.authorities(user.getRoles())
         );
     }
 
@@ -77,12 +79,6 @@ public class UserDetailService implements UserDetailsService {
                         .orElseThrow(() -> new UsernameNotFoundException(username)));
 
         return detailsFromUserAuth(user);
-    }
-
-    public static void updateStaticPrincipal(User user) {
-        SecurityContextHolder.getContext().setAuthentication(
-                authenticationFromUserAuth(user, detailsFromUser(user, false))
-        );
     }
 
     public void updatePrincipal(User user) {

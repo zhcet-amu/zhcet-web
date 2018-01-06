@@ -1,4 +1,4 @@
-package in.ac.amu.zhcet.service.security.permission;
+package in.ac.amu.zhcet.configuration.security.permission;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
@@ -8,15 +8,12 @@ import org.springframework.security.core.Authentication;
 @Slf4j
 public class DomainPermissionExpression extends SecurityExpressionRoot implements MethodSecurityExpressionOperations {
 
-    private final PermissionManager permissionManager;
-
     private Object filterObject;
     private Object returnObject;
     private Object target;
 
-    public DomainPermissionExpression(Authentication authentication, PermissionManager permissionManager) {
+    public DomainPermissionExpression(Authentication authentication) {
         super(authentication);
-        this.permissionManager = permissionManager;
     }
 
     public boolean isNotNull(Object filterObject) {

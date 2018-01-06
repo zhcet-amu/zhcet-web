@@ -1,7 +1,7 @@
 package in.ac.amu.zhcet.service.email;
 
 import com.google.common.base.Strings;
-import in.ac.amu.zhcet.configuration.ApplicationProperties;
+import in.ac.amu.zhcet.configuration.properties.EmailProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,10 +21,10 @@ public class EmailService{
     private final String senderEmail;
 
     @Autowired
-    public EmailService(JavaMailSender sender, ApplicationProperties applicationProperties) {
+    public EmailService(JavaMailSender sender, EmailProperties emailProperties) {
         this.sender = sender;
-        this.disabled = applicationProperties.getEmail().isDisabled();
-        this.senderEmail = applicationProperties.getEmail().getAddress();
+        this.disabled = emailProperties.isDisabled();
+        this.senderEmail = emailProperties.getAddress();
 
         if (disabled) {
             log.warn("CONFIG (Email): Email sending is disabled");

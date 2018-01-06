@@ -46,7 +46,7 @@
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Course Management</span>
                 </a>
             </li>
-            <li th:class="|nav-item ${pageId == 'notification_management' ? 'active' : ''} |" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
+            <li th:class="|nav-item ${pageId == 'notification_management' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_TEACHING_STAFF')">
                 <a th:href="@{/management/notification/send}">
                     <i class="icon-bell4"></i>
                     <span data-i18n="nav.project.main" class="menu-title">Notification</span>

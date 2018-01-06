@@ -80,7 +80,7 @@ public class FirebaseUserService {
         if (Strings.isNullOrEmpty(user.getDetails().getAvatarUrl()) && !Strings.isNullOrEmpty(token.getPicture())) {
             user.getDetails().setOriginalAvatarUrl(token.getPicture());
             user.getDetails().setAvatarUrl(token.getPicture());
-            UserDetailService.updateStaticPrincipal(user);
+            userDetailService.updatePrincipal(user);
         }
 
         userDetailService.getUserService().save(user);

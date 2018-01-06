@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.utils;
 
 import com.google.common.hash.Hashing;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
@@ -8,10 +9,13 @@ import org.springframework.security.core.Authentication;
 
 import java.nio.charset.Charset;
 import java.security.SecureRandom;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+@Slf4j
 public class SecurityUtils {
 
-    public static String PEPPER = "some_nice_pepper";
+    private static String PEPPER = "some_nice_pepper";
+    private static final AtomicBoolean PEPPER_SET = new AtomicBoolean();
 
     // Prevent instantiation of Util class
     private SecurityUtils() {}
@@ -48,6 +52,17 @@ public class SecurityUtils {
 
     public static boolean isFullyAuthenticated(Authentication authentication) {
         return !(isRememberMe(authentication) || isAnonymous(authentication));
+    }
+
+    public static String getPepper() {
+        return PEPPER;
+    }
+
+    public static void setPepper(String pepper) {
+        if (PEPPER_SET.compareAndSet(false, true))
+            PEPPER = pepper;
+        else
+            throw new IllegalStateException("Cannot set Pepper again");
     }
 
 }

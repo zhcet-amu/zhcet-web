@@ -1,6 +1,7 @@
 package in.ac.amu.zhcet.configuration;
 
 import com.google.common.base.Strings;
+import in.ac.amu.zhcet.configuration.properties.SecureProperties;
 import in.ac.amu.zhcet.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +9,15 @@ import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
-public class PropertyConfig {
+public class SecurePropertyConfig {
 
     private static Boolean PEPPER_SET;
 
     @Autowired
-    PropertyConfig(ApplicationProperties applicationProperties) {
-        if (!Strings.isNullOrEmpty(applicationProperties.getPepper()) && !applicationProperties.getPepper().equals(SecurityUtils.PEPPER)) {
-            SecurityUtils.PEPPER = applicationProperties.getPepper();
+    SecurePropertyConfig(SecureProperties secureProperties) {
+        String pepper = secureProperties.getPepper();
+        if (!Strings.isNullOrEmpty(pepper) && !pepper.equals(SecurityUtils.getPepper())) {
+            SecurityUtils.setPepper(pepper);
             log.info("Applied pepper to application");
             PEPPER_SET = true;
         } else {

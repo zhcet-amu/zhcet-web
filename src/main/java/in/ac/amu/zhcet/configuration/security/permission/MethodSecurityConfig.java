@@ -1,10 +1,9 @@
 package in.ac.amu.zhcet.configuration.security.permission;
 
-import in.ac.amu.zhcet.service.security.permission.PermissionExpressionHandler;
-import in.ac.amu.zhcet.service.security.permission.PermissionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
@@ -12,15 +11,15 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
-    private final PermissionManager permissionManager;
+    private final RoleHierarchy roleHierarchy;
 
     @Autowired
-    public MethodSecurityConfig(PermissionManager permissionManager) {
-        this.permissionManager = permissionManager;
+    public MethodSecurityConfig(RoleHierarchy roleHierarchy) {
+        this.roleHierarchy = roleHierarchy;
     }
 
     @Override
     protected MethodSecurityExpressionHandler createExpressionHandler() {
-        return new PermissionExpressionHandler(permissionManager);
+        return new PermissionExpressionHandler(roleHierarchy);
     }
 }

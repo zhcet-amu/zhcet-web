@@ -1,8 +1,8 @@
 package in.ac.amu.zhcet.configuration.actuator;
 
-import in.ac.amu.zhcet.configuration.ApplicationProperties;
 import in.ac.amu.zhcet.configuration.EmailConfiguration;
-import in.ac.amu.zhcet.configuration.PropertyConfig;
+import in.ac.amu.zhcet.configuration.SecurePropertyConfig;
+import in.ac.amu.zhcet.configuration.properties.EmailProperties;
 import in.ac.amu.zhcet.service.firebase.FirebaseService;
 import lombok.Getter;
 import lombok.ToString;
@@ -36,12 +36,12 @@ public class ServiceStatus implements Endpoint<ServiceStatus.Status> {
         public Firebase firebase = new Firebase();
     }
 
-    private final ApplicationProperties applicationProperties;
+    private final EmailProperties emailProperties;
     private final FirebaseService firebaseService;
 
     @Autowired
-    public ServiceStatus(ApplicationProperties applicationProperties, FirebaseService firebaseService) {
-        this.applicationProperties = applicationProperties;
+    public ServiceStatus(EmailProperties emailProperties, FirebaseService firebaseService) {
+        this.emailProperties = emailProperties;
         this.firebaseService = firebaseService;
     }
 
@@ -64,14 +64,14 @@ public class ServiceStatus implements Endpoint<ServiceStatus.Status> {
     public Status invoke() {
         Status status = new Status();
 
-        status.email.enabled = !applicationProperties.getEmail().isDisabled();
+        status.email.enabled = !emailProperties.isDisabled();
         status.email.working = EmailConfiguration.isEmailSet();
 
         status.firebase.enabled = !firebaseService.isDisabled();
         status.firebase.initialized = !firebaseService.isUninitialized();
         status.firebase.hasMessageServerKey = firebaseService.hasMessagingServerKey();
 
-        status.pepperSet = PropertyConfig.isPepperSet();
+        status.pepperSet = SecurePropertyConfig.isPepperSet();
 
         return status;
     }

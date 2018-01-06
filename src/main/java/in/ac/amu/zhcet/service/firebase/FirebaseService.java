@@ -6,7 +6,7 @@ import com.google.common.base.Strings;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.StorageClient;
-import in.ac.amu.zhcet.configuration.ApplicationProperties;
+import in.ac.amu.zhcet.configuration.properties.FirebaseProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +24,8 @@ public class FirebaseService {
     private boolean uninitialized;
 
     @Autowired
-    public FirebaseService(ApplicationProperties applicationProperties) throws IOException {
+    public FirebaseService(FirebaseProperties firebase) throws IOException {
         log.info("Initializing Firebase");
-        ApplicationProperties.Firebase firebase = applicationProperties.getFirebase();
         disabled = firebase.isDisabled();
         messagingServerKey = firebase.getMessagingServerKey();
 
