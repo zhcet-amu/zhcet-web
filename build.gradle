@@ -59,7 +59,8 @@ dependencies {
     compile 'commons-validator:commons-validator:1.6'
     compile 'org.modelmapper:modelmapper:1.1.1'
     compile 'mysql:mysql-connector-java'
-    compile 'com.github.darrachequesne:spring-data-jpa-datatables:4.3'
+    // TODO: Update JPA DataTables when hibernate bug is fixed
+    compile 'com.github.darrachequesne:spring-data-jpa-datatables:4.1'
     compile 'com.google.firebase:firebase-admin:5.7.0'
     compile 'commons-io:commons-io:2.6'
     compile 'org.imgscalr:imgscalr-lib:4.2'
