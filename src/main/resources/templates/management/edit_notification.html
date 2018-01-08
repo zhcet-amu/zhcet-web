@@ -18,7 +18,7 @@
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification_manager', subPage='manage_notification')">
     <div class="container">
         <div class="row">
-            <!--/*@thymesVar id="notification" type="in.ac.amu.zhcet.data.model.notification.Notification"*/-->
+            <!--/*@thymesVar id="notification" type="amu.zhcet.notification.Notification"*/-->
             <div class="col-xs-12" th:if="${notification}">
                 <div th:replace="fragments/layout :: toolbar"></div>
 

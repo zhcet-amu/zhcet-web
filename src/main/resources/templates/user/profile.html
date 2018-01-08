@@ -8,8 +8,8 @@
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'profile')" sec:authorize="isAuthenticated()">
-    <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
-    <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.user.User"*/-->
+    <!--/*@thymesVar id="student" type="amu.zhcet.data.user.student.Student"*/-->
+    <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
 
     <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2" th:with="hide_warnings = true">
         <div th:replace="fragments/layout :: toolbar"></div>

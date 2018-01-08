@@ -1,0 +1,1 @@
+package amu.zhcet.core.department.floated;

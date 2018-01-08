@@ -8,7 +8,7 @@
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage='faculty_page')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
 
-    <!--/*@thymesVar id="faculty" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+    <!--/*@thymesVar id="faculty" type="amu.zhcet.data.user.faculty.FacultyMember"*/-->
     <div th:if="${faculty}" class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
         <div th:replace="fragments/layout :: toolbar"></div>
         <div class="card">
@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class="card-block">
-                <!--/*@thymesVar id="facultyModel" type="in.ac.amu.zhcet.data.model.dto.datatables.FacultyEditModel"*/-->
+                <!--/*@thymesVar id="facultyModel" type="amu.zhcet.core.dean.edit.faculty.FacultyEditModel"*/-->
                 <form class="form" th:action="|/dean/faculty/${faculty.facultyId}|" method="post" th:object="${facultyModel}">
                     <div class="row">
                         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">

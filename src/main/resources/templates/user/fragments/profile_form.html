@@ -1,7 +1,7 @@
 <div class="card" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-    <!--/*@thymesVar id="faculty" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
-    <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
-    <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.user.User"*/-->
+    <!--/*@thymesVar id="faculty" type="amu.zhcet.data.user.faculty.FacultyMember"*/-->
+    <!--/*@thymesVar id="student" type="amu.zhcet.data.user.student.Student"*/-->
+    <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
     <div class="card-header">
         <h4 class="card-title" id="from-actions-top-left">Profile Setting</h4>
         <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
@@ -85,7 +85,7 @@
             </form>
         </div>
     </div>
-    <!--/*@thymesVar id="user_details" type="in.ac.amu.zhcet.data.model.user.UserDetail"*/-->
+    <!--/*@thymesVar id="user_details" type="amu.zhcet.data.user.detail.UserDetail"*/-->
     <form class="form" th:action="@{/profile/details}" method="post" th:object="${user_details}">
         <div class="row">
             <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">

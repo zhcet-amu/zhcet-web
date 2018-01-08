@@ -89,7 +89,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!--/*@thymesVar id="confirm" type="in.ac.amu.zhcet.data.model.FacultyMember"*/-->
+                                        <!--/*@thymesVar id="confirm" type="amu.zhcet.data.user.faculty.FacultyMember"*/-->
                                         <th:block th:each="confirm: ${confirmRegistration.data}">
                                             <tr th:class="(${confirm.meta} ? 'bg-danger white':'')">
                                                 <td th:text="${confirm.facultyId}"></td>

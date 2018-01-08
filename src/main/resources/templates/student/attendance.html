@@ -39,7 +39,7 @@
                                 <tbody>
 
                                 <th:block th:each="attendance: ${attendances}">
-                                    <!--/*@thymesVar id="attendance" type="in.ac.amu.zhcet.data.model.Attendance"*/-->
+                                    <!--/*@thymesVar id="attendance" type="amu.zhcet.data.attendance.Attendance"*/-->
                                     <tr th:with="percent=${attendance.attended*100.0/attendance.delivered}" th:class="(${percent &lt; @configurationService.threshold} ? 'bg-danger white':'')">
                                         <td th:text="${attendance.courseRegistration.floatedCourse.course.code}"></td>
                                         <td th:text="${attendance.courseRegistration.floatedCourse.course.title}"></td>

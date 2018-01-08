@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 
-group 'in.ac.amu'
+group 'amu'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8

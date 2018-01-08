@@ -211,7 +211,7 @@ This is purely **optional**, and only for those who want to add Sentry support. 
 
 ```
 dsn=<your_dsn>
-factory=in.ac.amu.zhcet.configuration.sentry.SentryFactory
+factory=amu.zhcet.configuration.sentry.SentryFactory
 ```
 
 **IMPORTANT** - Do not forget to configure this factory as it extracts the actual user IP from `X-FORWARDED-FOR` header where it is masked by reverse proxies. Not using this may result in filtering of Sentry Event in case reverse proxy masks user IP as `localhost` and obviouslt the reports about the origin of error will be wrong

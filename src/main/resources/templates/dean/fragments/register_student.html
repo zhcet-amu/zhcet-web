@@ -66,10 +66,10 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!--/*@thymesVar id="confirm" type="in.ac.amu.zhcet.data.model.Student"*/-->
+                                        <!--/*@thymesVar id="confirm" type="amu.zhcet.data.user.student.Student"*/-->
                                         <th:block th:each="confirm: ${confirmRegistration.data}">
                                             <tr th:class="(${confirm.meta} ? 'bg-danger white':'')">
-                                                <!--/*@thymesVar id="key" type="in.ac.amu.zhcet.data.model.Student"*/-->
+                                                <!--/*@thymesVar id="key" type="amu.zhcet.data.user.student.Student"*/-->
                                                 <td th:text="${confirm.enrolmentNumber}"></td>
                                                 <td th:text="${confirm.facultyNumber}"></td>
                                                 <td th:text="${confirm.user.name}"></td>

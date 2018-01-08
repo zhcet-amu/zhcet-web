@@ -10,7 +10,7 @@
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification', subPage='manage_notification')" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
 
-    <!--/*@thymesVar id="notification" type="in.ac.amu.zhcet.data.model.notification.Notification"*/-->
+    <!--/*@thymesVar id="notification" type="amu.zhcet.notification.Notification"*/-->
 
     <div class="container-fluid" th:if="${notification}">
         <div class="row">

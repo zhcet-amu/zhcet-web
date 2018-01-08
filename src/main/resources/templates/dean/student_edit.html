@@ -8,7 +8,7 @@
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage='students_page')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
 
-    <!--/*@thymesVar id="student" type="in.ac.amu.zhcet.data.model.Student"*/-->
+    <!--/*@thymesVar id="student" type="amu.zhcet.data.user.student.Student"*/-->
     <div th:if="${student}" class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
         <div th:replace="fragments/layout :: toolbar"></div>
         <div class="card">
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="card-block">
-                <!--/*@thymesVar id="studentModel" type="in.ac.amu.zhcet.data.model.dto.datatables.StudentEditModel"*/-->
+                <!--/*@thymesVar id="studentModel" type="amu.zhcet.core.dean.edit.student.StudentEditModel"*/-->
                 <form class="form" th:action="@{'/dean/students/' + ${student.user.userId}}" method="post" th:object="${studentModel}">
                     <div class="row">
                         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">

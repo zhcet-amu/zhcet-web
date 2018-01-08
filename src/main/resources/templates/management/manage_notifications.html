@@ -46,7 +46,7 @@
                 <div th:replace="fragments/layout :: success(condition = ${notification_success}, message = ${notification_success})"></div>
                 <div th:replace="fragments/layout :: pagination(pageUrl = 'management/notifications')"></div>
 
-                <!--/*@thymesVar id="notification" type="in.ac.amu.zhcet.data.model.notification.Notification"*/-->
+                <!--/*@thymesVar id="notification" type="amu.zhcet.notification.Notification"*/-->
 
                 <div th:if="${notifications.isEmpty()}" class="text-xs-center text-muted">
                     <h3>No notifications</h3>

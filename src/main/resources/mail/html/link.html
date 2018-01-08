@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="html/core :: head"></head>
 <body>
-<!--/*@thymesVar id="link_message" type="in.ac.amu.zhcet.service.email.data.LinkMessage"*/-->
+<!--/*@thymesVar id="link_message" type="amu.zhcet.email.LinkMessage"*/-->
 <div class="content" th:fragment="content" th:include="html/core :: wrapper">
     <td th:fragment="content">
         <p th:utext="|Hi ${link_message.name != null ? link_message.name : 'there'},|">Hi there,</p>

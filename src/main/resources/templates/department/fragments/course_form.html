@@ -4,9 +4,9 @@
             margin-bottom: 4px;
         }
     </style>
-    <!--/*@thymesVar id="course" type="in.ac.amu.zhcet.data.model.Course"*/-->
-    <!--/*@thymesVar id="department" type="in.ac.amu.zhcet.data.model.Department"*/-->
-    <!--/*@thymesVar id="type" type="in.ac.amu.zhcet.data.type.CourseType"*/-->
+    <!--/*@thymesVar id="course" type="amu.zhcet.data.course.Course"*/-->
+    <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
+    <!--/*@thymesVar id="type" type="amu.zhcet.data.course.CourseType"*/-->
     <div th:each="error : ${#fields.detailedErrors('*')}">
         <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
     </div>

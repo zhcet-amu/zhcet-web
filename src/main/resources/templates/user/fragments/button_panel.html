@@ -1,5 +1,5 @@
 <div xmlns:th="http://www.thymeleaf.org">
-    <!--/*@thymesVar id="user" type="in.ac.amu.zhcet.data.model.user.User"*/-->
+    <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
     <div class="text-xs-right">
         <button id="link-google" class="btn btn-round btn-info" style="display: none">Link Google Account</button>
         <button th:if="${user.emailVerified}" th:class="|btn btn-round btn-${user.emailUnsubscribed ? 'success' : 'danger'}|"
