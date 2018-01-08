@@ -23,7 +23,7 @@
             <div class="col-xs-12 col-xl-5">
                 <div th:replace="department/fragments/add_in_charge"></div>
                 <div th:replace="faculty/fragments/email_list"></div>
-                <div th:with="attendance_download_url = @{|./${floatedCourse.course.code}/attendance/download|}"
+                <div th:with="attendance_download_url = @{|./${floatedCourse.course.code}/attendance.csv|}"
                      th:insert="faculty/fragments/attendance_download"></div>
                 <div th:replace="department/fragments/register_students"></div>
             </div>
