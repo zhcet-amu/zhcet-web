@@ -5,6 +5,8 @@ import com.google.cloud.storage.Bucket;
 import com.google.common.base.Strings;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.cloud.StorageClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.URL;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Service
@@ -87,12 +90,16 @@ public class FirebaseService {
         return StorageClient.getInstance().bucket();
     }
 
+    public static FirebaseToken getToken(String token) throws ExecutionException, InterruptedException {
+        return FirebaseAuth.getInstance().verifyIdTokenAsync(token).get();
+    }
+
     public boolean canProceed() {
-        boolean unproceedable = isUninitialized() || isDisabled();
-        if (unproceedable)
+        boolean proceedable = !isUninitialized() && !isDisabled();
+        if (!proceedable)
             log.error("Cannot proceed as Firebase is uninitialized");
 
-        return !unproceedable;
+        return proceedable;
     }
 
     public boolean canSendMessage() {

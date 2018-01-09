@@ -3,7 +3,6 @@ package amu.zhcet.firebase.messaging;
 import amu.zhcet.common.markdown.MarkDownService;
 import amu.zhcet.core.notification.Notification;
 import amu.zhcet.core.notification.recipient.NotificationRecipient;
-import amu.zhcet.data.user.UserService;
 import amu.zhcet.firebase.FirebaseService;
 import amu.zhcet.firebase.messaging.model.SendRequest;
 import amu.zhcet.firebase.messaging.model.SendResponse;
@@ -30,35 +29,16 @@ public class FirebaseMessagingService {
 
     private final FirebaseService firebaseService;
     private final MarkDownService markDownService;
-    private final UserService userService;
 
     private MessagingClient messagingClient;
 
     @Autowired
-    public FirebaseMessagingService(FirebaseService firebaseService, MarkDownService markDownService, UserService userService) {
+    public FirebaseMessagingService(FirebaseService firebaseService, MarkDownService markDownService) {
         this.firebaseService = firebaseService;
         this.markDownService = markDownService;
-        this.userService = userService;
 
         HEADER_MAP.put("Authorization", "key=" + firebaseService.getMessagingServerKey());
         log.info("CONFIG (Firebase): Firebase Messaging Running : {}", firebaseService.canSendMessage());
-    }
-
-    /**
-     * Attaches FCM registration received from front end to user for push notifications
-     * @param userId User ID to attach token info to
-     * @param token FCM Registration Token to be attached
-     */
-    @Async
-    public void attachToken(String userId, String token) {
-        if (userId == null || token == null)
-            return;
-
-        userService.findById(userId).ifPresent(user -> {
-            user.getDetails().setFcmToken(token);
-            log.info("Added FCM token {} to user : {}", token, user.getUserId());
-            userService.save(user);
-        });
     }
 
     /**

@@ -1,9 +1,9 @@
-package amu.zhcet.firebase.auth;
+package amu.zhcet.firebase.auth.grant;
 
 import lombok.Data;
 
 @Data
-public class UserToken {
+class UserToken {
     private String token;
     private String username;
     private String name;

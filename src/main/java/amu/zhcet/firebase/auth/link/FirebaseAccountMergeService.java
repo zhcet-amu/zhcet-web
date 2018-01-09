@@ -1,6 +1,5 @@
-package amu.zhcet.firebase.auth;
+package amu.zhcet.firebase.auth.link;
 
-import amu.zhcet.core.auth.CustomUser;
 import amu.zhcet.core.auth.UserDetailService;
 import amu.zhcet.core.notification.ChannelType;
 import amu.zhcet.core.notification.Notification;
@@ -9,51 +8,28 @@ import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserType;
 import amu.zhcet.firebase.FirebaseService;
 import com.google.common.base.Strings;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
-import com.google.firebase.auth.UserRecord;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
-import javax.transaction.Transactional;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Service
-@Transactional
-public class FirebaseUserService {
-
-    private static final UserToken UNAUTHENTICATED = new UserToken();
+public class FirebaseAccountMergeService {
 
     private final FirebaseService firebaseService;
     private final UserDetailService userDetailService;
     private final NotificationSendingService notificationSendingService;
-    private final ModelMapper modelMapper;
 
-    public FirebaseUserService(FirebaseService firebaseService, UserDetailService userDetailService, NotificationSendingService notificationSendingService, ModelMapper modelMapper) {
+    @Autowired
+    FirebaseAccountMergeService(FirebaseService firebaseService, UserDetailService userDetailService, NotificationSendingService notificationSendingService) {
         this.firebaseService = firebaseService;
         this.userDetailService = userDetailService;
         this.notificationSendingService = notificationSendingService;
-        this.modelMapper = modelMapper;
-    }
-
-    static UserToken getUnauthenticated() {
-        return UNAUTHENTICATED;
-    }
-
-    UserToken fromUser(CustomUser user, String token) {
-        if (user == null) {
-            return UNAUTHENTICATED;
-        }
-
-        UserToken information = modelMapper.map(user, UserToken.class);
-        information.setToken(token);
-        information.setAuthenticated(true);
-        return information;
     }
 
     /**
@@ -84,16 +60,6 @@ public class FirebaseUserService {
         }
 
         userDetailService.getUserService().save(user);
-    }
-
-    @Async
-    public void getUser(String uid) {
-        try {
-            UserRecord userRecord = FirebaseAuth.getInstance().getUserAsync(uid).get();
-            log.info(userRecord.toString());
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -165,4 +131,5 @@ public class FirebaseUserService {
     private ChannelType fromUser(User user) {
         return user.getType() == UserType.STUDENT ? ChannelType.STUDENT : ChannelType.FACULTY;
     }
+
 }
