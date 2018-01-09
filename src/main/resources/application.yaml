@@ -40,6 +40,7 @@ server:
   use-forward-headers: true
   compression:
     enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,application/javascript
   undertow:
     accesslog:
       enabled: true
