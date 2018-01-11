@@ -5,7 +5,7 @@ import amu.zhcet.core.auth.CustomAuthenticationDetails;
 import amu.zhcet.core.auth.UserDetailService;
 import amu.zhcet.core.auth.login.handler.UsernameAuthenticationFailureHandler;
 import amu.zhcet.core.auth.login.persistent.PersistentTokenService;
-import amu.zhcet.data.user.Roles;
+import amu.zhcet.data.user.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
@@ -124,19 +124,19 @@ public class SecurityConfiguration {
                         .antMatchers("/notifications/{id}/**")
                     .access("@permissionManager.checkNotificationRecipient(authentication, #id)")
                         .antMatchers("/notifications/**").authenticated()
-                        .antMatchers("/student/**").hasAuthority(Roles.STUDENT)
-                        .antMatchers("/dean/**").hasAuthority(Roles.DEAN_ADMIN)
+                        .antMatchers("/student/**").hasAuthority(Role.STUDENT.toString())
+                        .antMatchers("/dean/**").hasAuthority(Role.DEAN_ADMIN.toString())
                         .antMatchers("/department/{department}/courses/{course}/**")
                     .access("@permissionManager.checkCourse(authentication, #department, #course)")
                         .antMatchers("/department/{department}/floated/{course}/**")
                     .access("@permissionManager.checkCourse(authentication, #department, #course)")
                         .antMatchers("/department/{department}/**")
                     .access("@permissionManager.checkDepartment(authentication, #department)")
-                        .antMatchers("/department/**").hasAuthority(Roles.DEPARTMENT_ADMIN)
-                        .antMatchers("/faculty/**").hasAuthority(Roles.FACULTY)
+                        .antMatchers("/department/**").hasAuthority(Role.DEPARTMENT_ADMIN.toString())
+                        .antMatchers("/faculty/**").hasAuthority(Role.FACULTY.toString())
                         .antMatchers("/management/notifications/{id}/**")
                     .access("@permissionManager.checkNotificationCreator(authentication, #id)")
-                        .antMatchers("/management/**").hasAuthority(Roles.TEACHING_STAFF)
+                        .antMatchers("/management/**").hasAuthority(Role.TEACHING_STAFF.toString())
                     .and()
                     .formLogin()
                         .authenticationDetailsSource(authenticationDetailsSource)

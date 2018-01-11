@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class NotificationManagementService {
+class NotificationManagementService {
 
     private static final int PAGE_SIZE = 10;
 

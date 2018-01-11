@@ -7,7 +7,7 @@ import amu.zhcet.core.notification.recipient.NotificationRecipient;
 import amu.zhcet.core.notification.recipient.NotificationRecipientRepository;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.CourseManagementService;
-import amu.zhcet.data.user.Roles;
+import amu.zhcet.data.user.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -50,13 +50,17 @@ public class PermissionManager {
                 .anyMatch(authority -> authority.equals(permission));
     }
 
+    public boolean hasPermission(Collection<? extends GrantedAuthority> authorities, Role role) {
+        return hasPermission(authorities, role.toString());
+    }
+
     public boolean checkDepartment(Authentication user, String departmentCode) {
-        if (hasPermission(user.getAuthorities(), Roles.DEPARTMENT_SUPER_ADMIN))
+        if (hasPermission(user.getAuthorities(), Role.DEPARTMENT_SUPER_ADMIN))
             return true;
 
         if (!(user.getPrincipal() instanceof CustomUser))
             return false;
-        return hasPermission(user.getAuthorities(), Roles.DEPARTMENT_ADMIN) &&
+        return hasPermission(user.getAuthorities(), Role.DEPARTMENT_ADMIN) &&
                 ((CustomUser) user.getPrincipal()).getDepartment().getCode().equals(departmentCode);
     }
 
@@ -66,8 +70,8 @@ public class PermissionManager {
     }
 
     public boolean checkNotificationCreator(Authentication user, String notificationId) {
-        boolean hasSendingPermission = hasPermission(user.getAuthorities(), Roles.TEACHING_STAFF) ||
-                hasPermission(user.getAuthorities(), Roles.DEVELOPMENT_ADMIN);
+        boolean hasSendingPermission = hasPermission(user.getAuthorities(), Role.TEACHING_STAFF) ||
+                hasPermission(user.getAuthorities(), Role.DEVELOPMENT_ADMIN);
         try {
             Notification notification = notificationRepository.findOne(Long.parseLong(notificationId));
             return notification != null && hasSendingPermission && notification.getSender().getUserId().equals(user.getName());

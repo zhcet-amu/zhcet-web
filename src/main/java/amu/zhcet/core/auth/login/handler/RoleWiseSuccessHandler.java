@@ -1,6 +1,6 @@
 package amu.zhcet.core.auth.login.handler;
 
-import amu.zhcet.data.user.Roles;
+import amu.zhcet.data.user.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -15,15 +15,15 @@ public class RoleWiseSuccessHandler extends SavedRequestAwareAuthenticationSucce
     public static String determineTargetUrl(Authentication authentication) {
         Set<String> authorities = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
-        if (authorities.contains(Roles.DEAN_ADMIN))
+        if (authorities.contains(Role.DEAN_ADMIN.toString()))
             return "/dean";
-        else if (authorities.contains(Roles.DEVELOPMENT_ADMIN))
+        else if (authorities.contains(Role.DEVELOPMENT_ADMIN.toString()))
             return "/actuator/health";
-        else if (authorities.contains(Roles.DEPARTMENT_ADMIN))
+        else if (authorities.contains(Role.DEPARTMENT_ADMIN.toString()))
             return "/department";
-        else if (authorities.contains(Roles.FACULTY))
+        else if (authorities.contains(Role.FACULTY.toString()))
             return "/faculty/courses";
-        else if (authorities.contains(Roles.STUDENT))
+        else if (authorities.contains(Role.STUDENT.toString()))
             return "/student/attendance";
         else
             return "/login";

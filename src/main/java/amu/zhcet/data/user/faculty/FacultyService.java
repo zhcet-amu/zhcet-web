@@ -3,7 +3,7 @@ package amu.zhcet.data.user.faculty;
 import amu.zhcet.common.realtime.RealTimeStatus;
 import amu.zhcet.common.utils.StringUtils;
 import amu.zhcet.data.department.Department;
-import amu.zhcet.data.user.Roles;
+import amu.zhcet.data.user.Role;
 import amu.zhcet.data.user.UserService;
 import amu.zhcet.data.user.UserType;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +65,7 @@ public class FacultyService {
         if (facultyMember.getUser().getUserId() == null)
             facultyMember.getUser().setUserId(facultyMember.getFacultyId());
         if (facultyMember.getUser().getRoles() == null || facultyMember.getUser().getRoles().isEmpty())
-            facultyMember.getUser().setRoles(Collections.singleton(Roles.FACULTY));
+            facultyMember.getUser().setRoles(Collections.singleton(Role.FACULTY.toString()));
 
         facultyMember.getUser().setPassword(passwordEncoder.encode(facultyMember.getUser().getPassword()));
 

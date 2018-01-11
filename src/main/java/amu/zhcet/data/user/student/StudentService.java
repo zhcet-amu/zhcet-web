@@ -2,7 +2,7 @@ package amu.zhcet.data.user.student;
 
 import amu.zhcet.common.realtime.RealTimeStatus;
 import amu.zhcet.common.utils.StringUtils;
-import amu.zhcet.data.user.Roles;
+import amu.zhcet.data.user.Role;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
 import amu.zhcet.data.user.UserType;
@@ -83,7 +83,7 @@ public class StudentService {
         if (student.getUser().getUserId() == null)
             student.getUser().setUserId(student.getEnrolmentNumber());
         if (student.getUser().getRoles() == null || student.getUser().getRoles().isEmpty())
-            student.getUser().setRoles(Collections.singleton(Roles.STUDENT));
+            student.getUser().setRoles(Collections.singleton(Role.STUDENT.toString()));
         if (student.getUser().getPassword() == null)
             student.getUser().setPassword(student.getFacultyNumber());
 

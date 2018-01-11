@@ -10,11 +10,6 @@
     <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
     <div th:replace="fragments/layout :: toolbar"></div>
 
-    <div th:if="${saved}" class="alert alert-dismissible alert-success">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Saved!</strong> Roles have been saved
-    </div>
-
     <div class="card">
         <div class="card-header">
             <h4 class="card-title" id="from-actions-top-left">Manage Roles</h4>
@@ -31,13 +26,23 @@
         <div class="card-body collapse in">
             <div id="payload" class="card-block">
                 <input class="fuzzy-search form-control round mb-1" placeholder="Search" />
+                <div class="row">
+                    <div class="col-md-4">
+                        <button class="sort btn btn-block btn-outline-info btn-round mb-2" data-sort="name">Sort by name</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="sort btn btn-block btn-outline-primary btn-round mb-2" data-sort="faculty-id">Sort by faculty ID</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="sort btn btn-block btn-outline-success btn-round mb-2" data-sort="created-date">Sort by created date</button>
+                    </div>
+                </div>
                 <div class="table-responsive">
                 <table class="table">
                     <tbody class="list">
-                    <!--/*@thymesVar id="member" type="amu.zhcet.data.user.faculty.FacultyMember"*/-->
-                    <tr th:each="member : ${facultyMembers}">
-                        <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
-                        <form th:action="|/dean/roles/${department.code}|" method="post">
+                        <!--/*@thymesVar id="member" type="amu.zhcet.data.user.faculty.FacultyMember"*/-->
+                        <tr th:each="member : ${facultyMembers}">
+                            <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
                             <td width="50" style="padding: 0;">
                                 <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
                                      th:src="${@viewService.getAvatarUrl(member.user.details.avatarUrl)}"
@@ -45,47 +50,19 @@
                             </td>
                             <td class="faculty-id" th:text="${member.facultyId}"></td>
                             <td class="name" th:text="${member.user.name}"></td>
-                            <td class="active" width="50" style="padding: 0">
-                                <span th:class="|capsule p-small ${member.working ? 'bg-success' : 'bg-danger'}|" th:text="${member.working ? 'Active' : 'Inactive'}"></span>
-                            </td>
+                            <td class="created-date" th:text="${#temporals.format(member.createdAt)}"></td>
                             <td>
-                                <table class="table table-column" style="background-color: white">
-                                    <tr>
-                                        <td><label>Dean Admin
-                                            <i class="material-icons helper" data-toggle="tooltip" data-original-title="Manages course and user registrations/roles">info_outline</i>
-                                        </label></td>
-                                        <td><input type="checkbox" class="switchery" data-color="primary" name="roles" value="dean" th:checked="${#lists.contains(member.user.roles, 'ROLE_DEAN_ADMIN')}"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>
-                                            Department Super Admin
-                                            <i class="material-icons helper" data-toggle="tooltip" data-original-title="Manages all department courses, floating, and incharges">info_outline</i>
-                                        </label></td>
-                                        <td><input type="checkbox" class="switchery" data-color="primary"  name="roles" value="department_super" th:checked="${#lists.contains(member.user.roles, 'ROLE_DEPARTMENT_SUPER_ADMIN')}"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>
-                                            Department Admin
-                                            <i class="material-icons helper" data-toggle="tooltip" data-original-title="Manages one department courses, floating, and incharges">info_outline</i>
-                                        </label></td>
-                                        <td><input type="checkbox" class="switchery" data-color="primary"  name="roles" value="department" th:checked="${#lists.contains(member.user.roles, 'ROLE_DEPARTMENT_ADMIN')}"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>
-                                            Faculty Member
-
-                                            <i class="material-icons helper" data-toggle="tooltip" data-original-title="Manages floated course attendance, results, etc">info_outline</i>
-                                        </label></td>
-                                        <td><input type="checkbox" class="switchery" data-color="primary" name="roles" value="faculty" th:checked="${#lists.contains(member.user.roles, 'ROLE_FACULTY')}"></td>
-                                    </tr>
-                                </table>
+                                <th:block th:each="role: ${member.user.roles}">
+                                    <div class="tag tag-danger" th:text="${@viewService.roleFilter(role)}"></div><br>
+                                </th:block>
                             </td>
                             <td style="padding: 5px;">
-                                <input type="hidden" name="facultyId" th:value="${member.facultyId}">
-                                <button class="mui-btn mui-btn--primary mui-btn--small mui-btn--fab bg-primary"><i class=" icon-check2"></i></button>
+                                <a th:href="@{|/dean/roles/user/${member.facultyId}|}"
+                                   class="mui-btn mui-btn--primary mui-btn--small mui-btn--fab bg-primary">
+                                    <i class=" icon-edit"></i>
+                                </a>
                             </td>
-                        </form>
-                    </tr>
+                        </tr>
                     </tbody>
                 </table>
                 </div>
@@ -98,7 +75,7 @@
 <script>
     (function (List) {
         var options = {
-            valueNames: [ 'faculty-id', 'name' ],
+            valueNames: [ 'faculty-id', 'name', 'created-date' ],
             page: 10,
             pagination: true
         };

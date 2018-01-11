@@ -13,6 +13,10 @@ table td {
     vertical-align: middle !important;
 }
 
+.hover-cursor:hover {
+    cursor: pointer;
+}
+
 .bg-danger {
     color: #eee
 }

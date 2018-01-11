@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head"></head>
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage = 'dean_admin')">
+    <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
+        <div th:replace="fragments/layout :: toolbar"></div>
+
+        <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
+        <!--/*@thymesVar id="roles" type="java.util.List<String>"*/-->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title" id="from-actions-top-left" th:text="|Manage Roles of ${user.name}|"></h4>
+                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                        <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card-body collapse in">
+                <div class="card-block">
+                    <form id="role-form" th:action="@{|/dean/roles/user/${user.userId}|}" method="post">
+
+                        <th:block th:each="role : ${roles}"
+                                  th:with="reachableRole = ${@viewService.getOnlyReachableRoles(user.roles)},
+                                           containsReachableRole = ${@viewService.containsRole(reachableRole, role)}">
+                            <fieldset class="checkbox">
+                                <label class="hover-cursor">
+                                    <input class="role-checkbox" type="checkbox" th:value="${role}" name="roles"
+                                           th:id="${#strings.toLowerCase(role)}"
+                                           th:checked="${@viewService.containsRole(user.roles, role) || containsReachableRole}"
+                                           th:disabled="${containsReachableRole}">
+                                    <strong><span th:text="${@viewService.roleFilter(role)}"></span></strong> -
+                                </label>
+                                <em><span th:text="${role.description}"></span></em>
+                            </fieldset>
+                            <br>
+                        </th:block>
+                        <button class="btn btn-primary float-xs-right" type="submit">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="default-role-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header bg-danger white">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">No Role Selected</h4>
+                    </div>
+                    <div class="modal-body text-xs-center">
+                        No role is selected for the user. This will reset the role to the default role depending on whether the user
+                        is student or faculty member. If you want to revoke access of a particular user, please disable it account.
+                        <br><br>
+                        Please click 'Save' button again if you want to continue
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="weak-role-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header bg-danger white">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Role Strength Reduction</h4>
+                    </div>
+                    <div class="modal-body text-xs-center">
+                        <span class="text-danger">WARNING!!! </span> You are reducing your own privilege. You might not get
+                         back access to change the setting again. Please proceed with caution!
+                        <br><br>
+                        Please click 'Save' button again if you want to continue
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    (function () {
+        var roleHierarchy = [[${roleHierarchy}]];
+        var roleOrder = [[${roleOrder}]];
+        var userRoles = [[${user.roles}]];
+
+        function getRemainingRoles() {
+            var remainingRoles= [];
+            $.each($(".role-checkbox:checked"), function(){
+                var value = $(this).val();
+                remainingRoles.push({
+                    role: value,
+                    order: roleOrder[value]
+                });
+            });
+
+            return remainingRoles;
+        }
+
+        function getHighestRole(remainingItems) {
+            if (!remainingItems || remainingItems.length === 0)
+                return {order: 0};
+            return remainingItems.reduce(function(prev, current) {
+                if (current.order > prev.order) {
+                    return current;
+                } else {
+                    return prev;
+                }
+            });
+        }
+
+        function getHighestRemainingRole() {
+            return getHighestRole(getRemainingRoles());
+        }
+
+        function getHighestUserRole() {
+            return getHighestRole($.map(userRoles, function (role) {
+                return {
+                    role: role,
+                    order: roleOrder[role]
+                }
+            }));
+        }
+
+        function toggleStatus(itemIds, check) {
+            var boxes = $($.map(itemIds, function (itemId) {
+                return '#' + itemId;
+            }).join(','));
+
+            boxes.prop('checked', check);
+            boxes.prop('disabled', check);
+        }
+
+        $('.role-checkbox').on('change', function (event) {
+            preventEvent = true;
+            toggleStatus(roleHierarchy[event.target.id], $(event.target).is(':checked'));
+        });
+
+        var roleForm = $('#role-form');
+        var preventEvent = true;
+        roleForm.submit(function (event) {
+            if (!preventEvent)
+                return;
+
+            event.preventDefault();
+            preventEvent = false;
+
+            var newHighest = getHighestRemainingRole();
+            var previousHighest = getHighestUserRole();
+
+            if (newHighest.order >= previousHighest.order) {
+                roleForm.submit();
+                return;
+            }
+
+            if (newHighest.order === 0) {
+                $('#default-role-modal').modal();
+            }
+
+            if (newHighest.order < previousHighest.order &&
+                [[${user.userId}]] === [[${#authentication.principal.username}]]) {
+                $('#weak-role-modal').modal();
+            }
+        });
+    }());
+</script>
+</body>
+</html>

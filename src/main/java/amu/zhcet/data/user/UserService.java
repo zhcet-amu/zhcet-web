@@ -77,17 +77,17 @@ public class UserService {
     public String getType(User user) {
         List<String> roles = user.getRoles();
 
-        if (roles.contains(Roles.SUPER_ADMIN))
+        if (roles.contains(Role.SUPER_ADMIN))
             return "Super Admin";
-        else if (roles.contains(Roles.DEAN_ADMIN))
+        else if (roles.contains(Role.DEAN_ADMIN))
             return "Dean Admin";
-        else if (roles.contains(Roles.DEVELOPMENT_ADMIN))
+        else if (roles.contains(Role.DEVELOPMENT_ADMIN))
             return "Management Admin";
-        else if (roles.contains(Roles.DEPARTMENT_SUPER_ADMIN))
+        else if (roles.contains(Role.DEPARTMENT_SUPER_ADMIN))
             return "Department Super Admin";
-        else if (roles.contains(Roles.DEPARTMENT_ADMIN))
+        else if (roles.contains(Role.DEPARTMENT_ADMIN))
             return "Department Admin";
-        else if (roles.contains(Roles.FACULTY))
+        else if (roles.contains(Role.FACULTY))
             return "Faculty Member";
         else
             return "Student";
