@@ -24,7 +24,6 @@
                     <strong>Note</strong><br>
                     Only attended and delivered columns of the file are editable, changes in other fields are ignored
                 </div>
-                <input type="text" name="section" th:value="${param.section}" hidden>
                 <br/>
                 <div th:replace="fragments/layout :: uploader(id = 'attendance_upload')"></div>
                 <div th:if="${updated}" class="alert alert-dismissible alert-success">

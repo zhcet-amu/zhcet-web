@@ -40,6 +40,26 @@ var App = (function () {
         toastr.options.closeButton = true;
     }
 
+    function blockUI(element, block) {
+        if (block) {
+            element.block({
+                message: '<div class="icon-spinner9 icon-spin icon-lg"></div>',
+                overlayCSS: {
+                    backgroundColor: "#fff",
+                    opacity: .8,
+                    cursor: "wait"
+                },
+                css: {
+                    border: 0,
+                    padding: 0,
+                    backgroundColor: "transparent"
+                }
+            });
+        } else {
+            element.unblock();
+        }
+    }
+
     function postToServer(url, data) {
         var header = $("meta[name='_csrf_header']").attr("content");
         var token = $("meta[name='_csrf']").attr("content");
@@ -56,6 +76,7 @@ var App = (function () {
     }
 
     return {
-        postToServer: postToServer
+        postToServer: postToServer,
+        blockUI: blockUI
     }
 }());

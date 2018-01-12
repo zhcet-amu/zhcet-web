@@ -87,22 +87,6 @@
         showSuccess('All Set!');
     }
 
-    function extractBlacklisted() {
-        var blacklisted = $('#blacklist').html();
-        if (!blacklisted || blacklisted.length < 1)
-            return [];
-
-        var blacklist = [];
-        var intermediate = blacklisted.substring(1, blacklisted.length - 1).split(',');
-        for (var i = 0; i < intermediate.length; i++) {
-            var item = intermediate[i].trim();
-            if (item !== '' && item !== 'null')
-                blacklist.push(item);
-        }
-
-        return blacklist;
-    }
-
     function loadScript(url) {
         var async_load = function() {
             var first, s;
@@ -166,7 +150,7 @@
         passwordStatus = $('#password-status');
         changePassword = $('#submit');
 
-        blacklist = extractBlacklisted();
+        blacklist = PageDetails.blacklisted;
 
         meter = document.getElementById('password-strength-meter');
         suggestionElement = $('.password-suggestions');

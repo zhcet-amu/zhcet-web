@@ -22,26 +22,28 @@
         <!--/*@thymesVar id="course" type="amu.zhcet.data.course.Course"*/-->
         <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
         <div class="row" th:if="${department}">
-            <div id="department" th:text="${department.code}" hidden></div>
             <div class="col-xs-12">
                 <div th:replace="fragments/layout :: toolbar"></div>
                 <div class="row">
                     <div class="col-md-10 col-xl-8 offset-md-1 offset-xl-2">
-                        <div class="bs-callout-primary callout-border-left p-1">
-                            <strong>Add courses by searching</strong><br>
-                            Search for courses by course code or title and float multiple courses in one go!
-                        </div>
-                        <br>
-                        <div th:replace="fragments/layout :: success(condition = ${float_success}, message = ${float_success})"></div>
-                        <div th:replace="fragments/layout :: error(condition = ${float_error}, error = ${float_error})"></div>
-                        <input class="courses twitter-typeahead form-control round mb-1" autocomplete="off" placeholder="Search" />
+                        <div id="action-area">
+                            <div class="bs-callout-primary callout-border-left p-1">
+                                <strong>Add courses by searching</strong><br>
+                                Search for courses by course code or title and float multiple courses in one go!
+                            </div>
+                            <br>
+                            <div th:replace="fragments/layout :: success(condition = ${float_success}, message = ${float_success})"></div>
+                            <div th:replace="fragments/layout :: error(condition = ${float_error}, error = ${float_error})"></div>
+                            <input class="courses twitter-typeahead form-control round mb-1" autocomplete="off" placeholder="Search" />
 
-                        <div class="bs-callout-primary callout-border-left p-1">
-                            <strong>OR</strong><br>
-                            Add courses by selecting from a list
+                            <div class="bs-callout-primary callout-border-left p-1">
+                                <strong>OR</strong><br>
+                                Add courses by selecting from a list
+                            </div>
+                            <br>
+                            <button id="select-courses" class="btn btn-primary float-xs-right" data-toggle="modal" data-target="#selection-modal">Select</button>
+
                         </div>
-                        <br>
-                        <button id="select-courses" class="btn btn-primary float-xs-right" data-toggle="modal" data-target="#selection-modal">Select</button>
 
                         <div class="modal fade text-xs-left" id="selection-modal" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -53,7 +55,7 @@
                                         <h4 class="modal-title">Select Courses</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <ul class="list-group list" id="course-selection-list"></ul>
+                                        <table class="list-group list" id="course-selection-list"></table>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" id="float-selected" class="btn btn-outline-primary" data-dismiss="modal">Add</button>
@@ -96,6 +98,11 @@
     </div>
 </div>
 <div th:replace="fragments/layout :: typeahead"></div>
+<script th:inline="javascript">
+    var PageDetails = {
+        department: [[${department.code}]]
+    }
+</script>
 <script th:src="@{/js/fuzzyhound.js}"></script>
 <script th:src="@{/js/float-course.js}"></script>
 </body>

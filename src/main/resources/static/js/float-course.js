@@ -52,7 +52,18 @@
         $.each(courses, function (index, course) {
             if (course.floated || (added.indexOf(course.code) !== -1))
                 return;
-            list.append("<li style='padding: 5px;'><input name='to-float' type='checkbox' style='margin-right: 10px; vertical-align: middle'><strong id='c-code'>"+course.code+"</strong> - "+course.title+" - <span class='capsule p-small'>Semester: " + course.semester + "</span></li>");
+            list.append(
+                "<tr><td>" +
+                "<fieldset class='checkbox'>" +
+                "<label class='hover-cursor'>" +
+                "<input name='to-float' type='checkbox' style='margin-right: 10px; vertical-align: middle'>" +
+                "<strong id='c-code'>"+course.code+"</strong> - " + course.title +
+                "</label>" +
+                "</fieldset>" +
+                "</td><td>" +
+                "<span class='tag tag-pill tag-info float-xs-right'>Semester: " + course.semester + "</span>" +
+                "</td></tr>"
+            );
         });
     }
 
@@ -76,14 +87,17 @@
         attachRemove();
     }
 
-    var department = $('#department').html();
+    var department = PageDetails.department;
     var courses = null;
+    var actionArea = $('#action-area');
 
-    fuzzyhound.onLoad(function (response) {
-        courses = response;
-    });
-
-    fuzzyhound.setSource("/department/" + department + "/api/courses", ["code", "title"]);
+    App.blockUI(actionArea, true);
+    fuzzyhound.setSource("/department/" + department + "/api/courses",
+        ["code", "title"],
+        function(response) {
+        App.blockUI(actionArea, false);
+            courses = response;
+        });
 
     /* main */ (function () {
         var searchBox = $('.courses');

@@ -1,7 +1,6 @@
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="add_in_charge" class="card">
     <!--/*@thymesVar id="floatedCourse" type="amu.zhcet.data.course.floated.FloatedCourse"*/-->
     <!--/*@thymesVar id="inCharge" type="amu.zhcet.data.course.incharge.CourseInCharge"*/-->
-    <div id="department" th:text="${department.code}" hidden></div>
     <div class="card-header">
         <h4 class="card-title">Teacher In Charge</h4>
         <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
@@ -22,17 +21,19 @@
             <br>
             <div th:replace="fragments/layout :: success(condition = ${float_success}, message = ${float_success})"></div>
             <div th:replace="fragments/layout :: error(condition = ${float_error}, error = ${float_success})"></div>
-            <div class="row">
-                <div class="col-md-9">
-                    <p>Include faculty members of all departments in search?</p>
+            <div id="incharge-action">
+                <div class="row">
+                    <div class="col-md-9">
+                        <p>Include faculty members of all departments in search?</p>
+                    </div>
+                    <div class="col-md-3">
+                        <button id="toggle-more" class="btn btn-block btn-outline-primary btn-round" data-toggle="tooltip"
+                                data-placement="top" data-original-title="Toggle all faculty members and only Departmental Faculty Members">More</button>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <button id="toggle-more" class="btn btn-block btn-outline-primary btn-round" data-toggle="tooltip"
-                            data-placement="top" data-original-title="Toggle all faculty members and only Departmental Faculty Members">More</button>
-                </div>
+                <br>
+                <input class="incharges twitter-typeahead form-control round mb-1" autocomplete="off" placeholder="Search" />
             </div>
-            <br>
-            <input class="incharges twitter-typeahead form-control round mb-1" autocomplete="off" placeholder="Search" />
             <form method="post" th:action="@{|/department/${department.code}/floated/${floatedCourse.course.code}/in_charge|}">
                 <div class="in-charge-container">
                     <div class="in-charge" th:each="inCharge : ${floatedCourse.inCharge}">
@@ -71,6 +72,11 @@
             </form>
         </div>
     </div>
+    <script th:inline="javascript">
+        var PageDetails = {
+            department: [[${department.code}]]
+        }
+    </script>
     <script id="in-charge-template" type="text/x-tmpl">
         <div class="in-charge new">
             <div class="row vertical-align text-xs-center">

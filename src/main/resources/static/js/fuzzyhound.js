@@ -1,9 +1,8 @@
 var fuzzyhound = (function ($, FuzzySearch) {
     var fuzzyhound = new FuzzySearch({output_limit: 6, output_map:"alias"});
-    var loaded = null;
 
     $.ajaxSetup({cache: true});
-    function setSource(url, keys) {
+    function setSource(url, keys, loaded) {
         $.getJSON(url).then(function (response) {
             fuzzyhound.setOptions({
                 source: response,
@@ -18,9 +17,6 @@ var fuzzyhound = (function ($, FuzzySearch) {
         get: function () {
             return fuzzyhound;
         },
-        setSource: setSource,
-        onLoad: function (callback) {
-            loaded = callback;
-        }
+        setSource: setSource
     }
 }(jQuery, FuzzySearch));

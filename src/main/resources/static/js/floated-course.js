@@ -29,10 +29,15 @@
     }
 
     var all = false;
-    var department = $('#department').html();
+    var blockInchargeUI = App.blockUI;
+    var department = PageDetails.department;
     var index = ["facultyId", "userName"];
     var baseUrl = "/department/" + department + "/api/faculty";
-    fuzzyhound.setSource(baseUrl, index);
+    var actionArea = $('#incharge-action');
+    blockInchargeUI(actionArea, true);
+    fuzzyhound.setSource(baseUrl, index, function () {
+        blockInchargeUI(actionArea, false);
+    });
 
     /* main */ (function () {
         $('#faculty-modal').modal('show');
@@ -67,7 +72,10 @@
         var toggle = $('#toggle-more');
         toggle.click(function () {
             all = !all;
-            fuzzyhound.setSource(baseUrl + '?all=' + all, index);
+            blockInchargeUI(actionArea, true);
+            fuzzyhound.setSource(baseUrl + '?all=' + all, index, function () {
+                blockInchargeUI(actionArea, false);
+            });
             toggle.text(all ? 'Less' : 'More');
         });
 

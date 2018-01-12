@@ -20,7 +20,7 @@
                 <div class="badge badge-info"><span><i class="material-icons">stars</i> Credits </span><span class="credits badge-content" th:text="${course.credits}"></span></div>
                 <div class="badge badge-info"><span><i class="material-icons">call_split</i> Branch </span><span class="branch badge-content" th:text="${course.branch}"></span></div>
                 <div class="badge badge-danger float-xs-right" th:if="${!course.active}"><i class="material-icons">clear</i> Deactivated</div>
-                <div class="badge badge-success float-xs-right" th:hidden="${course.meta == null}"><i class="material-icons">fiber_manual_record</i> <span th:text="${course.meta}"></span></div>
+                <div class="badge badge-success float-xs-right" th:hidden="${course.meta == null}"><i class="material-icons">fiber_manual_record</i> <span class="floated" th:text="${course.meta}"></span></div>
                 <div class="badge badge-success float-xs-right" th:if="${section}">Section <span class="section badge-content" th:text="${section}"></span></div>
             </div>
         </div>
