@@ -6,7 +6,7 @@ import com.j256.simplecsv.common.CsvColumn;
 import lombok.Data;
 
 @Data
-class StudentUpload {
+public class StudentUpload {
     @CsvColumn(columnName = "enrolment_no", mustNotBeBlank = true)
     private String enrolmentNumber;
     @CsvColumn(columnName = "faculty_no", mustNotBeBlank = true)

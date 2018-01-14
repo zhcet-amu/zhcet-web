@@ -4,41 +4,34 @@ import amu.zhcet.common.realtime.RealTimeStatus;
 import amu.zhcet.data.user.faculty.FacultyMember;
 import amu.zhcet.storage.csv.Confirmation;
 import amu.zhcet.storage.csv.UploadResult;
-import amu.zhcet.storage.file.FileSystemStorageService;
-import amu.zhcet.storage.file.FileType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @Controller
+@RequestMapping("/dean/register/faculty")
 public class FacultyRegistrationController {
 
-    private final FileSystemStorageService systemStorageService;
     private final FacultyUploadService facultyUploadService;
 
     @Autowired
-    public FacultyRegistrationController(FileSystemStorageService systemStorageService, FacultyUploadService facultyUploadService) {
-        this.systemStorageService = systemStorageService;
+    public FacultyRegistrationController(FacultyUploadService facultyUploadService) {
         this.facultyUploadService = facultyUploadService;
     }
 
-    @PostMapping("/dean/register/faculty")
+    @PostMapping
     public String uploadFacultyFile(RedirectAttributes attributes, @RequestParam MultipartFile file, HttpSession session, WebRequest webRequest) throws IOException {
         try {
             UploadResult<FacultyUpload> result = facultyUploadService.handleUpload(file);
@@ -58,7 +51,7 @@ public class FacultyRegistrationController {
         return "redirect:/dean";
     }
 
-    @PostMapping("/dean/register/faculty/confirm")
+    @PostMapping("/confirm")
     public String uploadFaculty(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
         Confirmation<FacultyMember> confirmation = (Confirmation<FacultyMember>) session.getAttribute("confirmFacultyRegistration");
 
@@ -82,22 +75,6 @@ public class FacultyRegistrationController {
         }
 
         return "redirect:/dean";
-    }
-
-    @GetMapping("/dean/password/{id}")
-    public void downloadCsv(HttpServletResponse response, @PathVariable("id") PasswordFile passwordFile) throws IOException {
-        if (passwordFile == null || passwordFile.isExpired()) return;
-
-        response.setContentType("text/csv");
-
-        response.setHeader("Content-disposition", "attachment;filename=passwords.csv");
-
-        List<String> lines = Files.readAllLines(systemStorageService.load(FileType.CSV, passwordFile.getLink()));
-        for (String line : lines) {
-            response.getOutputStream().println(line);
-        }
-
-        response.getOutputStream().flush();
     }
 
 }

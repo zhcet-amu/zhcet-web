@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collections;
@@ -21,6 +18,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
+@RequestMapping("/department/{department}/course/float")
 public class FloatCourseController {
 
     private final FloatedCourseService floatedCourseService;
@@ -37,7 +35,7 @@ public class FloatCourseController {
                         .build());
     }
 
-    @GetMapping("department/{department}/courses/{course}/float")
+    @GetMapping("/{course}")
     public String floatCourse(@PathVariable Department department, @PathVariable Course course, RedirectAttributes redirectAttributes) {
         String redirectUrl = "redirect:/department/{department}/course/float";
         if (course == null)
@@ -53,7 +51,7 @@ public class FloatCourseController {
         return redirectUrl;
     }
 
-    @GetMapping("/department/{department}/course/float")
+    @GetMapping
     public String floatCourse(Model model, @PathVariable Department department) {
         String templateUrl = "department/float_course";
         if (department == null)
@@ -68,7 +66,7 @@ public class FloatCourseController {
         return templateUrl;
     }
 
-    @PostMapping("/department/{department}/course/float")
+    @PostMapping
     public String floatCourses(RedirectAttributes redirectAttributes, @PathVariable Department department, @RequestParam("code") List<Course> courseList) {
         for (Course course : courseList)
             floatedCourseService.floatCourse(course);

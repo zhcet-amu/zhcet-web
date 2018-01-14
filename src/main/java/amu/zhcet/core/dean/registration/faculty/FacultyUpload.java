@@ -5,7 +5,7 @@ import com.j256.simplecsv.common.CsvColumn;
 import lombok.Data;
 
 @Data
-class FacultyUpload {
+public class FacultyUpload {
     @CsvColumn(columnName = "faculty_id", mustNotBeBlank = true)
     private String facultyId;
 

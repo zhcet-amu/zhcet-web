@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
@@ -20,6 +21,7 @@ import java.util.Collections;
 
 @Slf4j
 @Controller
+@RequestMapping("/dean/register/students")
 public class StudentRegistrationController {
 
     private final StudentUploadService studentUploadService;
@@ -29,7 +31,7 @@ public class StudentRegistrationController {
         this.studentUploadService = studentUploadService;
     }
 
-    @PostMapping("/dean/register/students")
+    @PostMapping
     public String uploadFile(RedirectAttributes attributes, @RequestParam MultipartFile file, HttpSession session, WebRequest webRequest) {
         try {
             UploadResult<StudentUpload> result = studentUploadService.handleUpload(file);
@@ -50,7 +52,7 @@ public class StudentRegistrationController {
         return "redirect:/dean";
     }
 
-    @PostMapping("/dean/register/students/confirm")
+    @PostMapping("/confirm")
     public String uploadStudents(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
         Confirmation<Student> confirmation = (Confirmation<Student>) session.getAttribute("confirmStudentRegistration");
 

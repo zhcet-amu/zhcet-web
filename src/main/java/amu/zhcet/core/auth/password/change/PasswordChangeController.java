@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 
 @Slf4j
 @Controller
+@RequestMapping("/profile/settings/password")
 public class PasswordChangeController {
 
     private final UserService userService;
@@ -25,7 +27,7 @@ public class PasswordChangeController {
         this.passwordChangeService = passwordChangeService;
     }
 
-    @GetMapping("/profile/settings/password")
+    @GetMapping
     public String changePassword(Model model) {
         String renderUrl = "user/change_password";
         userService.getLoggedInUser().ifPresent(user -> {
@@ -46,7 +48,7 @@ public class PasswordChangeController {
         return renderUrl;
     }
 
-    @PostMapping("/profile/settings/password/change")
+    @PostMapping("/change")
     public String savePassword(@Valid PasswordChange passwordChange, RedirectAttributes redirectAttributes) {
         String redirectUrl = "redirect:/profile/settings/password";
 

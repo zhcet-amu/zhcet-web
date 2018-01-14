@@ -13,9 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -25,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
+@RequestMapping("/dean/floated")
 public class FloatedCourseEditController {
 
     private final FloatedCourseService floatedCourseService;
@@ -39,7 +38,7 @@ public class FloatedCourseEditController {
         this.courseRegistrationService = courseRegistrationService;
     }
 
-    @GetMapping("/dean/floated")
+    @GetMapping
     public String students(Model model) {
         model.addAttribute("page_title", "Floated Courses - " + Utils.getSessionName(ConfigurationService.getDefaultSessionCode()));
         model.addAttribute("page_subtitle", "This session's floated courses");
@@ -47,7 +46,7 @@ public class FloatedCourseEditController {
         return "dean/floated_page";
     }
 
-    @GetMapping("dean/floated/{course}")
+    @GetMapping("/{course}")
     public String courseDetail(Model model, @PathVariable Course course, WebRequest webRequest) {
         String templateUrl = "dean/floated_course";
         floatedCourseService.getFloatedCourse(course).ifPresent(floatedCourse -> {
@@ -72,8 +71,8 @@ public class FloatedCourseEditController {
         return templateUrl;
     }
 
-    @PostMapping("dean/floated/{course}/remove/{student}")
-    public String removeStudent(RedirectAttributes attributes, @PathVariable Course course, @PathVariable Student student) {
+    @PostMapping("/{course}/unregister")
+    public String removeStudent(RedirectAttributes attributes, @PathVariable Course course, @RequestParam Student student) {
         if (course != null && student != null) {
             courseRegistrationService.removeRegistration(course, student);
             attributes.addFlashAttribute("flash_messages", Flash.success("Student removed from course"));

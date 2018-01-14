@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @Slf4j
 @Controller
+@RequestMapping("/dean/faculty")
 public class FacultyEditController {
 
     private final DepartmentService departmentService;
@@ -32,7 +34,7 @@ public class FacultyEditController {
         this.facultyEditService = facultyEditService;
     }
 
-    @GetMapping("/dean/faculty")
+    @GetMapping
     public String students(Model model) {
         model.addAttribute("page_title", "Faculty Manager");
         model.addAttribute("page_subtitle", "Registered Faculty Management");
@@ -40,7 +42,7 @@ public class FacultyEditController {
         return "dean/faculty_page";
     }
 
-    @GetMapping("/dean/faculty/{id}")
+    @GetMapping("/{id}")
     public String student(Model model, @PathVariable("id") FacultyMember faculty) {
         Optional.ofNullable(faculty).ifPresent(facultyMember -> {
             model.addAttribute("page_title", "Faculty Editor");
@@ -57,7 +59,7 @@ public class FacultyEditController {
         return "dean/faculty_edit";
     }
 
-    @PostMapping("/dean/faculty/{id}")
+    @PostMapping("/{id}")
     public String studentPost(RedirectAttributes redirectAttributes, @PathVariable("id") FacultyMember faculty, @Valid FacultyEditModel facultyEditModel, BindingResult result) {
         Optional.ofNullable(faculty).ifPresent(facultyMember -> {
             if (result.hasErrors()) {

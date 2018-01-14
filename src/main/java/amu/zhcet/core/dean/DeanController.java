@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
+@RequestMapping("/dean")
 public class DeanController {
 
     private final UserService userService;
@@ -32,7 +34,7 @@ public class DeanController {
         this.departmentService = departmentService;
     }
 
-    @GetMapping("/dean")
+    @GetMapping
     public String deanAdmin(Model model, WebRequest webRequest) {
         model.addAttribute("page_title", "Administration Panel");
         model.addAttribute("page_subtitle", "Dean Administration Panel");
@@ -52,7 +54,7 @@ public class DeanController {
         return "dean/admin";
     }
 
-    @PostMapping("/dean/departments/add")
+    @PostMapping("/departments/add")
     public String addDepartment(@Valid Department department, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {

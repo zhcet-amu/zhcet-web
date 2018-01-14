@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
+@RequestMapping("/management/notifications")
 public class NotificationManagementController {
 
     private final NotificationManagementService notificationManagementService;
@@ -25,7 +27,7 @@ public class NotificationManagementController {
         this.notificationManagementService = notificationManagementService;
     }
 
-    @GetMapping("/management/notifications")
+    @GetMapping
     public String manageNotifications(@RequestParam(required = false) Integer page, Model model) {
         model.addAttribute("page_title", "Manage Notifications");
         model.addAttribute("page_subtitle", "Notification Manager");
@@ -42,7 +44,7 @@ public class NotificationManagementController {
         return "management/manage_notifications";
     }
 
-    @GetMapping("/management/notifications/{notification}/report")
+    @GetMapping("/{notification}/report")
     public String notificationReport(@RequestParam(required = false) Integer page, @PathVariable Notification notification, Model model) {
         String templateUrl = "management/notification_report";
         if (notification == null)
@@ -58,7 +60,7 @@ public class NotificationManagementController {
         return templateUrl;
     }
 
-    @GetMapping("/management/notifications/{notification}/delete")
+    @GetMapping("/{notification}/delete")
     public String deleteNotification(@RequestParam(required = false) Integer page, @PathVariable Notification notification, RedirectAttributes redirectAttributes) {
         int currentPage = NotificationUtils.normalizePage(page);
         String redirectUrl = "redirect:/management/notifications?page=" + currentPage;

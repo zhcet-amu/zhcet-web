@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletRequest;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @Controller
+@RequestMapping("/profile")
 public class ProfileController {
 
     private final UserService userService;
@@ -37,7 +39,7 @@ public class ProfileController {
         this.facultyService = facultyService;
     }
 
-    @GetMapping("/profile")
+    @GetMapping
     public String profile(Model model, ServletRequest request) {
         userService.getLoggedInUser().ifPresent(user -> {
             model.addAttribute("user", user);
@@ -63,7 +65,7 @@ public class ProfileController {
         return "user/profile";
     }
 
-    @PostMapping("/profile/details")
+    @PostMapping("/details")
     public String saveProfile(@ModelAttribute @Valid UserDetail userDetail, BindingResult result, RedirectAttributes redirectAttributes) {
         userService.getLoggedInUser().ifPresent(user -> {
             if (result.hasErrors()) {

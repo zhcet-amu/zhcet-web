@@ -8,13 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class AttendanceController {
+public class StudentAttendanceController {
 
     private final StudentService studentService;
     private final AttendanceService attendanceService;
 
     @Autowired
-    public AttendanceController(StudentService studentService, AttendanceService attendanceService) {
+    public StudentAttendanceController(StudentService studentService, AttendanceService attendanceService) {
         this.studentService = studentService;
         this.attendanceService = attendanceService;
     }

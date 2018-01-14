@@ -5,7 +5,6 @@ import amu.zhcet.data.user.Gender;
 import amu.zhcet.data.user.student.HallCode;
 import amu.zhcet.data.user.student.Student;
 import amu.zhcet.data.user.student.StudentStatus;
-import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -25,6 +24,7 @@ import java.util.Optional;
 
 @Slf4j
 @Controller
+@RequestMapping("/dean/students")
 public class StudentEditController {
 
     private final StudentEditService studentEditService;
@@ -35,7 +35,7 @@ public class StudentEditController {
         this.departmentService = departmentService;
     }
 
-    @GetMapping("/dean/students")
+    @GetMapping
     public String students(Model model) {
         model.addAttribute("page_title", "Student Manager");
         model.addAttribute("page_subtitle", "Registered Student Management");
@@ -43,7 +43,7 @@ public class StudentEditController {
         return "dean/students_page";
     }
 
-    @GetMapping("/dean/students/{id}")
+    @GetMapping("{id}")
     public String student(Model model, @PathVariable("id") Student studentModel) {
         Optional.ofNullable(studentModel).ifPresent(student -> {
             model.addAttribute("page_title", "Student Editor");
@@ -62,7 +62,7 @@ public class StudentEditController {
         return "dean/student_edit";
     }
 
-    @PostMapping("/dean/students/{id}")
+    @PostMapping("{id}")
     public String studentPost(RedirectAttributes redirectAttributes, @PathVariable("id") Student studentModel, @Valid StudentEditModel studentEditModel, BindingResult result) {
         Optional.ofNullable(studentModel).ifPresent(student -> {
             if (result.hasErrors()) {
@@ -85,42 +85,6 @@ public class StudentEditController {
         });
 
         return "redirect:/dean/students/{id}";
-    }
-
-    @PostMapping("/dean/student/section") // We use 'student' instead of 'students' so that it does not clash with 'studentPost' method above
-    public String studentSection(RedirectAttributes redirectAttributes, @RequestParam List<String> enrolments, @RequestParam String section) {
-        if (Strings.isNullOrEmpty(section)) {
-            redirectAttributes.addFlashAttribute("section_error", "Section must not be empty");
-            return "redirect:/dean/students";
-        }
-
-        try {
-            studentEditService.changeSections(enrolments, section);
-            redirectAttributes.addFlashAttribute("section_success", "Sections changed successfully");
-        } catch (Exception e) {
-            log.error("Error changing sections", e);
-            redirectAttributes.addFlashAttribute("section_error", "Unknown error while changing sections");
-        }
-
-        return "redirect:/dean/students";
-    }
-
-    @PostMapping("/dean/student/status") // We use 'student' instead of 'students' so that it does not clash with 'studentPost' method above
-    public String studentStatus(RedirectAttributes redirectAttributes, @RequestParam List<String> enrolments, @RequestParam String status) {
-        if (Strings.isNullOrEmpty(status)) {
-            redirectAttributes.addFlashAttribute("section_error", "Status was unchanged");
-            return "redirect:/dean/students";
-        }
-
-        try {
-            studentEditService.changeStatuses(enrolments, status);
-            redirectAttributes.addFlashAttribute("section_success", "Statuses changed successfully");
-        } catch (Exception e) {
-            log.error("Error changing statuses", e);
-            redirectAttributes.addFlashAttribute("section_error", "Unknown error while changing statuses");
-        }
-
-        return "redirect:/dean/students";
     }
 
 }

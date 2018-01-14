@@ -17,12 +17,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
 @Slf4j
 @Controller
+@RequestMapping("/department/{department}/course")
 public class CourseCreationController {
 
     private final CourseService courseService;
@@ -39,7 +41,7 @@ public class CourseCreationController {
                         .build());
     }
 
-    @GetMapping("/department/{department}/course/add")
+    @GetMapping("/add")
     public String addCourse(Model model, @PathVariable Department department) {
         String templateUrl = "department/add_course";
         if (department == null)
@@ -62,7 +64,7 @@ public class CourseCreationController {
         return templateUrl;
     }
 
-    @PostMapping("/department/{department}/course/add")
+    @PostMapping("/add")
     public String postCourse(@PathVariable Department department, @Valid Course course, BindingResult result, RedirectAttributes redirectAttributes) {
         String templateUrl = "redirect:/department/{department}/course/add";
         if (department == null)

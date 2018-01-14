@@ -9,11 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
+@RequestMapping("/notifications")
 public class NotificationController {
 
     private final NotificationReadingService notificationReadingService;
@@ -29,7 +31,7 @@ public class NotificationController {
         model.addAttribute("page_description", "View and manage notifications");
     }
 
-    @GetMapping("/notifications")
+    @GetMapping
     public String getNotifications(@RequestParam(required = false) Integer page, Model model) {
         int currentPage = NotificationUtils.normalizePage(page);
         Page<NotificationRecipient> notificationRecipientPage = notificationReadingService.getNotifications(currentPage);
@@ -42,7 +44,7 @@ public class NotificationController {
         return "user/notifications";
     }
 
-    @GetMapping("/notifications/favorite")
+    @GetMapping("/favorite")
     public String getFavoriteNotifications(@RequestParam(required = false) Integer page, Model model) {
         int currentPage = NotificationUtils.normalizePage(page);
         Page<NotificationRecipient> notificationRecipientPage = notificationReadingService.getFavoriteNotifications(currentPage);
@@ -55,7 +57,7 @@ public class NotificationController {
         return "user/notifications";
     }
 
-    @GetMapping("/notifications/mark/read")
+    @GetMapping("/mark/read")
     public String markRead(@RequestParam(required = false) Integer page, RedirectAttributes redirectAttributes) {
         int currentPage = NotificationUtils.normalizePage(page);
         notificationReadingService.markRead();
@@ -63,7 +65,7 @@ public class NotificationController {
         return "redirect:/notifications?page=" + currentPage;
     }
 
-    @GetMapping("/notifications/{notification}/mark/favorite")
+    @GetMapping("/{notification}/mark/favorite")
     public String markFavorite(@RequestParam(required = false) Integer page, @PathVariable NotificationRecipient notification, RedirectAttributes redirectAttributes) {
         int currentPage = NotificationUtils.normalizePage(page);
 
@@ -72,7 +74,7 @@ public class NotificationController {
         return "redirect:/notifications?page=" + currentPage;
     }
 
-    @GetMapping("/notifications/{notification}/unmark/favorite")
+    @GetMapping("/{notification}/unmark/favorite")
     public String unmarkFavorite(@RequestParam(required = false) Integer page, @PathVariable NotificationRecipient notification, RedirectAttributes redirectAttributes) {
         int currentPage = NotificationUtils.normalizePage(page);
 

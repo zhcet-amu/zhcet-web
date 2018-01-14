@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
+@RequestMapping("/dean/configuration")
 public class ConfigurationController {
 
     private final ModelMapper modelMapper;
@@ -45,7 +47,7 @@ public class ConfigurationController {
         return configuration;
     }
 
-    @GetMapping("/dean/configuration")
+    @GetMapping
     public String configuration(Model model) {
         model.addAttribute("page_title", "Configuration");
         model.addAttribute("page_subtitle", "Configuration Management Panel");
@@ -56,7 +58,7 @@ public class ConfigurationController {
         return "dean/configuration";
     }
 
-    @PostMapping("/dean/configuration")
+    @PostMapping
     public String configurationPost(RedirectAttributes redirectAttributes, @Valid Config config, BindingResult result) {
         String redirectUrl = "redirect:/dean/configuration";
 

@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
@@ -22,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
+@RequestMapping("/dean/roles")
 public class RoleManagementController {
 
     private final RoleManagementService roleManagementService;
@@ -33,7 +31,7 @@ public class RoleManagementController {
         this.facultyService = facultyService;
     }
 
-    @GetMapping("/dean/roles/department/{department}")
+    @GetMapping("/department/{department}")
     public String roleManagement(Model model, @PathVariable Department department) {
         if (department == null)
             throw new AccessDeniedException("403");
@@ -55,7 +53,7 @@ public class RoleManagementController {
         return "dean/role_management";
     }
 
-    @GetMapping("/dean/roles/user/{user}")
+    @GetMapping("/user/{user}")
     public String rolePage(Model model, @PathVariable User user) {
         if (user == null)
             throw new AccessDeniedException("403");
@@ -82,7 +80,7 @@ public class RoleManagementController {
         return "dean/role_management_page";
     }
 
-    @PostMapping("/dean/roles/user/{user}")
+    @PostMapping("/user/{user}")
     public String postRoles(RedirectAttributes redirectAttributes, @PathVariable User user, @RequestParam(required = false) List<String> roles) {
         if (user == null)
             throw new AccessDeniedException("403");

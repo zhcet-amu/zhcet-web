@@ -14,15 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
 @Slf4j
 @Controller
+@RequestMapping("/department/{department}/courses/{course}")
 public class CourseEditController {
 
     private final CourseService courseService;
@@ -43,7 +42,7 @@ public class CourseEditController {
                         .build());
     }
 
-    @GetMapping("/department/{department}/courses/{course}/edit")
+    @GetMapping("/edit")
     public String addCourse(Model model, @PathVariable Department department, @PathVariable Course course) {
         String templateUrl = "department/edit_course";
         if (course == null)
@@ -66,26 +65,26 @@ public class CourseEditController {
         return templateUrl;
     }
 
-    @PostMapping("/department/{department}/courses/{original}/edit")
-    public String postCourse(@PathVariable Department department, @PathVariable Course original, @Valid Course course, BindingResult result, RedirectAttributes redirectAttributes) {
+    @PostMapping("/edit")
+    public String postCourse(@PathVariable Department department, @PathVariable Course course, @RequestParam("course") @Valid Course newCourse, BindingResult result, RedirectAttributes redirectAttributes) {
         String redirectUrl = "redirect:/department/{department}/courses/{original}/edit";
-        if (original == null)
+        if (course == null)
             return redirectUrl;
 
         if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute("course", course);
+            redirectAttributes.addFlashAttribute("course", newCourse);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.course", result);
         } else {
             try {
-                course.setDepartment(department);
-                courseService.updateCourse(original, course);
+                newCourse.setDepartment(department);
+                courseService.updateCourse(course, newCourse);
                 redirectAttributes.addFlashAttribute("course_success", "Course saved successfully!");
 
                 return redirectUrl;
             } catch (UpdateException e) {
                 log.warn("Course Save Error", e);
-                course.setCode(original.getCode());
-                redirectAttributes.addFlashAttribute("course", course);
+                newCourse.setCode(course.getCode());
+                redirectAttributes.addFlashAttribute("course", newCourse);
                 redirectAttributes.addFlashAttribute("course_errors", e.getMessage());
             }
         }
@@ -93,7 +92,7 @@ public class CourseEditController {
         return redirectUrl;
     }
 
-    @GetMapping("/department/{department}/courses/{course}/delete")
+    @GetMapping("/delete")
     public String deleteCourse(@PathVariable Department department, @PathVariable Course course, RedirectAttributes redirectAttributes) {
         if (course == null) {
             log.warn("Course not deletable");

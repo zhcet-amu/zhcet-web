@@ -11,14 +11,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
 
 @Slf4j
 @Controller
+@RequestMapping("/department")
 public class DepartmentController {
 
-    @GetMapping("/department")
+    @GetMapping
     public String department() {
         Optional<CustomUser> customUserOptional = Auditor.getLoggedInUser();
         CustomUser user = customUserOptional.orElseThrow(() -> new AccessDeniedException("403"));
@@ -33,7 +35,7 @@ public class DepartmentController {
                         .build());
     }
 
-    @GetMapping("/department/{department}")
+    @GetMapping("/{department}")
     public String departmentPage(Model model, @PathVariable Department department) {
         String templateUrl = "department/admin";
         Optional.ofNullable(department).ifPresent(dept -> {

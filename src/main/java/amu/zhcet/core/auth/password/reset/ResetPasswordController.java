@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -14,6 +15,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @Controller
+@RequestMapping("/login/password/reset")
 public class ResetPasswordController {
 
     private final PasswordResetService passwordResetService;
@@ -22,7 +24,7 @@ public class ResetPasswordController {
         this.passwordResetService = passwordResetService;
     }
 
-    @GetMapping("/login/password/reset")
+    @GetMapping
     public String resetPassword(Model model, @RequestParam String hash, @RequestParam("auth") String token){
 
         try {
@@ -39,7 +41,7 @@ public class ResetPasswordController {
         return "user/reset_password";
     }
 
-    @PostMapping("/login/password/reset")
+    @PostMapping
     public String savePassword(@Valid PasswordReset passwordReset, RedirectAttributes redirectAttributes) {
         String redirectUrl = String.format("redirect:/login/password/reset?hash=%s&auth=%s", passwordReset.getHash(), passwordReset.getToken());
 

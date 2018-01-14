@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 
 @Slf4j
 @Controller
+@RequestMapping("/management/notification/send")
 public class NotificationSendingController {
 
     private final UserService userService;
@@ -26,7 +28,7 @@ public class NotificationSendingController {
         this.notificationSendingService = notificationSendingService;
     }
 
-    @GetMapping("/management/notification/send")
+    @GetMapping
     public String sendNotification(Model model) {
         userService.getLoggedInUser().ifPresent(user -> {
             model.addAttribute("page_title", "Send Notifications");
@@ -48,7 +50,7 @@ public class NotificationSendingController {
         return "management/send_notification";
     }
 
-    @PostMapping("/management/notification/send")
+    @PostMapping
     public String handleSentNotification(@Valid Notification notification, BindingResult bindingResult, RedirectAttributes redirectAttribute) {
         String redirectUrl = "redirect:/management/notification/send";
 
