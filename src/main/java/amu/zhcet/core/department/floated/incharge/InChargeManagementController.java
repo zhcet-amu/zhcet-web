@@ -1,7 +1,7 @@
 package amu.zhcet.core.department.floated.incharge;
 
 import amu.zhcet.data.course.Course;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.department.Department;
 import amu.zhcet.data.user.faculty.FacultyMember;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +18,12 @@ import java.util.List;
 @Controller
 public class InChargeManagementController {
 
-    private final CourseManagementService courseManagementService;
+    private final FloatedCourseService floatedCourseService;
     private final InChargeManagementService inChargeManagementService;
 
     @Autowired
-    public InChargeManagementController(CourseManagementService courseManagementService, InChargeManagementService inChargeManagementService) {
-        this.courseManagementService = courseManagementService;
+    public InChargeManagementController(FloatedCourseService floatedCourseService, InChargeManagementService inChargeManagementService) {
+        this.floatedCourseService = floatedCourseService;
         this.inChargeManagementService = inChargeManagementService;
     }
 
@@ -33,7 +33,7 @@ public class InChargeManagementController {
                                  @PathVariable Course course,
                                  @RequestParam(required = false) List<FacultyMember> facultyId,
                                  @RequestParam(required = false) List<String> section) {
-        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
+        floatedCourseService.getFloatedCourse(course).ifPresent(floatedCourse -> {
             inChargeManagementService.saveInCharge(floatedCourse, facultyId, section);
 
             redirectAttributes.addFlashAttribute("incharge_success", "Course In-Charge saved successfully");

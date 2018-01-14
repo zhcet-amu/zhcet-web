@@ -5,7 +5,8 @@ import amu.zhcet.common.page.Path;
 import amu.zhcet.common.page.PathChain;
 import amu.zhcet.core.department.course.CoursesController;
 import amu.zhcet.data.course.Course;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.CourseService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.CourseType;
 import amu.zhcet.data.department.Department;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +25,13 @@ import javax.validation.Valid;
 @Controller
 public class CourseEditController {
 
-    private final CourseManagementService courseManagementService;
+    private final CourseService courseService;
+    private final FloatedCourseService floatedCourseService;
 
     @Autowired
-    public CourseEditController(CourseManagementService courseManagementService) {
-        this.courseManagementService = courseManagementService;
+    public CourseEditController(CourseService courseService, FloatedCourseService floatedCourseService) {
+        this.courseService = courseService;
+        this.floatedCourseService = floatedCourseService;
     }
 
     public static PathChain getPath(Department department, Course course) {
@@ -58,7 +61,7 @@ public class CourseEditController {
             model.addAttribute("course", course);
         }
 
-        model.addAttribute("floated", courseManagementService.isFloated(course));
+        model.addAttribute("floated", floatedCourseService.isFloated(course));
 
         return templateUrl;
     }
@@ -75,7 +78,7 @@ public class CourseEditController {
         } else {
             try {
                 course.setDepartment(department);
-                courseManagementService.saveCourse(original, course);
+                courseService.updateCourse(original, course);
                 redirectAttributes.addFlashAttribute("course_success", "Course saved successfully!");
 
                 return redirectUrl;
@@ -96,7 +99,7 @@ public class CourseEditController {
             log.warn("Course not deletable");
             redirectAttributes.addFlashAttribute("course_error", "No such course exists");
         } else {
-            courseManagementService.deleteCourse(course);
+            courseService.deleteCourse(course);
             redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " deleted successfully!");
         }
 

@@ -1,6 +1,6 @@
 package amu.zhcet.core.notification.sending;
 
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.floated.FloatedCourse;
 import amu.zhcet.data.course.incharge.CourseInChargeService;
 import amu.zhcet.data.course.registration.CourseRegistration;
@@ -21,14 +21,14 @@ import java.util.function.Consumer;
 @Service
 class UserExtractor {
 
-    private final CourseManagementService courseManagementService;
+    private final FloatedCourseService floatedCourseService;
     private final CourseInChargeService courseInChargeService;
     private final StudentService studentService;
     private final FacultyService facultyService;
 
     @Autowired
-    UserExtractor(CourseManagementService courseManagementService, CourseInChargeService courseInChargeService, StudentService studentService, FacultyService facultyService) {
-        this.courseManagementService = courseManagementService;
+    UserExtractor(FloatedCourseService floatedCourseService, CourseInChargeService courseInChargeService, StudentService studentService, FacultyService facultyService) {
+        this.floatedCourseService = floatedCourseService;
         this.courseInChargeService = courseInChargeService;
         this.studentService = studentService;
         this.facultyService = facultyService;
@@ -45,7 +45,7 @@ class UserExtractor {
     }
 
     void fromFloatedCourse(String floatedCourseId, Consumer<User> consumer) {
-        Optional<FloatedCourse> floatedCourseOptional = courseManagementService.getFloatedCourseByCode(floatedCourseId);
+        Optional<FloatedCourse> floatedCourseOptional = floatedCourseService.getFloatedCourseByCode(floatedCourseId);
         floatedCourseOptional.ifPresent(floatedCourse -> {
             List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
             sendToCourseRegistrations(courseRegistrations, consumer);

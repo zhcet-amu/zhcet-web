@@ -2,7 +2,7 @@ package amu.zhcet.core.shared.attendance.download;
 
 import amu.zhcet.common.utils.StringUtils;
 import amu.zhcet.data.course.Course;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.incharge.CourseInChargeService;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.department.Department;
@@ -26,13 +26,13 @@ import java.util.List;
 public class AttendanceDownloadController {
 
     private final AttendanceDownloadService attendanceDownloadService;
-    private final CourseManagementService courseManagementService;
+    private final FloatedCourseService floatedCourseService;
     private final CourseInChargeService courseInChargeService;
 
     @Autowired
-    public AttendanceDownloadController(AttendanceDownloadService attendanceDownloadService, CourseManagementService courseManagementService, CourseInChargeService courseInChargeService) {
+    public AttendanceDownloadController(AttendanceDownloadService attendanceDownloadService, FloatedCourseService floatedCourseService, CourseInChargeService courseInChargeService) {
         this.attendanceDownloadService = attendanceDownloadService;
-        this.courseManagementService = courseManagementService;
+        this.floatedCourseService = floatedCourseService;
         this.courseInChargeService = courseInChargeService;
     }
 
@@ -73,7 +73,7 @@ public class AttendanceDownloadController {
     }
 
     private void downloadAttendance(String context, Course course, HttpServletResponse response) {
-        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse ->
+        floatedCourseService.getFloatedCourse(course).ifPresent(floatedCourse ->
                 downloadAttendance(context, course.getCode(), floatedCourse.getCourseRegistrations(), response));
     }
 

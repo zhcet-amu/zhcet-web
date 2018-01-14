@@ -4,7 +4,8 @@ import amu.zhcet.common.page.Path;
 import amu.zhcet.common.page.PathChain;
 import amu.zhcet.core.department.DepartmentController;
 import amu.zhcet.data.course.Course;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.CourseService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.floated.FloatedCourse;
 import amu.zhcet.data.department.Department;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +24,13 @@ import java.util.stream.Collectors;
 @Controller
 public class CoursesController {
 
-    private final CourseManagementService courseManagementService;
+    private final CourseService courseService;
+    private final FloatedCourseService floatedCourseService;
 
     @Autowired
-    public CoursesController(CourseManagementService courseManagementService) {
-        this.courseManagementService = courseManagementService;
+    public CoursesController(CourseService courseService, FloatedCourseService floatedCourseService) {
+        this.courseService = courseService;
+        this.floatedCourseService = floatedCourseService;
     }
 
     public static PathChain getPath(Department department) {
@@ -52,12 +55,12 @@ public class CoursesController {
         model.addAttribute("page_path", getPath(department));
         model.addAttribute("all", !active);
 
-        List<Course> floatedCourses = courseManagementService.getCurrentFloatedCourses(department)
+        List<Course> floatedCourses = floatedCourseService.getCurrentFloatedCourses(department)
                 .stream()
                 .map(FloatedCourse::getCourse)
                 .collect(Collectors.toList());
 
-        List<Course> courses = courseManagementService.getAllActiveCourse(department, active);
+        List<Course> courses = courseService.getAllActiveCourse(department, active);
         courses.forEach(course -> {
             if (floatedCourses.contains(course))
                 course.setMeta("Floated");

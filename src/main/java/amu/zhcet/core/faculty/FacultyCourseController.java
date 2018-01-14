@@ -1,7 +1,7 @@
 package amu.zhcet.core.faculty;
 
 import amu.zhcet.common.utils.SortUtils;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.incharge.CourseInCharge;
 import amu.zhcet.data.course.incharge.CourseInChargeService;
 import amu.zhcet.data.course.registration.CourseRegistration;
@@ -56,7 +56,7 @@ public class FacultyCourseController {
             model.addAttribute("page_description", "Upload attendance for the floated course");
 
             List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-            List<String> emails = CourseManagementService
+            List<String> emails = FloatedCourseService
                     .getEmailsFromCourseRegistrations(courseRegistrations.stream())
                     .collect(Collectors.toList());
             SortUtils.sortCourseAttendance(courseRegistrations);

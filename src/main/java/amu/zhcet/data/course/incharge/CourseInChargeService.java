@@ -1,7 +1,7 @@
 package amu.zhcet.data.course.incharge;
 
 import amu.zhcet.data.config.ConfigurationService;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.floated.FloatedCourse;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.user.faculty.FacultyMember;
@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 public class CourseInChargeService {
 
     private final FacultyService facultyService;
-    private final CourseManagementService courseManagementService;
+    private final FloatedCourseService floatedCourseService;
     private final CourseInChargeRepository courseInChargeRepository;
 
     @Autowired
-    public CourseInChargeService(FacultyService facultyService, CourseManagementService courseManagementService, CourseInChargeRepository courseInChargeRepository) {
+    public CourseInChargeService(FacultyService facultyService, FloatedCourseService floatedCourseService, CourseInChargeRepository courseInChargeRepository) {
         this.facultyService = facultyService;
-        this.courseManagementService = courseManagementService;
+        this.floatedCourseService = floatedCourseService;
         this.courseInChargeRepository = courseInChargeRepository;
     }
 
@@ -96,7 +96,7 @@ public class CourseInChargeService {
         String section = codeAndSection.getRight();
 
         Optional<FacultyMember> facultyMemberOptional = facultyService.getLoggedInMember();
-        Optional<FloatedCourse> floatedCourseOptional = courseManagementService.getFloatedCourseByCode(courseCode);
+        Optional<FloatedCourse> floatedCourseOptional = floatedCourseService.getFloatedCourseByCode(courseCode);
 
         if (facultyMemberOptional.isPresent() && floatedCourseOptional.isPresent())
             return getCourseInCharge(floatedCourseOptional.get(), facultyMemberOptional.get(), section);

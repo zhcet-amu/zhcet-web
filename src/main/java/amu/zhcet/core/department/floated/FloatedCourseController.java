@@ -6,7 +6,7 @@ import amu.zhcet.common.page.PathChain;
 import amu.zhcet.common.utils.SortUtils;
 import amu.zhcet.core.department.course.CoursesController;
 import amu.zhcet.data.course.Course;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.course.registration.CourseRegistrationService;
 import amu.zhcet.data.department.Department;
@@ -30,15 +30,15 @@ import java.util.stream.Collectors;
 public class FloatedCourseController {
 
     private final CourseRegistrationService courseRegistrationService;
-    private final CourseManagementService courseManagementService;
+    private final FloatedCourseService floatedCourseService;
 
     @Autowired
     public FloatedCourseController(
             CourseRegistrationService courseRegistrationService,
-            CourseManagementService courseManagementService
+            FloatedCourseService floatedCourseService
     ) {
         this.courseRegistrationService = courseRegistrationService;
-        this.courseManagementService = courseManagementService;
+        this.floatedCourseService = floatedCourseService;
     }
 
     public static PathChain getPath(Department department, Course course) {
@@ -57,7 +57,7 @@ public class FloatedCourseController {
         if (department == null)
             return templateUrl;
 
-        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
+        floatedCourseService.getFloatedCourse(course).ifPresent(floatedCourse -> {
             if (!model.containsAttribute("success"))
                 webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
 
@@ -67,13 +67,13 @@ public class FloatedCourseController {
             model.addAttribute("page_path", getPath(department, course));
 
             List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-            List<String> emails = CourseManagementService
+            List<String> emails = FloatedCourseService
                     .getEmailsFromCourseRegistrations(courseRegistrations.stream())
                     .collect(Collectors.toList());
             SortUtils.sortCourseAttendance(courseRegistrations);
             model.addAttribute("courseRegistrations", courseRegistrations);
             model.addAttribute("floatedCourse", floatedCourse);
-            model.addAttribute("sections", CourseManagementService.getSections(floatedCourse));
+            model.addAttribute("sections", FloatedCourseService.getSections(floatedCourse));
             model.addAttribute("email_list", emails);
         });
 
@@ -94,8 +94,8 @@ public class FloatedCourseController {
     public String unfloat(RedirectAttributes redirectAttributes, @PathVariable Department department, @PathVariable Course course) {
         String redirectUrl = "redirect:/department/{department}/courses?active=true";
 
-        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
-            courseManagementService.unfloatCourse(floatedCourse);
+        floatedCourseService.getFloatedCourse(course).ifPresent(floatedCourse -> {
+            floatedCourseService.unfloatCourse(floatedCourse);
             redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " unfloated successfully!");
         });
 

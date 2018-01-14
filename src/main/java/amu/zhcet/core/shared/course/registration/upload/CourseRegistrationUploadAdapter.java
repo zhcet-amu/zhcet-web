@@ -2,7 +2,7 @@ package amu.zhcet.core.shared.course.registration.upload;
 
 import amu.zhcet.common.utils.StringUtils;
 import amu.zhcet.data.course.Course;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.floated.FloatedCourse;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.user.student.Student;
@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 class CourseRegistrationUploadAdapter {
 
-    private final CourseManagementService courseManagementService;
+    private final FloatedCourseService floatedCourseService;
     private final StudentService studentService;
     private final AbstractUploadService<RegistrationUpload, CourseRegistration> uploadService;
 
@@ -34,8 +34,8 @@ class CourseRegistrationUploadAdapter {
     }
 
     @Autowired
-    public CourseRegistrationUploadAdapter(CourseManagementService courseManagementService, StudentService studentService, AbstractUploadService<RegistrationUpload, CourseRegistration> uploadService) {
-        this.courseManagementService = courseManagementService;
+    public CourseRegistrationUploadAdapter(FloatedCourseService floatedCourseService, StudentService studentService, AbstractUploadService<RegistrationUpload, CourseRegistration> uploadService) {
+        this.floatedCourseService = floatedCourseService;
         this.studentService = studentService;
         this.uploadService = uploadService;
     }
@@ -47,7 +47,7 @@ class CourseRegistrationUploadAdapter {
     Confirmation<CourseRegistration> uploadToConfirmation(Course course, UploadResult<RegistrationUpload> uploadResult) {
         ErrorConditions conditions = new ErrorConditions();
 
-        return courseManagementService.getFloatedCourse(course)
+        return floatedCourseService.getFloatedCourse(course)
                 .map(FloatedCourse::getCourseRegistrations)
                 .map(registrations -> uploadService.confirmUpload(uploadResult)
                         .convert(this::fromRegistrationUpload)

@@ -4,7 +4,7 @@ import amu.zhcet.common.flash.Flash;
 import amu.zhcet.common.utils.SortUtils;
 import amu.zhcet.common.utils.Utils;
 import amu.zhcet.data.course.Course;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.course.registration.CourseRegistrationService;
 import amu.zhcet.data.user.student.Student;
@@ -26,15 +26,15 @@ import java.util.stream.Collectors;
 @Controller
 public class FloatedCourseEditController {
 
-    private final CourseManagementService courseManagementService;
+    private final FloatedCourseService floatedCourseService;
     private final CourseRegistrationService courseRegistrationService;
 
     @Autowired
     public FloatedCourseEditController(
-            CourseManagementService courseManagementService,
+            FloatedCourseService floatedCourseService,
             CourseRegistrationService courseRegistrationService
     ) {
-        this.courseManagementService = courseManagementService;
+        this.floatedCourseService = floatedCourseService;
         this.courseRegistrationService = courseRegistrationService;
     }
 
@@ -49,7 +49,7 @@ public class FloatedCourseEditController {
     @GetMapping("dean/floated/{course}")
     public String courseDetail(Model model, @PathVariable Course course, WebRequest webRequest) {
         String templateUrl = "dean/floated_course";
-        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
+        floatedCourseService.getFloatedCourse(course).ifPresent(floatedCourse -> {
             if (!model.containsAttribute("success"))
                 webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
 
@@ -58,7 +58,7 @@ public class FloatedCourseEditController {
             model.addAttribute("page_description", "Register Students for the Floated course");
 
             List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-            List<String> emails = CourseManagementService
+            List<String> emails = FloatedCourseService
                     .getEmailsFromCourseRegistrations(courseRegistrations.stream())
                     .collect(Collectors.toList());
             SortUtils.sortCourseAttendance(courseRegistrations);

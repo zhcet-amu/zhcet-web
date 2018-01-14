@@ -1,7 +1,7 @@
 package amu.zhcet.core.shared.course.registration.upload;
 
 import amu.zhcet.data.course.Course;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.storage.csv.Confirmation;
 import amu.zhcet.storage.csv.UploadResult;
@@ -21,12 +21,12 @@ import java.util.List;
 @Service
 class CourseRegistrationUploadService {
 
-    private final CourseManagementService courseManagementService;
+    private final FloatedCourseService floatedCourseService;
     private final CourseRegistrationUploadAdapter courseRegistrationUploadAdapter;
 
     @Autowired
-    public CourseRegistrationUploadService(CourseManagementService courseManagementService, CourseRegistrationUploadAdapter courseRegistrationUploadAdapter) {
-        this.courseManagementService = courseManagementService;
+    public CourseRegistrationUploadService(FloatedCourseService floatedCourseService, CourseRegistrationUploadAdapter courseRegistrationUploadAdapter) {
+        this.floatedCourseService = floatedCourseService;
         this.courseRegistrationUploadAdapter = courseRegistrationUploadAdapter;
     }
 
@@ -66,7 +66,7 @@ class CourseRegistrationUploadService {
 
     @Transactional
     public void registerStudents(Course course, Confirmation<CourseRegistration> confirmation) {
-        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
+        floatedCourseService.getFloatedCourse(course).ifPresent(floatedCourse -> {
             List<CourseRegistration> registrations = new ArrayList<>();
 
             for (CourseRegistration registration : confirmation.getData()) {
@@ -76,7 +76,7 @@ class CourseRegistrationUploadService {
             }
 
             floatedCourse.getCourseRegistrations().addAll(registrations);
-            courseManagementService.save(floatedCourse);
+            floatedCourseService.save(floatedCourse);
         });
     }
 

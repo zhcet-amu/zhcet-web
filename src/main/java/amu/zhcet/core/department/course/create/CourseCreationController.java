@@ -5,7 +5,8 @@ import amu.zhcet.common.page.Path;
 import amu.zhcet.common.page.PathChain;
 import amu.zhcet.core.department.course.CoursesController;
 import amu.zhcet.data.course.Course;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.CourseService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.CourseType;
 import amu.zhcet.data.department.Department;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +25,11 @@ import javax.validation.Valid;
 @Controller
 public class CourseCreationController {
 
-    private final CourseManagementService courseManagementService;
+    private final CourseService courseService;
 
     @Autowired
-    public CourseCreationController(CourseManagementService courseManagementService) {
-        this.courseManagementService = courseManagementService;
+    public CourseCreationController(CourseService courseService, FloatedCourseService floatedCourseService) {
+        this.courseService = courseService;
     }
 
     public static PathChain getPath(Department department) {
@@ -73,7 +74,7 @@ public class CourseCreationController {
         } else {
             try {
                 course.setDepartment(department);
-                courseManagementService.addCourse(course);
+                courseService.addCourse(course);
                 redirectAttributes.addFlashAttribute("course_success", "Course created successfully!");
 
                 return "redirect:/department/{department}/courses?active=true";

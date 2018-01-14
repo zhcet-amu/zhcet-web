@@ -6,7 +6,8 @@ import amu.zhcet.core.notification.NotificationRepository;
 import amu.zhcet.core.notification.recipient.NotificationRecipient;
 import amu.zhcet.core.notification.recipient.NotificationRecipientRepository;
 import amu.zhcet.data.course.Course;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.CourseService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.user.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,14 @@ import static org.springframework.security.core.authority.AuthorityUtils.createA
 public class PermissionManager {
 
     private final RoleHierarchy roleHierarchy;
-    private final CourseManagementService courseManagementService;
+    private final CourseService courseService;
     private final NotificationRepository notificationRepository;
     private final NotificationRecipientRepository notificationRecipientRepository;
 
     @Autowired
-    public PermissionManager(RoleHierarchy roleHierarchy, CourseManagementService courseManagementService, NotificationRepository notificationRepository, NotificationRecipientRepository notificationRecipientRepository) {
+    public PermissionManager(RoleHierarchy roleHierarchy, CourseService courseService, FloatedCourseService floatedCourseService, NotificationRepository notificationRepository, NotificationRecipientRepository notificationRecipientRepository) {
         this.roleHierarchy = roleHierarchy;
-        this.courseManagementService = courseManagementService;
+        this.courseService = courseService;
         this.notificationRepository = notificationRepository;
         this.notificationRecipientRepository = notificationRecipientRepository;
     }
@@ -65,7 +66,7 @@ public class PermissionManager {
     }
 
     public boolean checkCourse(Authentication user, String departmentCode, String courseCode) {
-        Course course = courseManagementService.getCourse(courseCode);
+        Course course = courseService.getCourse(courseCode);
         return checkDepartment(user, departmentCode) && (course == null || course.getDepartment().getCode().equals(departmentCode));
     }
 

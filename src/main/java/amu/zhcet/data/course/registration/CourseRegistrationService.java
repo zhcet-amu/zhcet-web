@@ -3,7 +3,7 @@ package amu.zhcet.data.course.registration;
 import amu.zhcet.data.attendance.Attendance;
 import amu.zhcet.data.attendance.AttendanceUpload;
 import amu.zhcet.data.course.Course;
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.floated.FloatedCourse;
 import amu.zhcet.data.user.student.Student;
 import lombok.extern.slf4j.Slf4j;
@@ -17,17 +17,17 @@ import java.util.Optional;
 @Service
 public class CourseRegistrationService {
 
-    private final CourseManagementService courseManagementService;
+    private final FloatedCourseService floatedCourseService;
     private final CourseRegistrationRepository courseRegistrationRepository;
 
     @Autowired
-    public CourseRegistrationService(CourseManagementService courseManagementService, CourseRegistrationRepository courseRegistrationRepository) {
-        this.courseManagementService = courseManagementService;
+    public CourseRegistrationService(FloatedCourseService floatedCourseService, CourseRegistrationRepository courseRegistrationRepository) {
+        this.floatedCourseService = floatedCourseService;
         this.courseRegistrationRepository = courseRegistrationRepository;
     }
 
     private Optional<CourseRegistration> getByStudentAndCourse(String enrolment, Course course) {
-        Optional<FloatedCourse> floatedCourseOptional = courseManagementService.getFloatedCourse(course);
+        Optional<FloatedCourse> floatedCourseOptional = floatedCourseService.getFloatedCourse(course);
         return floatedCourseOptional.flatMap(floatedCourse ->
                 courseRegistrationRepository.findByStudent_EnrolmentNumberAndFloatedCourse(enrolment, floatedCourse));
     }
@@ -53,7 +53,7 @@ public class CourseRegistrationService {
     }
 
     public void removeRegistration(Course course, Student student) {
-        courseManagementService.getFloatedCourse(course)
+        floatedCourseService.getFloatedCourse(course)
                 .flatMap(floatedCourse -> courseRegistrationRepository.findByStudentAndFloatedCourse(student, floatedCourse))
                 .ifPresent(courseRegistrationRepository::delete);
     }

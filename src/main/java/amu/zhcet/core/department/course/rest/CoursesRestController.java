@@ -1,9 +1,9 @@
-package amu.zhcet.core.department.course;
+package amu.zhcet.core.department.course.rest;
 
-import amu.zhcet.data.course.CourseManagementService;
+import amu.zhcet.data.course.CourseService;
 import amu.zhcet.data.course.floated.FloatedCourse;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.department.Department;
-import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,22 +17,14 @@ import java.util.stream.Collectors;
 public class CoursesRestController {
 
     private final ModelMapper modelMapper;
-    private final CourseManagementService courseManagementService;
+    private final CourseService courseService;
+    private final FloatedCourseService floatedCourseService;
 
     @Autowired
-    public CoursesRestController(ModelMapper modelMapper, CourseManagementService courseManagementService) {
+    public CoursesRestController(ModelMapper modelMapper, CourseService courseService, FloatedCourseService floatedCourseService) {
         this.modelMapper = modelMapper;
-        this.courseManagementService = courseManagementService;
-    }
-
-    @Data
-    private static class CourseDto {
-        private String code;
-        private String title;
-        private Integer semester;
-        private String category;
-        private Float credits;
-        private boolean floated;
+        this.courseService = courseService;
+        this.floatedCourseService = floatedCourseService;
     }
 
     private CourseDto attachStatus(CourseDto courseDto, List<FloatedCourse> floatedCourses) {
@@ -45,8 +37,8 @@ public class CoursesRestController {
         if (department == null)
             return null;
 
-        List<FloatedCourse> floatedCourses = courseManagementService.getCurrentFloatedCourses(department);
-        return courseManagementService.getAllActiveCourse(department, true)
+        List<FloatedCourse> floatedCourses = floatedCourseService.getCurrentFloatedCourses(department);
+        return courseService.getAllActiveCourse(department, true)
                 .stream()
                 .map(course -> modelMapper.map(course, CourseDto.class))
                 .map(courseDto -> attachStatus(courseDto, floatedCourses))
