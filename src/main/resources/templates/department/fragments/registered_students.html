@@ -30,9 +30,10 @@
                     <p>If you wish to continue, please click the delete button</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
-                    <form id="delete-link" method="post" th:action="@{|./${floatedCourse.course.code}/remove/|}">
-                        <button type="submit" id="delete-button" class="btn btn-outline-danger">Delete</button>
+                    <form method="post" th:action="@{|./${floatedCourse.course.code}/unregister|}">
+                        <input id="student-to-delete" type="text" name="student" hidden style="display: inline">
+                        <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-outline-danger">Delete</button>
                     </form>
                 </div>
             </div>

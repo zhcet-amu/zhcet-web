@@ -19,9 +19,8 @@
         var enrolment = student.attr('data-enrolment');
 
         deleteModal.find('#remove-student-id').text(enrolment);
-        var deleteForm = deleteModal.find('#delete-link');
-        var action = deleteForm.attr('action');
-        deleteForm.attr('action', action + enrolment);
+        var deleteInput = deleteModal.find('#student-to-delete');
+        deleteInput.val(enrolment);
 
         deleteModal.modal();
     });

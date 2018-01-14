@@ -15,9 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -27,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
+@RequestMapping("department/{department}/floated/{course}")
 public class FloatedCourseController {
 
     private final CourseRegistrationService courseRegistrationService;
@@ -51,7 +50,7 @@ public class FloatedCourseController {
                         .build());
     }
 
-    @GetMapping("department/{department}/floated/{course}")
+    @GetMapping
     public String courseDetail(Model model, @PathVariable Department department, @PathVariable Course course, WebRequest webRequest) {
         String templateUrl = "department/floated_course";
         if (department == null)
@@ -80,8 +79,8 @@ public class FloatedCourseController {
         return templateUrl;
     }
 
-    @PostMapping("department/{department}/floated/{course}/remove/{student}")
-    public String removeStudent(RedirectAttributes attributes, @PathVariable Department department, @PathVariable Course course, @PathVariable Student student) {
+    @PostMapping("/unregister")
+    public String removeStudent(RedirectAttributes attributes, @PathVariable Department department, @PathVariable Course course, @RequestParam Student student) {
         if (course != null && student != null) {
             courseRegistrationService.removeRegistration(course, student);
             attributes.addFlashAttribute("flash_messages", Flash.success("Student removed from course"));
@@ -90,7 +89,7 @@ public class FloatedCourseController {
         return "redirect:/department/{department}/floated/{course}";
     }
 
-    @GetMapping("department/{department}/floated/{course}/unfloat")
+    @PostMapping("/unfloat")
     public String unfloat(RedirectAttributes redirectAttributes, @PathVariable Department department, @PathVariable Course course) {
         String redirectUrl = "redirect:/department/{department}/courses?active=true";
 
