@@ -2,9 +2,9 @@ package amu.zhcet.core.dean.datatables.floated;
 
 import amu.zhcet.core.dean.datatables.DataTableUtils;
 import amu.zhcet.data.config.ConfigurationService;
+import amu.zhcet.data.course.CourseManagementService;
 import amu.zhcet.data.course.floated.FloatedCourse;
 import amu.zhcet.data.course.floated.FloatedCourseRepository;
-import amu.zhcet.data.course.incharge.CourseInChargeService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +21,11 @@ public class FloatedDataTableController {
 
     private final ModelMapper modelMapper;
     private final FloatedCourseRepository floatedCourseRepository;
-    private final CourseInChargeService courseInChargeService;
 
     @Autowired
-    public FloatedDataTableController(ModelMapper modelMapper, FloatedCourseRepository floatedCourseRepository, CourseInChargeService courseInChargeService) {
+    public FloatedDataTableController(ModelMapper modelMapper, FloatedCourseRepository floatedCourseRepository) {
         this.modelMapper = modelMapper;
         this.floatedCourseRepository = floatedCourseRepository;
-        this.courseInChargeService = courseInChargeService;
     }
 
     @JsonView(DataTablesOutput.View.class)
@@ -43,7 +41,7 @@ public class FloatedDataTableController {
     private FloatedCourseView fromFloatedCourse(FloatedCourse floatedCourse) {
         FloatedCourseView floatedCourseView = modelMapper.map(floatedCourse, FloatedCourseView.class);
         floatedCourseView.setNumStudents(floatedCourse.getCourseRegistrations().size());
-        floatedCourseView.setSections(courseInChargeService.getSections(floatedCourse).toString());
+        floatedCourseView.setSections(CourseManagementService.getSections(floatedCourse).toString());
 
         return floatedCourseView;
     }

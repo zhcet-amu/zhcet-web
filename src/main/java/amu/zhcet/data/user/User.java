@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true, exclude="details")
-@ToString(exclude = "password")
+@ToString(of = {"userId", "name", "department"})
 public class User extends BaseEntity {
 
     @Id

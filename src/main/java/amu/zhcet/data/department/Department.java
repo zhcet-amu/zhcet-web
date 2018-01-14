@@ -18,6 +18,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ToString(of = {"code", "name"})
 public class Department extends BaseEntity implements Serializable {
     @Id
     @NotBlank

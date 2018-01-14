@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@ToString(of = {"facultyId", "user", "designation"})
 public class FacultyMember extends BaseEntity {
 
     @Id

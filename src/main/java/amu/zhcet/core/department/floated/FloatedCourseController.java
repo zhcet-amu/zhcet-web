@@ -7,12 +7,9 @@ import amu.zhcet.common.utils.SortUtils;
 import amu.zhcet.core.department.course.CoursesController;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.CourseManagementService;
-import amu.zhcet.data.course.incharge.CourseInCharge;
-import amu.zhcet.data.course.incharge.CourseInChargeService;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.course.registration.CourseRegistrationService;
 import amu.zhcet.data.department.Department;
-import amu.zhcet.data.user.faculty.FacultyMember;
 import amu.zhcet.data.user.student.Student;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +18,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,17 +29,14 @@ import java.util.stream.Collectors;
 @Controller
 public class FloatedCourseController {
 
-    private final CourseInChargeService courseInChargeService;
     private final CourseRegistrationService courseRegistrationService;
     private final CourseManagementService courseManagementService;
 
     @Autowired
     public FloatedCourseController(
-            CourseInChargeService courseInChargeService,
             CourseRegistrationService courseRegistrationService,
             CourseManagementService courseManagementService
     ) {
-        this.courseInChargeService = courseInChargeService;
         this.courseRegistrationService = courseRegistrationService;
         this.courseManagementService = courseManagementService;
     }
@@ -82,7 +73,7 @@ public class FloatedCourseController {
             SortUtils.sortCourseAttendance(courseRegistrations);
             model.addAttribute("courseRegistrations", courseRegistrations);
             model.addAttribute("floatedCourse", floatedCourse);
-            model.addAttribute("sections", courseInChargeService.getSections(floatedCourse));
+            model.addAttribute("sections", CourseManagementService.getSections(floatedCourse));
             model.addAttribute("email_list", emails);
         });
 
@@ -108,47 +99,6 @@ public class FloatedCourseController {
             redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " unfloated successfully!");
         });
 
-        return redirectUrl;
-    }
-
-    private CourseInCharge create(String facultyId, String section) {
-        CourseInCharge courseInCharge = new CourseInCharge();
-        courseInCharge.setSection(section);
-        courseInCharge.setFacultyMember(FacultyMember.builder().facultyId(facultyId).build());
-
-        return courseInCharge;
-    }
-
-    private List<CourseInCharge> merge(List<String> facultyId, List<String> section) {
-        if (section == null)
-            section = Collections.nCopies(facultyId.size(), null);
-        if (facultyId.size() < section.size())
-            return null;
-
-        List<CourseInCharge> courseInCharges = new ArrayList<>();
-        for (int i = 0; i < section.size(); i++)
-            courseInCharges.add(create(facultyId.get(i), section.get(i)));
-
-        for (int i = section.size(); i < facultyId.size(); i++)
-            courseInCharges.add(create(facultyId.get(i), null));
-
-        return courseInCharges;
-    }
-
-    @PostMapping("department/{department}/floated/{course}/in_charge")
-    public String addInCharge(RedirectAttributes redirectAttributes, @PathVariable Department department, @PathVariable Course course, @RequestParam(required = false) List<String> facultyId, @RequestParam(required = false) List<String> section) {
-        String redirectUrl = "redirect:/department/{department}/floated/{course}";
-        if (course == null)
-            return redirectUrl;
-
-        if (facultyId == null) {
-            log.warn("Removed all course in charges : Course-{} Sections-{}", course.getCode(), section);
-            courseInChargeService.setInCharge(course, Collections.emptyList());
-        } else {
-            courseInChargeService.setInCharge(course, merge(facultyId, section));
-        }
-
-        redirectAttributes.addFlashAttribute("incharge_success", "Course In-Charge saved successfully");
         return redirectUrl;
     }
 

@@ -15,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -110,5 +113,14 @@ public class CourseManagementService {
 
     public void save(FloatedCourse floatedCourse) {
         floatedCourseRepository.save(floatedCourse);
+    }
+
+    public static Set<String> getSections(FloatedCourse floatedCourse) {
+        if (floatedCourse == null)
+            return Collections.emptySet();
+
+        return floatedCourse.getCourseRegistrations().stream()
+                .map(courseRegistration -> courseRegistration.getStudent().getSection())
+                .collect(Collectors.toSet());
     }
 }

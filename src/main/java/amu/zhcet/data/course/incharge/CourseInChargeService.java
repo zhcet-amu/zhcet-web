@@ -1,10 +1,8 @@
 package amu.zhcet.data.course.incharge;
 
 import amu.zhcet.data.config.ConfigurationService;
-import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.CourseManagementService;
 import amu.zhcet.data.course.floated.FloatedCourse;
-import amu.zhcet.data.course.floated.FloatedCourseRepository;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.user.faculty.FacultyMember;
 import amu.zhcet.data.user.faculty.FacultyService;
@@ -15,7 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -23,64 +22,37 @@ import java.util.stream.Collectors;
 public class CourseInChargeService {
 
     private final FacultyService facultyService;
-    private final FloatedCourseRepository floatedCourseRepository;
     private final CourseManagementService courseManagementService;
     private final CourseInChargeRepository courseInChargeRepository;
 
     @Autowired
-    public CourseInChargeService(FacultyService facultyService, FloatedCourseRepository floatedCourseRepository, CourseManagementService courseManagementService, CourseInChargeRepository courseInChargeRepository) {
+    public CourseInChargeService(FacultyService facultyService, CourseManagementService courseManagementService, CourseInChargeRepository courseInChargeRepository) {
         this.facultyService = facultyService;
-        this.floatedCourseRepository = floatedCourseRepository;
         this.courseManagementService = courseManagementService;
         this.courseInChargeRepository = courseInChargeRepository;
     }
 
-    @Transactional
-    public void setInCharge(Course course, List<CourseInCharge> courseInCharges) {
-        if (courseInCharges == null)
-            return;
-
-        courseManagementService.getFloatedCourse(course).ifPresent(floatedCourse -> {
-            for (CourseInCharge inCharge : floatedCourse.getInCharge()) {
-                if (!courseInCharges.contains(inCharge))
-                    courseInChargeRepository.delete(inCharge.getId());
-            }
-
-            floatedCourse.getInCharge().clear();
-
-            for (CourseInCharge courseInCharge : courseInCharges)
-                addInCharge(floatedCourse, courseInCharge.getFacultyMember().getFacultyId(), Strings.emptyToNull(courseInCharge.getSection()));
-        });
+    public static boolean sameCourseInCharge(CourseInCharge c1, CourseInCharge c2) {
+        return c1.getFacultyMember().equals(c2.getFacultyMember()) && c1.getFloatedCourse().equals(c2.getFloatedCourse());
     }
 
-    private void addInCharge(FloatedCourse stored, String facultyId, String section) {
-        Optional<FacultyMember> facultyMemberOptional = facultyService.getById(facultyId);
-        facultyMemberOptional.ifPresent(facultyMember -> {
-            Optional<CourseInCharge> inChargeOptional = getCourseInCharge(stored, facultyMember, section);
-            inChargeOptional.ifPresent(courseInCharge -> log.error("In-charge already present : {} {} {}",
-                    stored.getCourse().getCode(), facultyMember.getFacultyId(), section));
-            inChargeOptional.orElseGet(() -> {
-                CourseInCharge courseInCharge = new CourseInCharge();
-                courseInCharge.setFacultyMember(facultyMember);
-                courseInCharge.setFloatedCourse(stored);
-                courseInCharge.setSection(section);
+    @Transactional
+    public void deleteCourseInCharge(CourseInCharge courseInCharge) {
+        log.info("Deleting Course In-Charge : {}", courseInCharge);
+        courseInChargeRepository.delete(courseInCharge);
+    }
 
-                stored.getInCharge().add(courseInCharge);
-                floatedCourseRepository.save(stored);
-
-                return courseInCharge;
-            });
-        });
-        if (!facultyMemberOptional.isPresent()) {
-            log.error("No such faculty member : {}", facultyId);
-        }
+    @Transactional
+    public void saveCourseInCharge(CourseInCharge courseInCharge) {
+        log.info("Saving Course In-Charge : {}", courseInCharge);
+        courseInChargeRepository.save(courseInCharge);
     }
 
     public List<CourseInCharge> getCourseByFaculty(FacultyMember facultyMember) {
         return courseInChargeRepository.findByFacultyMemberAndFloatedCourse_Session(facultyMember, ConfigurationService.getDefaultSessionCode());
     }
 
-    public Optional<CourseInCharge> getCourseInCharge(FloatedCourse floatedCourse, FacultyMember facultyMember, String section) {
+    private Optional<CourseInCharge> getCourseInCharge(FloatedCourse floatedCourse, FacultyMember facultyMember, String section) {
         if (floatedCourse == null || facultyMember == null)
             return Optional.empty();
         return courseInChargeRepository.findByFloatedCourseAndFacultyMemberAndSection(floatedCourse, facultyMember, Strings.emptyToNull(section));
@@ -110,7 +82,7 @@ public class CourseInChargeService {
         return Pair.of(left, right);
     }
 
-    static boolean isInvalidCodeAndSection(Pair<String, String> codeAndSection) {
+    private static boolean isInvalidCodeAndSection(Pair<String, String> codeAndSection) {
         return codeAndSection.getLeft() == null;
     }
 
@@ -125,30 +97,26 @@ public class CourseInChargeService {
 
         Optional<FacultyMember> facultyMemberOptional = facultyService.getLoggedInMember();
         Optional<FloatedCourse> floatedCourseOptional = courseManagementService.getFloatedCourseByCode(courseCode);
-        if (!facultyMemberOptional.isPresent() || !floatedCourseOptional.isPresent())
-            return Optional.empty();
 
-        return getCourseInCharge(floatedCourseOptional.get(), facultyMemberOptional.get(), section);
+        if (facultyMemberOptional.isPresent() && floatedCourseOptional.isPresent())
+            return getCourseInCharge(floatedCourseOptional.get(), facultyMemberOptional.get(), section);
+
+        return Optional.empty();
     }
 
     public List<CourseRegistration> getCourseRegistrations(CourseInCharge courseInCharge) {
         String section = Strings.emptyToNull(courseInCharge.getSection());
         if (section == null) // Allow all registrations
-            return courseInCharge.getFloatedCourse().getCourseRegistrations();
+            return courseInCharge
+                    .getFloatedCourse()
+                    .getCourseRegistrations();
         else
-            return courseInCharge.getFloatedCourse().getCourseRegistrations()
-                .stream()
-                .filter(courseRegistration -> courseRegistration.getStudent().getSection().equals(section))
-                .collect(Collectors.toList());
-    }
-
-    public Set<String> getSections(FloatedCourse floatedCourse) {
-        if (floatedCourse == null)
-            return Collections.emptySet();
-
-        return floatedCourse.getCourseRegistrations().stream()
-                .map(courseRegistration -> courseRegistration.getStudent().getSection())
-                .collect(Collectors.toSet());
+            return courseInCharge
+                    .getFloatedCourse()
+                    .getCourseRegistrations()
+                    .stream()
+                    .filter(courseRegistration -> courseRegistration.getStudent().getSection().equals(section))
+                    .collect(Collectors.toList());
     }
 
 }

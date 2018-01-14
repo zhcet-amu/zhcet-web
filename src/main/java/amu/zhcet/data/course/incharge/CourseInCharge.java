@@ -5,6 +5,8 @@ import amu.zhcet.data.course.floated.FloatedCourse;
 import amu.zhcet.data.user.faculty.FacultyMember;
 import com.google.common.base.Strings;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.envers.Audited;
 
@@ -17,6 +19,8 @@ import javax.validation.constraints.NotNull;
 @Slf4j
 @Entity
 @Audited
+@EqualsAndHashCode(of = {"floatedCourse", "facultyMember", "section"}, callSuper = false)
+@ToString(of = {"facultyMember", "floatedCourse", "section"}, callSuper = true)
 public class CourseInCharge extends BaseIdEntity {
 
     @NotNull
@@ -35,21 +39,6 @@ public class CourseInCharge extends BaseIdEntity {
         String section = getSection();
         String suffix = Strings.emptyToNull(section) == null ? "" : ":" + section;
         return course + suffix;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof CourseInCharge))
-            return false;
-
-        CourseInCharge inCharge2 = (CourseInCharge) o;
-        if (!getFacultyMember().getFacultyId().equals(inCharge2.getFacultyMember().getFacultyId()))
-            return false;
-        if (getSection() == null && inCharge2.getSection() == null)
-            return true;
-        if ((getSection() == null && inCharge2.getSection() != null) || (getSection() != null && inCharge2.getSection() == null))
-            return false;
-        return (getSection().equals(inCharge2.getSection()));
     }
 
 }

@@ -4,6 +4,7 @@ import amu.zhcet.common.model.BaseEntity;
 import amu.zhcet.data.department.Department;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotBlank;
@@ -16,6 +17,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Audited
 @EqualsAndHashCode(callSuper = true)
+@ToString(of = {"code", "title", "department"})
 public class Course extends BaseEntity {
 
     @Id

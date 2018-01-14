@@ -20,7 +20,7 @@ import java.util.List;
 @Audited
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"courseRegistrations", "inCharge"})
+@ToString(of = {"id", "course"})
 @EqualsAndHashCode(callSuper = true)
 public class FloatedCourse extends BaseEntity implements Serializable {
     @Id
@@ -35,7 +35,7 @@ public class FloatedCourse extends BaseEntity implements Serializable {
     @NaturalId
     private String session;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "floatedCourse")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "floatedCourse")
     private List<CourseInCharge> inCharge;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "floatedCourse")
