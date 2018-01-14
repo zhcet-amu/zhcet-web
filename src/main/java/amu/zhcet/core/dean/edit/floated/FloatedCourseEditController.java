@@ -3,6 +3,7 @@ package amu.zhcet.core.dean.edit.floated;
 import amu.zhcet.common.flash.Flash;
 import amu.zhcet.common.utils.SortUtils;
 import amu.zhcet.common.utils.Utils;
+import amu.zhcet.data.config.ConfigurationService;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.registration.CourseRegistration;
@@ -40,7 +41,7 @@ public class FloatedCourseEditController {
 
     @GetMapping("/dean/floated")
     public String students(Model model) {
-        model.addAttribute("page_title", "Floated Courses - " + Utils.getDefaultSessionName());
+        model.addAttribute("page_title", "Floated Courses - " + Utils.getSessionName(ConfigurationService.getDefaultSessionCode()));
         model.addAttribute("page_subtitle", "This session's floated courses");
         model.addAttribute("page_description", "Search and view this session's floated courses for all departments");
         return "dean/floated_page";
