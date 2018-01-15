@@ -1,5 +1,6 @@
 package amu.zhcet.email;
 
+import amu.zhcet.common.utils.ConsoleHelper;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class EmailService{
         this.senderEmail = emailProperties.getAddress();
 
         if (disabled) {
-            log.warn("CONFIG (Email): Email sending is disabled");
+            log.warn(ConsoleHelper.red("CONFIG (Email): Email sending is disabled"));
         }
     }
 

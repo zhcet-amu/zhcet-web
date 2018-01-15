@@ -1,5 +1,6 @@
 package amu.zhcet.firebase;
 
+import amu.zhcet.common.utils.ConsoleHelper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Bucket;
 import com.google.common.base.Strings;
@@ -32,17 +33,17 @@ public class FirebaseService {
         messagingServerKey = firebase.getMessagingServerKey();
 
         if (disabled) {
-            log.warn("CONFIG (Firebase): Firebase is disabled");
+            log.warn(ConsoleHelper.red("CONFIG (Firebase): Firebase is disabled"));
             return;
         }
 
         if (Strings.isNullOrEmpty(messagingServerKey)) {
-            log.warn("CONFIG (Firebase Messaging): Firebase Messaging Server Key not found!");
+            log.warn(ConsoleHelper.red("CONFIG (Firebase Messaging): Firebase Messaging Server Key not found!"));
         }
 
         Optional<InputStream> serviceAccountOptional = getServiceAccountJson();
         if (!serviceAccountOptional.isPresent()) {
-            log.warn("CONFIG (Firebase): Firebase Service Account JSON not found anywhere. Any Firebase interaction may throw exception");
+            log.warn(ConsoleHelper.red("CONFIG (Firebase): Firebase Service Account JSON not found anywhere. Any Firebase interaction may throw exception"));
             uninitialized = true;
             return;
         }
@@ -56,7 +57,7 @@ public class FirebaseService {
                     .build();
 
             FirebaseApp.initializeApp(options);
-            log.info("Firebase Initialized");
+            log.info(ConsoleHelper.green("Firebase Initialized"));
         } catch (IllegalStateException ise) {
             log.info("Firebase already initialized");
         } catch (IllegalArgumentException e) {

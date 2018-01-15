@@ -1,5 +1,6 @@
 package amu.zhcet.email;
 
+import amu.zhcet.common.utils.ConsoleHelper;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -27,10 +28,11 @@ public class EmailConfiguration {
         String password = emailProperties.getPassword();
 
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
-            log.error("CONFIG (Email): Email or Password not found : {} {}", username, password);
+            log.error(ConsoleHelper.red("CONFIG (Email): Email or Password not found : {} {}"), username, password);
             EMAIL_ENABLED = false;
         } else {
             EMAIL_ENABLED = true;
+            log.info(ConsoleHelper.green("Email Initialized"));
         }
 
         mailSender.setUsername(username);
