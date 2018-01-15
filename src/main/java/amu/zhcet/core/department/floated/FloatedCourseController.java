@@ -4,8 +4,11 @@ import amu.zhcet.common.flash.Flash;
 import amu.zhcet.common.page.Path;
 import amu.zhcet.common.page.PathChain;
 import amu.zhcet.common.utils.SortUtils;
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.core.department.course.CoursesController;
+import amu.zhcet.data.course.floated.FloatedCourseNotFoundException;
 import amu.zhcet.data.course.Course;
+import amu.zhcet.data.course.floated.FloatedCourse;
 import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.course.registration.CourseRegistrationService;
@@ -32,10 +35,7 @@ public class FloatedCourseController {
     private final FloatedCourseService floatedCourseService;
 
     @Autowired
-    public FloatedCourseController(
-            CourseRegistrationService courseRegistrationService,
-            FloatedCourseService floatedCourseService
-    ) {
+    public FloatedCourseController(CourseRegistrationService courseRegistrationService, FloatedCourseService floatedCourseService) {
         this.courseRegistrationService = courseRegistrationService;
         this.floatedCourseService = floatedCourseService;
     }
@@ -52,53 +52,51 @@ public class FloatedCourseController {
 
     @GetMapping
     public String courseDetail(Model model, @PathVariable Department department, @PathVariable Course course, WebRequest webRequest) {
-        String templateUrl = "department/floated_course";
-        if (department == null)
-            return templateUrl;
+        ErrorUtils.requireNonNullDepartment(department);
+        FloatedCourse floatedCourse = floatedCourseService.getFloatedCourse(course).orElseThrow(FloatedCourseNotFoundException::new);
 
-        floatedCourseService.getFloatedCourse(course).ifPresent(floatedCourse -> {
-            if (!model.containsAttribute("success"))
-                webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
+        if (!model.containsAttribute("success"))
+            webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
 
-            model.addAttribute("page_title", course.getCode() + " - " + course.getTitle());
-            model.addAttribute("page_subtitle", "Course management for " + course.getCode());
-            model.addAttribute("page_description", "Register Students and add Faculty In-Charge for the course");
-            model.addAttribute("page_path", getPath(department, course));
+        model.addAttribute("page_title", course.getCode() + " - " + course.getTitle());
+        model.addAttribute("page_subtitle", "Course management for " + course.getCode());
+        model.addAttribute("page_description", "Register Students and add Faculty In-Charge for the course");
+        model.addAttribute("page_path", getPath(department, course));
 
-            List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-            List<String> emails = FloatedCourseService
-                    .getEmailsFromCourseRegistrations(courseRegistrations.stream())
-                    .collect(Collectors.toList());
-            SortUtils.sortCourseAttendance(courseRegistrations);
-            model.addAttribute("courseRegistrations", courseRegistrations);
-            model.addAttribute("floatedCourse", floatedCourse);
-            model.addAttribute("sections", FloatedCourseService.getSections(floatedCourse));
-            model.addAttribute("email_list", emails);
-        });
+        List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
+        List<String> emails = FloatedCourseService
+                .getEmailsFromCourseRegistrations(courseRegistrations.stream())
+                .collect(Collectors.toList());
+        SortUtils.sortCourseAttendance(courseRegistrations);
+        model.addAttribute("courseRegistrations", courseRegistrations);
+        model.addAttribute("floatedCourse", floatedCourse);
+        model.addAttribute("sections", FloatedCourseService.getSections(floatedCourse));
+        model.addAttribute("email_list", emails);
 
-        return templateUrl;
+        return "department/floated_course";
     }
 
     @PostMapping("/unregister")
     public String removeStudent(RedirectAttributes attributes, @PathVariable Department department, @PathVariable Course course, @RequestParam Student student) {
-        if (course != null && student != null) {
-            courseRegistrationService.removeRegistration(course, student);
-            attributes.addFlashAttribute("flash_messages", Flash.success("Student removed from course"));
-        }
+        ErrorUtils.requireNonNullDepartment(department);
+        ErrorUtils.requireNonNullStudent(student);
+        FloatedCourse floatedCourse = floatedCourseService.getFloatedCourse(course).orElseThrow(FloatedCourseNotFoundException::new);
+
+        courseRegistrationService.removeRegistration(floatedCourse, student);
+        attributes.addFlashAttribute("flash_messages", Flash.success("Student removed from course"));
 
         return "redirect:/department/{department}/floated/{course}";
     }
 
     @PostMapping("/unfloat")
     public String unfloat(RedirectAttributes redirectAttributes, @PathVariable Department department, @PathVariable Course course) {
-        String redirectUrl = "redirect:/department/{department}/courses?active=true";
+        ErrorUtils.requireNonNullDepartment(department);
+        FloatedCourse floatedCourse = floatedCourseService.getFloatedCourse(course).orElseThrow(FloatedCourseNotFoundException::new);
 
-        floatedCourseService.getFloatedCourse(course).ifPresent(floatedCourse -> {
-            floatedCourseService.unfloatCourse(floatedCourse);
-            redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " unfloated successfully!");
-        });
+        floatedCourseService.unfloatCourse(floatedCourse);
+        redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " unfloated successfully!");
 
-        return redirectUrl;
+        return "redirect:/department/{department}/courses?active=true";
     }
 
 }

@@ -1,4 +1,4 @@
-package amu.zhcet.core.dean.edit.student;
+package amu.zhcet.core.dean.datatables.student;
 
 import amu.zhcet.common.error.DuplicateException;
 import amu.zhcet.data.department.Department;

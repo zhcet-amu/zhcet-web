@@ -1,6 +1,7 @@
 package amu.zhcet.core.notification.reading;
 
 import amu.zhcet.common.utils.NotificationUtils;
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.core.notification.recipient.NotificationRecipient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,7 @@ public class NotificationController {
 
     @GetMapping("/{notification}/mark/favorite")
     public String markFavorite(@RequestParam(required = false) Integer page, @PathVariable NotificationRecipient notification, RedirectAttributes redirectAttributes) {
+        ErrorUtils.requireNonNullNotification(notification);
         int currentPage = NotificationUtils.normalizePage(page);
 
         notificationReadingService.markFavorite(notification);
@@ -76,6 +78,7 @@ public class NotificationController {
 
     @GetMapping("/{notification}/unmark/favorite")
     public String unmarkFavorite(@RequestParam(required = false) Integer page, @PathVariable NotificationRecipient notification, RedirectAttributes redirectAttributes) {
+        ErrorUtils.requireNonNullNotification(notification);
         int currentPage = NotificationUtils.normalizePage(page);
 
         notificationReadingService.unmarkFavorite(notification);

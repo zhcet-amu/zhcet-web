@@ -1,6 +1,7 @@
 package amu.zhcet.core.notification.management;
 
 import amu.zhcet.common.utils.NotificationUtils;
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.core.notification.Notification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,7 @@ public class NotificationEditController {
 
     @GetMapping
     public String editNotification(@PathVariable Notification notification, Model model) {
-        String templateUrl = "management/edit_notification";
-        if (notification == null)
-            return templateUrl;
+        ErrorUtils.requireNonNullNotification(notification);
 
         model.addAttribute("page_title", "Edit Notification");
         model.addAttribute("page_subtitle", "Notification Manager");
@@ -36,7 +35,7 @@ public class NotificationEditController {
 
         if (!model.containsAttribute("notification"))
             model.addAttribute("notification", notification);
-        return templateUrl;
+        return "management/edit_notification";
     }
 
     @PostMapping
@@ -44,9 +43,8 @@ public class NotificationEditController {
                                        @Valid Notification edited, BindingResult result,
                                        RedirectAttributes redirectAttributes)
     {
+        ErrorUtils.requireNonNullNotification(notification);
         int currentPage = NotificationUtils.normalizePage(page);
-        if (notification == null)
-            return "redirect:/management/notifications?page=" + currentPage;
 
         String redirectUrl = String.format("redirect:/management/notifications/%d/edit?page=%d", notification.getId(), currentPage);
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ import java.util.Collections;
 @RequestMapping("/dean/register/faculty")
 public class FacultyRegistrationController {
 
+    private static final String KEY_FACULTY_REGISTRATION = "confirmFacultyRegistration";
     private final FacultyUploadService facultyUploadService;
 
     @Autowired
@@ -37,12 +39,12 @@ public class FacultyRegistrationController {
             UploadResult<FacultyUpload> result = facultyUploadService.handleUpload(file);
 
             if (!result.getErrors().isEmpty()) {
-                webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);
+                webRequest.removeAttribute(KEY_FACULTY_REGISTRATION, RequestAttributes.SCOPE_SESSION);
                 attributes.addFlashAttribute("faculty_errors", result.getErrors());
             } else {
                 attributes.addFlashAttribute("faculty_success", true);
                 Confirmation<FacultyMember> confirmation = facultyUploadService.confirmUpload(result);
-                session.setAttribute("confirmFacultyRegistration", confirmation);
+                session.setAttribute(KEY_FACULTY_REGISTRATION, confirmation);
             }
         } catch (IOException ioe) {
             log.error("Error registering faculty", ioe);
@@ -52,9 +54,9 @@ public class FacultyRegistrationController {
     }
 
     @PostMapping("/confirm")
-    public String uploadFaculty(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
-        Confirmation<FacultyMember> confirmation = (Confirmation<FacultyMember>) session.getAttribute("confirmFacultyRegistration");
-
+    public String uploadFaculty(RedirectAttributes attributes,
+                                @SessionAttribute(KEY_FACULTY_REGISTRATION) Confirmation<FacultyMember> confirmation,
+                                WebRequest webRequest) {
         if (confirmation == null || !confirmation.getErrors().isEmpty()) {
             attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));
         } else {

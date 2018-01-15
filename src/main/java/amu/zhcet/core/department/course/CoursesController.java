@@ -3,6 +3,7 @@ package amu.zhcet.core.department.course;
 import amu.zhcet.common.page.Path;
 import amu.zhcet.common.page.PathChain;
 import amu.zhcet.core.department.DepartmentController;
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.CourseService;
 import amu.zhcet.data.course.floated.FloatedCourseService;
@@ -42,9 +43,7 @@ public class CoursesController {
 
     @GetMapping("/department/{department}/courses")
     public String getCourses(Model model, @PathVariable Department department, @RequestParam(value = "all", required = false) Boolean all) {
-        String templateUrl = "department/courses";
-        if (department == null)
-            return templateUrl;
+        ErrorUtils.requireNonNullDepartment(department);
 
         boolean active = !(all != null && all);
 
@@ -60,6 +59,7 @@ public class CoursesController {
                 .map(FloatedCourse::getCourse)
                 .collect(Collectors.toList());
 
+        // TODO: Add no of registrations
         List<Course> courses = courseService.getAllActiveCourse(department, active);
         courses.forEach(course -> {
             if (floatedCourses.contains(course))
@@ -70,7 +70,7 @@ public class CoursesController {
 
         model.addAttribute("courses", courses);
 
-        return templateUrl;
+        return "department/courses";
     }
 
 }

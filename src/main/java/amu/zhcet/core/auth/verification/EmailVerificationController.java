@@ -1,6 +1,8 @@
 package amu.zhcet.core.auth.verification;
 
 import amu.zhcet.common.utils.Utils;
+import amu.zhcet.data.user.User;
+import amu.zhcet.data.user.UserNotFoundException;
 import amu.zhcet.data.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,16 +54,16 @@ public class EmailVerificationController {
 
     @PostMapping("/profile/confirm_email")
     public String registerEmail(RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        userService.getLoggedInUser().ifPresent(user -> {
-            String email = user.getEmail();
+        User user = userService.getLoggedInUser().orElseThrow(UserNotFoundException::new);
 
-            if (Utils.isValidEmail(user.getEmail())) {
-                sendVerificationLink(email, redirectAttributes);
-            } else {
-                log.warn("Invalid Email", email);
-                redirectAttributes.addFlashAttribute("invalid_email", "The provided email is invalid!");
-            }
-        });
+        String email = user.getEmail();
+
+        if (Utils.isValidEmail(user.getEmail())) {
+            sendVerificationLink(email, redirectAttributes);
+        } else {
+            log.warn("Invalid Email", email);
+            redirectAttributes.addFlashAttribute("invalid_email", "The provided email is invalid!");
+        }
 
         return "redirect:/profile";
     }

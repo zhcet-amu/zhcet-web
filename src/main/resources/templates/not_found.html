@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" data-textdirection="ltr" class="loading"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head"></head>
+
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<div th:fragment="content" th:replace="fragments/layout :: wrapper">
+    <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
+        <div class="text-xs-center">
+            <svg style="width:100px;height:100px" viewBox="0 0 24 24">
+                <path fill="#aaaaaa" d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
+            </svg>
+            <svg style="width:250px;height:250px" viewBox="0 0 24 24">
+                <path fill="#999999" d="M10,1C5.58,1 2,2.79 2,5C2,7.06 5.13,8.74 9.15,8.96C10.45,7.7 12.19,7 14,7C14.8,7 15.59,7.14 16.34,7.41C17.37,6.74 18,5.91 18,5C18,2.79 14.42,1 10,1M2,7V10C2,11.68 4.08,13.11 7,13.71C7.06,12.7 7.32,11.72 7.77,10.82C4.44,10.34 2,8.82 2,7M13.93,8.94C12.75,8.95 11.53,9.4 10.46,10.46C6.21,14.71 11.71,21.5 16.75,18.17L21.29,22.71L22.71,21.29L18.17,16.75C20.66,12.97 17.47,8.93 13.93,8.94M13.9,11C15.47,10.95 17,12.16 17,14A3,3 0 0,1 14,17C11.33,17 10,13.77 11.88,11.88C12.47,11.29 13.19,11 13.9,11M2,12V15C2,17.05 5.09,18.72 9.06,18.95C8.17,18.07 7.54,16.95 7.22,15.74C4.18,15.17 2,13.72 2,12Z" />
+            </svg>
+            <svg style="width:100px;height:100px" viewBox="0 0 24 24">
+                <path fill="#aaaaaa" d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z" />
+            </svg>
+        </div>
+        <div class="text-xs-center">
+            <h3 class="text-muted" th:text="${page_title}"></h3>
+            <p class="lead">Hmmm! We searched everywhere but couldn't find what you were looking for!</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package amu.zhcet.core.shared.course.registration.upload;
 
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.course.Course;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,8 @@ public class DeanCourseRegistrationController {
      */
     @PostMapping
     public String uploadFile(RedirectAttributes attributes, @PathVariable Course course, @RequestParam MultipartFile file, HttpSession session) {
-        if (course != null)
-            courseRegistrationUploadService.upload(course, file, attributes, session);
+        ErrorUtils.requireNonNullCourse(course);
+        courseRegistrationUploadService.upload(course, file, attributes, session);
 
         return "redirect:/dean/floated/{course}";
     }
@@ -53,8 +54,8 @@ public class DeanCourseRegistrationController {
      */
     @PostMapping("/confirm")
     public String confirmRegistration(RedirectAttributes attributes, @PathVariable Course course, HttpSession session) {
-        if (course != null)
-            courseRegistrationUploadService.register(course, attributes, session);
+        ErrorUtils.requireNonNullCourse(course);
+        courseRegistrationUploadService.register(course, attributes, session);
 
         return "redirect:/dean/floated/{course}";
     }

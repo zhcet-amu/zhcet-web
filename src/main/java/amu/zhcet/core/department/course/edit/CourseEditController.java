@@ -4,6 +4,7 @@ import amu.zhcet.common.error.UpdateException;
 import amu.zhcet.common.page.Path;
 import amu.zhcet.common.page.PathChain;
 import amu.zhcet.core.department.course.CoursesController;
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.CourseService;
 import amu.zhcet.data.course.floated.FloatedCourseService;
@@ -44,9 +45,8 @@ public class CourseEditController {
 
     @GetMapping("/edit")
     public String addCourse(Model model, @PathVariable Department department, @PathVariable Course course) {
-        String templateUrl = "department/edit_course";
-        if (course == null)
-            return templateUrl;
+        ErrorUtils.requireNonNullDepartment(department);
+        ErrorUtils.requireNonNullCourse(course);
 
         model.addAttribute("page_description", "Edit course details and manage other settings");
         model.addAttribute("department", department);
@@ -62,14 +62,13 @@ public class CourseEditController {
 
         model.addAttribute("floated", floatedCourseService.isFloated(course));
 
-        return templateUrl;
+        return "department/edit_course";
     }
 
     @PostMapping("/edit")
     public String postCourse(@PathVariable Department department, @PathVariable Course course, @RequestParam("course") @Valid Course newCourse, BindingResult result, RedirectAttributes redirectAttributes) {
-        String redirectUrl = "redirect:/department/{department}/courses/{original}/edit";
-        if (course == null)
-            return redirectUrl;
+        ErrorUtils.requireNonNullDepartment(department);
+        ErrorUtils.requireNonNullCourse(course);
 
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("course", newCourse);
@@ -79,8 +78,6 @@ public class CourseEditController {
                 newCourse.setDepartment(department);
                 courseService.updateCourse(course, newCourse);
                 redirectAttributes.addFlashAttribute("course_success", "Course saved successfully!");
-
-                return redirectUrl;
             } catch (UpdateException e) {
                 log.warn("Course Save Error", e);
                 newCourse.setCode(course.getCode());
@@ -89,18 +86,16 @@ public class CourseEditController {
             }
         }
 
-        return redirectUrl;
+        return "redirect:/department/{department}/courses/{course}/edit";
     }
 
     @GetMapping("/delete")
     public String deleteCourse(@PathVariable Department department, @PathVariable Course course, RedirectAttributes redirectAttributes) {
-        if (course == null) {
-            log.warn("Course not deletable");
-            redirectAttributes.addFlashAttribute("course_error", "No such course exists");
-        } else {
-            courseService.deleteCourse(course);
-            redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " deleted successfully!");
-        }
+        ErrorUtils.requireNonNullDepartment(department);
+        ErrorUtils.requireNonNullCourse(course);
+
+        courseService.deleteCourse(course);
+        redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " deleted successfully!");
 
         return "redirect:/department/{department}/courses?active=true";
     }

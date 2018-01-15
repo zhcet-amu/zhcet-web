@@ -1,6 +1,7 @@
 package amu.zhcet.core.dean.rolemanagement;
 
 import amu.zhcet.common.flash.Flash;
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.department.Department;
 import amu.zhcet.data.user.Role;
 import amu.zhcet.data.user.User;
@@ -8,7 +9,6 @@ import amu.zhcet.data.user.faculty.FacultyMember;
 import amu.zhcet.data.user.faculty.FacultyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +33,7 @@ public class RoleManagementController {
 
     @GetMapping("/department/{department}")
     public String roleManagement(Model model, @PathVariable Department department) {
-        if (department == null)
-            throw new AccessDeniedException("403");
+        ErrorUtils.requireNonNullDepartment(department);
 
         model.addAttribute("page_title", "Role Management");
         model.addAttribute("page_subtitle", "Role Management Panel for " + department.getName() + " Department");
@@ -42,6 +41,7 @@ public class RoleManagementController {
 
         model.addAttribute("department", department);
         List<FacultyMember> facultyMembers = facultyService.getByDepartment(department);
+        // Sort Faculty Members according to created date ignoring null
         facultyMembers.sort((f1, f2) -> {
             if (f1.getCreatedAt() != null && f2.getCreatedAt() != null)
                 return f1.getCreatedAt().compareTo(f2.getCreatedAt());
@@ -55,8 +55,7 @@ public class RoleManagementController {
 
     @GetMapping("/user/{user}")
     public String rolePage(Model model, @PathVariable User user) {
-        if (user == null)
-            throw new AccessDeniedException("403");
+        ErrorUtils.requireNonNullUser(user);
 
         model.addAttribute("page_title", "Role Management");
         model.addAttribute("page_subtitle", "Role Management Panel for " + user.getName());
@@ -82,8 +81,7 @@ public class RoleManagementController {
 
     @PostMapping("/user/{user}")
     public String postRoles(RedirectAttributes redirectAttributes, @PathVariable User user, @RequestParam(required = false) List<String> roles) {
-        if (user == null)
-            throw new AccessDeniedException("403");
+        ErrorUtils.requireNonNullUser(user);
 
         roleManagementService.saveRoles(user, roles);
 

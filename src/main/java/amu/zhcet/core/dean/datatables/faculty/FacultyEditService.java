@@ -1,4 +1,4 @@
-package amu.zhcet.core.dean.edit.faculty;
+package amu.zhcet.core.dean.datatables.faculty;
 
 import amu.zhcet.data.department.Department;
 import amu.zhcet.data.department.DepartmentService;

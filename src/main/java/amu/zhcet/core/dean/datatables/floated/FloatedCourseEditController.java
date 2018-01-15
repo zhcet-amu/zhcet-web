@@ -1,10 +1,13 @@
-package amu.zhcet.core.dean.edit.floated;
+package amu.zhcet.core.dean.datatables.floated;
 
 import amu.zhcet.common.flash.Flash;
 import amu.zhcet.common.utils.SortUtils;
 import amu.zhcet.common.utils.Utils;
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.config.ConfigurationService;
 import amu.zhcet.data.course.Course;
+import amu.zhcet.data.course.floated.FloatedCourse;
+import amu.zhcet.data.course.floated.FloatedCourseNotFoundException;
 import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.course.registration.CourseRegistrationService;
@@ -30,10 +33,7 @@ public class FloatedCourseEditController {
     private final CourseRegistrationService courseRegistrationService;
 
     @Autowired
-    public FloatedCourseEditController(
-            FloatedCourseService floatedCourseService,
-            CourseRegistrationService courseRegistrationService
-    ) {
+    public FloatedCourseEditController(FloatedCourseService floatedCourseService, CourseRegistrationService courseRegistrationService) {
         this.floatedCourseService = floatedCourseService;
         this.courseRegistrationService = courseRegistrationService;
     }
@@ -48,35 +48,36 @@ public class FloatedCourseEditController {
 
     @GetMapping("/{course}")
     public String courseDetail(Model model, @PathVariable Course course, WebRequest webRequest) {
-        String templateUrl = "dean/floated_course";
-        floatedCourseService.getFloatedCourse(course).ifPresent(floatedCourse -> {
-            if (!model.containsAttribute("success"))
-                webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
+        FloatedCourse floatedCourse = floatedCourseService.getFloatedCourse(course).orElseThrow(FloatedCourseNotFoundException::new);
 
-            model.addAttribute("page_title", course.getCode() + " - " + course.getTitle());
-            model.addAttribute("page_subtitle", "Course management for " + course.getCode());
-            model.addAttribute("page_description", "Register Students for the Floated course");
+        if (!model.containsAttribute("success"))
+            webRequest.removeAttribute("confirmRegistration", RequestAttributes.SCOPE_SESSION);
 
-            List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-            List<String> emails = FloatedCourseService
-                    .getEmailsFromCourseRegistrations(courseRegistrations.stream())
-                    .collect(Collectors.toList());
-            SortUtils.sortCourseAttendance(courseRegistrations);
-            model.addAttribute("courseRegistrations", courseRegistrations);
-            model.addAttribute("floatedCourse", floatedCourse);
-            model.addAttribute("deanOverride", "dean");
-            model.addAttribute("email_list", emails);
-        });
+        model.addAttribute("page_title", course.getCode() + " - " + course.getTitle());
+        model.addAttribute("page_subtitle", "Course management for " + course.getCode());
+        model.addAttribute("page_description", "Register Students for the Floated course");
 
-        return templateUrl;
+        List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
+        List<String> emails = FloatedCourseService
+                .getEmailsFromCourseRegistrations(courseRegistrations.stream())
+                .collect(Collectors.toList());
+        SortUtils.sortCourseAttendance(courseRegistrations);
+        model.addAttribute("courseRegistrations", courseRegistrations);
+        model.addAttribute("floatedCourse", floatedCourse);
+        model.addAttribute("deanOverride", "dean");
+        model.addAttribute("email_list", emails);
+
+        return "dean/floated_course";
     }
 
     @PostMapping("/{course}/unregister")
     public String removeStudent(RedirectAttributes attributes, @PathVariable Course course, @RequestParam Student student) {
-        if (course != null && student != null) {
-            courseRegistrationService.removeRegistration(course, student);
-            attributes.addFlashAttribute("flash_messages", Flash.success("Student removed from course"));
-        }
+        // TODO: Extract to shared package
+        ErrorUtils.requireNonNullCourse(course);
+        ErrorUtils.requireNonNullStudent(student);
+        FloatedCourse floatedCourse = floatedCourseService.getFloatedCourse(course).orElseThrow(FloatedCourseNotFoundException::new);
+        courseRegistrationService.removeRegistration(floatedCourse, student);
+        attributes.addFlashAttribute("flash_messages", Flash.success("Student removed from course"));
 
         return "redirect:/dean/floated/{course}";
     }

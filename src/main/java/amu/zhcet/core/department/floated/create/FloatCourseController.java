@@ -3,6 +3,7 @@ package amu.zhcet.core.department.floated.create;
 import amu.zhcet.common.page.Path;
 import amu.zhcet.common.page.PathChain;
 import amu.zhcet.core.department.course.CoursesController;
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.department.Department;
@@ -37,9 +38,8 @@ public class FloatCourseController {
 
     @GetMapping("/{course}")
     public String floatCourse(@PathVariable Department department, @PathVariable Course course, RedirectAttributes redirectAttributes) {
-        String redirectUrl = "redirect:/department/{department}/course/float";
-        if (course == null)
-            return redirectUrl;
+        ErrorUtils.requireNonNullDepartment(department);
+        ErrorUtils.requireNonNullCourse(course);
 
         if (floatedCourseService.isFloated(course)) {
             log.warn("Course is already floated {}", course.getCode());
@@ -48,14 +48,12 @@ public class FloatCourseController {
             redirectAttributes.addFlashAttribute("courses", Collections.singletonList(course));
         }
 
-        return redirectUrl;
+        return "redirect:/department/{department}/course/float";
     }
 
     @GetMapping
     public String floatCourse(Model model, @PathVariable Department department) {
-        String templateUrl = "department/float_course";
-        if (department == null)
-            return templateUrl;
+        ErrorUtils.requireNonNullDepartment(department);
 
         model.addAttribute("page_title", "Float Course : " + department.getName() + " Department");
         model.addAttribute("page_subtitle", "Floated Course Management");
@@ -63,11 +61,13 @@ public class FloatCourseController {
         model.addAttribute("department", department);
         model.addAttribute("page_path", getPath(department));
 
-        return templateUrl;
+        return "department/float_course";
     }
 
     @PostMapping
     public String floatCourses(RedirectAttributes redirectAttributes, @PathVariable Department department, @RequestParam("code") List<Course> courseList) {
+        ErrorUtils.requireNonNullDepartment(department);
+
         for (Course course : courseList)
             floatedCourseService.floatCourse(course);
 

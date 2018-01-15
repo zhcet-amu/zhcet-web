@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ import java.util.Collections;
 @RequestMapping("/dean/register/students")
 public class StudentRegistrationController {
 
+    private static final String KEY_STUDENT_REGISTRATION = "confirmStudentRegistration";
     private final StudentUploadService studentUploadService;
 
     @Autowired
@@ -37,13 +39,13 @@ public class StudentRegistrationController {
             UploadResult<StudentUpload> result = studentUploadService.handleUpload(file);
 
             if (!result.getErrors().isEmpty()) {
-                webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
+                webRequest.removeAttribute(KEY_STUDENT_REGISTRATION, RequestAttributes.SCOPE_SESSION);
                 attributes.addFlashAttribute("students_errors", result.getErrors());
             } else {
                 attributes.addFlashAttribute("students_success", true);
                 Confirmation<Student> confirmation = studentUploadService.confirmUpload(result);
 
-                session.setAttribute("confirmStudentRegistration", confirmation);
+                session.setAttribute(KEY_STUDENT_REGISTRATION, confirmation);
             }
         } catch (IOException ioe) {
             log.error("Error registering students", ioe);
@@ -53,9 +55,9 @@ public class StudentRegistrationController {
     }
 
     @PostMapping("/confirm")
-    public String uploadStudents(RedirectAttributes attributes, HttpSession session, WebRequest webRequest) {
-        Confirmation<Student> confirmation = (Confirmation<Student>) session.getAttribute("confirmStudentRegistration");
-
+    public String uploadStudents(RedirectAttributes attributes,
+                                 @SessionAttribute(KEY_STUDENT_REGISTRATION) Confirmation<Student> confirmation,
+                                 WebRequest webRequest) {
         if (confirmation == null || !confirmation.getErrors().isEmpty()) {
             attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));
         } else {
@@ -68,7 +70,7 @@ public class StudentRegistrationController {
                 attributes.addFlashAttribute("student_unknown_error", true);
             }
 
-            webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
+            webRequest.removeAttribute(KEY_STUDENT_REGISTRATION, RequestAttributes.SCOPE_SESSION);
         }
 
         return "redirect:/dean";

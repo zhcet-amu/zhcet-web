@@ -1,8 +1,13 @@
 package amu.zhcet.core.shared.attendance.download;
 
 import amu.zhcet.common.utils.StringUtils;
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.course.Course;
+import amu.zhcet.data.course.floated.FloatedCourse;
+import amu.zhcet.data.course.floated.FloatedCourseNotFoundException;
 import amu.zhcet.data.course.floated.FloatedCourseService;
+import amu.zhcet.data.course.incharge.CourseInCharge;
+import amu.zhcet.data.course.incharge.CourseInChargeNotFoundException;
 import amu.zhcet.data.course.incharge.CourseInChargeService;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.department.Department;
@@ -43,12 +48,11 @@ public class AttendanceDownloadController {
      */
     @GetMapping("faculty/courses/{code}/attendance.csv")
     public void downloadAttendanceForFaculty(HttpServletResponse response, @PathVariable String code) {
-        courseInChargeService.getCourseInCharge(code).ifPresent(courseInCharge -> {
-            String section = StringUtils.defaultString(CourseInChargeService.getCodeAndSection(code).getRight(), "all");
-            List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-            String suffix = courseInCharge.getFloatedCourse().getCourse().getCode() + "_" + section;
-            downloadAttendance("faculty", suffix, courseRegistrations, response);
-        });
+        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(code).orElseThrow(CourseInChargeNotFoundException::new);
+        String section = StringUtils.defaultString(CourseInChargeService.getCodeAndSection(code).getRight(), "all");
+        List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
+        String suffix = courseInCharge.getFloatedCourse().getCourse().getCode() + "_" + section;
+        downloadAttendance("faculty", suffix, courseRegistrations, response);
     }
 
     /**
@@ -58,6 +62,7 @@ public class AttendanceDownloadController {
      */
     @GetMapping("dean/floated/{course}/attendance.csv")
     public void downloadAttendanceForDean(@PathVariable Course course, HttpServletResponse response) {
+        ErrorUtils.requireNonNullCourse(course);
         downloadAttendance("dean", course, response);
     }
 
@@ -69,12 +74,14 @@ public class AttendanceDownloadController {
      */
     @GetMapping("department/{department}/floated/{course}/attendance.csv")
     public void downloadAttendanceForDepartment(@PathVariable Department department, @PathVariable Course course, HttpServletResponse response) {
+        ErrorUtils.requireNonNullDepartment(department);
+        ErrorUtils.requireNonNullCourse(course);
         downloadAttendance("department", course, response);
     }
 
     private void downloadAttendance(String context, Course course, HttpServletResponse response) {
-        floatedCourseService.getFloatedCourse(course).ifPresent(floatedCourse ->
-                downloadAttendance(context, course.getCode(), floatedCourse.getCourseRegistrations(), response));
+        FloatedCourse floatedCourse = floatedCourseService.getFloatedCourse(course).orElseThrow(FloatedCourseNotFoundException::new);
+        downloadAttendance(context, course.getCode(), floatedCourse.getCourseRegistrations(), response);
     }
 
     private void downloadAttendance(String context, String suffix, List<CourseRegistration> courseRegistrations, HttpServletResponse response) {

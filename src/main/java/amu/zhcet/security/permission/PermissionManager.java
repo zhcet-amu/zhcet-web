@@ -67,7 +67,10 @@ public class PermissionManager {
 
     public boolean checkCourse(Authentication user, String departmentCode, String courseCode) {
         Course course = courseService.getCourse(courseCode);
-        return checkDepartment(user, departmentCode) && (course == null || course.getDepartment().getCode().equals(departmentCode));
+        if (course == null) // If course isn't found, leave it to Controller
+            return checkDepartment(user, departmentCode);
+        else
+            return checkDepartment(user, departmentCode) && course.getDepartment().getCode().equals(departmentCode);
     }
 
     public boolean checkNotificationCreator(Authentication user, String notificationId) {
@@ -75,7 +78,10 @@ public class PermissionManager {
                 hasPermission(user.getAuthorities(), Role.DEVELOPMENT_ADMIN);
         try {
             Notification notification = notificationRepository.findOne(Long.parseLong(notificationId));
-            return notification != null && hasSendingPermission && notification.getSender().getUserId().equals(user.getName());
+            if (notification == null) // If notification isn't found, leave it to Controller
+                return hasSendingPermission;
+            else
+                return hasSendingPermission && notification.getSender().getUserId().equals(user.getName());
         } catch (NumberFormatException nfe) {
             return true;
         }
@@ -84,7 +90,8 @@ public class PermissionManager {
     public boolean checkNotificationRecipient(Authentication user, String notificationId) {
         try {
             NotificationRecipient notification = notificationRecipientRepository.findOne(Long.parseLong(notificationId));
-            return notification != null && notification.getRecipient().getUserId().equals(user.getName());
+            // If notification is not found, leave it to Controller
+            return notification == null || notification.getRecipient().getUserId().equals(user.getName());
         } catch (NumberFormatException nfe) {
             return true;
         }

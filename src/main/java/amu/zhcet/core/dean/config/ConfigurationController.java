@@ -60,28 +60,25 @@ public class ConfigurationController {
 
     @PostMapping
     public String configurationPost(RedirectAttributes redirectAttributes, @Valid Config config, BindingResult result) {
-        String redirectUrl = "redirect:/dean/configuration";
 
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("config", config);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.config", result);
-            return redirectUrl;
-        }
-
-        List<String> errors = new ArrayList<>();
-        if (config.getTerm() != 'A' && config.getTerm() != 'W')
-            errors.add("Term can only be Autumn or Winter");
-
-        if (!errors.isEmpty()) {
-            redirectAttributes.addFlashAttribute("config", config);
-            redirectAttributes.addFlashAttribute("errors", errors);
-            return redirectUrl;
         } else {
-            configurationService.save(toConfigModel(config));
-            redirectAttributes.addFlashAttribute("success", Collections.singletonList("Configuration successfully saved!"));
+            List<String> errors = new ArrayList<>();
+            if (config.getTerm() != 'A' && config.getTerm() != 'W')
+                errors.add("Term can only be Autumn or Winter");
+
+            if (!errors.isEmpty()) {
+                redirectAttributes.addFlashAttribute("config", config);
+                redirectAttributes.addFlashAttribute("errors", errors);
+            } else {
+                configurationService.save(toConfigModel(config));
+                redirectAttributes.addFlashAttribute("success", Collections.singletonList("Configuration successfully saved!"));
+            }
         }
 
-        return redirectUrl;
+        return "redirect:/dean/configuration";
     }
 
 }

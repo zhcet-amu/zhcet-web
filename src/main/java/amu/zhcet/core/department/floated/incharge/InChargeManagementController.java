@@ -1,6 +1,9 @@
 package amu.zhcet.core.department.floated.incharge;
 
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.course.Course;
+import amu.zhcet.data.course.floated.FloatedCourse;
+import amu.zhcet.data.course.floated.FloatedCourseNotFoundException;
 import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.department.Department;
 import amu.zhcet.data.user.faculty.FacultyMember;
@@ -33,11 +36,11 @@ public class InChargeManagementController {
                                  @PathVariable Course course,
                                  @RequestParam(required = false) List<FacultyMember> facultyId,
                                  @RequestParam(required = false) List<String> section) {
-        floatedCourseService.getFloatedCourse(course).ifPresent(floatedCourse -> {
-            inChargeManagementService.saveInCharge(floatedCourse, facultyId, section);
+        ErrorUtils.requireNonNullDepartment(department);
+        FloatedCourse floatedCourse = floatedCourseService.getFloatedCourse(course).orElseThrow(FloatedCourseNotFoundException::new);
+        inChargeManagementService.saveInCharge(floatedCourse, facultyId, section);
 
-            redirectAttributes.addFlashAttribute("incharge_success", "Course In-Charge saved successfully");
-        });
+        redirectAttributes.addFlashAttribute("incharge_success", "Course In-Charge saved successfully");
 
         return "redirect:/department/{department}/floated/{course}";
     }

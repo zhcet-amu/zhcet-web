@@ -52,9 +52,8 @@ public class CourseRegistrationService {
         });
     }
 
-    public void removeRegistration(Course course, Student student) {
-        floatedCourseService.getFloatedCourse(course)
-                .flatMap(floatedCourse -> courseRegistrationRepository.findByStudentAndFloatedCourse(student, floatedCourse))
+    public void removeRegistration(FloatedCourse floatedCourse, Student student) {
+        courseRegistrationRepository.findByStudentAndFloatedCourse(student, floatedCourse)
                 .ifPresent(courseRegistrationRepository::delete);
     }
 

@@ -2,6 +2,8 @@ package amu.zhcet.core.faculty.attendance;
 
 import amu.zhcet.common.utils.SortUtils;
 import amu.zhcet.data.course.floated.FloatedCourseService;
+import amu.zhcet.data.course.incharge.CourseInCharge;
+import amu.zhcet.data.course.incharge.CourseInChargeNotFoundException;
 import amu.zhcet.data.course.incharge.CourseInChargeService;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
-@RequestMapping("/faculty/courses/{code}")
+@RequestMapping("/faculty/courses/{code}/attendance")
 public class FacultyCourseAttendanceController {
 
     private final CourseInChargeService courseInChargeService;
@@ -27,24 +29,24 @@ public class FacultyCourseAttendanceController {
         this.courseInChargeService = courseInChargeService;
     }
 
-    @GetMapping("/attendance")
+    @GetMapping
     public String attendance(Model model, @PathVariable String code) {
-        courseInChargeService.getCourseInCharge(code).ifPresent(courseInCharge -> {
-            model.addAttribute("page_title", courseInCharge.getFloatedCourse().getCourse().getCode() + " - " + courseInCharge.getFloatedCourse().getCourse().getTitle());
-            model.addAttribute("page_subtitle", "Attendance management for " + courseInCharge.getFloatedCourse().getCourse().getCode());
-            model.addAttribute("page_description", "Upload attendance for the floated course");
+        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(code).orElseThrow(CourseInChargeNotFoundException::new);
 
-            List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-            List<String> emails = FloatedCourseService
-                    .getEmailsFromCourseRegistrations(courseRegistrations.stream())
-                    .collect(Collectors.toList());
-            SortUtils.sortCourseAttendance(courseRegistrations);
+        model.addAttribute("page_title", courseInCharge.getFloatedCourse().getCourse().getCode() + " - " + courseInCharge.getFloatedCourse().getCourse().getTitle());
+        model.addAttribute("page_subtitle", "Attendance management for " + courseInCharge.getFloatedCourse().getCourse().getCode());
+        model.addAttribute("page_description", "Upload attendance for the floated course");
 
-            model.addAttribute("incharge", courseInCharge);
-            model.addAttribute("courseRegistrations", courseRegistrations);
-            model.addAttribute("course", courseInCharge.getFloatedCourse().getCourse());
-            model.addAttribute("email_list", emails);
-        });
+        List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
+        List<String> emails = FloatedCourseService
+                .getEmailsFromCourseRegistrations(courseRegistrations.stream())
+                .collect(Collectors.toList());
+        SortUtils.sortCourseAttendance(courseRegistrations);
+
+        model.addAttribute("incharge", courseInCharge);
+        model.addAttribute("courseRegistrations", courseRegistrations);
+        model.addAttribute("course", courseInCharge.getFloatedCourse().getCourse());
+        model.addAttribute("email_list", emails);
 
         return "faculty/course_attendance";
     }

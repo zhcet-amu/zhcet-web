@@ -1,6 +1,6 @@
-package amu.zhcet.core.dean.edit.faculty;
+package amu.zhcet.core.dean.datatables.faculty;
 
-import amu.zhcet.core.dean.edit.UserEditModel;
+import amu.zhcet.core.dean.datatables.UserEditModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

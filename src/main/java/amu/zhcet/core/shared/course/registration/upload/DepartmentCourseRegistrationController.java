@@ -1,5 +1,6 @@
 package amu.zhcet.core.shared.course.registration.upload;
 
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.department.Department;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +39,9 @@ public class DepartmentCourseRegistrationController {
      */
     @PostMapping
     public String uploadFile(RedirectAttributes attributes, @PathVariable Department department, @PathVariable Course course, @RequestParam MultipartFile file, HttpSession session) {
-        if (course != null)
-            courseRegistrationUploadService.upload(course, file, attributes, session);
+        ErrorUtils.requireNonNullDepartment(department);
+        ErrorUtils.requireNonNullCourse(course);
+        courseRegistrationUploadService.upload(course, file, attributes, session);
 
         return "redirect:/department/{department}/floated/{course}";
     }
@@ -56,8 +58,9 @@ public class DepartmentCourseRegistrationController {
      */
     @PostMapping("/confirm")
     public String confirmRegistration(RedirectAttributes attributes, @PathVariable Department department, @PathVariable Course course, HttpSession session) {
-        if (course != null)
-            courseRegistrationUploadService.register(course, attributes, session);
+        ErrorUtils.requireNonNullDepartment(department);
+        ErrorUtils.requireNonNullCourse(course);
+        courseRegistrationUploadService.register(course, attributes, session);
 
         return "redirect:/department/{department}/floated/{course}";
     }

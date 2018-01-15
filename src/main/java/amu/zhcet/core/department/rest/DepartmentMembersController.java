@@ -1,4 +1,4 @@
-package amu.zhcet.core.department;
+package amu.zhcet.core.department.rest;
 
 import amu.zhcet.data.department.Department;
 import amu.zhcet.data.user.faculty.FacultyMember;
@@ -36,6 +36,9 @@ public class DepartmentMembersController {
 
     @GetMapping("/department/{department}/api/faculty")
     public List<FacultyDto> faculty(@PathVariable Department department, @RequestParam(required = false) Boolean all) {
+        if (department == null)
+            return null;
+
         List<FacultyMember> facultyMembers;
 
         if (all != null && all)

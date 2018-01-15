@@ -4,6 +4,7 @@ import amu.zhcet.common.error.DuplicateException;
 import amu.zhcet.common.page.Path;
 import amu.zhcet.common.page.PathChain;
 import amu.zhcet.core.department.course.CoursesController;
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.CourseService;
 import amu.zhcet.data.course.floated.FloatedCourseService;
@@ -24,7 +25,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @Controller
-@RequestMapping("/department/{department}/course")
+@RequestMapping("/department/{department}/course/add")
 public class CourseCreationController {
 
     private final CourseService courseService;
@@ -41,11 +42,9 @@ public class CourseCreationController {
                         .build());
     }
 
-    @GetMapping("/add")
+    @GetMapping
     public String addCourse(Model model, @PathVariable Department department) {
-        String templateUrl = "department/add_course";
-        if (department == null)
-            return templateUrl;
+        ErrorUtils.requireNonNullDepartment(department);
 
         model.addAttribute("page_description", "Create new global course for the Department");
         model.addAttribute("department", department);
@@ -61,14 +60,12 @@ public class CourseCreationController {
             model.addAttribute("course", course);
         }
 
-        return templateUrl;
+        return "department/add_course";
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public String postCourse(@PathVariable Department department, @Valid Course course, BindingResult result, RedirectAttributes redirectAttributes) {
-        String templateUrl = "redirect:/department/{department}/course/add";
-        if (department == null)
-            return templateUrl;
+        ErrorUtils.requireNonNullDepartment(department);
 
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("course", course);
@@ -87,7 +84,7 @@ public class CourseCreationController {
             }
         }
 
-        return templateUrl;
+        return "redirect:/department/{department}/course/add";
     }
 
 }

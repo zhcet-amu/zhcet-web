@@ -1,6 +1,7 @@
 package amu.zhcet.data.attendance;
 
 import amu.zhcet.data.config.ConfigurationService;
+import amu.zhcet.data.user.student.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,8 @@ public class AttendanceService {
     }
 
     @Transactional
-    public List<Attendance> getAttendanceByStudent(String studentId) {
-        return attendanceRepository.getByCourseRegistration_Student_EnrolmentNumberAndCourseRegistration_FloatedCourse_Session(studentId, ConfigurationService.getDefaultSessionCode());
+    public List<Attendance> getAttendanceByStudent(Student student) {
+        return attendanceRepository.getByCourseRegistration_StudentAndCourseRegistration_FloatedCourse_Session(student, ConfigurationService.getDefaultSessionCode());
     }
 
 }

@@ -1,6 +1,7 @@
 package amu.zhcet.core.notification.management;
 
 import amu.zhcet.common.utils.NotificationUtils;
+import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.core.notification.Notification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,7 @@ public class NotificationManagementController {
 
     @GetMapping("/{notification}/report")
     public String notificationReport(@RequestParam(required = false) Integer page, @PathVariable Notification notification, Model model) {
-        String templateUrl = "management/notification_report";
-        if (notification == null)
-            return templateUrl;
+        ErrorUtils.requireNonNullNotification(notification);
 
         model.addAttribute("page_title", "Notification Report");
         model.addAttribute("page_subtitle", "Notification Manager");
@@ -57,20 +56,17 @@ public class NotificationManagementController {
         notificationManagementService.setSeenCount(notification);
         model.addAttribute("notification", notification);
 
-        return templateUrl;
+        return "management/notification_report";
     }
 
     @GetMapping("/{notification}/delete")
     public String deleteNotification(@RequestParam(required = false) Integer page, @PathVariable Notification notification, RedirectAttributes redirectAttributes) {
+        ErrorUtils.requireNonNullNotification(notification);
         int currentPage = NotificationUtils.normalizePage(page);
-        String redirectUrl = "redirect:/management/notifications?page=" + currentPage;
-
-        if (notification == null)
-            return redirectUrl;
 
         notificationManagementService.deleteNotification(notification);
         redirectAttributes.addFlashAttribute("notification_success", "Notification Deleted");
-        return redirectUrl;
+        return "redirect:/management/notifications?page=" + currentPage;
     }
 
 }

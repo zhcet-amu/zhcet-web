@@ -1,5 +1,7 @@
 package amu.zhcet.core.auth.password.change;
 
+import amu.zhcet.data.user.User;
+import amu.zhcet.data.user.UserNotFoundException;
 import amu.zhcet.data.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,48 +31,43 @@ public class PasswordChangeController {
 
     @GetMapping
     public String changePassword(Model model) {
-        String renderUrl = "user/change_password";
-        userService.getLoggedInUser().ifPresent(user -> {
-            if (!user.isEmailVerified()) {
-                log.warn("User not verified and tried to change the password!");
-                model.addAttribute("error", "The user is not verified, and hence can't change the password");
-            } else {
-                PasswordChange passwordChange = new PasswordChange();
-                model.addAttribute("password", passwordChange);
-                model.addAttribute("blacklist", Arrays.asList(
-                        user.getName(),
-                        user.getEmail(),
-                        user.getUserId()
-                ));
-            }
-        });
+        User user = userService.getLoggedInUser().orElseThrow(UserNotFoundException::new);
 
-        return renderUrl;
+        if (!user.isEmailVerified()) {
+            log.warn("User not verified and tried to change the password!");
+            model.addAttribute("error", "The user is not verified, and hence can't change the password");
+        } else {
+            PasswordChange passwordChange = new PasswordChange();
+            model.addAttribute("password", passwordChange);
+            model.addAttribute("blacklist", Arrays.asList(
+                    user.getName(),
+                    user.getEmail(),
+                    user.getUserId()
+            ));
+        }
+
+        return "user/change_password";
     }
 
     @PostMapping("/change")
     public String savePassword(@Valid PasswordChange passwordChange, RedirectAttributes redirectAttributes) {
-        String redirectUrl = "redirect:/profile/settings/password";
+        User user = userService.getLoggedInUser().orElseThrow(UserNotFoundException::new);
 
-        return userService.getLoggedInUser()
-                .map(user -> {
+        if (!user.isEmailVerified()) {
+            log.warn("!!POST!! User not verified and tried to change the password!");
+            redirectAttributes.addFlashAttribute("error", "The user is not verified, and hence can't change the password");
+        } else {
+            try {
+                passwordChangeService.changePassword(passwordChange, user);
+                redirectAttributes.addFlashAttribute("password_change_success", "Password was changed successfully");
+                return "redirect:/profile";
+            } catch (PasswordVerificationException pve) {
+                log.info("Password Change Error", pve);
+                redirectAttributes.addFlashAttribute("pass_errors", pve.getErrors());
+            }
+        }
 
-                    if (!user.isEmailVerified()) {
-                        log.warn("!!POST!! User not verified and tried to change the password!");
-                        redirectAttributes.addFlashAttribute("error", "The user is not verified, and hence can't change the password");
-                    } else {
-                        try {
-                            passwordChangeService.changePassword(passwordChange, user);
-                            redirectAttributes.addFlashAttribute("password_change_success", "Password was changed successfully");
-                            return "redirect:/profile";
-                        } catch (PasswordVerificationException pve) {
-                            log.info("Password Change Error", pve);
-                            redirectAttributes.addFlashAttribute("pass_errors", pve.getErrors());
-                        }
-                    }
-
-                    return redirectUrl;
-                }).orElse(redirectUrl);
+        return "redirect:/profile/settings/password";
     }
 
 }

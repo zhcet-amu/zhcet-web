@@ -1,4 +1,4 @@
-package amu.zhcet.core.dean.edit.student;
+package amu.zhcet.core.dean.datatables.student;
 
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;

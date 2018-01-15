@@ -1,9 +1,12 @@
 package amu.zhcet.core.profile;
 
+import amu.zhcet.data.user.User;
+import amu.zhcet.data.user.UserNotFoundException;
 import amu.zhcet.data.user.UserService;
 import amu.zhcet.security.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,19 +26,17 @@ public class EmailUnsubscribeController {
     @ResponseBody
     @GetMapping("/login/unsubscribe")
     public String unsubscribe(@RequestParam String email, @RequestParam String conf) {
+        User user = userService.getUserByEmail(email).orElseThrow(UserNotFoundException::new);
         if (!SecurityUtils.hashMatches(email, conf))
             return "Invalid Entry";
-
-        userService.getUserByEmail(email).ifPresent(user -> {
-            userService.unsubscribeEmail(user, true);
-        });
-
+        userService.unsubscribeEmail(user, true);
         return "Unsubscribed";
     }
 
     @GetMapping("/profile/email")
     public String unsubscribeEmail(@RequestParam(required = false) Boolean unsubscribe) {
-        userService.getLoggedInUser().ifPresent(user -> userService.unsubscribeEmail(user, unsubscribe != null && unsubscribe));
+        User user = userService.getLoggedInUser().orElseThrow(() -> new AccessDeniedException("403"));
+        userService.unsubscribeEmail(user, unsubscribe != null && unsubscribe);
         return "redirect:/profile";
     }
 

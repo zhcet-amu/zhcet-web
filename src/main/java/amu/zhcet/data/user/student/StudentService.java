@@ -94,6 +94,7 @@ public class StudentService {
         return student;
     }
 
+    // TODO: Extract to local package
     @Async
     public void register(Set<Student> students, RealTimeStatus status) {
         long startTime = System.nanoTime();
@@ -105,14 +106,13 @@ public class StudentService {
             students.stream()
                     .map(this::initializeStudent)
                     .forEach(student -> {
-                        sanitizeStudent(student);
                         save(student);
                         status.setCompleted(completed[0]++);
                     });
             float duration = (System.nanoTime() - startTime)/1000000f;
             status.setDuration(duration);
             status.setFinished(true);
-            log.info("Saved {} Students in {} s", students.size(), duration);
+            log.info("Saved {} Students in {} ms", students.size(), duration);
         } catch (Exception exception) {
             log.error("Error while saving students", exception);
             status.setMessage(exception.getMessage());
