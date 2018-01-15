@@ -33,32 +33,37 @@ public class FirebaseService {
 
         if (disabled) {
             log.warn("CONFIG (Firebase): Firebase is disabled");
+            return;
         }
 
         if (Strings.isNullOrEmpty(messagingServerKey)) {
-            log.error("CONFIG (Firebase Messaging): Firebase Messaging Server Key not found!");
+            log.warn("CONFIG (Firebase Messaging): Firebase Messaging Server Key not found!");
         }
 
         Optional<InputStream> serviceAccountOptional = getServiceAccountJson();
         if (!serviceAccountOptional.isPresent()) {
-            log.error("CONFIG (Firebase): Firebase Service Account JSON not found anywhere. Any Firebase interaction may throw exception");
+            log.warn("CONFIG (Firebase): Firebase Service Account JSON not found anywhere. Any Firebase interaction may throw exception");
             uninitialized = true;
             return;
         }
 
-        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(serviceAccountOptional.get());
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(googleCredentials)
-                .setDatabaseUrl(firebase.getDatabaseUrl())
-                .setStorageBucket(firebase.getStorageBucket())
-                .build();
-
         try {
+            GoogleCredentials googleCredentials = GoogleCredentials.fromStream(serviceAccountOptional.get());
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(googleCredentials)
+                    .setDatabaseUrl(firebase.getDatabaseUrl())
+                    .setStorageBucket(firebase.getStorageBucket())
+                    .build();
+
             FirebaseApp.initializeApp(options);
             log.info("Firebase Initialized");
         } catch (IllegalStateException ise) {
-            log.warn("Firebase already initialized");
+            log.info("Firebase already initialized");
+        } catch (IllegalArgumentException e) {
+            uninitialized = true;
+            log.error("Firebase couldn't be initialized", e);
         }
+
     }
 
     private Optional<InputStream> getServiceAccountJson() {
@@ -66,11 +71,11 @@ public class FirebaseService {
         try {
             InputStream is = getClass().getResourceAsStream("/" + fileName);
             if (is == null) {
-                log.warn("service-account.json not found in class resources. Maybe debug build? Trying to load another way");
+                log.info("service-account.json not found in class resources. Maybe debug build? Trying to load another way");
                 URL url = getClass().getClassLoader().getResource(fileName);
 
                 if (url == null) {
-                    log.warn(fileName + " not found in class loader resource as well... Using last resort...");
+                    log.info(fileName + " not found in class loader resource as well... Using last resort...");
                     throw new FileNotFoundException();
                 }
 
@@ -78,10 +83,12 @@ public class FirebaseService {
             }
             return Optional.of(is);
         } catch (FileNotFoundException e) {
-            log.warn("service-account.json not found in storage system... Attempting to load from environment...");
+            log.info("service-account.json not found in storage system... Attempting to load from environment...");
             String property = System.getenv("FIREBASE_JSON");
-            if (property == null)
+            if (property == null) {
+                log.warn("FIREBASE account.json not found anywhere!");
                 return Optional.empty();
+            }
             return Optional.of(new ByteArrayInputStream(System.getenv("FIREBASE_JSON").getBytes()));
         }
     }
@@ -97,7 +104,7 @@ public class FirebaseService {
     public boolean canProceed() {
         boolean proceedable = !isUninitialized() && !isDisabled();
         if (!proceedable)
-            log.error("Cannot proceed as Firebase is uninitialized");
+            log.info("Cannot proceed as Firebase is uninitialized");
 
         return proceedable;
     }
@@ -105,7 +112,7 @@ public class FirebaseService {
     public boolean canSendMessage() {
         boolean unsendable = !hasMessagingServerKey() || isDisabled();
         if (unsendable)
-            log.error("Cannot broadcast as Firebase Messaging Server Key is not found");
+            log.info("Cannot broadcast as Firebase Messaging Server Key is not found");
 
         return !unsendable;
     }
