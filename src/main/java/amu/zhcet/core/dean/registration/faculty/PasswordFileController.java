@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.nio.file.Files;
 import java.util.List;
 
 @Controller
+@RequestMapping("/dean/password")
 public class PasswordFileController {
 
     private final FileSystemStorageService systemStorageService;
@@ -22,8 +24,8 @@ public class PasswordFileController {
         this.systemStorageService = systemStorageService;
     }
 
-    @GetMapping("/dean/password/{id}")
-    public void downloadCsv(HttpServletResponse response, @PathVariable("id") PasswordFile passwordFile) throws IOException {
+    @GetMapping("{passwordFile}")
+    public void downloadCsv(HttpServletResponse response, @PathVariable PasswordFile passwordFile) throws IOException {
         if (passwordFile == null || passwordFile.isExpired()) return;
 
         response.setContentType("text/csv");

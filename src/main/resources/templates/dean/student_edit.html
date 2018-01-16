@@ -91,7 +91,7 @@
                             <div class="mui-form">
                                 <div class="mui-select">
                                     <label for="hallCode">Hall Code</label>
-                                    <select id="hallCode" th:field="*{hallCode}" name="courseCode">
+                                    <select id="hallCode" th:field="*{hallCode}">
                                         <option value="">Select Hall</option>
                                         <option th:each="hall : ${hallCodes}"
                                                 th:value="${hall}"
@@ -104,7 +104,7 @@
                             <div class="mui-form">
                                 <div class="mui-select">
                                     <label for="status">Status</label>
-                                    <select id="status" th:field="*{status}" name="courseCode">
+                                    <select id="status" th:field="*{status}">
                                         <option value="">Select Status</option>
                                         <option th:each="status : ${statuses}"
                                                 th:value="${status}"

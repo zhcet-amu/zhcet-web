@@ -1,6 +1,5 @@
-package amu.zhcet.core.dean.datatables.faculty;
+package amu.zhcet.core.dean.datatables;
 
-import amu.zhcet.core.dean.datatables.UserView;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

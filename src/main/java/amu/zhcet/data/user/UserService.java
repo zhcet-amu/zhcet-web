@@ -1,8 +1,6 @@
 package amu.zhcet.data.user;
 
-import amu.zhcet.common.error.DuplicateException;
 import amu.zhcet.common.utils.StringUtils;
-import amu.zhcet.common.utils.Utils;
 import amu.zhcet.data.user.detail.UserDetail;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
@@ -50,19 +48,11 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public boolean throwDuplicateEmail(String email, User user) {
-        Optional<User> checkEmailDuplicate = getUserByEmail(email);
-        if (checkEmailDuplicate.isPresent() && !checkEmailDuplicate.get().getUserId().equals(user.getUserId())) {
-            log.error("User with email already exists {} {}", user.getUserId(), email);
-            throw new DuplicateException("User", "email", email);
-        }
-
-        if (!Utils.isValidEmail(email)) {
-            log.error("Invalid Email {} {}", user.getUserId(), email);
-            throw new RuntimeException("Invalid Email");
-        }
-
-        return false;
+    public boolean checkDuplicateEmail(User user, String email) {
+        return getUserByEmail(email)
+                .map(User::getUserId)
+                .filter(duplicateId -> !duplicateId.equals(user.getUserId()))
+                .isPresent();
     }
 
     public Optional<User> getLoggedInUser() {
@@ -77,17 +67,17 @@ public class UserService {
     public String getType(User user) {
         List<String> roles = user.getRoles();
 
-        if (roles.contains(Role.SUPER_ADMIN))
+        if (roles.contains(Role.SUPER_ADMIN.toString()))
             return "Super Admin";
-        else if (roles.contains(Role.DEAN_ADMIN))
+        else if (roles.contains(Role.DEAN_ADMIN.toString()))
             return "Dean Admin";
-        else if (roles.contains(Role.DEVELOPMENT_ADMIN))
+        else if (roles.contains(Role.DEVELOPMENT_ADMIN.toString()))
             return "Management Admin";
-        else if (roles.contains(Role.DEPARTMENT_SUPER_ADMIN))
+        else if (roles.contains(Role.DEPARTMENT_SUPER_ADMIN.toString()))
             return "Department Super Admin";
-        else if (roles.contains(Role.DEPARTMENT_ADMIN))
+        else if (roles.contains(Role.DEPARTMENT_ADMIN.toString()))
             return "Department Admin";
-        else if (roles.contains(Role.FACULTY))
+        else if (roles.contains(Role.FACULTY.toString()))
             return "Faculty Member";
         else
             return "Student";

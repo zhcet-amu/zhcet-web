@@ -6,7 +6,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 
 import java.util.Optional;
 
-public class DataTableUtils {
+class DataTableUtils {
 
     public static void convertInput(DataTablesInput input) {
         input.getColumns().replaceAll(column -> {

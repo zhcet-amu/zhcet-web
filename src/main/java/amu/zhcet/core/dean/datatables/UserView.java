@@ -6,7 +6,7 @@ import lombok.Data;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 @Data
-public class UserView {
+class UserView {
     @JsonView(DataTablesOutput.View.class)
     @JsonProperty("user_name")
     private String userName;

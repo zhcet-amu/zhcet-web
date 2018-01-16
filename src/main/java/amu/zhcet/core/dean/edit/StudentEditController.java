@@ -1,4 +1,4 @@
-package amu.zhcet.core.dean.datatables.student;
+package amu.zhcet.core.dean.edit;
 
 import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.department.DepartmentService;
@@ -41,8 +41,8 @@ public class StudentEditController {
         return "dean/students_page";
     }
 
-    @GetMapping("{id}")
-    public String student(Model model, @PathVariable("id") Student student) {
+    @GetMapping("{student}")
+    public String student(Model model, @PathVariable Student student) {
         ErrorUtils.requireNonNullStudent(student);
 
         model.addAttribute("page_title", "Student Editor");
@@ -60,26 +60,26 @@ public class StudentEditController {
         return "dean/student_edit";
     }
 
-    @PostMapping("{id}")
-    public String studentPost(RedirectAttributes redirectAttributes, @PathVariable("id") Student student, @Valid StudentEditModel studentEditModel, BindingResult result) {
+    @PostMapping("{student}")
+    public String studentPost(RedirectAttributes redirectAttributes, @PathVariable Student student, @Valid StudentEditModel studentEditModel, BindingResult result) {
         ErrorUtils.requireNonNullStudent(student);
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.studentModel", result);
             redirectAttributes.addFlashAttribute("studentModel", studentEditModel);
         } else {
-
             try {
-                studentEditService.saveStudent(student.getEnrolmentNumber(), studentEditModel);
+                studentEditService.saveStudent(student, studentEditModel);
                 redirectAttributes.addFlashAttribute("success", Collections.singletonList("Student successfully updated"));
             } catch (RuntimeException re) {
-                log.error("Error saving student", re);
+                log.warn("Error saving student", re);
 
                 redirectAttributes.addFlashAttribute("errors", Collections.singletonList(re.getMessage()));
                 redirectAttributes.addFlashAttribute("studentModel", studentEditModel);
             }
         }
 
-        return "redirect:/dean/students/{id}";
+        return "redirect:/dean/students/{student}";
     }
 
 }

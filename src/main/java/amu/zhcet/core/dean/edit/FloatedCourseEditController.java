@@ -1,4 +1,4 @@
-package amu.zhcet.core.dean.datatables.floated;
+package amu.zhcet.core.dean.edit;
 
 import amu.zhcet.common.flash.Flash;
 import amu.zhcet.common.utils.SortUtils;

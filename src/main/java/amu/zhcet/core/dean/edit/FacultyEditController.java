@@ -1,4 +1,4 @@
-package amu.zhcet.core.dean.datatables.faculty;
+package amu.zhcet.core.dean.edit;
 
 import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.department.DepartmentService;
@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -42,44 +40,42 @@ public class FacultyEditController {
         return "dean/faculty_page";
     }
 
-    @GetMapping("/{id}")
-    public String student(Model model, @PathVariable("id") FacultyMember facultyMember) {
-        ErrorUtils.requireNonNullFacultyMember(facultyMember);
+    @GetMapping("{faculty}")
+    public String student(Model model, @PathVariable FacultyMember faculty) {
+        ErrorUtils.requireNonNullFacultyMember(faculty);
 
         model.addAttribute("page_title", "Faculty Editor");
         model.addAttribute("page_description", "Change faculty specific details");
-        model.addAttribute("faculty", facultyMember);
+        model.addAttribute("faculty", faculty);
         model.addAttribute("departments", departmentService.findAll());
         model.addAttribute("genders", Gender.values());
         if (!model.containsAttribute("facultyModel")) {
-            model.addAttribute("page_subtitle", "Edit details of " + facultyMember.getUser().getName());
-            model.addAttribute("facultyModel", facultyEditService.fromFaculty(facultyMember));
+            model.addAttribute("page_subtitle", "Edit details of " + faculty.getUser().getName());
+            model.addAttribute("facultyModel", facultyEditService.fromFaculty(faculty));
         }
 
         return "dean/faculty_edit";
     }
 
-    @PostMapping("/{id}")
-    public String studentPost(RedirectAttributes redirectAttributes, @PathVariable("id") FacultyMember facultyMember, @Valid FacultyEditModel facultyEditModel, BindingResult result) {
-        ErrorUtils.requireNonNullFacultyMember(facultyMember);
+    @PostMapping("{faculty}")
+    public String studentPost(RedirectAttributes redirectAttributes, @PathVariable FacultyMember faculty, @Valid FacultyEditModel facultyEditModel, BindingResult result) {
+        ErrorUtils.requireNonNullFacultyMember(faculty);
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.facultyModel", result);
             redirectAttributes.addFlashAttribute("facultyModel", facultyEditModel);
         } else {
-            List<String> errors = new ArrayList<>();
-
             try {
-                facultyEditService.saveFacultyMember(facultyMember.getFacultyId(), facultyEditModel);
+                facultyEditService.saveFacultyMember(faculty, facultyEditModel);
                 redirectAttributes.addFlashAttribute("success", Collections.singletonList("Faculty successfully updated"));
             } catch (RuntimeException re) {
-                log.error("Error saving faculty", re);
-                errors.add(re.getMessage());
-                redirectAttributes.addFlashAttribute("errors", errors);
+                log.warn("Error saving faculty", re);
+                
+                redirectAttributes.addFlashAttribute("errors", Collections.singletonList(re.getMessage()));
                 redirectAttributes.addFlashAttribute("facultyModel", facultyEditModel);
             }
         }
 
-        return "redirect:/dean/faculty/{id}";
+        return "redirect:/dean/faculty/{faculty}";
     }
 
 }

@@ -2,6 +2,8 @@ package amu.zhcet.core.faculty;
 
 import amu.zhcet.data.course.incharge.CourseInCharge;
 import amu.zhcet.data.course.incharge.CourseInChargeService;
+import amu.zhcet.data.user.faculty.FacultyMember;
+import amu.zhcet.data.user.faculty.FacultyMemberNotFoundException;
 import amu.zhcet.data.user.faculty.FacultyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +35,14 @@ public class FacultyCourseController {
         model.addAttribute("page_subtitle", "Faculty Floated Course Management");
         model.addAttribute("page_description", "Manage and upload attendance for currently floated courses");
 
-        facultyService.getLoggedInMember().ifPresent(facultyMember -> {
-            List<CourseInCharge> courseInCharges = courseInChargeService.getCourseByFaculty(facultyMember);
-            courseInCharges.sort(Comparator.comparing(o -> {
-                Integer compared = o.getFloatedCourse().getCourse().getSemester();
-                return compared != null ? compared : 0;
-            }));
-            model.addAttribute("courseInCharges", courseInCharges);
-        });
+        FacultyMember facultyMember = facultyService.getLoggedInMember().orElseThrow(FacultyMemberNotFoundException::new);
+        List<CourseInCharge> courseInCharges = courseInChargeService.getCourseByFaculty(facultyMember);
+        // Sort courses by semester
+        courseInCharges.sort(Comparator.comparing(o -> {
+            Integer compared = o.getFloatedCourse().getCourse().getSemester();
+            return compared != null ? compared : 0;
+        }));
+        model.addAttribute("courseInCharges", courseInCharges);
 
         return "faculty/courses";
     }

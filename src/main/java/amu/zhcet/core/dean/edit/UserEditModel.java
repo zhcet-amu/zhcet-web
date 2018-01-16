@@ -1,4 +1,4 @@
-package amu.zhcet.core.dean.datatables;
+package amu.zhcet.core.dean.edit;
 
 import amu.zhcet.data.user.Gender;
 import lombok.Data;

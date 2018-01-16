@@ -1,4 +1,4 @@
-package amu.zhcet.core.dean.datatables.floated;
+package amu.zhcet.core.dean.datatables;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;

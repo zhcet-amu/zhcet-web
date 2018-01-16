@@ -15,12 +15,12 @@ public class ItemNotFoundException extends RuntimeException {
     private String id;
 
     public ItemNotFoundException(@NonNull String type) {
-        super("Item of type " + type + " was not found!");
+        super(type + " was not found!");
         this.type = type;
     }
 
     public ItemNotFoundException(String type, @Nullable String id) {
-        super("Item of type " + type + " with ID " + id + " was not found!");
+        super(type + " " + id + " was not found!");
         this.type = type;
         this.id = id;
     }

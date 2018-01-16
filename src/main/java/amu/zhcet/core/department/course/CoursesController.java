@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Comparator;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
+@RequestMapping("/department/{department}/courses")
 public class CoursesController {
 
     private final CourseService courseService;
@@ -41,7 +43,7 @@ public class CoursesController {
                     .build());
     }
 
-    @GetMapping("/department/{department}/courses")
+    @GetMapping
     public String getCourses(Model model, @PathVariable Department department, @RequestParam(value = "all", required = false) Boolean all) {
         ErrorUtils.requireNonNullDepartment(department);
 
@@ -62,6 +64,7 @@ public class CoursesController {
         // TODO: Add no of registrations
         List<Course> courses = courseService.getAllActiveCourse(department, active);
         courses.forEach(course -> {
+
             if (floatedCourses.contains(course))
                 course.setMeta("Floated");
         });

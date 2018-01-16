@@ -1,6 +1,5 @@
-package amu.zhcet.core.dean.datatables.student;
+package amu.zhcet.core.dean.datatables;
 
-import amu.zhcet.core.dean.datatables.DataTableUtils;
 import amu.zhcet.data.user.student.Student;
 import amu.zhcet.data.user.student.StudentRepository;
 import com.fasterxml.jackson.annotation.JsonView;

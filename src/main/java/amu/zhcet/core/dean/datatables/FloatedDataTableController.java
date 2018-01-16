@@ -1,6 +1,5 @@
-package amu.zhcet.core.dean.datatables.floated;
+package amu.zhcet.core.dean.datatables;
 
-import amu.zhcet.core.dean.datatables.DataTableUtils;
 import amu.zhcet.data.config.ConfigurationService;
 import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.floated.FloatedCourse;
