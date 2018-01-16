@@ -1,6 +1,5 @@
 <div xmlns:th="http://www.thymeleaf.org" lang="en">
     <div class="card" th:fragment="register_faculty">
-        <div id="task_id_faculty" th:text="${task_id_faculty}" hidden></div>
         <div class="card-header">
             <h4 class="card-title">Register Faculty</h4>
             <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
@@ -124,7 +123,7 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
-    <script th:fragment="script">
+    <script th:fragment="script" th:inline="javascript">
         (function () {
 
             $(document).ready(function () {
@@ -135,7 +134,7 @@
                 });
 
                 $('#faculty-progress').initStatusProgress({
-                    taskId: $('#task_id_faculty').text(),
+                    taskId: [[${task_id_faculty}]],
                     finished: function (result) {
                         toastr.success('Faculty Registration Complete in ' + result.duration/1000 + ' s')
                     },

@@ -1,6 +1,7 @@
 package amu.zhcet.core.dean.registration.faculty;
 
 import amu.zhcet.common.realtime.RealTimeStatus;
+import amu.zhcet.common.realtime.RealTimeStatusService;
 import amu.zhcet.data.user.faculty.FacultyMember;
 import amu.zhcet.storage.csv.Confirmation;
 import amu.zhcet.storage.csv.UploadResult;
@@ -25,12 +26,14 @@ import java.util.Collections;
 @RequestMapping("/dean/register/faculty")
 public class FacultyRegistrationController {
 
-    private static final String KEY_FACULTY_REGISTRATION = "confirmFacultyRegistration";
+    public static final String KEY_FACULTY_REGISTRATION = "confirmFacultyRegistration";
     private final FacultyUploadService facultyUploadService;
+    private final RealTimeStatusService realTimeStatusService;
 
     @Autowired
-    public FacultyRegistrationController(FacultyUploadService facultyUploadService) {
+    public FacultyRegistrationController(FacultyUploadService facultyUploadService, RealTimeStatusService realTimeStatusService) {
         this.facultyUploadService = facultyUploadService;
+        this.realTimeStatusService = realTimeStatusService;
     }
 
     @PostMapping
@@ -61,9 +64,11 @@ public class FacultyRegistrationController {
             attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));
         } else {
             try {
-                RealTimeStatus status = facultyUploadService.registerFaculty(confirmation);
+                String passwordFileLocation = facultyUploadService.savePasswordFile(confirmation);
+                RealTimeStatus status = realTimeStatusService.install();
+                facultyUploadService.registerFaculty(confirmation, status);
                 attributes.addFlashAttribute("task_id_faculty", status.getId());
-                attributes.addFlashAttribute("file_saved", status.getMeta());
+                attributes.addFlashAttribute("file_saved", passwordFileLocation);
                 attributes.addFlashAttribute("faculty_registered", true);
             } catch (IOException e) {
                 log.error("Error registering faculty", e);

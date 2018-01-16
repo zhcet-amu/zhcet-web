@@ -1,6 +1,8 @@
 package amu.zhcet.core.dean;
 
 import amu.zhcet.common.error.DuplicateException;
+import amu.zhcet.core.dean.registration.faculty.FacultyRegistrationController;
+import amu.zhcet.core.dean.registration.student.StudentRegistrationController;
 import amu.zhcet.data.department.Department;
 import amu.zhcet.data.department.DepartmentService;
 import amu.zhcet.data.user.UserService;
@@ -41,10 +43,12 @@ public class DeanController {
         model.addAttribute("page_description", "Register Students and Faculty, manage roles and users");
 
         if (!model.containsAttribute("faculty_success"))
-            webRequest.removeAttribute("confirmFacultyRegistration", RequestAttributes.SCOPE_SESSION);
+            webRequest.removeAttribute(FacultyRegistrationController.KEY_FACULTY_REGISTRATION,
+                    RequestAttributes.SCOPE_SESSION);
 
         if (!model.containsAttribute("students_success"))
-            webRequest.removeAttribute("confirmStudentRegistration", RequestAttributes.SCOPE_SESSION);
+            webRequest.removeAttribute(StudentRegistrationController.KEY_STUDENT_REGISTRATION,
+                    RequestAttributes.SCOPE_SESSION);
 
         model.addAttribute("users", userService.getAll());
         if (!model.containsAttribute("department"))

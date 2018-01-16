@@ -1,6 +1,7 @@
 package amu.zhcet.core.dean.registration.student;
 
 import amu.zhcet.common.realtime.RealTimeStatus;
+import amu.zhcet.common.realtime.RealTimeStatusService;
 import amu.zhcet.data.user.student.Student;
 import amu.zhcet.storage.csv.Confirmation;
 import amu.zhcet.storage.csv.UploadResult;
@@ -25,12 +26,14 @@ import java.util.Collections;
 @RequestMapping("/dean/register/students")
 public class StudentRegistrationController {
 
-    private static final String KEY_STUDENT_REGISTRATION = "confirmStudentRegistration";
+    public static final String KEY_STUDENT_REGISTRATION = "confirmStudentRegistration";
     private final StudentUploadService studentUploadService;
+    private final RealTimeStatusService realTimeStatusService;
 
     @Autowired
-    public StudentRegistrationController(StudentUploadService studentUploadService) {
+    public StudentRegistrationController(StudentUploadService studentUploadService, RealTimeStatusService realTimeStatusService) {
         this.studentUploadService = studentUploadService;
+        this.realTimeStatusService = realTimeStatusService;
     }
 
     @PostMapping
@@ -62,7 +65,8 @@ public class StudentRegistrationController {
             attributes.addFlashAttribute("errors", Collections.singletonList("Unknown Error"));
         } else {
             try {
-                RealTimeStatus status = studentUploadService.registerStudents(confirmation);
+                RealTimeStatus status = realTimeStatusService.install();
+                studentUploadService.registerStudents(confirmation, status);
                 attributes.addFlashAttribute("task_id_student", status.getId());
                 attributes.addFlashAttribute("students_registered", true);
             } catch (Exception e) {

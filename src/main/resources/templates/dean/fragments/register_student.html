@@ -1,6 +1,5 @@
 <div xmlns:th="http://www.thymeleaf.org" lang="en">
     <div class="card" th:fragment="register_student">
-        <div id="task_id_student" th:text="${task_id_student}" hidden></div>
         <div class="card-header">
             <h4 class="card-title">Register Students</h4>
             <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
@@ -117,7 +116,7 @@
             </div>
         </div>
     </div>
-    <script th:fragment="script">
+    <script th:fragment="script" th:inline="javascript">
         (function () {
             $(document).ready(function () {
                 $('#registration-modal').modal('show');
@@ -127,7 +126,7 @@
                 });
 
                 $('#student-progress').initStatusProgress({
-                    taskId: $('#task_id_student').text(),
+                    taskId: [[${task_id_student}]],
                     finished: function (result) {
                         toastr.success('Student Registration Complete in ' + result.duration/1000 + ' s')
                     },

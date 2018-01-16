@@ -1,6 +1,5 @@
 package amu.zhcet.data.user.student;
 
-import amu.zhcet.common.realtime.RealTimeStatus;
 import amu.zhcet.common.utils.StringUtils;
 import amu.zhcet.data.user.Role;
 import amu.zhcet.data.user.User;
@@ -8,7 +7,6 @@ import amu.zhcet.data.user.UserService;
 import amu.zhcet.data.user.UserType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +16,6 @@ import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -89,36 +86,7 @@ public class StudentService {
 
         student.getUser().setPassword(passwordEncoder.encode(student.getUser().getPassword()));
 
-        userService.save(student.getUser());
-
         return student;
-    }
-
-    // TODO: Extract to local package
-    @Async
-    public void register(Set<Student> students, RealTimeStatus status) {
-        long startTime = System.nanoTime();
-        status.setContext("Student Registration");
-        status.setTotal(students.size());
-
-        try {
-            final int[] completed = {1};
-            students.stream()
-                    .map(this::initializeStudent)
-                    .forEach(student -> {
-                        save(student);
-                        status.setCompleted(completed[0]++);
-                    });
-            float duration = (System.nanoTime() - startTime)/1000000f;
-            status.setDuration(duration);
-            status.setFinished(true);
-            log.info("Saved {} Students in {} ms", students.size(), duration);
-        } catch (Exception exception) {
-            log.error("Error while saving students", exception);
-            status.setMessage(exception.getMessage());
-            status.setFailed(true);
-            throw exception;
-        }
     }
 
     private static void sanitizeStudent(Student student) {
@@ -134,4 +102,10 @@ public class StudentService {
         studentRepository.save(student);
     }
 
+    @Transactional
+    public void register(Student student) {
+        sanitizeStudent(initializeStudent(student));
+        userService.save(student.getUser());
+        studentRepository.save(student);
+    }
 }

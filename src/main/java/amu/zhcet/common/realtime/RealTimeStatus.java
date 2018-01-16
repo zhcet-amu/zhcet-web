@@ -14,4 +14,9 @@ public class RealTimeStatus {
     private boolean failed;
     private boolean invalid;
     private transient String meta;
+
+    public void increment() {
+        completed++;
+    }
+
 }

@@ -1,6 +1,5 @@
 package amu.zhcet.data.user.faculty;
 
-import amu.zhcet.common.realtime.RealTimeStatus;
 import amu.zhcet.common.utils.StringUtils;
 import amu.zhcet.data.department.Department;
 import amu.zhcet.data.user.Role;
@@ -8,7 +7,6 @@ import amu.zhcet.data.user.UserService;
 import amu.zhcet.data.user.UserType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +16,6 @@ import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -69,43 +66,20 @@ public class FacultyService {
 
         facultyMember.getUser().setPassword(passwordEncoder.encode(facultyMember.getUser().getPassword()));
 
-        userService.save(facultyMember.getUser());
-
         return facultyMember;
-    }
-
-    // TODO: Extract to local package
-    @Async
-    public void register(Set<FacultyMember> facultyMembers, RealTimeStatus status) {
-        long startTime = System.nanoTime();
-        status.setContext("Faculty Registration");
-        status.setTotal(facultyMembers.size());
-
-        try {
-            final int[] completed = {1};
-            facultyMembers.stream()
-                    .map(this::initializeFaculty)
-                    .forEach(facultyMember -> {
-                        sanitizeFaculty(facultyMember);
-                        save(facultyMember);
-                        status.setCompleted(completed[0]++);
-                    });
-            float duration = (System.nanoTime() - startTime)/1000000f;
-            status.setDuration(duration);
-            status.setFinished(true);
-            log.info("Saved {} Faculty in {} s", facultyMembers.size(), duration);
-        } catch (Exception exception) {
-            log.error("Error while saving faculty", exception);
-            status.setMessage(exception.getMessage());
-            status.setFailed(true);
-            throw exception;
-        }
     }
 
     private static void sanitizeFaculty(FacultyMember facultyMember) {
         UserService.sanitizeUser(facultyMember.getUser());
         facultyMember.setFacultyId(StringUtils.capitalizeAll(facultyMember.getFacultyId()));
         facultyMember.setDesignation(StringUtils.capitalizeFirst(facultyMember.getDesignation()));
+    }
+
+    @Transactional
+    public void register(FacultyMember facultyMember) {
+        sanitizeFaculty(initializeFaculty(facultyMember));
+        userService.save(facultyMember.getUser());
+        facultyRepository.save(facultyMember);
     }
 
     @Transactional

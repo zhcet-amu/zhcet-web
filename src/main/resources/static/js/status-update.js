@@ -59,7 +59,7 @@
             settings.percentageText = container.find('.percentage');
             settings.progressBar = container.find('.determinate');
 
-            if (settings.taskId !== '') {
+            if (settings.taskId && settings.taskId !== '') {
                 container.show();
                 interval = setInterval(function () {
                     poll(settings);
