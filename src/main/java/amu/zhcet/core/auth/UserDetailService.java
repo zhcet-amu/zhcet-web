@@ -1,7 +1,7 @@
 package amu.zhcet.core.auth;
 
-import amu.zhcet.core.auth.login.LoginAttemptService;
 import amu.zhcet.common.utils.Utils;
+import amu.zhcet.core.auth.login.LoginAttemptService;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
 import amu.zhcet.security.permission.PermissionManager;
@@ -16,9 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-import java.time.ZonedDateTime;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -85,15 +82,7 @@ public class UserDetailService implements UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(authenticationFromUser(user));
     }
 
-    public Optional<User> getLoggedInUser() {
-        return userService.getLoggedInUser();
-    }
-
-    @Transactional
-    public void updateAvatar(User user, String originalAvatarUrl, String avatarUrl) {
-        user.getDetails().setAvatarUrl(avatarUrl);
-        user.getDetails().setOriginalAvatarUrl(originalAvatarUrl);
-        user.getDetails().setAvatarUpdated(ZonedDateTime.now());
+    public void saveAndUpdatePrincipal(User user) {
         userService.save(user);
         updatePrincipal(user);
     }

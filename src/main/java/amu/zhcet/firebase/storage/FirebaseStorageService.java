@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -30,12 +29,12 @@ public class FirebaseStorageService {
      * Uploads a file to Firebase Storage
      * @param path Path at which the file is to be stored on Firebase
      * @param contentType Content-Type of file - Helps Firebase to set meta data on file
-     * @param fileStream InputStream of file to be stored
+     * @param content byte array of file to be stored
      * @return Public facing URL of the uploaded file
      * @throws UnsupportedEncodingException if the file type is unsupported
      */
     @Async
-    public CompletableFuture<Optional<String>> uploadFile(String path, String contentType, InputStream fileStream) throws UnsupportedEncodingException {
+    public CompletableFuture<Optional<String>> uploadFile(String path, String contentType, byte[] content) throws UnsupportedEncodingException {
         if (!firebaseService.canProceed())
             return CompletableFuture.completedFuture(Optional.empty());
 
@@ -52,7 +51,7 @@ public class FirebaseStorageService {
                 .setMetadata(map)
                 .setAcl(Collections.singletonList(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)))
                 .build();
-        BlobInfo uploaded = bucket.getStorage().create(uploadContent, fileStream);
+        BlobInfo uploaded = bucket.getStorage().create(uploadContent, content);
 
         log.info("File Uploaded");
         log.info("Media Link : {}", uploaded.getMediaLink());

@@ -51,7 +51,7 @@ class RoleManagementService {
 
         user.setRoles(optimalRoles);
         userDetailService.getUserService().save(user);
-        userDetailService.getLoggedInUser()
+        userDetailService.getUserService().getLoggedInUser()
                 .filter(member -> user.getUserId().equals(member.getUserId()))
                 .ifPresent(userDetailService::updatePrincipal);
     }

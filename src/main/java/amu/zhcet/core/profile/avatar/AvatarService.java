@@ -3,20 +3,26 @@ package amu.zhcet.core.profile.avatar;
 import amu.zhcet.core.auth.UserDetailService;
 import amu.zhcet.data.user.User;
 import amu.zhcet.storage.image.ImageService;
+import amu.zhcet.storage.image.ImageUploadException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Service
 class AvatarService {
 
-    private static final int AVATAR_TIMEOUT_HOURS = 24; // 1 day
+    public static final int AVATAR_TIMEOUT_HOURS = 24; // 1 day
+    private static final int ORIGINAL_AVATAR_SIZE = 1000;
+    private static final int AVATAR_SIZE = 86;
 
     private final ImageService imageService;
     private final UserDetailService userDetailService;
@@ -32,10 +38,10 @@ class AvatarService {
         if (lastUpdated != null) {
             log.info("User {} last updated its avatar at {}", user.getUserId(), lastUpdated.toString());
 
-            long timeElapsed = ChronoUnit.HOURS.between(lastUpdated, ZonedDateTime.now());
+            long timeElapsed = getElapsedTime(user);
             if (timeElapsed < AVATAR_TIMEOUT_HOURS) {
-                log.warn("Trying to update avatar before cool down : {} hours elapsed and {}  hours remaining", timeElapsed, AVATAR_TIMEOUT_HOURS - timeElapsed);
-
+                log.warn("Trying to update avatar before cool down : {} hours elapsed and {}  hours remaining",
+                        timeElapsed, AVATAR_TIMEOUT_HOURS - timeElapsed);
                 return false;
             }
         }
@@ -43,14 +49,28 @@ class AvatarService {
         return true;
     }
 
+    public long getElapsedTime(User user) {
+        ZonedDateTime lastUpdated = user.getDetails().getAvatarUpdated();
+        return ChronoUnit.HOURS.between(lastUpdated, ZonedDateTime.now());
+    }
+
+    @Transactional
     public void uploadImage(User user, MultipartFile file) {
         log.info("Uploading photo " + file.getOriginalFilename() + " for " + user.getUserId());
+        CompletableFuture<Optional<String>> avatarFuture = imageService.upload("profile/" + user.getUserId() + "/profile_thumb",
+                file, AVATAR_SIZE);
+        CompletableFuture<Optional<String>> originalAvatarFuture =imageService.upload("profile/" + user.getUserId() + "/profile",
+                file, ORIGINAL_AVATAR_SIZE);
+
+        CompletableFuture.allOf(avatarFuture, originalAvatarFuture).join();
+
         try {
-            ImageService.Avatar avatar = imageService.uploadAvatar("profile/" + user.getUserId() + "/profile", file);
-            userDetailService.updateAvatar(user, avatar.getOriginalAvatarUrl(), avatar.getAvatarUrl());
+            avatarFuture.get().ifPresent(user.getDetails()::setAvatarUrl);
+            originalAvatarFuture.get().ifPresent(user.getDetails()::setOriginalAvatarUrl);
+            user.getDetails().setAvatarUpdated(ZonedDateTime.now());
+            userDetailService.saveAndUpdatePrincipal(user);
         } catch (InterruptedException | ExecutionException e) {
-            log.error("Error uploading avatar", e);
-            throw new RuntimeException("Error Uploading Avatar");
+            throw new ImageUploadException(e.getMessage());
         }
     }
 

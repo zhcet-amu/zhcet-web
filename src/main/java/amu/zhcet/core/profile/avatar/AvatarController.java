@@ -15,6 +15,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collections;
 
+import static amu.zhcet.core.profile.avatar.AvatarService.AVATAR_TIMEOUT_HOURS;
+
 @Slf4j
 @Controller
 public class AvatarController {
@@ -41,6 +43,11 @@ public class AvatarController {
             } catch (RuntimeException re) {
                 redirectAttributes.addFlashAttribute("flash_messages", Flash.error("Failed to upload avatar"));
             }
+        } else {
+            long timeElapsed = avatarService.getElapsedTime(user);
+            redirectAttributes.addFlashAttribute("avatar_errors", Collections.singletonList(String.format(
+                            "You can only update profile picture once in %d hours. %d hours remaining for cool down",
+                                    AVATAR_TIMEOUT_HOURS, AVATAR_TIMEOUT_HOURS - timeElapsed)));
         }
 
         return "redirect:/profile";
