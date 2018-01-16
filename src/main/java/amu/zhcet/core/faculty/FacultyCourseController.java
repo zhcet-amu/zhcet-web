@@ -1,5 +1,6 @@
 package amu.zhcet.core.faculty;
 
+import amu.zhcet.data.course.floated.FloatedCourse;
 import amu.zhcet.data.course.incharge.CourseInCharge;
 import amu.zhcet.data.course.incharge.CourseInChargeService;
 import amu.zhcet.data.user.faculty.FacultyMember;
@@ -37,6 +38,13 @@ public class FacultyCourseController {
 
         FacultyMember facultyMember = facultyService.getLoggedInMember().orElseThrow(FacultyMemberNotFoundException::new);
         List<CourseInCharge> courseInCharges = courseInChargeService.getCourseByFaculty(facultyMember);
+
+        // Set the no of registrations for each course
+        for (CourseInCharge courseInCharge : courseInCharges) {
+            FloatedCourse floatedCourse = courseInCharge.getFloatedCourse();
+            floatedCourse.getCourse().setRegistrations(floatedCourse.getCourseRegistrations().size());
+        }
+
         // Sort courses by semester
         courseInCharges.sort(Comparator.comparing(o -> {
             Integer compared = o.getFloatedCourse().getCourse().getSemester();

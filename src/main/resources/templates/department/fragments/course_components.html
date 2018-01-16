@@ -14,6 +14,7 @@
                     <span th:class="|capsule p-small ${(course.compulsory != null && course.compulsory) ? 'bg-primary' : 'bg-info'} text-white|" th:text="${(course.compulsory != null && course.compulsory) ? 'Compulsory' : 'Optional'}"></span>
                 </span>
             </h5>
+            <p th:if="${course.registrations}" th:text="|${course.registrations} Students Registered|"></p>
             <blockquote class="card-text" th:text="${course.description}"></blockquote>
             <div class="badges card-text">
                 <div class="badge badge-info"><span><i class="material-icons">hourglass_empty</i> Semester </span><span class="semester badge-content" th:text="${course.semester}"></span></div>

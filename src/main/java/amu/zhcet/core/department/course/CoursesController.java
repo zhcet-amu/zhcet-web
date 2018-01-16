@@ -6,8 +6,8 @@ import amu.zhcet.core.department.DepartmentController;
 import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.CourseService;
-import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.floated.FloatedCourse;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.department.Department;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Controller
@@ -47,6 +47,7 @@ public class CoursesController {
     public String getCourses(Model model, @PathVariable Department department, @RequestParam(value = "all", required = false) Boolean all) {
         ErrorUtils.requireNonNullDepartment(department);
 
+        // Determine if only active courses have to be should
         boolean active = !(all != null && all);
 
         model.addAttribute("page_description", "View and manage courses for the Department");
@@ -56,18 +57,23 @@ public class CoursesController {
         model.addAttribute("page_path", getPath(department));
         model.addAttribute("all", !active);
 
-        List<Course> floatedCourses = floatedCourseService.getCurrentFloatedCourses(department)
-                .stream()
-                .map(FloatedCourse::getCourse)
-                .collect(Collectors.toList());
+        List<FloatedCourse> floatedCourses = floatedCourseService.getCurrentFloatedCourses(department);
 
-        // TODO: Add no of registrations
         List<Course> courses = courseService.getAllActiveCourse(department, active);
-        courses.forEach(course -> {
 
-            if (floatedCourses.contains(course))
-                course.setMeta("Floated");
-        });
+        // Add meta tag and no of registrations to each course
+        for (FloatedCourse floatedCourse : floatedCourses) {
+            Stream.of(floatedCourse)
+                    .map(FloatedCourse::getCourse)
+                    .map(courses::indexOf)
+                    .filter(index -> index != -1)
+                    .map(courses::get)
+                    .findFirst()
+                    .ifPresent(course -> {
+                        course.setMeta("Floated");
+                        course.setRegistrations(floatedCourse.getCourseRegistrations().size());
+                    });
+        }
 
         courses.sort(Comparator.comparing(Course::getCode));
 

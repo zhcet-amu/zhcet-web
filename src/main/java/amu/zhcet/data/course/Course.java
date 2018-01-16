@@ -66,4 +66,6 @@ public class Course extends BaseEntity {
     @Size(max = 2500)
     @Type(type = "text")
     private String description;
+
+    private transient Integer registrations;
 }
