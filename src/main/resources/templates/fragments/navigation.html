@@ -29,15 +29,15 @@
                 </ul>
             </li>
             <li th:class="|nav-item ${pageId == 'department' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
-                <a th:href="@{/department}" href="department.html">
+                <a th:href="@{/admin/department}" href="department.html">
                     <i class="icon-archive3"></i>
                     <span data-i18n="nav.project.main" class="menu-title">Department Panel</span>
                 </a>
                 <ul class="menu-content">
-                    <li th:class="${subPage == 'department_admin' ? 'active' : ''}" ><a th:href="@{/department}" class="menu-item">Admin Panel</a></li>
-                    <li th:class="${subPage == 'courses' ? 'active' : ''}" ><a th:href="@{|/department/${#authentication.principal.department.code}/courses|}" class="menu-item">Courses</a></li>
-                    <li th:class="${subPage == 'add_course' ? 'active' : ''}" ><a th:href="@{|/department/${#authentication.principal.department.code}/course/add|}" class="menu-item">Add Course</a></li>
-                    <li th:class="${subPage == 'float_course' ? 'active' : ''}" ><a th:href="@{|/department/${#authentication.principal.department.code}/course/float|}" class="menu-item">Float Course</a></li>
+                    <li th:class="${subPage == 'department_admin' ? 'active' : ''}" ><a th:href="@{/admin/department}" class="menu-item">Admin Panel</a></li>
+                    <li th:class="${subPage == 'courses' ? 'active' : ''}" ><a th:href="@{|/admin/department/${#authentication.principal.department.code}/courses|}" class="menu-item">Courses</a></li>
+                    <li th:class="${subPage == 'add_course' ? 'active' : ''}" ><a th:href="@{|/admin/department/${#authentication.principal.department.code}/course/add|}" class="menu-item">Add Course</a></li>
+                    <li th:class="${subPage == 'float_course' ? 'active' : ''}" ><a th:href="@{|/admin/department/${#authentication.principal.department.code}/course/float|}" class="menu-item">Float Course</a></li>
                 </ul>
             </li>
             <li class="nav-item" sec:authorize="!isAuthenticated()">

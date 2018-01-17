@@ -34,7 +34,7 @@
                 <br>
                 <input class="incharges twitter-typeahead form-control round mb-1" autocomplete="off" placeholder="Search" />
             </div>
-            <form method="post" th:action="@{|/department/${department.code}/floated/${floatedCourse.course.code}/in_charge|}">
+            <form method="post" th:action="@{|/admin/department/${department.code}/floated/${floatedCourse.course.code}/in_charge|}">
                 <div class="in-charge-container">
                     <div class="in-charge" th:each="inCharge : ${floatedCourse.inCharge}">
                         <div class="row vertical-align text-xs-center">

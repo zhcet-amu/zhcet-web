@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
-@RequestMapping("department/{department}/floated/{course}")
+@RequestMapping("/admin/department/{department}/floated/{course}")
 public class FloatedCourseController {
 
     private final CourseRegistrationService courseRegistrationService;
@@ -43,10 +43,10 @@ public class FloatedCourseController {
     public static PathChain getPath(Department department, Course course) {
         return CoursesController.getPath(department)
                 .add(Path.builder().title(course.getCode())
-                        .link(String.format("/department/%s/courses/%s/edit", department.getCode(), course.getCode()))
+                        .link(String.format("/admin/department/%s/courses/%s/edit", department.getCode(), course.getCode()))
                         .build())
                 .add(Path.builder().title("Manage")
-                        .link(String.format("/department/%s/floated/%s", department.getCode(), course.getCode()))
+                        .link(String.format("/admin/department/%s/floated/%s", department.getCode(), course.getCode()))
                         .build());
     }
 
@@ -85,7 +85,7 @@ public class FloatedCourseController {
         courseRegistrationService.removeRegistration(floatedCourse, student);
         attributes.addFlashAttribute("flash_messages", Flash.success("Student removed from course"));
 
-        return "redirect:/department/{department}/floated/{course}";
+        return "redirect:/admin/department/{department}/floated/{course}";
     }
 
     @PostMapping("/unfloat")
@@ -96,7 +96,7 @@ public class FloatedCourseController {
         floatedCourseService.unfloatCourse(floatedCourse);
         redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " unfloated successfully!");
 
-        return "redirect:/department/{department}/courses?active=true";
+        return "redirect:/admin/department/{department}/courses?active=true";
     }
 
 }

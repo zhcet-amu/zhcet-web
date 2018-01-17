@@ -18,7 +18,7 @@
                             <label for="type">Select Department</label>
                             <select id="type" onchange="location = this.value;">
                                 <option th:each="dep : ${@departmentService.findAll()}"
-                                        th:value="@{|/department/${dep.code}|}"
+                                        th:value="@{|/admin/department/${dep.code}|}"
                                         th:text="${dep.name}"
                                         th:selected="${dep.code == department.code}">
                                 </option>
@@ -37,7 +37,7 @@
                             <div class="card-block">
                                 <h4 class="card-title">View Courses</h4>
                                 <p class="card-text">View and manage all the courses in department.</p>
-                                <a th:href="@{|/department/${department.code}/courses|}" class="btn btn-outline-danger float-xs-right">All  Courses</a>
+                                <a th:href="@{|/admin/department/${department.code}/courses|}" class="btn btn-outline-danger float-xs-right">All  Courses</a>
                             </div>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                             <div class="card-block">
                                 <h4 class="card-title">Float Course</h4>
                                 <p class="card-text">Float courses in the current session.</p>
-                                <a th:href="@{|/department/${department.code}/course/float|}" class="btn btn-outline-info float-xs-right">Float Course</a>
+                                <a th:href="@{|/admin/department/${department.code}/course/float|}" class="btn btn-outline-info float-xs-right">Float Course</a>
                             </div>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                             <div class="card-block">
                                 <h4 class="card-title">Add Course</h4>
                                 <p class="card-text">Add a new course to the department. </p>
-                                <a th:href="@{|/department/${department.code}/course/add|}" class="btn btn-outline-success float-xs-right">New Course</a>
+                                <a th:href="@{|/admin/department/${department.code}/course/add|}" class="btn btn-outline-success float-xs-right">New Course</a>
                             </div>
                         </div>
                     </div>

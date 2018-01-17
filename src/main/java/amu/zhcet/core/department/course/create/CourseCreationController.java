@@ -25,7 +25,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @Controller
-@RequestMapping("/department/{department}/course/add")
+@RequestMapping("/admin/department/{department}/course/add")
 public class CourseCreationController {
 
     private final CourseService courseService;
@@ -38,7 +38,7 @@ public class CourseCreationController {
     public static PathChain getPath(Department department) {
         return CoursesController.getPath(department)
                 .add(Path.builder().title("Create")
-                        .link(String.format("/department/%s/course/add", department.getCode()))
+                        .link(String.format("/admin/department/%s/course/add", department.getCode()))
                         .build());
     }
 
@@ -76,7 +76,7 @@ public class CourseCreationController {
                 courseService.addCourse(course);
                 redirectAttributes.addFlashAttribute("course_success", "Course created successfully!");
 
-                return "redirect:/department/{department}/courses?active=true";
+                return "redirect:/admin/department/{department}/courses?active=true";
             } catch (DuplicateException e) {
                 log.warn("Duplicate Course", e);
                 redirectAttributes.addFlashAttribute("course", course);
@@ -84,7 +84,7 @@ public class CourseCreationController {
             }
         }
 
-        return "redirect:/department/{department}/course/add";
+        return "redirect:/admin/department/{department}/course/add";
     }
 
 }

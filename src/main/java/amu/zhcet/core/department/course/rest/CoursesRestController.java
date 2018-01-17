@@ -32,7 +32,7 @@ public class CoursesRestController {
         return courseDto;
     }
 
-    @GetMapping("/department/{department}/api/courses")
+    @GetMapping("/admin/department/{department}/api/courses")
     public List<CourseDto> courses(@PathVariable Department department) {
         if (department == null)
             return null;

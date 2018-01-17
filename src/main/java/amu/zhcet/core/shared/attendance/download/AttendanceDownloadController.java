@@ -72,7 +72,7 @@ public class AttendanceDownloadController {
      * @param course Course for which the attendance is to be downloaded
      * @param response Response object to be sent, containing the attendance CSV
      */
-    @GetMapping("/department/{department}/floated/{course}/attendance.csv")
+    @GetMapping("/admin/department/{department}/floated/{course}/attendance.csv")
     public void downloadAttendanceForDepartment(@PathVariable Department department, @PathVariable Course course, HttpServletResponse response) {
         ErrorUtils.requireNonNullDepartment(department);
         ErrorUtils.requireNonNullCourse(course);

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
-@RequestMapping("department/{department}/floated/{course}/register")
+@RequestMapping("/admin/department/{department}/floated/{course}/register")
 public class DepartmentCourseRegistrationController {
 
     private final CourseRegistrationUploadService courseRegistrationUploadService;
@@ -43,7 +43,7 @@ public class DepartmentCourseRegistrationController {
         ErrorUtils.requireNonNullCourse(course);
         courseRegistrationUploadService.upload(course, file, attributes, session);
 
-        return "redirect:/department/{department}/floated/{course}";
+        return "redirect:/admin/department/{department}/floated/{course}";
     }
 
     /**
@@ -62,7 +62,7 @@ public class DepartmentCourseRegistrationController {
         ErrorUtils.requireNonNullCourse(course);
         courseRegistrationUploadService.register(course, attributes, session);
 
-        return "redirect:/department/{department}/floated/{course}";
+        return "redirect:/admin/department/{department}/floated/{course}";
     }
 
 }

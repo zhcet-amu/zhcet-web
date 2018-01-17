@@ -30,7 +30,7 @@ public class InChargeManagementController {
         this.inChargeManagementService = inChargeManagementService;
     }
 
-    @PostMapping("department/{department}/floated/{course}/in_charge")
+    @PostMapping("/admin/department/{department}/floated/{course}/in_charge")
     public String changeInCharge(RedirectAttributes redirectAttributes,
                                  @PathVariable Department department,
                                  @PathVariable Course course,
@@ -42,7 +42,7 @@ public class InChargeManagementController {
 
         redirectAttributes.addFlashAttribute("incharge_success", "Course In-Charge saved successfully");
 
-        return "redirect:/department/{department}/floated/{course}";
+        return "redirect:/admin/department/{department}/floated/{course}";
     }
 
 }

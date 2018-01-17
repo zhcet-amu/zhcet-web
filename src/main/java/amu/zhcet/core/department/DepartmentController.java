@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
-@RequestMapping("/department")
+@RequestMapping("/admin/department")
 public class DepartmentController {
 
     public static PathChain getPath(Department department) {
         return PathChain.start()
                 .add(Path.builder().title("Departments").build())
                 .add(Path.builder().title(department.getName())
-                        .link(String.format("/department/%s", department.getCode()))
+                        .link(String.format("/admin/department/%s", department.getCode()))
                         .build());
     }
 
@@ -32,7 +32,7 @@ public class DepartmentController {
         return Auditor.getLoggedInUser()
                 .map(CustomUser::getDepartment)
                 .map(Department::getCode)
-                .map(code -> "redirect:/department/" + code)
+                .map(code -> "redirect:/admin/department/" + code)
                 .orElseThrow(() -> new AccessDeniedException("403"));
     }
 

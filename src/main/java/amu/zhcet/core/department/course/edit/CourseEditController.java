@@ -22,7 +22,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @Controller
-@RequestMapping("/department/{department}/courses/{course}")
+@RequestMapping("/admin/department/{department}/courses/{course}")
 public class CourseEditController {
 
     private final CourseService courseService;
@@ -39,7 +39,7 @@ public class CourseEditController {
                 .add(Path.builder().title(course.getCode())
                         .build())
                 .add(Path.builder().title("Edit")
-                        .link(String.format("/department/%s/courses/%s/edit", department.getCode(), course.getCode()))
+                        .link(String.format("/admin/department/%s/courses/%s/edit", department.getCode(), course.getCode()))
                         .build());
     }
 
@@ -86,7 +86,7 @@ public class CourseEditController {
             }
         }
 
-        return "redirect:/department/{department}/courses/{course}/edit";
+        return "redirect:/admin/department/{department}/courses/{course}/edit";
     }
 
     @GetMapping("/delete")
@@ -97,6 +97,6 @@ public class CourseEditController {
         courseService.deleteCourse(course);
         redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " deleted successfully!");
 
-        return "redirect:/department/{department}/courses?active=true";
+        return "redirect:/admin/department/{department}/courses?active=true";
     }
 }
