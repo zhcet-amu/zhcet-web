@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Controller
-@RequestMapping("/department/{department}/courses")
+@RequestMapping("/admin/department/{department}/courses")
 public class CoursesController {
 
     private final CourseService courseService;
@@ -39,7 +39,7 @@ public class CoursesController {
     public static PathChain getPath(Department department) {
         return DepartmentController.getPath(department)
                 .add(Path.builder().title("Courses")
-                    .link(String.format("/department/%s/courses", department.getCode()))
+                    .link(String.format("/admin/department/%s/courses", department.getCode()))
                     .build());
     }
 

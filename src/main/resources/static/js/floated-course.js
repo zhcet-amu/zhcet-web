@@ -32,7 +32,7 @@
     var blockInchargeUI = App.blockUI;
     var department = PageDetails.department;
     var index = ["facultyId", "userName"];
-    var baseUrl = "/department/" + department + "/api/faculty";
+    var baseUrl = "/admin/department/" + department + "/api/faculty";
     var actionArea = $('#incharge-action');
     blockInchargeUI(actionArea, true);
     fuzzyhound.setSource(baseUrl, index, function () {

@@ -26,7 +26,7 @@
                 </div>
                 <div class="card-body collapse in">
                     <div class="card-block">
-                        <form class="form" th:action="@{|/department/${department.code}/course/add|}" method="post" th:object="${course}">
+                        <form class="form" th:action="@{|/admin/department/${department.code}/course/add|}" method="post" th:object="${course}">
                             <div th:replace="department/fragments/course_form"></div>
                             <div class="form-actions right">
                                 <button type="submit" class="btn btn-primary">

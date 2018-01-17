@@ -37,9 +37,9 @@
             <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
             <div class="heading-elements">
                 <ul class="list-inline mb-0">
-                    <li th:if="${course.meta}"><a th:href="@{|/department/${department.code}/floated/${course.code}|}" data-toggle="tooltip" data-placement="top" data-original-title="Manage Course"><i class="icon-paper"></i></a></li>
-                    <li th:unless="${course.meta}"><a th:href="@{|/department/${department.code}/course/float/${course.code}|}" data-toggle="tooltip" data-placement="top" data-original-title="Float Course"><i class="icon-layers"></i></a></li>
-                    <li><a th:href="@{|/department/${department.code}/courses/${course.code}/edit|}" data-toggle="tooltip" data-placement="top" data-original-title="Edit Course"><i class="icon-cog3"></i></a></li>
+                    <li th:if="${course.meta}"><a th:href="@{|/admin/department/${department.code}/floated/${course.code}|}" data-toggle="tooltip" data-placement="top" data-original-title="Manage Course"><i class="icon-paper"></i></a></li>
+                    <li th:unless="${course.meta}"><a th:href="@{|/admin/department/${department.code}/course/float/${course.code}|}" data-toggle="tooltip" data-placement="top" data-original-title="Float Course"><i class="icon-layers"></i></a></li>
+                    <li><a th:href="@{|/admin/department/${department.code}/courses/${course.code}/edit|}" data-toggle="tooltip" data-placement="top" data-original-title="Edit Course"><i class="icon-cog3"></i></a></li>
                 </ul>
             </div>
         </div>

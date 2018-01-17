@@ -34,7 +34,7 @@ public class DepartmentMembersController {
         this.facultyService = facultyService;
     }
 
-    @GetMapping("/department/{department}/api/faculty")
+    @GetMapping("/admin/department/{department}/api/faculty")
     public List<FacultyDto> faculty(@PathVariable Department department, @RequestParam(required = false) Boolean all) {
         if (department == null)
             return null;

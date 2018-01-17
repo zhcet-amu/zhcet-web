@@ -13,10 +13,10 @@
             <div th:replace="fragments/layout :: toolbar"></div>
             <div class="text-xs-right">
                 <input id="course-code" th:value="${course.code}" type="text" hidden>
-                <a th:href="@{|/department/${department.code}/floated/${course.code}|}" th:if="${floated}">
+                <a th:href="@{|/admin/department/${department.code}/floated/${course.code}|}" th:if="${floated}">
                     <button class="btn btn-round btn-primary mb-2">Manage Floated Course</button>
                 </a>
-                <a th:href="@{|/department/${department.code}/courses/${course.code}/float|}" th:unless="${floated}">
+                <a th:href="@{|/admin/department/${department.code}/course/float/${course.code}|}" th:unless="${floated}">
                     <button class="btn btn-round btn-info mb-2">Float Course</button>
                 </a>
                 <button class="btn btn-round btn-danger mb-2" data-toggle="modal" data-target="#delete">Delete Course</button>
@@ -44,7 +44,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
-                            <a th:href="@{|/department/${department.code}/courses/${course.code}/delete|}">
+                            <a th:href="@{|/admin/department/${department.code}/courses/${course.code}/delete|}">
                                 <button type="button" id="delete-button" class="btn btn-outline-danger" disabled>Delete Course</button>
                             </a>
                         </div>
@@ -67,7 +67,7 @@
                 </div>
                 <div class="card-body collapse in">
                     <div class="card-block">
-                        <form class="form" th:action="@{|/department/${department.code}/courses/${course.code}/edit|}" method="post" th:object="${course}">
+                        <form class="form" th:action="@{|/admin/department/${department.code}/courses/${course.code}/edit|}" method="post" th:object="${course}">
                             <div th:replace="fragments/layout :: success(condition = ${course_success}, message = ${course_success})"></div>
                             <div th:replace="department/fragments/course_form"></div>
                             <div class="form-actions right">

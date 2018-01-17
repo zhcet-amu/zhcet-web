@@ -92,7 +92,7 @@
     var actionArea = $('#action-area');
 
     App.blockUI(actionArea, true);
-    fuzzyhound.setSource("/department/" + department + "/api/courses",
+    fuzzyhound.setSource("/admin/department/" + department + "/api/courses",
         ["code", "title"],
         function(response) {
         App.blockUI(actionArea, false);
