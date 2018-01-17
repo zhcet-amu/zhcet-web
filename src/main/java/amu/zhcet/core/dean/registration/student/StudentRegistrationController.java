@@ -23,7 +23,7 @@ import java.util.Collections;
 
 @Slf4j
 @Controller
-@RequestMapping("/dean/register/students")
+@RequestMapping("/admin/dean/register/students")
 public class StudentRegistrationController {
 
     public static final String KEY_STUDENT_REGISTRATION = "confirmStudentRegistration";
@@ -54,7 +54,7 @@ public class StudentRegistrationController {
             log.error("Error registering students", ioe);
         }
 
-        return "redirect:/dean";
+        return "redirect:/admin/dean";
     }
 
     @PostMapping("/confirm")
@@ -77,7 +77,7 @@ public class StudentRegistrationController {
             webRequest.removeAttribute(KEY_STUDENT_REGISTRATION, RequestAttributes.SCOPE_SESSION);
         }
 
-        return "redirect:/dean";
+        return "redirect:/admin/dean";
     }
 
 }

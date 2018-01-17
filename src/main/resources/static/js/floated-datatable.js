@@ -16,8 +16,8 @@
         modal.find('#num').html(data['num_students']);
         modal.find('#sections').html(data['sections']);
         modal.find('#type_icon').attr('class', (data['course_type'] === 'Theory' ? 'icon-book' : 'icon-lab'));
-        modal.find('#link').attr('href', '/dean/floated/' + data['course_code'] + '/attendance/download');
-        modal.find('#register').attr('href', '/dean/floated/' + data['course_code']);
+        modal.find('#link').attr('href', '/admin/dean/floated/' + data['course_code'] + '/attendance/download');
+        modal.find('#register').attr('href', '/admin/dean/floated/' + data['course_code']);
 
         if (data['createdAt'] && data['createdAt'] !== '')
             modal.find('#floated-at').html(moment(DataUtils.fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));
@@ -41,7 +41,7 @@
             scrollCollapse: true,
             'ajax': {
                 'contentType': 'application/json',
-                'url': '/dean/api/floated',
+                'url': '/admin/dean/api/floated',
                 'type': 'POST',
                 'data': function (d) {
                     return JSON.stringify(d);

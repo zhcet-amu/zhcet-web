@@ -26,7 +26,7 @@ public class FacultyDataTableController {
     }
 
     @JsonView(DataTablesOutput.View.class)
-    @PostMapping(value = "/dean/api/faculty")
+    @PostMapping(value = "/admin/dean/api/faculty")
     public DataTablesOutput<FacultyView> getFaculty(@Valid @RequestBody DataTablesInput input) {
         DataTableUtils.convertInput(input);
         Boolean working = DataTableUtils.sanitizeBoolean(input, "working");

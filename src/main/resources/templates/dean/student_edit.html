@@ -51,7 +51,7 @@
             </div>
             <div class="card-block">
                 <!--/*@thymesVar id="studentModel" type="amu.zhcet.core.dean.edit.student.StudentEditModel"*/-->
-                <form class="form" th:action="@{'/dean/students/' + ${student.user.userId}}" method="post" th:object="${studentModel}">
+                <form class="form" th:action="@{'/admin/dean/students/' + ${student.user.userId}}" method="post" th:object="${studentModel}">
                     <div class="row">
                         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
                             <div th:each="message : ${success}" class="alert alert-dismissible alert-success">
@@ -162,7 +162,7 @@
                                                th:field="*{section}"/>
                                     </div>
                                 </div>
-                                <a th:href="@{|/dean/roles/user/${student.enrolmentNumber}/|}"
+                                <a th:href="@{|/admin/dean/roles/user/${student.enrolmentNumber}/|}"
                                    class="btn btn-block btn-danger">Edit Roles</a>
                                 <br>
                                 <button type="submit" class="btn btn-primary float-xs-right">

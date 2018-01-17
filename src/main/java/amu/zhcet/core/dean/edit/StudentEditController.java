@@ -22,7 +22,7 @@ import java.util.Collections;
 
 @Slf4j
 @Controller
-@RequestMapping("/dean/students")
+@RequestMapping("/admin/dean/students")
 public class StudentEditController {
 
     private final StudentEditService studentEditService;
@@ -79,7 +79,7 @@ public class StudentEditController {
             }
         }
 
-        return "redirect:/dean/students/{student}";
+        return "redirect:/admin/dean/students/{student}";
     }
 
 }

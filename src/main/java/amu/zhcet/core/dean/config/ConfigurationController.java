@@ -20,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/dean/configuration")
+@RequestMapping("/admin/dean/configuration")
 public class ConfigurationController {
 
     private final ModelMapper modelMapper;
@@ -78,7 +78,7 @@ public class ConfigurationController {
             }
         }
 
-        return "redirect:/dean/configuration";
+        return "redirect:/admin/dean/configuration";
     }
 
 }

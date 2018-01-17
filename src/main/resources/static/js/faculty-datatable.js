@@ -9,7 +9,7 @@
         modal.find('#department').html(data['user_department_name']);
         modal.find('#working').html(data['working'] ? 'Working' : 'Inactive');
         modal.find('#working').attr('class', 'capsule p-small ' + (data['working'] ? 'bg-success' : 'bg-danger'));
-        modal.find('#link').attr('href', '/dean/faculty/' + data['facultyId']);
+        modal.find('#link').attr('href', '/admin/dean/faculty/' + data['facultyId']);
 
         modal.find('#avatar').attr('src', 'https://zhcet-backend.firebaseapp.com/static/img/account.svg');
         if (data['avatar-url'] !== '' || data['original-avatar-url'] !== '') {
@@ -64,7 +64,7 @@
             scrollCollapse: true,
             'ajax': {
                 'contentType': 'application/json',
-                'url': '/dean/api/faculty',
+                'url': '/admin/dean/api/faculty',
                 'type': 'POST',
                 'data': function (d) {
                     return JSON.stringify(d);
@@ -119,7 +119,7 @@
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
             "initComplete": function () {
                 DataUtils.searchDelay(table);
-                DataUtils.attachSelectors(table, 'DataTables_facultyTable_/dean/faculty', [{
+                DataUtils.attachSelectors(table, 'DataTables_facultyTable_/admin/dean/faculty', [{
                     id: '#working-status',
                     columnName: 'working'
                 }, {

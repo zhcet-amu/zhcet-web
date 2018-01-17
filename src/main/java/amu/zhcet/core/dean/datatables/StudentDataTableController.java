@@ -26,7 +26,7 @@ public class StudentDataTableController {
     }
 
     @JsonView(DataTablesOutput.View.class)
-    @PostMapping(value = "/dean/api/students")
+    @PostMapping(value = "/admin/dean/api/students")
     public DataTablesOutput<StudentView> getStudents(@Valid @RequestBody DataTablesInput input) {
         DataTableUtils.convertInput(input);
         return studentRepository.findAll(input, this::fromStudent);
