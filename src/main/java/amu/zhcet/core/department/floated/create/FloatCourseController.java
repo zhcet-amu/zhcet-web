@@ -14,12 +14,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin/department/{department}/course/float")
+@RequestMapping("/admin/department/{department}/float")
 public class FloatCourseController {
 
     private final FloatedCourseService floatedCourseService;
@@ -32,23 +31,8 @@ public class FloatCourseController {
     public static PathChain getPath(Department department) {
         return CoursesController.getPath(department)
                 .add(Path.builder().title("Float")
-                        .link(String.format("/admin/department/%s/course/float", department.getCode()))
+                        .link(String.format("/admin/department/%s/float", department.getCode()))
                         .build());
-    }
-
-    @GetMapping("/{course}")
-    public String floatCourse(@PathVariable Department department, @PathVariable Course course, RedirectAttributes redirectAttributes) {
-        ErrorUtils.requireNonNullDepartment(department);
-        ErrorUtils.requireNonNullCourse(course);
-
-        if (floatedCourseService.isFloated(course)) {
-            log.warn("Course is already floated {}", course.getCode());
-            redirectAttributes.addFlashAttribute("float_error", "Course is already floated");
-        }  else {
-            redirectAttributes.addFlashAttribute("courses", Collections.singletonList(course));
-        }
-
-        return "redirect:/admin/department/{department}/course/float";
     }
 
     @GetMapping
@@ -74,9 +58,9 @@ public class FloatCourseController {
         redirectAttributes.addFlashAttribute("float_success", "Courses floated successfully!");
 
         if (courseList.size() == 1)
-            return String.format("redirect:/admin/department/{department}/floated/%s", courseList.get(0).getCode());
+            return String.format("redirect:/admin/department/floated/%s", courseList.get(0).getCode());
 
-        return "redirect:/admin/department/{department}/course/float";
+        return "redirect:/admin/department/{department}/float";
     }
 
 }
