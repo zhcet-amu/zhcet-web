@@ -46,7 +46,7 @@ public class AttendanceDownloadController {
      * @param response Response object to be sent, containing the attendance CSV
      * @param code The course and section code for faculty, of the form course:section
      */
-    @GetMapping("faculty/courses/{code}/attendance.csv")
+    @GetMapping("/faculty/courses/{code}/attendance.csv")
     public void downloadAttendanceForFaculty(HttpServletResponse response, @PathVariable String code) {
         CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(code).orElseThrow(CourseInChargeNotFoundException::new);
         String section = StringUtils.defaultString(CourseInChargeService.getCodeAndSection(code).getRight(), "all");
@@ -60,7 +60,7 @@ public class AttendanceDownloadController {
      * @param course Course for which the attendance is to be downloaded
      * @param response Response object to be sent, containing the attendance CSV
      */
-    @GetMapping("dean/floated/{course}/attendance.csv")
+    @GetMapping("/admin/dean/floated/{course}/attendance.csv")
     public void downloadAttendanceForDean(@PathVariable Course course, HttpServletResponse response) {
         ErrorUtils.requireNonNullCourse(course);
         downloadAttendance("dean", course, response);
@@ -72,7 +72,7 @@ public class AttendanceDownloadController {
      * @param course Course for which the attendance is to be downloaded
      * @param response Response object to be sent, containing the attendance CSV
      */
-    @GetMapping("department/{department}/floated/{course}/attendance.csv")
+    @GetMapping("/department/{department}/floated/{course}/attendance.csv")
     public void downloadAttendanceForDepartment(@PathVariable Department department, @PathVariable Course course, HttpServletResponse response) {
         ErrorUtils.requireNonNullDepartment(department);
         ErrorUtils.requireNonNullCourse(course);

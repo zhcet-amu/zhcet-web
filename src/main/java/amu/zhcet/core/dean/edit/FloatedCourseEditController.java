@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
-@RequestMapping("/dean/floated")
+@RequestMapping("/admin/dean/floated")
 public class FloatedCourseEditController {
 
     private final FloatedCourseService floatedCourseService;
@@ -64,7 +64,6 @@ public class FloatedCourseEditController {
         SortUtils.sortCourseAttendance(courseRegistrations);
         model.addAttribute("courseRegistrations", courseRegistrations);
         model.addAttribute("floatedCourse", floatedCourse);
-        model.addAttribute("deanOverride", "dean");
         model.addAttribute("email_list", emails);
 
         return "dean/floated_course";
@@ -79,7 +78,7 @@ public class FloatedCourseEditController {
         courseRegistrationService.removeRegistration(floatedCourse, student);
         attributes.addFlashAttribute("flash_messages", Flash.success("Student removed from course"));
 
-        return "redirect:/dean/floated/{course}";
+        return "redirect:/admin/dean/floated/{course}";
     }
 
 }

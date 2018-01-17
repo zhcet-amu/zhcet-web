@@ -7,7 +7,7 @@
         modal.find('#faculty_no').html(data['facultyNumber']);
         modal.find('#enrolment_no').html(data['enrolmentNumber']);
         modal.find('#department').html(data['user_department_name']);
-        modal.find('#link').attr('href', '/dean/students/' + data['enrolmentNumber']);
+        modal.find('#link').attr('href', '/admin/dean/students/' + data['enrolmentNumber']);
 
         modal.find('#avatar').attr('src', 'https://zhcet-backend.firebaseapp.com/static/img/account.svg');
         if (data['avatar-url'] !== '' || data['original-avatar-url'] !== '') {
@@ -88,7 +88,7 @@
             scrollCollapse: true,
             'ajax': {
                 'contentType': 'application/json',
-                'url': '/dean/api/students',
+                'url': '/admin/dean/api/students',
                 'type': 'POST',
                 'data': function (d) {
                     return JSON.stringify(d);
@@ -164,7 +164,7 @@
             "lengthMenu": [[10, 25, 50, 100, 200, 500], [10, 25, 50, 100, 200, 500]],
             "initComplete": function () {
                 DataUtils.searchDelay(table);
-                DataUtils.attachSelectors(table, 'DataTables_studentTable_/dean/students', [{
+                DataUtils.attachSelectors(table, 'DataTables_studentTable_/admin/dean/students', [{
                     id: '#stat',
                     defaultVal: 'A',
                     columnName: 'status'

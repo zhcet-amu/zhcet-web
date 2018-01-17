@@ -30,7 +30,7 @@
                     </div>
                     <div class="card-block">
                         <!--/*@thymesVar id="config" type="amu.zhcet.core.dean.config.Config"*/-->
-                        <form class="form form-horizontal" th:action="@{/dean/configuration}" method="post" th:object="${config}">
+                        <form class="form form-horizontal" th:action="@{/admin/dean/configuration}" method="post" th:object="${config}">
                             <div th:each="message : ${success}" class="alert alert-dismissible alert-success">
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                                 <span th:text="${message}"></span>

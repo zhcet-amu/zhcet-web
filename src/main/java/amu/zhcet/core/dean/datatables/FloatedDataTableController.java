@@ -28,7 +28,7 @@ public class FloatedDataTableController {
     }
 
     @JsonView(DataTablesOutput.View.class)
-    @PostMapping(value = "/dean/api/floated")
+    @PostMapping(value = "/admin/dean/api/floated")
     public DataTablesOutput<FloatedCourseView> getFloatedCourses(@Valid @RequestBody DataTablesInput input) {
         DataTableUtils.convertInput(input);
 

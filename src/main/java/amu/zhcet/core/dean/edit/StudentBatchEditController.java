@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/dean/student")
+@RequestMapping("/admin/dean/student")
 public class StudentBatchEditController {
 
     private final StudentEditService studentEditService;
@@ -27,7 +27,7 @@ public class StudentBatchEditController {
     public String studentSection(RedirectAttributes redirectAttributes, @RequestParam List<String> enrolments, @RequestParam String section) {
         if (Strings.isNullOrEmpty(section)) {
             redirectAttributes.addFlashAttribute("section_error", "Section must not be empty");
-            return "redirect:/dean/students";
+            return "redirect:/admin/dean/students";
         }
 
         try {
@@ -38,14 +38,14 @@ public class StudentBatchEditController {
             redirectAttributes.addFlashAttribute("section_error", "Unknown error while changing sections");
         }
 
-        return "redirect:/dean/students";
+        return "redirect:/admin/dean/students";
     }
 
     @PostMapping("/status") // We use 'student' instead of 'students' so that it does not clash with 'studentPost' method above
     public String studentStatus(RedirectAttributes redirectAttributes, @RequestParam List<String> enrolments, @RequestParam String status) {
         if (Strings.isNullOrEmpty(status)) {
             redirectAttributes.addFlashAttribute("section_error", "Status was unchanged");
-            return "redirect:/dean/students";
+            return "redirect:/admin/dean/students";
         }
 
         try {
@@ -56,7 +56,7 @@ public class StudentBatchEditController {
             redirectAttributes.addFlashAttribute("section_error", "Unknown error while changing statuses");
         }
 
-        return "redirect:/dean/students";
+        return "redirect:/admin/dean/students";
     }
 
 }

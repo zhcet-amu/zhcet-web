@@ -24,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/dean")
+@RequestMapping("/admin/dean")
 public class DeanController {
 
     private final UserService userService;
@@ -78,7 +78,7 @@ public class DeanController {
             }
         }
 
-        return "redirect:/dean";
+        return "redirect:/admin/dean";
     }
 
 }

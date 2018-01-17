@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.util.List;
 
 @Controller
-@RequestMapping("/dean/password")
+@RequestMapping("/admin/dean/password")
 public class PasswordFileController {
 
     private final FileSystemStorageService systemStorageService;

@@ -138,7 +138,7 @@
                 </div>
                 <div class="modal-body">
                     <p>This will change the section/status of <span class="capsule p-small count"></span> selected student(s) to the chosen value</p>
-                    <form th:action="@{/dean/student/section}" method="post">
+                    <form th:action="@{/admin/dean/student/section}" method="post">
                         <div class="enrolments" hidden></div>
                         <fieldset class="form-group floating-label-form-group">
                             <label for="section">New Section</label>
@@ -147,7 +147,7 @@
                         <input type="submit" class="btn btn-block btn-outline-primary" value="Save Section">
                     </form>
                     <h6 class="line-on-side text-muted text-xs-center font-small-3 pt-2">OR</h6>
-                    <form th:action="@{/dean/student/status}" method="post">
+                    <form th:action="@{/admin/dean/student/status}" method="post">
                         <div class="enrolments" hidden></div>
                         <div class="mui-form">
                             <div class="mui-select">

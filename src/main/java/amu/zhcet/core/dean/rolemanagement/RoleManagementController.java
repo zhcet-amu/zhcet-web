@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
-@RequestMapping("/dean/roles")
+@RequestMapping("/admin/dean/roles")
 public class RoleManagementController {
 
     private final RoleManagementService roleManagementService;
@@ -88,7 +88,7 @@ public class RoleManagementController {
         redirectAttributes.addFlashAttribute("flash_messages",
                 Flash.title("Saved!").success("Roles have been saved"));
 
-        return "redirect:/dean/roles/user/{user}";
+        return "redirect:/admin/dean/roles/user/{user}";
     }
 
 }

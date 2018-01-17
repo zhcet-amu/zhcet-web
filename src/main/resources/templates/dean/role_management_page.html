@@ -27,7 +27,7 @@
 
             <div class="card-body collapse in">
                 <div class="card-block">
-                    <form id="role-form" th:action="@{|/dean/roles/user/${user.userId}|}" method="post">
+                    <form id="role-form" th:action="@{|/admin/dean/roles/user/${user.userId}|}" method="post">
 
                         <th:block th:each="role : ${roles}"
                                   th:with="reachableRole = ${@viewService.getOnlyReachableRoles(user.roles)},

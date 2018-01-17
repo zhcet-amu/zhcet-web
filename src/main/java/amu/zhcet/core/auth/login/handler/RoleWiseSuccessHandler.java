@@ -16,7 +16,7 @@ public class RoleWiseSuccessHandler extends SavedRequestAwareAuthenticationSucce
         Set<String> authorities = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
         if (authorities.contains(Role.DEAN_ADMIN.toString()))
-            return "/dean";
+            return "/admin/dean";
         else if (authorities.contains(Role.DEVELOPMENT_ADMIN.toString()))
             return "/actuator/health";
         else if (authorities.contains(Role.DEPARTMENT_ADMIN.toString()))

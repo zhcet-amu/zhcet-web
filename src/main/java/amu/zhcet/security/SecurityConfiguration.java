@@ -125,7 +125,7 @@ public class SecurityConfiguration {
                     .access("@permissionManager.checkNotificationRecipient(authentication, #id)")
                         .antMatchers("/notifications/**").authenticated()
                         .antMatchers("/student/**").hasAuthority(Role.STUDENT.toString())
-                        .antMatchers("/dean/**").hasAuthority(Role.DEAN_ADMIN.toString())
+                        .antMatchers("/admin/dean/**").hasAuthority(Role.DEAN_ADMIN.toString())
                         .antMatchers("/department/{department}/courses/{course}/**")
                     .access("@permissionManager.checkCourse(authentication, #department, #course)")
                         .antMatchers("/department/{department}/floated/{course}/**")

@@ -20,7 +20,7 @@ import java.util.Collections;
 
 @Slf4j
 @Controller
-@RequestMapping("/dean/faculty")
+@RequestMapping("/admin/dean/faculty")
 public class FacultyEditController {
 
     private final DepartmentService departmentService;
@@ -75,7 +75,7 @@ public class FacultyEditController {
             }
         }
 
-        return "redirect:/dean/faculty/{faculty}";
+        return "redirect:/admin/dean/faculty/{faculty}";
     }
 
 }
