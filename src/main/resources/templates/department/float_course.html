@@ -65,7 +65,7 @@
                         </div>
                         <br><br>
                         <form class="selected-courses-container" th:hidden="${courses == null ? true : false}"
-                              method="post" th:action="@{|/admin/department/${department.code}/course/float|}">
+                              method="post" th:action="@{|/admin/department/${department.code}/float|}">
                             <div class="selected-courses">
                                 <div th:each="course : ${courses}" class="course card">
                                     <input type="text" class="chosen-code" name="code" th:value="${course.code}" hidden>

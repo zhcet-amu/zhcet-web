@@ -61,16 +61,24 @@ public class PermissionManager {
 
         if (!(user.getPrincipal() instanceof CustomUser))
             return false;
-        return hasPermission(user.getAuthorities(), Role.DEPARTMENT_ADMIN) &&
-                ((CustomUser) user.getPrincipal()).getDepartment().getCode().equals(departmentCode);
+
+        CustomUser customUser = (CustomUser) user.getPrincipal();
+
+        boolean isDepartmentAdmin = hasPermission(user.getAuthorities(), Role.DEPARTMENT_ADMIN);
+
+        if (departmentCode == null) {
+            return isDepartmentAdmin;
+        } else {
+            return isDepartmentAdmin && customUser.getDepartment().getCode().equals(departmentCode);
+        }
     }
 
-    public boolean checkCourse(Authentication user, String departmentCode, String courseCode) {
+    public boolean checkCourse(Authentication user, String courseCode) {
         Course course = courseService.getCourse(courseCode);
         if (course == null) // If course isn't found, leave it to Controller
-            return checkDepartment(user, departmentCode);
+            return checkDepartment(user, null);
         else
-            return checkDepartment(user, departmentCode) && course.getDepartment().getCode().equals(departmentCode);
+            return checkDepartment(user, course.getDepartment().getCode());
     }
 
     public boolean checkNotificationCreator(Authentication user, String notificationId) {

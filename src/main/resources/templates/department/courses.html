@@ -58,7 +58,7 @@
                                 </div>
                                 <ul class="list-group list">
                                     <li th:each="course : ${courses}" class="mb-2">
-                                        <a th:href="|/admin/department/${department.code}/courses/${course.code}/edit|" style="color: inherit">
+                                        <a th:href="|/admin/department/courses/${course.code}/edit|" style="color: inherit">
                                             <div th:replace="department/fragments/course_components :: course_card"></div>
                                         </a>
                                     </li>

@@ -22,7 +22,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin/department/{department}/courses/{course}")
+@RequestMapping("/admin/department/courses/{course}")
 public class CourseEditController {
 
     private final CourseService courseService;
@@ -34,25 +34,25 @@ public class CourseEditController {
         this.floatedCourseService = floatedCourseService;
     }
 
-    public static PathChain getPath(Department department, Course course) {
-        return CoursesController.getPath(department)
+    public static PathChain getPath(Course course) {
+        return CoursesController.getPath(course.getDepartment())
                 .add(Path.builder().title(course.getCode())
                         .build())
                 .add(Path.builder().title("Edit")
-                        .link(String.format("/admin/department/%s/courses/%s/edit", department.getCode(), course.getCode()))
+                        .link(String.format("/admin/department/courses/%s/edit", course.getCode()))
                         .build());
     }
 
     @GetMapping("/edit")
-    public String addCourse(Model model, @PathVariable Department department, @PathVariable Course course) {
-        ErrorUtils.requireNonNullDepartment(department);
+    public String addCourse(Model model, @PathVariable Course course) {
         ErrorUtils.requireNonNullCourse(course);
 
+        Department department = course.getDepartment();
         model.addAttribute("page_description", "Edit course details and manage other settings");
         model.addAttribute("department", department);
         model.addAttribute("page_title", "Edit Course : " + department.getName() + " Department");
         model.addAttribute("page_subtitle", "Course Management");
-        model.addAttribute("page_path", getPath(department, course));
+        model.addAttribute("page_path", getPath(course));
 
         model.addAttribute("course_types", CourseType.values());
 
@@ -66,10 +66,10 @@ public class CourseEditController {
     }
 
     @PostMapping("/edit")
-    public String postCourse(@PathVariable Department department, @PathVariable Course course, @RequestParam("course") @Valid Course newCourse, BindingResult result, RedirectAttributes redirectAttributes) {
-        ErrorUtils.requireNonNullDepartment(department);
+    public String postCourse(@PathVariable Course course, @ModelAttribute("course") @Valid Course newCourse, BindingResult result, RedirectAttributes redirectAttributes) {
         ErrorUtils.requireNonNullCourse(course);
 
+        Department department = course.getDepartment();
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("course", newCourse);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.course", result);
@@ -86,16 +86,16 @@ public class CourseEditController {
             }
         }
 
-        return "redirect:/admin/department/{department}/courses/{course}/edit";
+        return "redirect:/admin/department/courses/{course}/edit";
     }
 
     @GetMapping("/delete")
-    public String deleteCourse(@PathVariable Department department, @PathVariable Course course, RedirectAttributes redirectAttributes) {
-        ErrorUtils.requireNonNullDepartment(department);
+    public String deleteCourse(@PathVariable Course course, RedirectAttributes redirectAttributes) {
         ErrorUtils.requireNonNullCourse(course);
 
         courseService.deleteCourse(course);
         redirectAttributes.addFlashAttribute("course_success", "Course " + course.getCode() + " deleted successfully!");
+        redirectAttributes.addAttribute("department", course.getDepartment());
 
         return "redirect:/admin/department/{department}/courses?active=true";
     }

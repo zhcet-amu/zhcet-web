@@ -119,24 +119,39 @@ public class SecurityConfiguration {
             httpSecurity
                     .authorizeRequests()
                     .expressionHandler(securityExpressionHandler)
-                        .antMatchers("/").permitAll()
-                        .antMatchers("/profile/**").authenticated()
-                        .antMatchers("/notifications/{id}/**")
-                    .access("@permissionManager.checkNotificationRecipient(authentication, #id)")
-                        .antMatchers("/notifications/**").authenticated()
-                        .antMatchers("/student/**").hasAuthority(Role.STUDENT.toString())
-                        .antMatchers("/admin/dean/**").hasAuthority(Role.DEAN_ADMIN.toString())
-                        .antMatchers("/admin/department/{department}/courses/{course}/**")
-                    .access("@permissionManager.checkCourse(authentication, #department, #course)")
-                        .antMatchers("/admin/department/{department}/floated/{course}/**")
-                    .access("@permissionManager.checkCourse(authentication, #department, #course)")
-                        .antMatchers("/admin/department/{department}/**")
-                    .access("@permissionManager.checkDepartment(authentication, #department)")
-                        .antMatchers("/admin/department/**").hasAuthority(Role.DEPARTMENT_ADMIN.toString())
-                        .antMatchers("/faculty/**").hasAuthority(Role.FACULTY.toString())
-                        .antMatchers("/management/notifications/{id}/**")
-                    .access("@permissionManager.checkNotificationCreator(authentication, #id)")
-                        .antMatchers("/management/**").hasAuthority(Role.TEACHING_STAFF.toString())
+                    .antMatchers("/").permitAll()
+
+                    .antMatchers("/profile/**").authenticated()
+
+                    .antMatchers("/notifications/{id}/**")
+                        .access("@permissionManager.checkNotificationRecipient(authentication, #id)")
+                    .antMatchers("/notifications/**")
+                        .authenticated()
+
+                    .antMatchers("/student/**")
+                        .hasAuthority(Role.STUDENT.toString())
+
+                    .antMatchers("/admin/dean/**")
+                        .hasAuthority(Role.DEAN_ADMIN.toString())
+
+                    .antMatchers("/admin/department/courses/{course}/**",
+                            "/admin/department/floated/{course}/**",
+                            "/admin/department/float/{course}/**")
+                        .access("@permissionManager.checkCourse(authentication, #course)")
+
+                    .antMatchers("/admin/department/{department}/**")
+                        .access("@permissionManager.checkDepartment(authentication, #department)")
+                    .antMatchers("/admin/department/**")
+                        .hasAuthority(Role.DEPARTMENT_ADMIN.toString())
+
+                    .antMatchers("/faculty/**")
+                        .hasAuthority(Role.FACULTY.toString())
+
+                    .antMatchers("/management/notifications/{id}/**")
+                        .access("@permissionManager.checkNotificationCreator(authentication, #id)")
+                    .antMatchers("/management/**")
+                        .hasAuthority(Role.TEACHING_STAFF.toString())
+
                     .and()
                     .formLogin()
                         .authenticationDetailsSource(authenticationDetailsSource)
@@ -144,13 +159,16 @@ public class SecurityConfiguration {
                         .failureHandler(new UsernameAuthenticationFailureHandler("/login?error"))
                         .usernameParameter("username")
                         .passwordParameter("password")
+
                     .and()
                         .logout().logoutSuccessUrl("/login?logout").permitAll()
+
                     .and()
                     .rememberMe()
                         .rememberMeCookieName("zhcet-remember-me")
                         .tokenValiditySeconds(24 * 60 * 60)
                         .tokenRepository(persistentTokenService)
+
                     .and()
                         .sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry);
         }
