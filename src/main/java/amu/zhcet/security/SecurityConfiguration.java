@@ -123,13 +123,20 @@ public class SecurityConfiguration {
 
                     .antMatchers("/profile/**").authenticated()
 
+                    .antMatchers("/dashboard/**").authenticated()
+
+                    .antMatchers("/dashboard/student/**")
+                        .hasAuthority(Role.STUDENT.toString())
+
                     .antMatchers("/notifications/{id}/**")
                         .access("@permissionManager.checkNotificationRecipient(authentication, #id)")
                     .antMatchers("/notifications/**")
                         .authenticated()
 
-                    .antMatchers("/dashboard/student/**")
-                        .hasAuthority(Role.STUDENT.toString())
+                    .antMatchers("/management/notifications/{id}/**")
+                        .access("@permissionManager.checkNotificationCreator(authentication, #id)")
+                    .antMatchers("/management/**")
+                        .hasAuthority(Role.TEACHING_STAFF.toString())
 
                     .antMatchers("/admin/dean/**")
                         .hasAuthority(Role.DEAN_ADMIN.toString())
@@ -146,11 +153,6 @@ public class SecurityConfiguration {
 
                     .antMatchers("/admin/faculty/**")
                         .hasAuthority(Role.FACULTY.toString())
-
-                    .antMatchers("/management/notifications/{id}/**")
-                        .access("@permissionManager.checkNotificationCreator(authentication, #id)")
-                    .antMatchers("/management/**")
-                        .hasAuthority(Role.TEACHING_STAFF.toString())
 
                     .and()
                     .formLogin()
