@@ -14,8 +14,11 @@ public class ConsoleHelper {
         return color(ConsoleColors.RED, string);
     }
 
+    public static String yellow(String string) {
+        return color(ConsoleColors.YELLOW, string);
+    }
+
     public static String color(String color, String string) {
         return color + string + ConsoleColors.RESET;
     }
-
 }

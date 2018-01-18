@@ -1,5 +1,6 @@
 package amu.zhcet.data.config;
 
+import amu.zhcet.common.utils.ConsoleHelper;
 import amu.zhcet.common.utils.Utils;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class ConfigurationService {
 
     private void updateConfiguration(Configuration configurationModel) {
         configuration = configurationModel;
-        log.info("Static Configuration Set : {}", configuration);
+        log.info(ConsoleHelper.green("Static Configuration Set : {}"), configuration);
     }
 
     public static String getDefaultSessionCode() {

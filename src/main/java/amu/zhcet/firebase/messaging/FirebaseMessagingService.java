@@ -1,6 +1,7 @@
 package amu.zhcet.firebase.messaging;
 
 import amu.zhcet.common.markdown.MarkDownService;
+import amu.zhcet.common.utils.ConsoleColors;
 import amu.zhcet.common.utils.ConsoleHelper;
 import amu.zhcet.core.notification.Notification;
 import amu.zhcet.core.notification.recipient.NotificationRecipient;
@@ -39,7 +40,9 @@ public class FirebaseMessagingService {
         this.markDownService = markDownService;
 
         HEADER_MAP.put("Authorization", "key=" + firebaseService.getMessagingServerKey());
-        log.info(ConsoleHelper.red("CONFIG (Firebase): Firebase Messaging Running : {}"), firebaseService.canSendMessage());
+        boolean canSendMessage = firebaseService.canSendMessage();
+        String color = canSendMessage ? ConsoleColors.GREEN : ConsoleColors.RED;
+        log.info(ConsoleHelper.color(color, "CONFIG (Firebase): Firebase Messaging Running : {}"), canSendMessage);
     }
 
     /**

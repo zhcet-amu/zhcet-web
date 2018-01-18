@@ -28,7 +28,7 @@ public class FirebaseService {
 
     @Autowired
     public FirebaseService(FirebaseProperties firebase) throws IOException {
-        log.info("Initializing Firebase");
+        log.info(ConsoleHelper.blue("Initializing Firebase"));
         disabled = firebase.isDisabled();
         messagingServerKey = firebase.getMessagingServerKey();
 
@@ -59,7 +59,7 @@ public class FirebaseService {
             FirebaseApp.initializeApp(options);
             log.info(ConsoleHelper.green("Firebase Initialized"));
         } catch (IllegalStateException ise) {
-            log.info("Firebase already initialized");
+            log.info(ConsoleHelper.yellow("Firebase already initialized"));
         } catch (IllegalArgumentException e) {
             uninitialized = true;
             log.error("Firebase couldn't be initialized", e);
