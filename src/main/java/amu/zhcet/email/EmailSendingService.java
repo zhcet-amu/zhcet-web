@@ -37,7 +37,7 @@ public class EmailSendingService {
         return LinkMessage.builder()
                 .title(notification.getTitle())
                 .subject(String.format("ZHCET Course %s %s", notification.getRecipientChannel(), notification.getTitle()))
-                .relativeLink("/student/attendance")
+                .relativeLink("/dashboard/student/attendance")
                 .linkText("View Attendance")
                 .preMessage(notification.getMessage() + "\nPlease click the button below to view your attendance")
                 .markdown(true)

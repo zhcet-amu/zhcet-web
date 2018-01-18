@@ -128,7 +128,7 @@ public class SecurityConfiguration {
                     .antMatchers("/notifications/**")
                         .authenticated()
 
-                    .antMatchers("/student/**")
+                    .antMatchers("/dashboard/student/**")
                         .hasAuthority(Role.STUDENT.toString())
 
                     .antMatchers("/admin/dean/**")

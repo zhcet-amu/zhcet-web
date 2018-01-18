@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/dashboard/student/attendance")
 public class StudentAttendanceController {
 
     private final StudentService studentService;
@@ -21,7 +23,7 @@ public class StudentAttendanceController {
         this.attendanceService = attendanceService;
     }
 
-    @GetMapping("/student/attendance")
+    @GetMapping
     public String attendance(Model model) {
         Student student = studentService.getLoggedInStudent().orElseThrow(StudentNotFoundException::new);
         model.addAttribute("page_title", "Attendance");

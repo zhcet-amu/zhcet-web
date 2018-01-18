@@ -24,7 +24,7 @@ public class RoleWiseSuccessHandler extends SavedRequestAwareAuthenticationSucce
         else if (authorities.contains(Role.FACULTY.toString()))
             return "/admin/faculty/courses";
         else if (authorities.contains(Role.STUDENT.toString()))
-            return "/student/attendance";
+            return "/dashboard/student/attendance";
         else
             return "/login";
     }
