@@ -47,7 +47,7 @@
                 </a>
             </li>
             <li th:class="|nav-item ${pageId == 'faculty_courses' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_FACULTY')">
-                <a th:href="@{/faculty/courses}" href="floatedCourse.html">
+                <a th:href="@{/admin/faculty/courses}" href="floatedCourse.html">
                     <i class="icon-layers"></i>
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Course Management</span>
                 </a>

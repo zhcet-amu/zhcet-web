@@ -18,7 +18,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/faculty/courses")
+@RequestMapping("/admin/faculty/courses")
 public class FacultyCourseController {
 
     private final FacultyService facultyService;

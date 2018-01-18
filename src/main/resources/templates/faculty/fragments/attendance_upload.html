@@ -12,7 +12,7 @@
     </div>
     <div class="card-body collapse in collapse in">
         <div class="card-block">
-            <form class="form" enctype="multipart/form-data" th:action="|/faculty/courses/${incharge.code}/attendance/edit|" method="post">
+            <form class="form" enctype="multipart/form-data" th:action="|/admin/faculty/courses/${incharge.code}/attendance/edit|" method="post">
                 <div hidden>
                     Download the <a th:href="@{/csv/attendance_format.csv}">attendance format</a>
                 </div>

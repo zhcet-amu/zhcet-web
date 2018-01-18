@@ -23,7 +23,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("faculty/courses/{code}/attendance/edit")
+@RequestMapping("/admin/faculty/courses/{code}/attendance/edit")
 public class AttendanceUploadController {
 
     private final CourseInChargeService courseInChargeService;
@@ -67,7 +67,7 @@ public class AttendanceUploadController {
             log.error("Attendance Upload", ioe);
         }
 
-        return "redirect:/faculty/courses/{code}/attendance";
+        return "redirect:/admin/faculty/courses/{code}/attendance";
     }
 
     @PostMapping("/confirm")
@@ -88,7 +88,7 @@ public class AttendanceUploadController {
             }
         }
 
-        return "redirect:/faculty/courses/{code}/attendance";
+        return "redirect:/admin/faculty/courses/{code}/attendance";
     }
 
 }

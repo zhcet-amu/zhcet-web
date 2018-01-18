@@ -144,7 +144,7 @@ public class SecurityConfiguration {
                     .antMatchers("/admin/department/**")
                         .hasAuthority(Role.DEPARTMENT_ADMIN.toString())
 
-                    .antMatchers("/faculty/**")
+                    .antMatchers("/admin/faculty/**")
                         .hasAuthority(Role.FACULTY.toString())
 
                     .antMatchers("/management/notifications/{id}/**")
