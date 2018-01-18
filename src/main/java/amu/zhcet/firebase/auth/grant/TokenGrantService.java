@@ -8,13 +8,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @Service
-class TokenGrantService {
+public class TokenGrantService {
 
     private static final UserToken UNAUTHENTICATED = new UserToken();
 
@@ -32,6 +33,7 @@ class TokenGrantService {
      * Note: Only to be called from an authenticated endpoint
      * @return UserToken
      */
+    @Transactional
     public UserToken generateToken() {
         if (!firebaseService.canProceed())
             return null;

@@ -24,7 +24,7 @@ import java.util.List;
 @ToString(exclude = "notificationRecipients")
 public class Notification extends BaseIdEntity {
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private User sender;
     @Size(max = 150)
     private String title;

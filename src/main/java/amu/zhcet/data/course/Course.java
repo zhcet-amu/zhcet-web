@@ -29,7 +29,7 @@ public class Course extends BaseEntity {
     private String title;
     private boolean active = true;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private Department department;
 

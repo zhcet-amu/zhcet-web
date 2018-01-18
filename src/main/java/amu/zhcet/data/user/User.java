@@ -42,7 +42,7 @@ public class User extends BaseEntity {
     private String name;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Department department;
 
     private boolean enabled = true;
@@ -62,7 +62,7 @@ public class User extends BaseEntity {
     @Valid
     @NotNull
     @PrimaryKeyJoinColumn
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserDetail details = new UserDetail();
 
     public void setUserId(String id) {

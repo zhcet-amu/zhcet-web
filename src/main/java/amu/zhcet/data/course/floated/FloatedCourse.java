@@ -29,7 +29,7 @@ public class FloatedCourse extends BaseEntity implements Serializable {
 
     @NaturalId
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Course course;
     @NotBlank
     @NaturalId

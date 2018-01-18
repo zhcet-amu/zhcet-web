@@ -32,12 +32,12 @@ public class DepartmentService {
         return departmentRepository.findByName(name);
     }
 
-    public boolean existsName(String departmentName) {
-        return departmentRepository.findByName(StringUtils.capitalizeFirst(departmentName)) != null;
+    private boolean existsName(String departmentName) {
+        return departmentRepository.findByName(departmentName).isPresent();
     }
 
-    public boolean existsCode(String code) {
-        return departmentRepository.findOne(StringUtils.capitalizeAll(code)) != null;
+    private boolean existsCode(String code) {
+        return departmentRepository.exists(code);
     }
 
     public void addDepartment(Department department) {

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
@@ -18,10 +19,10 @@ import java.time.LocalDateTime;
 public class NotificationRecipient extends BaseIdEntity {
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Notification notification;
     @NotNull
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private User recipient;
     private boolean favorite;
     private boolean seen;

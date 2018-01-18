@@ -34,7 +34,7 @@ public class Student extends BaseEntity {
 
     @NotNull
     @PrimaryKeyJoinColumn
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private User user = new User();
 
     public Student(User user, String facultyNumber) {

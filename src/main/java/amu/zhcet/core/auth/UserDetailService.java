@@ -6,6 +6,7 @@ import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
 import amu.zhcet.security.permission.PermissionManager;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,9 +17,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
 @Slf4j
 @Service
+@Transactional
 public class UserDetailService implements UserDetailsService {
 
     private final UserService userService;
@@ -40,6 +43,10 @@ public class UserDetailService implements UserDetailsService {
     }
 
     private UserDetails detailsFromUser(User user, boolean isBlocked) {
+        // Since we are using lazy properties, we have to initialize Department
+        // So that the proxy object is replaced by its actual implementation
+        Hibernate.initialize(user.getDepartment());
+
         return new CustomUser(user.getUserId(), user.getPassword(), user.isEnabled(), isBlocked,
                 permissionManager.authorities(user.getRoles()))
                 .name(user.getName())

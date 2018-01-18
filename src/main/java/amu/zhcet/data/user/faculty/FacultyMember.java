@@ -25,7 +25,7 @@ public class FacultyMember extends BaseEntity {
     @Valid
     @NotNull
     @PrimaryKeyJoinColumn
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private User user = new User();
 
     private boolean working = true;

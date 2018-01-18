@@ -26,7 +26,7 @@ public class UserDetail extends BaseEntity {
     @Id
     private String userId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     @JsonIgnore
     User user;

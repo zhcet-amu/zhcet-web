@@ -30,7 +30,7 @@ public class VerificationToken extends BaseEntity {
     private String token;
     private boolean used;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 

@@ -24,11 +24,11 @@ public class CourseRegistration extends BaseEntity {
     private String id;
 
     @NonNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private FloatedCourse floatedCourse;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Student student;
 
     private char mode;
@@ -36,7 +36,7 @@ public class CourseRegistration extends BaseEntity {
     @Valid
     @NotNull
     @PrimaryKeyJoinColumn
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Attendance attendance = new Attendance();
 
     public CourseRegistration(Student student, FloatedCourse floatedCourse) {
