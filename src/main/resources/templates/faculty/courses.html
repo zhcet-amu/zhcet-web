@@ -42,7 +42,7 @@
                                     </div>
                                 </div>
                                 <ul class="list-group list">
-                                    <li th:each="incharge : ${courseInCharges}" class="mb-2" th:with="url = |/faculty/courses/${incharge.code}/attendance|">
+                                    <li th:each="incharge : ${courseInCharges}" class="mb-2" th:with="url = |/admin/faculty/courses/${incharge.code}/attendance|">
                                         <a th:href="${url}" style="color: inherit" th:with="course = ${incharge.floatedCourse.course}">
                                             <div class="card" th:with="section = ${#strings.defaultString(incharge.section, 'All')}">
                                                 <div class="card-header">

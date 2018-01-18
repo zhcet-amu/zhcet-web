@@ -46,7 +46,7 @@ public class AttendanceDownloadController {
      * @param response Response object to be sent, containing the attendance CSV
      * @param code The course and section code for faculty, of the form course:section
      */
-    @GetMapping("/faculty/courses/{code}/attendance.csv")
+    @GetMapping("/admin/faculty/courses/{code}/attendance.csv")
     public void downloadAttendanceForFaculty(HttpServletResponse response, @PathVariable String code) {
         CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(code).orElseThrow(CourseInChargeNotFoundException::new);
         String section = StringUtils.defaultString(CourseInChargeService.getCodeAndSection(code).getRight(), "all");

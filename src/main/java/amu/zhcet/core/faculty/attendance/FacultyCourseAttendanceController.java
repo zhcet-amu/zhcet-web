@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
-@RequestMapping("/faculty/courses/{code}/attendance")
+@RequestMapping("/admin/faculty/courses/{code}/attendance")
 public class FacultyCourseAttendanceController {
 
     private final CourseInChargeService courseInChargeService;
