@@ -72,7 +72,7 @@
             <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
                  th:src="${@viewService.getAvatarUrl(user.details.originalAvatarUrl)}"
                  class="rounded-circle height-200" alt="Profile Picture"/>
-            <form th:action="@{/profile/picture}" enctype="multipart/form-data" method="post" class="pt-2" th:if="${@firebaseService.canProceed()}">
+            <form th:action="@{/profile/picture}" enctype="multipart/form-data" method="post" class="pt-2">
                 <div th:replace="fragments/layout :: uploader(id = 'avatar_upload', btn_choose = 'Change Avatar', upload_types = 'image/*')"></div>
                 <div th:each="success : ${avatar_success}" class="alert alert-dismissible alert-success">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>

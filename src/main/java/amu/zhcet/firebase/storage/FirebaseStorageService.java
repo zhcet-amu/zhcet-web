@@ -6,7 +6,6 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Bucket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -33,7 +32,6 @@ public class FirebaseStorageService {
      * @return Public facing URL of the uploaded file
      * @throws UnsupportedEncodingException if the file type is unsupported
      */
-    @Async
     public CompletableFuture<Optional<String>> uploadFile(String path, String contentType, byte[] content) throws UnsupportedEncodingException {
         if (!firebaseService.canProceed())
             return CompletableFuture.completedFuture(Optional.empty());

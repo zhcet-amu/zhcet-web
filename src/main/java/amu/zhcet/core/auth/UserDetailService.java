@@ -43,10 +43,6 @@ public class UserDetailService implements UserDetailsService {
     }
 
     private UserDetails detailsFromUser(User user, boolean isBlocked) {
-        // Since we are using lazy properties, we have to initialize Department
-        // So that the proxy object is replaced by its actual implementation
-        Hibernate.initialize(user.getDepartment());
-
         return new CustomUser(user.getUserId(), user.getPassword(), user.isEnabled(), isBlocked,
                 permissionManager.authorities(user.getRoles()))
                 .name(user.getName())
@@ -58,9 +54,16 @@ public class UserDetailService implements UserDetailsService {
                 .passwordChanged(user.isPasswordChanged());
     }
 
-    private UserDetails detailsFromUserAuth(User user) {
+    private UserDetails getRealDetailsFromAuth(User user) {
+        // Since we are using lazy properties, we have to initialize Department
+        // So that the proxy object is replaced by its actual implementation
+        Hibernate.initialize(user.getDepartment());
         String ip = Utils.getClientIP(request);
-        return detailsFromUser(user, loginAttemptService.isBlocked(LoginAttemptService.getKey(ip, user.getUserId())));
+        return getFakeDetailsFromAuth(user, loginAttemptService.isBlocked(LoginAttemptService.getKey(ip, user.getUserId())));
+    }
+
+    private UserDetails getFakeDetailsFromAuth(User user, boolean isBlocked) {
+        return detailsFromUser(user, isBlocked);
     }
 
     private Authentication authenticationFromUserAuth(User user, UserDetails userDetails) {
@@ -69,28 +72,40 @@ public class UserDetailService implements UserDetailsService {
         );
     }
 
-    public Authentication authenticationFromUser(User user) {
-        return authenticationFromUserAuth(user, detailsFromUserAuth(user));
+    public Authentication getRealAuthentication(User user) {
+        return authenticationFromUserAuth(user, getRealDetailsFromAuth(user));
+    }
+
+    private Authentication getFakeAuthentication(User user, boolean isBlocked) {
+        return authenticationFromUserAuth(user, getFakeDetailsFromAuth(user, isBlocked));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService
-                .findById(username)
-                .orElseGet(() -> userService
-                        .getUserByEmail(username)
-                        .orElseThrow(() -> new UsernameNotFoundException(username)));
+        User user = userService.findById(username)
+                .orElseGet(() -> userService.getUserByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username)));
 
-        return detailsFromUserAuth(user);
+        return getRealDetailsFromAuth(user);
     }
 
     public void updatePrincipal(User user) {
         // Update the principal for use throughout the app
-        SecurityContextHolder.getContext().setAuthentication(authenticationFromUser(user));
+        SecurityContextHolder.getContext().setAuthentication(getRealAuthentication(user));
+    }
+
+    private void updateFakePrincipal(User user, boolean isBlocked) {
+        // Update the principal for use throughout the app
+        SecurityContextHolder.getContext().setAuthentication(getFakeAuthentication(user, isBlocked));
     }
 
     public void saveAndUpdatePrincipal(User user) {
         userService.save(user);
         updatePrincipal(user);
+    }
+
+    public void saveAndUpdateFakePrincipal(User user, boolean isBlocked) {
+        userService.save(user);
+        updateFakePrincipal(user, isBlocked);
     }
 }

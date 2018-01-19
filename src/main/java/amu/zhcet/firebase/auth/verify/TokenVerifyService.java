@@ -75,7 +75,7 @@ public class TokenVerifyService {
     private void setUserAuthentication(User user) {
         SecurityContextHolder
                 .getContext()
-                .setAuthentication(userDetailService.authenticationFromUser(user));
+                .setAuthentication(userDetailService.getRealAuthentication(user));
 
         log.info("Logged in user using Social Login: {}", user.getUserId());
     }

@@ -52,7 +52,7 @@ public class FileSystemStorageService implements StorageService {
         return StringUtils.cleanPath(LocalDateTime.now().toString() + "_" + Auditor.getLoggedInUsername() + "_" + name);
     }
 
-    private void storeAbstract(FileType fileType, String name, InputStream inputStream, EmptyChecker emptyChecker) {
+    private String storeAbstract(FileType fileType, String name, InputStream inputStream, EmptyChecker emptyChecker) {
         String filename = generateFileName(name);
         try {
             if (emptyChecker.isEmpty()) {
@@ -66,12 +66,13 @@ public class FileSystemStorageService implements StorageService {
             log.error(String.format("Failed storing file %s", filename), e);
             throw new StorageException("Failed to store file " + filename, e);
         }
+        return filename;
     }
 
     @Override
-    public void store(FileType fileType, File file) {
+    public String store(FileType fileType, File file) {
         try {
-            storeAbstract(fileType, file.getName(), new FileInputStream(file), () -> file.length() == 0);
+            return storeAbstract(fileType, file.getName(), new FileInputStream(file), () -> file.length() == 0);
         } catch (FileNotFoundException e) {
             log.error(String.format("Failed storing file %s", file.getName()), e);
             throw new StorageException("Failed to store file " + file.getName(), e);
@@ -79,13 +80,18 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void store(FileType fileType, MultipartFile file) {
+    public String store(FileType fileType, MultipartFile file) {
         try {
-            storeAbstract(fileType, file.getOriginalFilename(), file.getInputStream(), file::isEmpty);
+            return storeAbstract(fileType, file.getOriginalFilename(), file.getInputStream(), file::isEmpty);
         } catch (IOException e) {
             log.error(String.format("Failed storing file %s", file.getName()), e);
             throw new StorageException("Failed to store file " + file.getName(), e);
         }
+    }
+
+    @Override
+    public String store(FileType fileType, String name, byte[] bytes) {
+        return storeAbstract(fileType, name, new ByteArrayInputStream(bytes), () -> bytes.length == 0);
     }
 
     @Override

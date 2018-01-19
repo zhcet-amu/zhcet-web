@@ -13,9 +13,11 @@ public interface StorageService {
 
     String generateFileName(String name);
 
-    void store(FileType fileType, File file);
+    String store(FileType fileType, File file);
 
-    void store(FileType fileType, MultipartFile file);
+    String store(FileType fileType, MultipartFile file);
+
+    String store(FileType fileType, String name, byte[] bytes);
 
     Stream<Path> loadAll(FileType fileType);
 

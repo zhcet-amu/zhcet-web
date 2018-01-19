@@ -1,4 +1,4 @@
-package amu.zhcet.storage.image;
+package amu.zhcet.storage.image.upload;
 
 public class ImageUploadException extends IllegalStateException {
 

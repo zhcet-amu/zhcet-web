@@ -1,0 +1,1 @@
+AlTER TABLE uploaded_image ADD COLUMN is_thumbnail BIT(1) DEFAULT 0 AFTER content_type;

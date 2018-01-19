@@ -3,7 +3,8 @@ package amu.zhcet.core.profile.avatar;
 import amu.zhcet.common.flash.Flash;
 import amu.zhcet.core.auth.UserDetailService;
 import amu.zhcet.data.user.User;
-import amu.zhcet.storage.image.ImageUploadException;
+import amu.zhcet.storage.image.edit.ImageEditException;
+import amu.zhcet.storage.image.upload.ImageUploadException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -38,7 +39,7 @@ public class AvatarController {
             try {
                 avatarService.uploadImage(user, file);
                 redirectAttributes.addFlashAttribute("avatar_success", Collections.singletonList("Profile Picture Updated"));
-            } catch (ImageUploadException ime) {
+            } catch (ImageUploadException| ImageEditException ime) {
                 redirectAttributes.addFlashAttribute("avatar_errors", Collections.singletonList(ime.getMessage()));
             } catch (RuntimeException re) {
                 redirectAttributes.addFlashAttribute("flash_messages", Flash.error("Failed to upload avatar"));
