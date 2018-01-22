@@ -46,7 +46,7 @@ class FacultyIntegrityVerifier {
 
         if (isDuplicateId(facultyMember)) {
             return "Duplicate Faculty ID";
-        } else if (doesDepartmentExist(facultyMember)) {
+        } else if (!doesDepartmentExist(facultyMember)) {
             return "No such department: " + facultyMember.getUser().getDepartment().getName();
         } else if (doesFacultyIdAlreadyExists(facultyMember)) {
             return "Faculty Member with ID already exists";
