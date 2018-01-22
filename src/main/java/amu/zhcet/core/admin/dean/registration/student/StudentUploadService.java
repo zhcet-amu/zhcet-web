@@ -44,6 +44,7 @@ class StudentUploadService {
         status.setTotal(students.size());
 
         try {
+            status.start();
             students.stream()
                     .peek(ignore -> status.increment())
                     .forEach(studentService::register);

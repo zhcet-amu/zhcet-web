@@ -21,6 +21,7 @@
                         <br/>
                         <div th:replace="fragments/layout :: uploader(id = 'student_upload')"></div>
                         <div id="student-progress" style="display: none">
+                            <div class="waiting">Please Wait...</div>
                             <div class="md-progress">
                                 <div class="determinate" style="width: 0%"></div>
                             </div>
@@ -129,6 +130,9 @@
                     taskId: [[${task_id_student}]],
                     finished: function (result) {
                         toastr.success('Student Registration Complete in ' + result.duration/1000 + ' s')
+                    },
+                    error: function (message) {
+                        toastr.error(message);
                     },
                     failed: function (result) {
                         console.log(result);

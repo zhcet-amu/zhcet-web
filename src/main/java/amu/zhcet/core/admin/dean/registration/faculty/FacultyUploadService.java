@@ -52,6 +52,7 @@ class FacultyUploadService {
         status.setTotal(facultyMembers.size());
 
         try {
+            status.start();
             facultyMembers.stream()
                     .peek(ignore -> status.increment())
                     .forEach(facultyService::register);
