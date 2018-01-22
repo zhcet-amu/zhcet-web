@@ -20,7 +20,7 @@ public class RealTimeStatusService {
         invalidStatus.setInvalid(true);
 
         this.realTimeStatusCache = Caffeine.newBuilder()
-                .expireAfterWrite(10, TimeUnit.MINUTES)
+                .expireAfterWrite(20, TimeUnit.MINUTES)
                 .maximumSize(100)
                 .build();
     }

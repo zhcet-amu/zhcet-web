@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 @RestController
 public class RealTimeStatusController {
 
-    private static final long TIMEOUT = 600000L; // 10 Minutes
+    private static final long TIMEOUT = 1200000L; // 20 Minutes
     private final RealTimeStatusService realTimeStatusService;
 
     public RealTimeStatusController(RealTimeStatusService realTimeStatusService) {
