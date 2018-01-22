@@ -2,6 +2,7 @@ package amu.zhcet.core.admin.dean.registration.student;
 
 import amu.zhcet.data.user.Gender;
 import amu.zhcet.data.user.student.HallCode;
+import amu.zhcet.storage.csv.CustomEnumConverter;
 import com.j256.simplecsv.common.CsvColumn;
 import lombok.Data;
 
@@ -15,9 +16,9 @@ public class StudentUpload {
     private String section;
     @CsvColumn(mustNotBeBlank = true)
     private String name;
-    @CsvColumn(mustBeSupplied = false)
+    @CsvColumn(mustBeSupplied = false, converterClass = CustomEnumConverter.class)
     private Gender gender;
-    @CsvColumn(mustBeSupplied = false)
+    @CsvColumn(mustBeSupplied = false, converterClass = CustomEnumConverter.class)
     private HallCode hall;
     @CsvColumn(mustBeSupplied = false)
     private char status;

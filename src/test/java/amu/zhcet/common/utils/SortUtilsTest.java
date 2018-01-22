@@ -29,13 +29,13 @@ public class SortUtilsTest {
         AttendanceUpload saim = new AttendanceUpload();
 
         areeb.setSection(SECTION_A4PE);
-        areeb.setFaculty_no(AREEB_FACULTY_NO);
+        areeb.setFacultyNo(AREEB_FACULTY_NO);
 
         divy.setSection(SECTION_A4PE);
-        divy.setFaculty_no(DIVY_FACULTY_NO);
+        divy.setFacultyNo(DIVY_FACULTY_NO);
 
         saim.setSection(SECTION_A5PE);
-        saim.setFaculty_no(SAIM_FACULTY_NO);
+        saim.setFacultyNo(SAIM_FACULTY_NO);
 
         List<AttendanceUpload> attendanceUpload = new ArrayList<>();
         attendanceUpload.addAll(Arrays.asList(saim, divy, areeb));

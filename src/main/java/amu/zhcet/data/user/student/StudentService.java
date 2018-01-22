@@ -49,7 +49,7 @@ public class StudentService {
         return studentRepository.findAllProjectedBy();
     }
 
-    public List<StudentRepository.Identifier> getIdentifiersByFacultyNummbers(List<String> facultyNumbers) {
+    public List<StudentRepository.Identifier> getIdentifiersByFacultyNumbers(List<String> facultyNumbers) {
         return studentRepository.getByFacultyNumberIn(facultyNumbers);
     }
 

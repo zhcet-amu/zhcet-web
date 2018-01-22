@@ -1,6 +1,7 @@
 package amu.zhcet.core.admin.dean.registration.faculty;
 
 import amu.zhcet.data.user.Gender;
+import amu.zhcet.storage.csv.CustomEnumConverter;
 import com.j256.simplecsv.common.CsvColumn;
 import lombok.Data;
 
@@ -12,7 +13,7 @@ public class FacultyUpload {
     @CsvColumn(mustNotBeBlank = true)
     private String name;
 
-    @CsvColumn(mustBeSupplied = false)
+    @CsvColumn(mustBeSupplied = false, converterClass = CustomEnumConverter.class)
     private Gender gender;
 
     @CsvColumn(mustNotBeBlank = true)

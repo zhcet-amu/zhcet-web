@@ -10,7 +10,6 @@ import amu.zhcet.security.SecurityUtils;
 import amu.zhcet.storage.csv.AbstractUploadService;
 import amu.zhcet.storage.csv.Confirmation;
 import amu.zhcet.storage.csv.UploadResult;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,12 +29,6 @@ class FacultyRegistrationAdapter {
     private final UserService userService;
     private final AbstractUploadService<FacultyUpload, FacultyMember> uploadService;
 
-    @Data
-    private static class ErrorConditions {
-        private boolean invalidDepartment;
-        private boolean duplicateFacultyId;
-    }
-
     @Autowired
     public FacultyRegistrationAdapter(DepartmentRepository departmentRepository, UserService userService, AbstractUploadService<FacultyUpload, FacultyMember> uploadService) {
         this.departmentRepository = departmentRepository;
@@ -44,54 +36,19 @@ class FacultyRegistrationAdapter {
         this.uploadService = uploadService;
     }
 
-    private String getMappedValue(
-            FacultyMember facultyMember,
-            List<Department> departments,
-            List<UserRepository.Identifier> userIds,
-            ErrorConditions conditions
-    ) {
-        String departmentName = facultyMember.getUser().getDepartment().getName();
-
-        Optional<Department> optional = departments.stream()
-                .filter(department -> department.getName().equals(departmentName))
-                .findFirst();
-
-        if (!optional.isPresent()) {
-            conditions.setInvalidDepartment(true);
-            return "No such department: " + departmentName;
-        } else if (userIds.parallelStream().anyMatch(identifier -> identifier.getUserId().equals(facultyMember.getFacultyId()))) {
-            conditions.setDuplicateFacultyId(true);
-            return "Duplicate Faculty ID";
-        } else {
-            facultyMember.getUser().setDepartment(optional.get());
-            return null;
-        }
-    }
-
     UploadResult<FacultyUpload> fileToUpload(MultipartFile file) throws IOException {
         return uploadService.handleUpload(FacultyUpload.class, file);
     }
 
     Confirmation<FacultyMember> uploadToConfirmation(UploadResult<FacultyUpload> uploadResult) {
-        ErrorConditions conditions = new ErrorConditions();
+        FacultyIntegrityVerifier verifier = getVerifier(uploadResult);
 
-        List<Department> departments = departmentRepository.findAll();
-
-        List<String> ids = uploadResult.getUploads()
-                .stream()
-                .map(FacultyUpload::getFacultyId)
-                .collect(Collectors.toList());
-
-        List<UserRepository.Identifier> existingUserIds = userService.getUserIdentifiers(ids);
-
-        if (!existingUserIds.isEmpty())
-            log.warn("Duplicate faculty ids : {}", existingUserIds.toString());log.warn("Duplicate enrolments : {}", existingUserIds.toString());
-
-        Confirmation<FacultyMember> facultyConfirmation =
-                uploadService.confirmUpload(uploadResult)
+        Confirmation<FacultyMember> facultyConfirmation = uploadService.confirmUpload(uploadResult)
                     .convert(FacultyRegistrationAdapter::fromFacultyUpload)
-                    .map(facultyMember -> getMappedValue(facultyMember, departments, existingUserIds, conditions))
+                    .map(verifier::getError)
                     .get();
+
+        FacultyIntegrityVerifier.ErrorConditions conditions = verifier.getErrorConditions();
 
         if (conditions.isInvalidDepartment())
             facultyConfirmation.getErrors().add("Faculty Member with invalid department found");
@@ -103,6 +60,19 @@ class FacultyRegistrationAdapter {
         }
 
         return facultyConfirmation;
+    }
+
+    private FacultyIntegrityVerifier getVerifier(UploadResult<FacultyUpload> uploadResult) {
+        List<Department> departments = departmentRepository.findAll();
+
+        List<String> ids = uploadResult.getUploads()
+                .stream()
+                .map(FacultyUpload::getFacultyId)
+                .collect(Collectors.toList());
+
+        List<UserRepository.Identifier> existingUserIds = userService.getUserIdentifiers(ids);
+
+        return new FacultyIntegrityVerifier(departments, existingUserIds);
     }
 
     private static FacultyMember fromFacultyUpload(FacultyUpload facultyUpload) {

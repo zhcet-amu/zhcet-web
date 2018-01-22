@@ -16,7 +16,7 @@ public class SortUtils {
         attendanceUploads.sort((att1, att2) ->
                 ComparisonChain.start()
                         .compare(att1.getSection(), att2.getSection(), Ordering.natural().nullsFirst())
-                        .compare(att1.getFaculty_no().substring(5), att2.getFaculty_no().substring(5))
+                        .compare(att1.getFacultyNo().substring(5), att2.getFacultyNo().substring(5))
                         .result()
         );
     }

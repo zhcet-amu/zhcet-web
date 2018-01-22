@@ -21,11 +21,12 @@
             <div th:with="attendance_download_url = @{|/admin/faculty/courses/${incharge.code}/attendance.csv|}"
                  th:insert="faculty/fragments/attendance_download"></div>
             <div th:replace="faculty/fragments/attendance_upload"></div>
-            <div th:replace="faculty/fragments/attendance_errors"></div>
             <div th:replace="faculty/fragments/attendance_confirm"></div>
         </div>
     </div>
-
+    <div class="row">
+        <div th:replace="faculty/fragments/attendance_errors"></div>
+    </div>
     <div class="row" th:unless="${incharge}">
         <div th:replace="department/fragments/course_not_found"></div>
     </div>
@@ -62,6 +63,6 @@
 <script th:src="@{/js/file-uploader.js}"></script>
 <div th:replace="fragments/layout :: datatables"></div>
 <div th:replace="fragments/layout :: datatables_export"></div>
-<script th:src="@{/js/course-attendance.js}"></script>
+<script th:src="@{/js/attendance-upload.js}"></script>
 </body>
 </html>

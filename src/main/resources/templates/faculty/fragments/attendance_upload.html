@@ -30,14 +30,8 @@
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     <strong>Updated!</strong> Student attendance was successfully updated<br/>
                 </div>
-                <div th:if="${success}" class="alert alert-dismissible alert-success">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>Uploaded!</strong> Your file was correctly uploaded. Now, confirm the prompt
-                    below to update the attendance
-                </div>
                 <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>Something went wrong!</strong>
                     <div th:utext="${error}">Fix this and try and try again</div>
                 </div>
             </form>

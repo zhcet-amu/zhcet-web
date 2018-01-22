@@ -7,10 +7,10 @@ import lombok.Data;
 @Data
 public class AttendanceUpload implements Meta {
     private String meta;
-    @CsvColumn(mustNotBeBlank = true)
-    private String enrolment_no;
-    @CsvColumn(mustBeSupplied = false)
-    private String faculty_no;
+    @CsvColumn(columnName = "enrolment_no", mustNotBeBlank = true)
+    private String enrolmentNo;
+    @CsvColumn(columnName = "faculty_no", mustBeSupplied = false)
+    private String facultyNo;
     @CsvColumn(mustBeSupplied = false)
     private String name;
     @CsvColumn(mustBeSupplied = false)

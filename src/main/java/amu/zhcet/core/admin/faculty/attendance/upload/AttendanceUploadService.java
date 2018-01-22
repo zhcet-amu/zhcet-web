@@ -6,8 +6,6 @@ import amu.zhcet.core.notification.sending.NotificationSendingService;
 import amu.zhcet.data.attendance.AttendanceUpload;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.incharge.CourseInCharge;
-import amu.zhcet.data.course.incharge.CourseInChargeService;
-import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.course.registration.CourseRegistrationService;
 import amu.zhcet.data.user.faculty.FacultyMember;
 import amu.zhcet.email.EmailSendingService;
@@ -26,20 +24,17 @@ import java.util.List;
 @Service
 class AttendanceUploadService {
 
-    private final CourseInChargeService courseInChargeService;
     private final CourseRegistrationService courseRegistrationService;
     private final NotificationSendingService notificationSendingService;
     private final AttendanceUploadAdapter attendanceUploadAdapter;
 
     @Autowired
     public AttendanceUploadService(
-            CourseInChargeService courseInChargeService,
             CourseRegistrationService courseRegistrationService,
             NotificationSendingService notificationSendingService,
             AttendanceUploadAdapter attendanceUploadAdapter
     ) {
         this.attendanceUploadAdapter = attendanceUploadAdapter;
-        this.courseInChargeService = courseInChargeService;
         this.courseRegistrationService = courseRegistrationService;
         this.notificationSendingService = notificationSendingService;
     }
@@ -54,15 +49,6 @@ class AttendanceUploadService {
 
     @Transactional
     public void updateAttendance(CourseInCharge courseInCharge, List<AttendanceUpload> uploadList) {
-        List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
-
-        for (AttendanceUpload attendanceUpload : uploadList) {
-            if (AttendanceUploadAdapter.studentExists(attendanceUpload, courseRegistrations, null) == null) {
-                log.error("Force updating attendance of invalid student {} {} {}", courseInCharge.getCode(), attendanceUpload.getEnrolment_no());
-                throw new RuntimeException("Invalid DataBody : " + attendanceUpload);
-            }
-        }
-
         for (AttendanceUpload attendance : uploadList) {
             courseRegistrationService.setAttendance(courseInCharge.getFloatedCourse().getCourse(), attendance);
         }

@@ -1,41 +1,52 @@
-<div xmlns:th="http://www.thymeleaf.org" th:fragment="attendance_errors" th:if="${confirmAttendanceErrors}" class="card">
-    <div class="card-header">
-        <h4 class="card-title">Course Attendance</h4>
-        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-        <div class="heading-elements">
-            <ul class="list-inline mb-0">
-                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
-                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="card-body collapse in collapse in">
-        <div class="card-block">
-            <div class="row">
-                <div class="table-responsive">
-                    <table class="table" id="error_table">
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="attendance_errors" th:if="${confirmAttendanceErrors}"
+     id="error-modal" class="modal">
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Error Uploading Attendance</h4>
+            </div>
+            <div class="modal-body" style="padding: 30px;">
+                <div class="row">
+                    <table id="error-table" class="table display table-striped table-bordered">
                         <thead>
                         <tr>
-                            <th class="text-xs-center" data-original-title="Enrolment Number" data-toggle="tooltip">ID</th>
-                            <th class="text-xs-center" data-original-title="Attended/Delivered" data-toggle="tooltip">Att./Del.</th>
+                            <th>Enrolment Number</th>
+                            <th>Faculty Number</th>
+                            <th>Name</th>
+                            <th>Attended</th>
+                            <th>Delivered</th>
+                            <th>Error</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <th:block th:each="confirm: ${confirmAttendanceErrors.data}">
-                            <tr th:class="(${confirm.meta} ? '':'bg-danger white')">
-                                <td class="text-xs-center" th:text="${confirm.enrolment_no}"></td>
-                                <td class="text-xs-center" th:text="|${confirm.attended}/${confirm.delivered}|"></td>
+                        <th:block th:each="confirm : ${confirmAttendanceErrors.data}">
+                            <tr th:class="(${confirm.meta} ? 'bg-danger white' : '')">
+                                <td th:text="${confirm.enrolmentNo}"></td>
+                                <td th:text="${confirm.facultyNo}"></td>
+                                <td th:text="${confirm.name}"></td>
+                                <td th:text="${confirm.attended}"></td>
+                                <td th:text="${confirm.delivered}"></td>
+                                <td th:text="${confirm.meta}"></td>
                             </tr>
                         </th:block>
                         </tbody>
+                        <tfoot>
+                        <tr>
+                            <th>Enrolment Number</th>
+                            <th>Faculty Number</th>
+                            <th>Name</th>
+                            <th>Attended</th>
+                            <th>Delivered</th>
+                            <th>Error</th>
+                        </tr>
+                        </tfoot>
                     </table>
                 </div>
-            </div>
-            <div th:each="error : ${confirmAttendanceErrors.errors}" class="alert alert-dismissible alert-danger">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>Something went wrong!</strong>
-                <div th:utext="${error}">Fix this and try and try again</div>
+                <div th:each="error : ${confirmAttendanceErrors.errors}">
+                    <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                </div>
             </div>
         </div>
     </div>

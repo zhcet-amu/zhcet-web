@@ -1,6 +1,7 @@
 package amu.zhcet.storage.csv;
 
 import amu.zhcet.common.model.Meta;
+import org.springframework.util.Assert;
 
 import java.util.function.Function;
 
@@ -25,8 +26,7 @@ public class ConfirmationAdapter<T, U extends Meta> {
     }
 
     public Confirmation<U> get() {
-        if (mapper == null)
-            throw new IllegalStateException("Mapper cannot be null");
+        Assert.notNull(mapper, "Mapper cannot be null");
 
         uploadResult
                 .getUploads()

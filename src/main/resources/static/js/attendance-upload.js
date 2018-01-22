@@ -15,6 +15,7 @@
         }
     );
 
+    $('#error-table').DataTable();
     var table = $('#attendance_table').DataTable({
         order: [],
         dom: 'lBfrtip',
@@ -28,4 +29,5 @@
     });
 
     $("#upload_modal").modal('show');
+    $("#error-modal").modal('show');
 }(jQuery));

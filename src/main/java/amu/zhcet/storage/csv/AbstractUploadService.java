@@ -5,19 +5,14 @@ import amu.zhcet.storage.file.FileSystemStorageService;
 import amu.zhcet.storage.file.FileType;
 import amu.zhcet.storage.file.StorageException;
 import com.j256.simplecsv.processor.ParseError;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Named;
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Function;
 
 @Slf4j
 @Service
@@ -26,17 +21,25 @@ public class AbstractUploadService<T, U extends Meta> {
     private final FileSystemStorageService systemStorageService;
     private final List<String> allowedCsvTypes;
 
-    @Data
-    @RequiredArgsConstructor
-    public static class ParseErrorWrapper {
-        private final ParseError parseError;
-        private final List<String> columns;
-    }
-
     @Autowired
     public AbstractUploadService(@Named("allowedCsvTypes") List<String> allowedCsvTypes, FileSystemStorageService systemStorageService) {
         this.systemStorageService = systemStorageService;
         this.allowedCsvTypes = allowedCsvTypes;
+    }
+
+    public UploadResult<T> handleUpload(Class<T> uploadClass, MultipartFile file) throws IOException {
+        UploadResult<T> uploadResult = new UploadResult<>();
+
+        boolean fileStored = storeFile(file, uploadResult);
+        boolean fileTypeValid = validateType(file, uploadResult);
+        if (fileStored && fileTypeValid)
+            parseFile(uploadClass, file, uploadResult);
+
+        return uploadResult;
+    }
+
+    public ConfirmationAdapter<T, U> confirmUpload(UploadResult<T> uploadResult) {
+        return new ConfirmationAdapter<>(uploadResult);
     }
 
     private boolean storeFile(MultipartFile file, UploadResult<T> uploadResult) {
@@ -60,57 +63,29 @@ public class AbstractUploadService<T, U extends Meta> {
         return true;
     }
 
-    private static ParseErrorWrapper fromParseError(ParseError parseError, CsvParser.Result<?> result) {
-        return new ParseErrorWrapper(parseError, result.getColumns());
+    private static String getErrorMessage(ParseError parseError) {
+        String message = parseError.getMessage() +
+                "<br>Line Number: " + parseError.getLineNumber() +
+                " Position: " + parseError.getLinePos();
+
+        if (parseError.getLine() != null)
+            message += "<br>Line: " + parseError.getLine();
+
+        return message;
     }
 
-    private void parseFile(
-            @Nonnull
-            Class<T> uploadClass,
-            @Nonnull
-            MultipartFile file,
-            @Nonnull
-            UploadResult<T> uploadResult,
-            @Nullable
-            Function<ParseErrorWrapper, String> errorHandler
-    ) throws IOException {
-        CsvParser.Result<T> result = CsvParser.of(uploadClass, file).parse();
-
-        Function<ParseErrorWrapper, String> handler = errorHandler != null ? errorHandler : CsvParseErrorHandler::handleError;
+    private void parseFile(Class<T> uploadClass, MultipartFile file, UploadResult<T> uploadResult) throws IOException {
+        CsvParser.Result<T> result = CsvParser.of(uploadClass).parse(file);
 
         uploadResult.getUploads().addAll(result.getItems());
         if (!result.isParsedSuccessfully()) {
             result.getParseErrors()
                     .stream()
-                    .map(parseError -> fromParseError(parseError, result))
-                    .map(handler)
+                    .map(AbstractUploadService::getErrorMessage)
                     .forEach(message -> uploadResult.getErrors().add(message));
 
             log.warn(String.format("CSV Parsing Errors %s %s", file.getOriginalFilename(), uploadResult.getErrors()));
         }
-    }
-
-    public UploadResult<T> handleUpload(Class<T> uploadClass, MultipartFile file) throws IOException {
-        return handleUpload(uploadClass, file, null);
-    }
-
-    public UploadResult<T> handleUpload(
-            Class<T> uploadClass,
-            MultipartFile file,
-            Function<ParseErrorWrapper,String> errorHandler
-    )
-            throws IOException
-    {
-        UploadResult<T> uploadResult = new UploadResult<>();
-
-        if (storeFile(file, uploadResult) && validateType(file, uploadResult))
-            parseFile(uploadClass, file, uploadResult, errorHandler);
-
-        return uploadResult;
-    }
-
-    public ConfirmationAdapter<T, U> confirmUpload(UploadResult<T> uploadResult) {
-        return new ConfirmationAdapter<>(uploadResult);
     }
 
 }

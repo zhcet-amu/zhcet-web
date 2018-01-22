@@ -7,7 +7,6 @@ import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.storage.csv.AbstractUploadService;
 import amu.zhcet.storage.csv.Confirmation;
 import amu.zhcet.storage.csv.UploadResult;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +22,6 @@ class AttendanceUploadAdapter {
     private final CourseInChargeService courseInChargeService;
     private final AbstractUploadService<AttendanceUpload, AttendanceUpload> uploadService;
 
-    @Data
-    private static class ErrorConditions {
-        private boolean exists = true;
-    }
-
     @Autowired
     public AttendanceUploadAdapter(CourseInChargeService courseInChargeService, AbstractUploadService<AttendanceUpload, AttendanceUpload> uploadService) {
         this.courseInChargeService = courseInChargeService;
@@ -40,36 +34,28 @@ class AttendanceUploadAdapter {
     }
 
     Confirmation<AttendanceUpload> uploadToConfirmation(CourseInCharge courseInCharge, UploadResult<AttendanceUpload> uploadResult) {
-        ErrorConditions conditions = new ErrorConditions();
-
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
+
+        AttendanceUploadIntegrityVerifier verifier = new AttendanceUploadIntegrityVerifier(courseRegistrations);
 
         Confirmation<AttendanceUpload> attendanceConfirmation =
                 uploadService.confirmUpload(uploadResult)
                     .convert(item -> item)
-                    .map(upload -> studentExists(upload, courseRegistrations, conditions))
+                    .map(verifier::getError)
                     .get();
 
-        if (!conditions.isExists()) {
+        AttendanceUploadIntegrityVerifier.ErrorConditions conditions = verifier.getErrorConditions();
+
+        if (conditions.isDuplicateStudent())
+            attendanceConfirmation.getErrors().add("Duplicate Students found");
+        if (conditions.isNotRegistered())
+            attendanceConfirmation.getErrors().add("Students which are not registered for this course found");
+
+        if (!attendanceConfirmation.getErrors().isEmpty()) {
             log.warn(attendanceConfirmation.getData().toString());
-            attendanceConfirmation.getErrors().add("The students highlighted in red are not registered for this course");
         }
 
         return attendanceConfirmation;
-    }
-
-    static String studentExists(AttendanceUpload upload, List<CourseRegistration> registrations, ErrorConditions conditions) {
-        boolean exists = registrations.stream()
-                .map(registration -> registration.getStudent().getEnrolmentNumber())
-                .anyMatch(enrolment -> enrolment.equals(upload.getEnrolment_no()));
-
-        if (!exists) {
-            log.info("Student does not exist for course in-charge {}", upload.getEnrolment_no());
-            if (conditions != null)
-                conditions.setExists(false);
-        }
-
-        return exists ? "exists" : null;
     }
 
 }

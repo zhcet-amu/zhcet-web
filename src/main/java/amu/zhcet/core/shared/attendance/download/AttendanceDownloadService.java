@@ -53,8 +53,8 @@ public class AttendanceDownloadService {
 
     private AttendanceUpload fromCourseRegistration(CourseRegistration courseRegistration) {
         AttendanceUpload attendanceUpload = new AttendanceUpload();
-        attendanceUpload.setEnrolment_no(courseRegistration.getStudent().getEnrolmentNumber());
-        attendanceUpload.setFaculty_no(courseRegistration.getStudent().getFacultyNumber());
+        attendanceUpload.setEnrolmentNo(courseRegistration.getStudent().getEnrolmentNumber());
+        attendanceUpload.setFacultyNo(courseRegistration.getStudent().getFacultyNumber());
         attendanceUpload.setName(courseRegistration.getStudent().getUser().getName());
         attendanceUpload.setSection(courseRegistration.getStudent().getSection());
         attendanceUpload.setAttended(courseRegistration.getAttendance().getAttended());

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class RegistrationUpload {
-    @CsvColumn(columnName = "faculty_no", mustNotBeBlank = true)
+    @CsvColumn(columnName = "facultyNo", mustNotBeBlank = true)
     private String facultyNo;
     @CsvColumn
     private char mode;
