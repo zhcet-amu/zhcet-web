@@ -38,7 +38,7 @@ class CourseRegistrationIntegrityVerifier {
 
         if (isDuplicateStudent(student)) {
             return "Duplicate Faculty Number";
-        } else if (isValidStudent(student)) {
+        } else if (!isValidStudent(student)) {
             return  "No such student found";
         } else if(isStudentAlreadyEnrolled(student)) {
             return "Already enrolled in " + course.getCode();
