@@ -1,9 +1,10 @@
 package amu.zhcet.firebase;
 
 import amu.zhcet.common.utils.ConsoleHelper;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.Bucket;
-import com.google.common.base.Strings;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,48 +14,99 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.net.URL;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Service
 public class FirebaseService {
 
+    private final FirebaseLocator firebaseLocator;
+
     private final boolean disabled;
-    private final String messagingServerKey;
     private boolean uninitialized;
 
+    private GoogleCredential googleCredential;
+    private String projectId;
+
     @Autowired
-    public FirebaseService(FirebaseProperties firebase) throws IOException {
+    public FirebaseService(FirebaseLocator firebaseLocator, FirebaseProperties firebase) throws IOException {
+        this.firebaseLocator = firebaseLocator;
         log.info(ConsoleHelper.blue("Initializing Firebase"));
         disabled = firebase.isDisabled();
-        messagingServerKey = firebase.getMessagingServerKey();
 
         if (disabled) {
             log.warn(ConsoleHelper.red("CONFIG (Firebase): Firebase is disabled"));
             return;
         }
 
-        if (Strings.isNullOrEmpty(messagingServerKey)) {
-            log.warn(ConsoleHelper.red("CONFIG (Firebase Messaging): Firebase Messaging Server Key not found!"));
-        }
-
-        Optional<InputStream> serviceAccountOptional = getServiceAccountJson();
-        if (!serviceAccountOptional.isPresent()) {
+        if (firebaseLocator.found()) {
+            initializeFirebase();
+        } else {
             log.warn(ConsoleHelper.red("CONFIG (Firebase): Firebase Service Account JSON not found anywhere. Any Firebase interaction may throw exception"));
             uninitialized = true;
-            return;
         }
+    }
 
+    public static FirebaseToken getToken(String token) throws ExecutionException, InterruptedException {
+        return FirebaseAuth.getInstance().verifyIdTokenAsync(token).get();
+    }
+
+    public String getStorageBucket() {
+        return projectId + ".appspot.com";
+    }
+
+    public String getDatabaseUrl() {
+        return "https://" + projectId + ".firebaseio.com/";
+    }
+
+    public String getMessagingServer() {
+        return "https://fcm.googleapis.com/v1/projects/" + projectId + "/messages:send";
+    }
+
+    public Bucket getBucket() {
+        return StorageClient.getInstance().bucket();
+    }
+
+    public String getToken() {
         try {
-            GoogleCredentials googleCredentials = GoogleCredentials.fromStream(serviceAccountOptional.get());
+            googleCredential.refreshToken();
+        } catch (IOException e) {
+            log.error("Error refreshing token", e);
+        }
+        return googleCredential.getAccessToken();
+    }
+
+    public boolean canProceed() {
+        boolean proceedable = isInitialized() && isEnabled();
+        if (!proceedable)
+            log.info("Cannot proceed as Firebase is uninitialized");
+
+        return proceedable;
+    }
+
+    public boolean isEnabled() {
+        return !disabled;
+    }
+
+    public boolean isInitialized() {
+        return !uninitialized;
+    }
+
+    private void initializeFirebase() throws IOException {
+        try {
+            String messagingScope = "https://www.googleapis.com/auth/firebase.messaging";
+            googleCredential = GoogleCredential.fromStream(firebaseLocator.getServiceAccountStream())
+                    .createScoped(Collections.singletonList(messagingScope));
+            GoogleCredentials googleCredentials = GoogleCredentials.fromStream(firebaseLocator.getServiceAccountStream());
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(googleCredentials)
-                    .setDatabaseUrl(firebase.getDatabaseUrl())
-                    .setStorageBucket(firebase.getStorageBucket())
+                    .setDatabaseUrl(getDatabaseUrl())
+                    .setStorageBucket(getStorageBucket())
                     .build();
+
+            projectId = ((ServiceAccountCredentials) googleCredentials).getProjectId();
 
             FirebaseApp.initializeApp(options);
             log.info(ConsoleHelper.green("Firebase Initialized"));
@@ -64,74 +116,6 @@ public class FirebaseService {
             uninitialized = true;
             log.error("Firebase couldn't be initialized", e);
         }
-
-    }
-
-    private Optional<InputStream> getServiceAccountJson() {
-        String fileName = "service-account.json";
-        try {
-            InputStream is = getClass().getResourceAsStream("/" + fileName);
-            if (is == null) {
-                log.info("service-account.json not found in class resources. Maybe debug build? Trying to load another way");
-                URL url = getClass().getClassLoader().getResource(fileName);
-
-                if (url == null) {
-                    log.info(fileName + " not found in class loader resource as well... Using last resort...");
-                    throw new FileNotFoundException();
-                }
-
-                is = new FileInputStream(url.getFile());
-            }
-            return Optional.of(is);
-        } catch (FileNotFoundException e) {
-            log.info("service-account.json not found in storage system... Attempting to load from environment...");
-            String property = System.getenv("FIREBASE_JSON");
-            if (property == null) {
-                log.warn("FIREBASE account.json not found anywhere!");
-                return Optional.empty();
-            }
-            return Optional.of(new ByteArrayInputStream(System.getenv("FIREBASE_JSON").getBytes()));
-        }
-    }
-
-    public Bucket getBucket() {
-        return StorageClient.getInstance().bucket();
-    }
-
-    public static FirebaseToken getToken(String token) throws ExecutionException, InterruptedException {
-        return FirebaseAuth.getInstance().verifyIdTokenAsync(token).get();
-    }
-
-    public boolean canProceed() {
-        boolean proceedable = !isUninitialized() && !isDisabled();
-        if (!proceedable)
-            log.info("Cannot proceed as Firebase is uninitialized");
-
-        return proceedable;
-    }
-
-    public boolean canSendMessage() {
-        boolean unsendable = !hasMessagingServerKey() || isDisabled();
-        if (unsendable)
-            log.info("Cannot broadcast as Firebase Messaging Server Key is not found");
-
-        return !unsendable;
-    }
-
-    public boolean isDisabled() {
-        return disabled;
-    }
-
-    public boolean isUninitialized() {
-        return uninitialized;
-    }
-
-    public boolean hasMessagingServerKey() {
-        return getMessagingServerKey() != null;
-    }
-
-    public String getMessagingServerKey() {
-        return messagingServerKey;
     }
 
 }

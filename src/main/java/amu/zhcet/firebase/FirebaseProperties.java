@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 public class FirebaseProperties {
 
     private boolean disabled;
-    private String databaseUrl;
-    private String storageBucket;
-    private String messagingServerKey;
+    private String serviceAccount;
 
 }

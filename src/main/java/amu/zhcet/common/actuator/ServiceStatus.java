@@ -28,7 +28,7 @@ public class ServiceStatus implements Endpoint<ServiceStatus.Status> {
         static class Firebase {
             public Boolean enabled;
             public Boolean initialized;
-            public Boolean hasMessageServerKey;
+            public Boolean proceedable;
         }
 
         public Boolean pepperSet;
@@ -67,9 +67,9 @@ public class ServiceStatus implements Endpoint<ServiceStatus.Status> {
         status.email.enabled = !emailProperties.isDisabled();
         status.email.working = EmailConfiguration.isEmailSet();
 
-        status.firebase.enabled = !firebaseService.isDisabled();
-        status.firebase.initialized = !firebaseService.isUninitialized();
-        status.firebase.hasMessageServerKey = firebaseService.hasMessagingServerKey();
+        status.firebase.enabled = firebaseService.isEnabled();
+        status.firebase.initialized = firebaseService.isInitialized();
+        status.firebase.proceedable = firebaseService.canProceed();
 
         status.pepperSet = SecurePropertyConfig.isPepperSet();
 

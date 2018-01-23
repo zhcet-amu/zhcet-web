@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificationBody {
+public class WebPushNotification {
     private String title;
     private String body;
+    private final String icon = "https://zhcet-backend.firebaseapp.com/static/img/icon.png";
 }

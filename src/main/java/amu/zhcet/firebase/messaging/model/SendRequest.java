@@ -1,7 +1,6 @@
 package amu.zhcet.firebase.messaging.model;
 
-import amu.zhcet.firebase.messaging.model.request.DataBody;
-import amu.zhcet.firebase.messaging.model.request.NotificationBody;
+import amu.zhcet.firebase.messaging.model.request.Message;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SendRequest {
-    private String to;
-    private NotificationBody notification;
-    private DataBody data;
+    private Message message;
 }

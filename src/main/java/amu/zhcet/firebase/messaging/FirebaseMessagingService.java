@@ -8,8 +8,6 @@ import amu.zhcet.core.notification.recipient.NotificationRecipient;
 import amu.zhcet.firebase.FirebaseService;
 import amu.zhcet.firebase.messaging.model.SendRequest;
 import amu.zhcet.firebase.messaging.model.SendResponse;
-import amu.zhcet.firebase.messaging.model.request.DataBody;
-import amu.zhcet.firebase.messaging.model.request.NotificationBody;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
@@ -19,15 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
 @Service
 public class FirebaseMessagingService {
-
-    private static final String BASE_URL = "https://fcm.googleapis.com/fcm/send";
-    private static final Map<String, Object> HEADER_MAP = new HashMap<>();
 
     private final FirebaseService firebaseService;
     private final MarkDownService markDownService;
@@ -39,8 +31,7 @@ public class FirebaseMessagingService {
         this.firebaseService = firebaseService;
         this.markDownService = markDownService;
 
-        HEADER_MAP.put("Authorization", "key=" + firebaseService.getMessagingServerKey());
-        boolean canSendMessage = firebaseService.canSendMessage();
+        boolean canSendMessage = firebaseService.canProceed();
         String color = canSendMessage ? ConsoleColors.GREEN : ConsoleColors.RED;
         log.info(ConsoleHelper.color(color, "CONFIG (Firebase): Firebase Messaging Running : {}"), canSendMessage);
     }
@@ -53,7 +44,7 @@ public class FirebaseMessagingService {
      */
     @Async
     public void sendMessage(NotificationRecipient notificationRecipient) {
-        if (!firebaseService.canSendMessage())
+        if (!firebaseService.canProceed())
             return;
 
         String fcmToken = notificationRecipient.getRecipient().getDetails().getFcmToken();
@@ -63,25 +54,8 @@ public class FirebaseMessagingService {
 
         Notification notification = notificationRecipient.getNotification();
 
-        NotificationBody notificationBody = NotificationBody.builder()
-                .title("New Notification")
-                .body(notification.getTitle())
-                .build();
-
-        DataBody dataBody = DataBody.builder()
-                .title(markDownService.render(notification.getTitle()))
-                .message(markDownService.render(notification.getMessage()))
-                .sender(notification.getSender().getName())
-                .sentTime(notification.getSentTime().toString())
-                .build();
-
-        SendResponse sendResponse = getMessagingClient().sendMessage(
-                SendRequest.builder()
-                        .to(fcmToken)
-                        .notification(notificationBody)
-                        .data(dataBody)
-                        .build(),
-                HEADER_MAP);
+        SendRequest request = RequestMapper.createRequest(notification, fcmToken, markDownService::render);
+        SendResponse sendResponse = getMessagingClient().sendMessage(firebaseService.getToken(), request);
 
         log.info("Sent Broadcast : {}", sendResponse);
     }
@@ -92,7 +66,7 @@ public class FirebaseMessagingService {
                     .client(new OkHttpClient())
                     .decoder(new JacksonDecoder())
                     .encoder(new JacksonEncoder())
-                    .target(MessagingClient.class, BASE_URL);
+                    .target(MessagingClient.class, firebaseService.getMessagingServer());
         }
 
         return messagingClient;

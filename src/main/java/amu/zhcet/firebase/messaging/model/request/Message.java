@@ -9,7 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificationBody {
-    private String title;
-    private String body;
+public class Message {
+    private String token;
+    private String topic;
+    private String name;
+    private NotificationBody notification;
+    private WebPushConfig webpush;
+    private DataBody data;
 }

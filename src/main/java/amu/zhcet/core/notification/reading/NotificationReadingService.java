@@ -40,7 +40,7 @@ public class NotificationReadingService {
 
     public String getUnreadNotificationCount() {
         int size = getUnreadNotifications().size();
-        return size + (size >= 10 ? "+" : "");
+        return size + (size >= 10 ? "" : "");
     }
 
     public Page<NotificationRecipient> getNotifications(int page) {

@@ -2,16 +2,15 @@ package amu.zhcet.firebase.messaging;
 
 import amu.zhcet.firebase.messaging.model.SendRequest;
 import amu.zhcet.firebase.messaging.model.SendResponse;
-import feign.HeaderMap;
 import feign.Headers;
+import feign.Param;
 import feign.RequestLine;
 
-import java.util.Map;
-
+@Headers("Content-Type: application/json")
 public interface MessagingClient {
 
     @RequestLine("POST")
-    @Headers("Content-Type: application/json")
-    SendResponse sendMessage(SendRequest request, @HeaderMap Map<String, Object>headers);
+    @Headers("Authorization: Bearer {token}")
+    SendResponse sendMessage(@Param("token") String token, SendRequest request);
 
 }
