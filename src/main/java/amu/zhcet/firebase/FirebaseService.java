@@ -100,13 +100,17 @@ public class FirebaseService {
             googleCredential = GoogleCredential.fromStream(firebaseLocator.getServiceAccountStream())
                     .createScoped(Collections.singletonList(messagingScope));
             GoogleCredentials googleCredentials = GoogleCredentials.fromStream(firebaseLocator.getServiceAccountStream());
+
+            projectId = ((ServiceAccountCredentials) googleCredentials).getProjectId();
+
+            if (projectId == null)
+                throw new RuntimeException("Project ID must not be null");
+
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(googleCredentials)
                     .setDatabaseUrl(getDatabaseUrl())
                     .setStorageBucket(getStorageBucket())
                     .build();
-
-            projectId = ((ServiceAccountCredentials) googleCredentials).getProjectId();
 
             FirebaseApp.initializeApp(options);
             log.info(ConsoleHelper.green("Firebase Initialized"));
