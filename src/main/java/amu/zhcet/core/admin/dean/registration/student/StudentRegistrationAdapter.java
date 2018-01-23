@@ -8,7 +8,7 @@ import amu.zhcet.data.user.UserService;
 import amu.zhcet.data.user.student.Student;
 import amu.zhcet.data.user.student.StudentRepository;
 import amu.zhcet.data.user.student.StudentService;
-import amu.zhcet.storage.csv.AbstractUploadService;
+import amu.zhcet.storage.csv.CsvParserService;
 import amu.zhcet.storage.csv.Confirmation;
 import amu.zhcet.storage.csv.UploadResult;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +27,10 @@ class StudentRegistrationAdapter {
     private final UserService userService;
     private final StudentService studentService;
     private final DepartmentRepository departmentRepository;
-    private final AbstractUploadService<StudentUpload, Student> uploadService;
+    private final CsvParserService<StudentUpload, Student> uploadService;
 
     @Autowired
-    public StudentRegistrationAdapter(UserService userService, DepartmentRepository departmentRepository, StudentService studentService, AbstractUploadService<StudentUpload, Student> uploadService) {
+    public StudentRegistrationAdapter(UserService userService, DepartmentRepository departmentRepository, StudentService studentService, CsvParserService<StudentUpload, Student> uploadService) {
         this.userService = userService;
         this.departmentRepository = departmentRepository;
         this.studentService = studentService;

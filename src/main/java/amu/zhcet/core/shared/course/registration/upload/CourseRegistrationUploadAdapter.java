@@ -6,7 +6,7 @@ import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.user.student.Student;
 import amu.zhcet.data.user.student.StudentService;
-import amu.zhcet.storage.csv.AbstractUploadService;
+import amu.zhcet.storage.csv.CsvParserService;
 import amu.zhcet.storage.csv.Confirmation;
 import amu.zhcet.storage.csv.UploadResult;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +23,10 @@ class CourseRegistrationUploadAdapter {
 
     private final FloatedCourseService floatedCourseService;
     private final StudentService studentService;
-    private final AbstractUploadService<RegistrationUpload, CourseRegistration> uploadService;
+    private final CsvParserService<RegistrationUpload, CourseRegistration> uploadService;
 
     @Autowired
-    public CourseRegistrationUploadAdapter(FloatedCourseService floatedCourseService, StudentService studentService, AbstractUploadService<RegistrationUpload, CourseRegistration> uploadService) {
+    public CourseRegistrationUploadAdapter(FloatedCourseService floatedCourseService, StudentService studentService, CsvParserService<RegistrationUpload, CourseRegistration> uploadService) {
         this.floatedCourseService = floatedCourseService;
         this.studentService = studentService;
         this.uploadService = uploadService;

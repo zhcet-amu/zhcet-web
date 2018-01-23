@@ -4,7 +4,7 @@ import amu.zhcet.data.attendance.AttendanceUpload;
 import amu.zhcet.data.course.incharge.CourseInCharge;
 import amu.zhcet.data.course.incharge.CourseInChargeService;
 import amu.zhcet.data.course.registration.CourseRegistration;
-import amu.zhcet.storage.csv.AbstractUploadService;
+import amu.zhcet.storage.csv.CsvParserService;
 import amu.zhcet.storage.csv.Confirmation;
 import amu.zhcet.storage.csv.UploadResult;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +20,10 @@ import java.util.List;
 class AttendanceUploadAdapter {
 
     private final CourseInChargeService courseInChargeService;
-    private final AbstractUploadService<AttendanceUpload, AttendanceUpload> uploadService;
+    private final CsvParserService<AttendanceUpload, AttendanceUpload> uploadService;
 
     @Autowired
-    public AttendanceUploadAdapter(CourseInChargeService courseInChargeService, AbstractUploadService<AttendanceUpload, AttendanceUpload> uploadService) {
+    public AttendanceUploadAdapter(CourseInChargeService courseInChargeService, CsvParserService<AttendanceUpload, AttendanceUpload> uploadService) {
         this.courseInChargeService = courseInChargeService;
         this.uploadService = uploadService;
     }

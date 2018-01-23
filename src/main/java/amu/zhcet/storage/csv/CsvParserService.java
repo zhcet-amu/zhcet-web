@@ -16,13 +16,13 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class AbstractUploadService<T, U extends Meta> {
+public class CsvParserService<T, U extends Meta> {
 
     private final FileSystemStorageService systemStorageService;
     private final List<String> allowedCsvTypes;
 
     @Autowired
-    public AbstractUploadService(@Named("allowedCsvTypes") List<String> allowedCsvTypes, FileSystemStorageService systemStorageService) {
+    public CsvParserService(@Named("allowedCsvTypes") List<String> allowedCsvTypes, FileSystemStorageService systemStorageService) {
         this.systemStorageService = systemStorageService;
         this.allowedCsvTypes = allowedCsvTypes;
     }
@@ -64,7 +64,7 @@ public class AbstractUploadService<T, U extends Meta> {
     }
 
     private static String getErrorMessage(ParseError parseError) {
-        String message = parseError.getMessage() +
+        String message = parseError.getMessage().replace("suppled", "supplied") + // TODO: Correct the typo in library
                 "<br>Line Number: " + parseError.getLineNumber() +
                 " Position: " + parseError.getLinePos();
 
@@ -81,7 +81,7 @@ public class AbstractUploadService<T, U extends Meta> {
         if (!result.isParsedSuccessfully()) {
             result.getParseErrors()
                     .stream()
-                    .map(AbstractUploadService::getErrorMessage)
+                    .map(CsvParserService::getErrorMessage)
                     .forEach(message -> uploadResult.getErrors().add(message));
 
             log.warn(String.format("CSV Parsing Errors %s %s", file.getOriginalFilename(), uploadResult.getErrors()));
