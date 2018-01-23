@@ -2,6 +2,7 @@ package amu.zhcet.core.shared.attendance.download;
 
 import amu.zhcet.common.utils.StringUtils;
 import amu.zhcet.core.error.ErrorUtils;
+import amu.zhcet.data.attendance.Attendance;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.floated.FloatedCourse;
 import amu.zhcet.data.course.floated.FloatedCourseNotFoundException;
@@ -13,13 +14,21 @@ import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.department.Department;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller for downloading attendance from Dean, Department and Faculty Admin accounts
@@ -47,12 +56,12 @@ public class AttendanceDownloadController {
      * @param code The course and section code for faculty, of the form course:section
      */
     @GetMapping("/admin/faculty/courses/{code}/attendance.csv")
-    public void downloadAttendanceForFaculty(HttpServletResponse response, @PathVariable String code) {
+    public ResponseEntity<InputStreamResource> downloadAttendanceForFaculty(HttpServletResponse response, @PathVariable String code) {
         CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(code).orElseThrow(CourseInChargeNotFoundException::new);
         String section = StringUtils.defaultString(CourseInChargeService.getCodeAndSection(code).getRight(), "all");
         List<CourseRegistration> courseRegistrations = courseInChargeService.getCourseRegistrations(courseInCharge);
         String suffix = courseInCharge.getFloatedCourse().getCourse().getCode() + "_" + section;
-        downloadAttendance("faculty", suffix, courseRegistrations, response);
+        return downloadAttendance("faculty", suffix, courseRegistrations);
     }
 
     /**
@@ -61,9 +70,9 @@ public class AttendanceDownloadController {
      * @param response Response object to be sent, containing the attendance CSV
      */
     @GetMapping("/admin/dean/floated/{course}/attendance.csv")
-    public void downloadAttendanceForDean(@PathVariable Course course, HttpServletResponse response) {
+    public ResponseEntity<InputStreamResource> downloadAttendanceForDean(@PathVariable Course course, HttpServletResponse response) {
         ErrorUtils.requireNonNullCourse(course);
-        downloadAttendance("dean", course, response);
+        return downloadAttendance("dean", course);
     }
 
     /**
@@ -73,23 +82,45 @@ public class AttendanceDownloadController {
      * @param response Response object to be sent, containing the attendance CSV
      */
     @GetMapping("/admin/department/{department}/floated/{course}/attendance.csv")
-    public void downloadAttendanceForDepartment(@PathVariable Department department, @PathVariable Course course, HttpServletResponse response) {
+    public ResponseEntity<InputStreamResource> downloadAttendanceForDepartment(@PathVariable Department department, @PathVariable Course course, HttpServletResponse response) {
         ErrorUtils.requireNonNullDepartment(department);
         ErrorUtils.requireNonNullCourse(course);
-        downloadAttendance("department", course, response);
+        return downloadAttendance("department", course);
     }
 
-    private void downloadAttendance(String context, Course course, HttpServletResponse response) {
+    private ResponseEntity<InputStreamResource> downloadAttendance(String context, Course course) {
         FloatedCourse floatedCourse = floatedCourseService.getFloatedCourse(course).orElseThrow(FloatedCourseNotFoundException::new);
-        downloadAttendance(context, course.getCode(), floatedCourse.getCourseRegistrations(), response);
+        return downloadAttendance(context, course.getCode(), floatedCourse.getCourseRegistrations());
     }
 
-    private void downloadAttendance(String context, String suffix, List<CourseRegistration> courseRegistrations, HttpServletResponse response) {
+    private ResponseEntity<InputStreamResource> downloadAttendance(String context, String suffix, List<CourseRegistration> courseRegistrations) {
         try {
-            attendanceDownloadService.download(suffix, context, courseRegistrations, response);
+           InputStream stream = attendanceDownloadService.getAttendanceStream(suffix, context, courseRegistrations);
+
+            String lastModified = getLastModifiedDate(courseRegistrations)
+                    .map(localDateTime -> "_" + localDateTime.format(DateTimeFormatter.ISO_DATE_TIME))
+                    .orElse("");
+
+           return ResponseEntity.ok()
+                   .contentType(MediaType.parseMediaType("text/csv"))
+                   .header("Content-disposition",
+                           "attachment;filename=attendance_" + suffix + lastModified + ".csv")
+                   .body(new InputStreamResource(stream));
         } catch (IOException e) {
-            log.error("Attendance Download", e);
+            log.error("Attendance Download Error", e);
+
+            return ResponseEntity.notFound().build();
         }
+    }
+
+    private Optional<LocalDateTime> getLastModifiedDate(List<CourseRegistration> courseRegistrations) {
+        if (courseRegistrations == null)
+            return Optional.empty();
+
+        return courseRegistrations.stream()
+                .map(CourseRegistration::getAttendance)
+                .max(Comparator.comparing(Attendance::getUpdatedAt))
+                .map(Attendance::getUpdatedAt);
     }
 
 }

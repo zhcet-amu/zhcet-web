@@ -12,10 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,7 +67,7 @@ public class AttendanceDownloadService {
         return attendanceUpload;
     }
 
-    private List<String> attendanceCsv(String authority, String meta, List<CourseRegistration> courseRegistrations) throws IOException {
+    public InputStream getAttendanceStream(String authority, String meta, List<CourseRegistration> courseRegistrations) throws IOException {
         SortUtils.sortCourseAttendance(courseRegistrations);
         String fileName = fileSystemStorageService.generateFileName(authority + "_" + meta + ".csv");
 
@@ -81,19 +81,7 @@ public class AttendanceDownloadService {
 
         log.info("File Written!");
 
-        return Files.readAllLines(fileSystemStorageService.load(FileType.CSV, fileName));
-    }
-
-    public void download(String suffix, String authority, List<CourseRegistration> courseRegistrations, HttpServletResponse response) throws IOException {
-        response.setContentType("text/csv");
-        response.setHeader("Content-disposition", "attachment;filename=attendance_" + suffix + ".csv");
-
-        List<String> lines = attendanceCsv(authority, suffix, courseRegistrations);
-        for (String line : lines) {
-            response.getOutputStream().println(line);
-        }
-
-        response.getOutputStream().flush();
+        return new FileInputStream(fileSystemStorageService.load(FileType.CSV, fileName).toFile());
     }
 
 }

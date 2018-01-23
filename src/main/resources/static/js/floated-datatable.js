@@ -16,7 +16,7 @@
         modal.find('#num').html(data['num_students']);
         modal.find('#sections').html(data['sections']);
         modal.find('#type_icon').attr('class', (data['course_type'] === 'Theory' ? 'icon-book' : 'icon-lab'));
-        modal.find('#link').attr('href', '/admin/dean/floated/' + data['course_code'] + '/attendance/download');
+        modal.find('#link').attr('href', '/admin/dean/floated/' + data['course_code'] + '/attendance.csv');
         modal.find('#register').attr('href', '/admin/dean/floated/' + data['course_code']);
 
         if (data['createdAt'] && data['createdAt'] !== '')
