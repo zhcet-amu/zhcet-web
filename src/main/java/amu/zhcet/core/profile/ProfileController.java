@@ -1,6 +1,5 @@
 package amu.zhcet.core.profile;
 
-import amu.zhcet.core.auth.UserDetailService;
 import amu.zhcet.data.user.Gender;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
 @Slf4j
@@ -29,20 +27,18 @@ import javax.validation.Valid;
 public class ProfileController {
 
     private final UserService userService;
-    private final UserDetailService userDetailService;
     private final StudentService studentService;
     private final FacultyService facultyService;
 
     @Autowired
-    public ProfileController(UserDetailService userDetailService, StudentService studentService, FacultyService facultyService) {
-        this.userDetailService = userDetailService;
-        this.userService = userDetailService.getUserService();
+    public ProfileController(UserService userService, StudentService studentService, FacultyService facultyService) {
+        this.userService = userService;
         this.studentService = studentService;
         this.facultyService = facultyService;
     }
 
     @GetMapping
-    public String profile(Model model, ServletRequest request) {
+    public String profile(Model model) {
         User user = userService.getLoggedInUser().orElseThrow(() -> new AccessDeniedException("403"));
         model.addAttribute("user", user);
 
@@ -59,9 +55,6 @@ public class ProfileController {
         } else {
             facultyService.getLoggedInMember().ifPresent(facultyMember -> model.addAttribute("faculty", facultyMember));
         }
-
-        if (request.getParameterMap().containsKey("refresh"))
-            userDetailService.updatePrincipal(user);
 
         return "user/profile";
     }

@@ -1,7 +1,7 @@
 package amu.zhcet.core;
 
 import amu.zhcet.common.utils.StringUtils;
-import amu.zhcet.core.auth.CustomUser;
+import amu.zhcet.auth.UserAuth;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.user.Gender;
 import amu.zhcet.data.user.Role;
@@ -27,10 +27,10 @@ public class ViewService {
         this.permissionManager = permissionManager;
     }
 
-    public List<CustomUser> getUsersFromSessionRegistry() {
+    public List<UserAuth> getUsersFromSessionRegistry() {
         return sessionRegistry.getAllPrincipals().stream()
                 .filter(u -> !sessionRegistry.getAllSessions(u, false).isEmpty())
-                .map(object -> ((CustomUser) object))
+                .map(object -> ((UserAuth) object))
                 .collect(Collectors.toList());
     }
 

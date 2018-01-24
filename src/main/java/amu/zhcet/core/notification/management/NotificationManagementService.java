@@ -1,6 +1,6 @@
 package amu.zhcet.core.notification.management;
 
-import amu.zhcet.core.auth.Auditor;
+import amu.zhcet.auth.Auditor;
 import amu.zhcet.core.notification.Notification;
 import amu.zhcet.core.notification.NotificationRepository;
 import amu.zhcet.core.notification.recipient.NotificationRecipient;

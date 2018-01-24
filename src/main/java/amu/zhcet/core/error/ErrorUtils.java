@@ -1,5 +1,6 @@
 package amu.zhcet.core.error;
 
+import amu.zhcet.auth.UserAuth;
 import amu.zhcet.core.notification.Notification;
 import amu.zhcet.core.notification.NotificationNotFoundException;
 import amu.zhcet.core.notification.recipient.NotificationRecipient;
@@ -37,6 +38,10 @@ public class ErrorUtils {
     }
 
     public static void requireNonNullUser(User user) {
+        if (user == null) throw new UserNotFoundException();
+    }
+
+    public static void requireNonNullUser(UserAuth user) {
         if (user == null) throw new UserNotFoundException();
     }
 

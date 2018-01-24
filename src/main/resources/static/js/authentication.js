@@ -9,29 +9,19 @@ var Authentication = (function ($, App, firebase) {
 
     /**
      * Google Authentication and linking module
-     * @returns {{link: function:object, login: function(callback}}
+     * @returns {{link: function:object, login: function}}
      */
     function google() {
 
-        /**
-         * Google Login Module
-         * @param callback
-         */
-        function googleLogin(callback) {
-            firebase.auth().signInWithPopup(googleProvider)
+        function login() {
+            return firebase.auth().signInWithPopup(googleProvider)
                 .then(function (result) {
                     var userLoggedIn = result && result.user;
 
                     if (userLoggedIn)
                         return result.user.getIdToken(false);
                     else
-                        throw Error();
-                }).then(function (token) {
-                    return App.postToServer("/login/api/token", token);
-                }).then(function (action) {
-                    window.location = action;
-                }).catch(function(error) {
-                    callIfFunction(callback, false, error ? error.message: null);
+                        throw Error('Could not authenticate');
                 });
         }
 
@@ -144,7 +134,7 @@ var Authentication = (function ($, App, firebase) {
 
         return {
             link: link,
-            login: googleLogin
+            login: login
         }
     }
 
@@ -185,7 +175,7 @@ var Authentication = (function ($, App, firebase) {
     }
 
     return {
-        auth: auth,
-        google: google
+        auth: auth(),
+        google: google()
     }
 }(jQuery, App, firebase));

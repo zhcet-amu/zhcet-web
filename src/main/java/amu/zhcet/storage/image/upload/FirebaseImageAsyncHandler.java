@@ -1,7 +1,9 @@
 package amu.zhcet.storage.image.upload;
 
-import amu.zhcet.core.auth.UserDetailService;
+import amu.zhcet.core.auth.AuthManager;
+import amu.zhcet.core.auth.UserAuth;
 import amu.zhcet.data.user.User;
+import amu.zhcet.data.user.UserService;
 import amu.zhcet.storage.image.Image;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +16,21 @@ import java.util.Optional;
 @Service
 public class FirebaseImageAsyncHandler {
 
+    private final UserService userService;
     private final FileImageUploadService fileImageUploadService;
-    private final UserDetailService userDetailService;
     private final FirebaseImageUploadService firebaseImageUploadService;
 
     @Autowired
-    public FirebaseImageAsyncHandler(FileImageUploadService fileImageUploadService, UserDetailService userDetailService, FirebaseImageUploadService firebaseImageUploadService) {
+    public FirebaseImageAsyncHandler(FileImageUploadService fileImageUploadService,
+                                     UserService userService,
+                                     FirebaseImageUploadService firebaseImageUploadService) {
         this.fileImageUploadService = fileImageUploadService;
-        this.userDetailService = userDetailService;
+        this.userService = userService;
         this.firebaseImageUploadService = firebaseImageUploadService;
     }
 
     @Async
-    public void handleUploadedImage(User user, Image image, UploadedImage uploadedImage) {
+    public void handleUploadedImage(UserAuth user, Image image, UploadedImage uploadedImage) {
         Optional<String> avatarUploadFuture = firebaseImageUploadService.upload(image).join();
 
         if (!avatarUploadFuture.isPresent()) {
@@ -34,17 +38,17 @@ public class FirebaseImageAsyncHandler {
             return;
         }
 
-        log.info("File uploaded to Firebase : {} {} {}", user.getUserId(), image, uploadedImage);
+        log.info("File uploaded to Firebase : {} {} {}", user.getUsername(), image, uploadedImage);
 
         String url = avatarUploadFuture.get();
-        Optional<User> stored = userDetailService.getUserService().findById(user.getUserId());
+        Optional<User> stored = userService.findById(user.getUsername());
 
         if (!stored.isPresent()) {
             log.warn("Tried to update avatar of non-existent user {} {}", image, uploadedImage);
             return;
         }
 
-        log.info("Saving firebase URL to avatar for user : {}", user.getUserId());
+        log.info("Saving firebase URL to avatar for user : {}", user.getUsername());
 
         User storedUser = stored.get();
         if (uploadedImage.isThumbnail()) {
@@ -56,7 +60,8 @@ public class FirebaseImageAsyncHandler {
         }
 
         log.info("Saving user...");
-        userDetailService.saveAndUpdateFakePrincipal(storedUser, false);
+        AuthManager.updateAvatar(user, storedUser.getDetails().getAvatarUrl());
+        userService.save(storedUser);
 
         log.info("Deleting File {}", uploadedImage);
         fileImageUploadService.delete(uploadedImage);

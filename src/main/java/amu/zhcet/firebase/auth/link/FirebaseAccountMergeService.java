@@ -1,10 +1,12 @@
 package amu.zhcet.firebase.auth.link;
 
-import amu.zhcet.core.auth.UserDetailService;
+import amu.zhcet.auth.AuthManager;
+import amu.zhcet.auth.UserAuth;
 import amu.zhcet.core.notification.ChannelType;
 import amu.zhcet.core.notification.Notification;
 import amu.zhcet.core.notification.sending.NotificationSendingService;
 import amu.zhcet.data.user.User;
+import amu.zhcet.data.user.UserService;
 import amu.zhcet.data.user.UserType;
 import amu.zhcet.firebase.FirebaseService;
 import com.google.common.base.Strings;
@@ -22,13 +24,13 @@ import java.util.Optional;
 public class FirebaseAccountMergeService {
 
     private final FirebaseService firebaseService;
-    private final UserDetailService userDetailService;
+    private final UserService userService;
     private final NotificationSendingService notificationSendingService;
 
     @Autowired
-    FirebaseAccountMergeService(FirebaseService firebaseService, UserDetailService userDetailService, NotificationSendingService notificationSendingService) {
+    FirebaseAccountMergeService(FirebaseService firebaseService, UserService userService, NotificationSendingService notificationSendingService) {
         this.firebaseService = firebaseService;
-        this.userDetailService = userDetailService;
+        this.userService = userService;
         this.notificationSendingService = notificationSendingService;
     }
 
@@ -40,13 +42,18 @@ public class FirebaseAccountMergeService {
      * - Updates profile picture from provider data
      *
      * Mail merge and avatar update is done only if the user account information is not already present
-     * @param user User Account the data is to be merged in
+     * @param userAuth User Account the data is to be merged in
      * @param token Decoded Firebase Token containing data
      */
     @Async
-    public void mergeFirebaseDetails(@Nullable User user, @Nullable FirebaseToken token) {
-        if (user == null || token == null || !firebaseService.canProceed())
+    public void mergeFirebaseDetails(@Nullable UserAuth userAuth, @Nullable FirebaseToken token) {
+        if (userAuth == null || token == null || !firebaseService.canProceed())
             return;
+        Optional<User> optionalUser = userService.findById(userAuth.getUsername());
+        if (!optionalUser.isPresent())
+            return;
+
+        User user = optionalUser.get();
 
         if (token.getClaims() != null)
             user.getDetails().setFirebaseClaims(token.getClaims().toString());
@@ -56,10 +63,10 @@ public class FirebaseAccountMergeService {
         if (Strings.isNullOrEmpty(user.getDetails().getAvatarUrl()) && !Strings.isNullOrEmpty(token.getPicture())) {
             user.getDetails().setOriginalAvatarUrl(token.getPicture());
             user.getDetails().setAvatarUrl(token.getPicture());
-            userDetailService.updatePrincipal(user);
+            AuthManager.updateAvatar(userAuth, user.getDetails().getAvatarUrl());
         }
 
-        userDetailService.getUserService().save(user);
+        userService.save(user);
     }
 
     /**
@@ -78,7 +85,7 @@ public class FirebaseAccountMergeService {
         if (Strings.isNullOrEmpty(token.getEmail()))
             return;
 
-        Optional<User> duplicate = userDetailService.getUserService().getUserByEmail(token.getEmail());
+        Optional<User> duplicate = userService.getUserByEmail(token.getEmail());
 
         // Exchange user emails if someone else has access to the email provided
         if (duplicate.isPresent() && !duplicate.get().getUserId().equals(user.getUserId())) {
@@ -91,8 +98,8 @@ public class FirebaseAccountMergeService {
                 duplicateUser.setEmail(null);
                 duplicateUser.setEmailVerified(false);
 
-                userDetailService.getUserService().save(duplicateUser);
-                userDetailService.getUserService().findById(duplicateUser.getUserId()).ifPresent(dupe -> {
+                userService.save(duplicateUser);
+                userService.findById(duplicateUser.getUserId()).ifPresent(dupe -> {
                     log.info("Cleared email info from duplicate user, {}", dupe.getEmail());
                 });
                 sendEmailChangeNotification(duplicateUser, user, token.getEmail());

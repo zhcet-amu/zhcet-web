@@ -60,17 +60,25 @@ var App = (function () {
         }
     }
 
-    function postToServer(url, data) {
+    function getCsrfTokens() {
         var header = $("meta[name='_csrf_header']").attr("content");
         var token = $("meta[name='_csrf']").attr("content");
 
+        return {
+            header: header,
+            token: token
+        }
+    }
+
+    function postToServer(url, data) {
         return Promise.resolve($.ajax({
             type: 'POST',
             contentType: 'application/json; charset=utf-8',
             url: url,
             data: data,
             beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token);
+                var csrf = getCsrfTokens();
+                xhr.setRequestHeader(csrf.header, csrf.token);
             }
         }));
     }

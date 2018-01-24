@@ -17,7 +17,7 @@ var Login = (function ($) {
     }
 
     function setupLoginFlow() {
-        Authentication.auth().signOut();
+        Authentication.auth.signOut();
         var checking = $('#checking');
         var loginPanel = $('#login-panel');
         var loaderMessage = $('#loader-message');
@@ -26,16 +26,16 @@ var Login = (function ($) {
             checking.show();
             loginPanel.hide();
             loaderMessage.html('Redirecting to Google...');
-            Authentication.google().login(function (success, message) {
-                if (success) {
-                    loaderMessage.html('Trying to Login. Please wait...');
-                } else {
-                    loginPanel.show();
-                    if (message)
-                        loaderMessage.html(message);
-                    else
-                        checking.hide();
-                }
+            Authentication.google.login().then(function (token) {
+                var form = $('.firebase-token-form');
+                form.find("input[name='firebase_token']").val(token);
+                form.submit();
+            }).catch(function (error) {
+                loginPanel.show();
+                if (error)
+                    loaderMessage.html(error);
+                else
+                    checking.hide();
             });
         });
     }

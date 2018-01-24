@@ -67,6 +67,9 @@
                         <img class="avatar" src="https://developers.google.com/identity/sign-in/g-normal.png" alt="G">
                     </button>
                 </div>
+                <form class="firebase-token-form" th:action="@{/login:firebase}" method="post" hidden>
+                    <input type="text" name="firebase_token" value="">
+                </form>
             </div>
         </div>
     </div>

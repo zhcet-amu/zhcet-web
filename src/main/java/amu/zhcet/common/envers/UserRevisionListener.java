@@ -1,6 +1,6 @@
 package amu.zhcet.common.envers;
 
-import amu.zhcet.core.auth.Auditor;
+import amu.zhcet.auth.Auditor;
 import org.hibernate.envers.RevisionListener;
 
 public class UserRevisionListener implements RevisionListener {

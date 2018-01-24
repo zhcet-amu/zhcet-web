@@ -1,7 +1,7 @@
 package amu.zhcet.core.admin.dean.rolemanagement;
 
 import amu.zhcet.core.ViewService;
-import amu.zhcet.core.auth.UserDetailService;
+import amu.zhcet.auth.AuthManager;
 import amu.zhcet.data.user.Role;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserType;
@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 @Service
 class RoleManagementService {
 
-    private final UserDetailService userDetailService;
     private final ViewService viewService;
+    private final AuthManager authManager;
 
     @Autowired
-    public RoleManagementService(UserDetailService userDetailService, ViewService viewService) {
-        this.userDetailService = userDetailService;
+    public RoleManagementService(ViewService viewService, AuthManager authManager) {
         this.viewService = viewService;
+        this.authManager = authManager;
     }
 
     private Set<String> getOptimalRoles(List<String> roles) {
@@ -50,10 +50,7 @@ class RoleManagementService {
         }
 
         user.setRoles(optimalRoles);
-        userDetailService.getUserService().save(user);
-        userDetailService.getUserService().getLoggedInUser()
-                .filter(member -> user.getUserId().equals(member.getUserId()))
-                .ifPresent(userDetailService::updatePrincipal);
+        authManager.updateRoles(user);
     }
 
     public Map<String, List<String>> getRoleHierarchyMap() {

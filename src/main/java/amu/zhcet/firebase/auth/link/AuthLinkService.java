@@ -1,6 +1,6 @@
 package amu.zhcet.firebase.auth.link;
 
-import amu.zhcet.data.user.UserService;
+import amu.zhcet.auth.UserAuth;
 import amu.zhcet.firebase.FirebaseService;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +15,11 @@ class AuthLinkService {
 
     private final FirebaseService firebaseService;
     private final FirebaseAccountMergeService firebaseAccountMergeService;
-    private final UserService userService;
 
     @Autowired
-    public AuthLinkService(FirebaseService firebaseService, FirebaseAccountMergeService firebaseAccountMergeService, UserService userService) {
+    public AuthLinkService(FirebaseService firebaseService, FirebaseAccountMergeService firebaseAccountMergeService) {
         this.firebaseService = firebaseService;
         this.firebaseAccountMergeService = firebaseAccountMergeService;
-        this.userService = userService;
     }
 
     /**
@@ -30,15 +28,14 @@ class AuthLinkService {
      * NOTE: Only to be called from an authenticated endpoint
      * @param token String: Firebase Authentication Token
      */
-    public void linkAccount(String token) {
+    public void linkAccount(UserAuth userAuth, String token) {
         if (!firebaseService.canProceed())
             return;
 
         try {
             FirebaseToken decodedToken = FirebaseService.getToken(token);
             log.info(decodedToken.getClaims().toString());
-            userService.getLoggedInUser().ifPresent(user ->
-                    firebaseAccountMergeService.mergeFirebaseDetails(user, decodedToken));
+            firebaseAccountMergeService.mergeFirebaseDetails(userAuth, decodedToken);
         } catch (ExecutionException | InterruptedException e) {
             log.error("Error linking data", e);
         }

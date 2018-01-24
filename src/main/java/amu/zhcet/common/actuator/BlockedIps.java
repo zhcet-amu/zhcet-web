@@ -1,6 +1,6 @@
 package amu.zhcet.common.actuator;
 
-import amu.zhcet.core.auth.login.LoginAttemptService;
+import amu.zhcet.auth.login.LoginAttemptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.Endpoint;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package amu.zhcet.security.permission;
 
-import amu.zhcet.core.auth.CustomUser;
+import amu.zhcet.auth.UserAuth;
 import amu.zhcet.core.notification.Notification;
 import amu.zhcet.core.notification.NotificationRepository;
 import amu.zhcet.core.notification.recipient.NotificationRecipient;
@@ -45,13 +45,13 @@ public class PermissionManager {
                 .collect(Collectors.toList());
     }
 
-    public boolean hasPermission(Collection<? extends GrantedAuthority> authorities, String permission) {
+    public static boolean hasPermission(Collection<? extends GrantedAuthority> authorities, String permission) {
         return authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .anyMatch(authority -> authority.equals(permission));
     }
 
-    public boolean hasPermission(Collection<? extends GrantedAuthority> authorities, Role role) {
+    public static boolean hasPermission(Collection<? extends GrantedAuthority> authorities, Role role) {
         return hasPermission(authorities, role.toString());
     }
 
@@ -59,17 +59,17 @@ public class PermissionManager {
         if (hasPermission(user.getAuthorities(), Role.DEPARTMENT_SUPER_ADMIN))
             return true;
 
-        if (!(user.getPrincipal() instanceof CustomUser))
+        if (!(user.getPrincipal() instanceof UserAuth))
             return false;
 
-        CustomUser customUser = (CustomUser) user.getPrincipal();
+        UserAuth userAuth = (UserAuth) user.getPrincipal();
 
         boolean isDepartmentAdmin = hasPermission(user.getAuthorities(), Role.DEPARTMENT_ADMIN);
 
         if (departmentCode == null) {
             return isDepartmentAdmin;
         } else {
-            return isDepartmentAdmin && customUser.getDepartment().getCode().equals(departmentCode);
+            return isDepartmentAdmin && userAuth.getDepartment().getCode().equals(departmentCode);
         }
     }
 

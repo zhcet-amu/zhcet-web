@@ -1,6 +1,6 @@
 package amu.zhcet.storage.image.upload;
 
-import amu.zhcet.data.user.User;
+import amu.zhcet.core.auth.UserAuth;
 import amu.zhcet.storage.image.Image;
 import amu.zhcet.storage.image.edit.ImageEditService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class ImageUploadService {
         return fileImageUploadService.uploadImage(image);
     }
 
-    public Avatar upload(User user, String name, MultipartFile file) throws ExecutionException, InterruptedException {
+    public Avatar upload(UserAuth user, String name, MultipartFile file) throws ExecutionException, InterruptedException {
         // Normalize (Crop) Image in parallel
         CompletableFuture<Image> avatarFuture = imageEditService.normalizeAsync(file, ORIGINAL_AVATAR_SIZE);
         CompletableFuture<Image> avatarThumbnailFuture = imageEditService.normalizeAsync(file, AVATAR_SIZE);
@@ -67,10 +67,10 @@ public class ImageUploadService {
 
     }
 
-    private void uploadToCloud(User user, Image avatarImage, UploadedImage uploadedAvatar) {
+    private void uploadToCloud(UserAuth user, Image avatarImage, UploadedImage uploadedAvatar) {
         // Save user information in database
         log.info("Saving user info with uploaded image");
-        uploadedAvatar.setUser(user.getUserId());
+        uploadedAvatar.setUser(user.getUsername());
         fileImageUploadService.save(uploadedAvatar);
         // Send to cloud
         log.info("Sending to firebase...");

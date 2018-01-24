@@ -1,6 +1,6 @@
 package amu.zhcet.firebase.messaging.token;
 
-import amu.zhcet.core.auth.Auditor;
+import amu.zhcet.auth.Auditor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

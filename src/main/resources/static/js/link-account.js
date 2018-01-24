@@ -3,7 +3,7 @@
     var loader = $('#loader');
     var listener;
 
-    var googleLink = Authentication.google().link();
+    var googleLink = Authentication.google.link();
 
     function setListener(func) {
         if (listener)

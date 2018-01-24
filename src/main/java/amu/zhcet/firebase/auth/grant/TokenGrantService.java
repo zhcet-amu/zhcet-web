@@ -1,7 +1,7 @@
 package amu.zhcet.firebase.auth.grant;
 
-import amu.zhcet.core.auth.Auditor;
-import amu.zhcet.core.auth.CustomUser;
+import amu.zhcet.auth.Auditor;
+import amu.zhcet.auth.UserAuth;
 import amu.zhcet.firebase.FirebaseService;
 import com.google.firebase.auth.FirebaseAuth;
 import org.modelmapper.ModelMapper;
@@ -39,9 +39,9 @@ public class TokenGrantService {
             return null;
 
         try {
-            Optional<CustomUser> userOptional = Auditor.getLoggedInUser();
+            Optional<UserAuth> userOptional = Auditor.getLoggedInUser();
             if (!userOptional.isPresent()) return UNAUTHENTICATED;
-            CustomUser user = userOptional.get();
+            UserAuth user = userOptional.get();
             Map<String, Object> claims = new HashMap<>();
             claims.put("type", user.getType().toString());
             claims.put("department", user.getDepartment().getName());
@@ -52,7 +52,7 @@ public class TokenGrantService {
         }
     }
 
-    private UserToken fromUser(CustomUser user, String token) {
+    private UserToken fromUser(UserAuth user, String token) {
         if (user == null) {
             return UNAUTHENTICATED;
         }

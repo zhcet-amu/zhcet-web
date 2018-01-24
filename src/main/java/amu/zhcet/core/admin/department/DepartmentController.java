@@ -2,8 +2,8 @@ package amu.zhcet.core.admin.department;
 
 import amu.zhcet.common.page.Path;
 import amu.zhcet.common.page.PathChain;
-import amu.zhcet.core.auth.Auditor;
-import amu.zhcet.core.auth.CustomUser;
+import amu.zhcet.auth.Auditor;
+import amu.zhcet.auth.UserAuth;
 import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.department.Department;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class DepartmentController {
     @GetMapping
     public String department() {
         return Auditor.getLoggedInUser()
-                .map(CustomUser::getDepartment)
+                .map(UserAuth::getDepartment)
                 .map(Department::getCode)
                 .map(code -> "redirect:/admin/department/" + code)
                 .orElseThrow(() -> new AccessDeniedException("403"));

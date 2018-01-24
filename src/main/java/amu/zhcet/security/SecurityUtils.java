@@ -1,5 +1,7 @@
 package amu.zhcet.security;
 
+import amu.zhcet.auth.AuthManager;
+import amu.zhcet.security.permission.PermissionManager;
 import com.google.common.hash.Hashing;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -9,6 +11,8 @@ import org.springframework.security.core.Authentication;
 
 import java.nio.charset.Charset;
 import java.security.SecureRandom;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
@@ -16,6 +20,8 @@ public class SecurityUtils {
 
     private static String PEPPER = "some_nice_pepper";
     private static final AtomicBoolean PEPPER_SET = new AtomicBoolean();
+
+    private static List<String> STALE_AUTHORITIES = Collections.singletonList("PASSWORD_CHANGE_PRIVILEGE");
 
     // Prevent instantiation of Util class
     private SecurityUtils() {}
@@ -65,4 +71,10 @@ public class SecurityUtils {
             throw new IllegalStateException("Cannot set Pepper again");
     }
 
+    public static void clearStaleAuthorities(Authentication authentication) {
+        boolean isStale = STALE_AUTHORITIES.stream()
+                .anyMatch(authority -> PermissionManager.hasPermission(authentication.getAuthorities(), authority));
+
+        AuthManager.logout();
+    }
 }
