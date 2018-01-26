@@ -71,8 +71,6 @@ public class PasswordValidator {
     }
 
     void validateOldPassword(String oldHashedPassword, String oldRawPassword) {
-        log.info(oldHashedPassword);
-        log.info(oldRawPassword);
         if (!passwordEncoder.matches(oldRawPassword, oldHashedPassword))
             throw new PasswordValidationException("Old Password does not match supplied password");
     }
