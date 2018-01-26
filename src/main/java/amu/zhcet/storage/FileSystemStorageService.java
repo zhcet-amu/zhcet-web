@@ -1,6 +1,6 @@
-package amu.zhcet.storage.file;
+package amu.zhcet.storage;
 
-import amu.zhcet.core.auth.Auditor;
+import amu.zhcet.auth.Auditor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;

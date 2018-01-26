@@ -1,4 +1,4 @@
-package amu.zhcet.storage.file;
+package amu.zhcet.storage;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;

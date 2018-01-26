@@ -1,7 +1,7 @@
 package amu.zhcet.storage.image.upload;
 
-import amu.zhcet.storage.file.FileSystemStorageService;
-import amu.zhcet.storage.file.FileType;
+import amu.zhcet.storage.FileSystemStorageService;
+import amu.zhcet.storage.FileType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;

@@ -1,30 +1,28 @@
 package amu.zhcet.security;
 
-import amu.zhcet.core.auth.Auditor;
-import amu.zhcet.core.auth.CustomAuthenticationDetails;
-import amu.zhcet.core.auth.login.handler.UsernameAuthenticationFailureHandler;
+import amu.zhcet.auth.Auditor;
+import amu.zhcet.auth.CustomAuthenticationDetails;
+import amu.zhcet.auth.login.handler.UsernameAuthenticationFailureHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
-@Configuration
-@EnableWebSecurity
+@Component
 public class SecurityBeans {
 
     @Bean

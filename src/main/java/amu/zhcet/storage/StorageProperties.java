@@ -1,4 +1,4 @@
-package amu.zhcet.storage.file;
+package amu.zhcet.storage;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

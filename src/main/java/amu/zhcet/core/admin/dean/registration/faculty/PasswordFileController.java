@@ -1,7 +1,7 @@
 package amu.zhcet.core.admin.dean.registration.faculty;
 
-import amu.zhcet.storage.file.FileSystemStorageService;
-import amu.zhcet.storage.file.FileType;
+import amu.zhcet.storage.FileSystemStorageService;
+import amu.zhcet.storage.FileType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

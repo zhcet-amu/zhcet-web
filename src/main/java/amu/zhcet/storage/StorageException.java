@@ -1,4 +1,4 @@
-package amu.zhcet.storage.file;
+package amu.zhcet.storage;
 
 public class StorageException extends RuntimeException {
 

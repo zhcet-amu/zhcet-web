@@ -1,6 +1,6 @@
 package amu.zhcet.storage.image.upload;
 
-import amu.zhcet.core.auth.UserAuth;
+import amu.zhcet.auth.UserAuth;
 import amu.zhcet.storage.image.Image;
 import amu.zhcet.storage.image.edit.ImageEditService;
 import lombok.extern.slf4j.Slf4j;

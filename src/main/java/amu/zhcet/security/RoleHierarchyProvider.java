@@ -1,6 +1,5 @@
-package amu.zhcet.security.permission;
+package amu.zhcet.security;
 
-import amu.zhcet.security.SecureProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;

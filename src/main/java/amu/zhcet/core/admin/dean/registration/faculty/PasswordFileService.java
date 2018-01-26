@@ -1,7 +1,7 @@
 package amu.zhcet.core.admin.dean.registration.faculty;
 
-import amu.zhcet.storage.file.FileSystemStorageService;
-import amu.zhcet.storage.file.FileType;
+import amu.zhcet.storage.FileSystemStorageService;
+import amu.zhcet.storage.FileType;
 import com.j256.simplecsv.processor.CsvProcessor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

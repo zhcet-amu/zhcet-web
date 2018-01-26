@@ -1,7 +1,7 @@
 package amu.zhcet.storage.image.upload;
 
-import amu.zhcet.core.auth.AuthManager;
-import amu.zhcet.core.auth.UserAuth;
+import amu.zhcet.auth.AuthManager;
+import amu.zhcet.auth.UserAuth;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
 import amu.zhcet.storage.image.Image;

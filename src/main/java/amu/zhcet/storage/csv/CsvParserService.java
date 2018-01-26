@@ -1,9 +1,9 @@
 package amu.zhcet.storage.csv;
 
 import amu.zhcet.common.model.Meta;
-import amu.zhcet.storage.file.FileSystemStorageService;
-import amu.zhcet.storage.file.FileType;
-import amu.zhcet.storage.file.StorageException;
+import amu.zhcet.storage.FileSystemStorageService;
+import amu.zhcet.storage.FileType;
+import amu.zhcet.storage.StorageException;
 import com.j256.simplecsv.processor.ParseError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
