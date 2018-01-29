@@ -75,6 +75,7 @@ public class SecurityUtils {
         boolean isStale = STALE_AUTHORITIES.stream()
                 .anyMatch(authority -> PermissionManager.hasPermission(authentication.getAuthorities(), authority));
 
-        AuthManager.logout();
+        if (isStale)
+            AuthManager.logout();
     }
 }

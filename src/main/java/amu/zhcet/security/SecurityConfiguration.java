@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
+import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,44 +31,48 @@ import javax.servlet.http.HttpServletRequest;
 @EnableWebSecurity
 class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailService userDetailsService;
     private final PersistentTokenService persistentTokenService;
     private final AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource;
     private final DefaultWebSecurityExpressionHandler securityExpressionHandler;
     private final SessionRegistry sessionRegistry;
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final FirebaseAutheticationFilter firebaseAutheticationFilter;
-    private final FirebaseAuthenticationProvider firebaseAuthenticationProvider;
 
     @Autowired
     public SecurityConfiguration(
-            UserDetailService userDetailsService,
             PersistentTokenService persistentTokenService,
             AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource,
             DefaultWebSecurityExpressionHandler securityExpressionHandler,
             SessionRegistry sessionRegistry,
             AuthenticationFailureHandler authenticationFailureHandler,
-            FirebaseAutheticationFilter firebaseAutheticationFilter,
-            FirebaseAuthenticationProvider firebaseAuthenticationProvider) {
-        this.userDetailsService = userDetailsService;
+            FirebaseAutheticationFilter firebaseAutheticationFilter) {
         this.persistentTokenService = persistentTokenService;
         this.authenticationDetailsSource = authenticationDetailsSource;
         this.securityExpressionHandler = securityExpressionHandler;
         this.sessionRegistry = sessionRegistry;
         this.authenticationFailureHandler = authenticationFailureHandler;
         this.firebaseAutheticationFilter = firebaseAutheticationFilter;
-        this.firebaseAuthenticationProvider = firebaseAuthenticationProvider;
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder authenticationMgr, PasswordEncoder passwordEncoder) throws Exception {
-        authenticationMgr
+    public void configureAuthentication(AuthenticationManagerBuilder authBuilder, UserDetailService userDetailsService, PasswordEncoder passwordEncoder) throws Exception {
+        authBuilder
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder);
     }
 
-    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Autowired
+    public void configureFirebaseAuthentication(AuthenticationManagerBuilder authBuilder, FirebaseAuthenticationProvider firebaseAuthenticationProvider) {
+        authBuilder.authenticationProvider(firebaseAuthenticationProvider);
+    }
+
+    @Autowired
+    public void configureEventPublisher(AuthenticationManagerBuilder authBuilder, AuthenticationEventPublisher authenticationEventPublisher) {
+        authBuilder.authenticationEventPublisher(authenticationEventPublisher);
+    }
+
     @Override
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
@@ -76,7 +81,6 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .addFilterBefore(firebaseAutheticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authenticationProvider(firebaseAuthenticationProvider)
 
                 .authorizeRequests()
                 .expressionHandler(securityExpressionHandler)
