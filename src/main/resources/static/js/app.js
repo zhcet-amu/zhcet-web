@@ -33,6 +33,25 @@ var loadImages = function (images) {
     return Promise.all(promises);
 };
 
+function loadScript(url, onload) {
+    var async_load = function() {
+        var first, s;
+        s = document.createElement('script');
+        s.src = url;
+        s.type = 'text/javascript';
+        s.async = true;
+        s.onload = onload;
+        first = document.getElementsByTagName('script')[0];
+        return first.parentNode.insertBefore(s, first);
+    };
+
+    if (window.attachEvent) {
+        window.attachEvent('onload', async_load);
+    } else {
+        window.addEventListener('load', async_load, false);
+    }
+}
+
 var App = (function () {
 
     if (!!window.toastr) {

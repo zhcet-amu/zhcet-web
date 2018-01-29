@@ -261,127 +261,30 @@ i.gray {
     margin-top: 60px;
 }
 
-meter {
-    /* Reset the default appearance */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+.form-group.issue .help-block,.form-group.issue .help-inline, .form-group.issue .form-control-position{color:#FF8F00}
+.form-group.issue input,.form-group.issue select,.form-group.issue textarea{color:#FF8F00;border-color:#FF9800}
+.form-group.issue input:focus,.form-group.issue select:focus,.form-group.issue textarea:focus{border-color:#FF9800;-webkit-box-shadow:0 0 6px #FFC107;box-shadow:0 0 6px #FFC107}
+.form-group.issue .input-append .add-on,.form-group.issue .input-prepend .add-on{color:#FFC107;background-color:#FED2C9;border-color:#FF9800}
 
-    margin: 0 auto 1em;
-    width: 100%;
-    height: 0.5em;
+.form-group.error .help-block,.form-group.error .help-inline, .form-group.error .form-control-position{color:#DA4453}
+.form-group.error input,.form-group.error select,.form-group.error textarea{color:#DA4453;border-color:#DA4453}
+.form-group.error input:focus,.form-group.error select:focus,.form-group.error textarea:focus{border-color:#B41323;-webkit-box-shadow:0 0 6px #F38C96;box-shadow:0 0 6px #F38C96}
+.form-group.error .input-append .add-on,.form-group.error .input-prepend .add-on{color:#DA4453;background-color:#FACACF;border-color:#DA4453}
 
-    /* Applicable only to Firefox */
-    background: rgba(0, 0, 0, 0.1) none;
-}
-
-meter::-webkit-meter-bar {
-    background: rgba(0, 0, 0, 0.1) none;
-}
-
-/* Webkit based browsers */
-meter[value="1"]::-webkit-meter-optimum-value { background: #f44336; }
-meter[value="2"]::-webkit-meter-optimum-value { background: #FF9800; }
-meter[value="3"]::-webkit-meter-optimum-value { background: #FFEB3B; }
-meter[value="4"]::-webkit-meter-optimum-value { background: #4CAF50; }
-
-/* Gecko based browsers */
-meter[value="1"]::-moz-meter-bar { background: #f44336; }
-meter[value="2"]::-moz-meter-bar { background: #FF9800; }
-meter[value="3"]::-moz-meter-bar { background: #FFEB3B; }
-meter[value="4"]::-moz-meter-bar { background: #4CAF50; }
-
-.password-suggestions> #warning-wrapper {
-    border-radius: 0.5rem;
-    padding: 0.3rem;
-    margin-bottom: 0.3rem;
-}
-
-.password-suggestions > #suggestions-wrapper {
-    background-color: #FF9800;
-    border-radius: 0.5rem;
-}
+.form-group.validate .help-block,.form-group.validate .help-inline,.form-group.validate .form-control-position{color:#37BC9B}
+.form-group.validate input,.form-group.validate select,.form-group.validate textarea{color:#37BC9B;border-color:#37BC9B}
+.form-group.validate input:focus,.form-group.validate select:focus,.form-group.validate textarea:focus{border-color:#34C5A1;-webkit-box-shadow:0 0 6px #78DCC3;box-shadow:0 0 6px #78DCC3}
+.form-group.validate .input-append .add-on,.form-group.validate .input-prepend .add-on{color:#37BC9B;background-color:#DDF6F0;border-color:#37BC9B}
+.form-group .help-block ul{padding-left:1.5rem}
 
 /* Progress Bar */
-.md-progress {
-    position: relative;
-    height: 4px;
-    display: block;
-    width: 100%;
-    background-color: #acece6;
-    border-radius: 2px;
-    background-clip: padding-box;
-    margin: 0.5rem 0 1rem 0;
-    overflow: hidden; }
-.md-progress .determinate {
-    position: absolute;
-    background-color: inherit;
-    top: 0;
-    bottom: 0;
-    background-color: #26a69a;
-    transition: width .3s linear; }
-.md-progress .indeterminate {
-    background-color: #26a69a; }
-.md-progress .indeterminate:before {
-    content: '';
-    position: absolute;
-    background-color: inherit;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    will-change: left, right;
-    -webkit-animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
-    animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite; }
-.md-progress .indeterminate:after {
-    content: '';
-    position: absolute;
-    background-color: inherit;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    will-change: left, right;
-    -webkit-animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
-    animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
-    -webkit-animation-delay: 1.15s;
-    animation-delay: 1.15s; }
+.md-progress {position: relative;height: 4px;display: block;width: 100%;background-color: #acece6;border-radius: 2px;background-clip: padding-box;margin: 0.5rem 0 1rem 0;overflow: hidden; }
+.md-progress .determinate {position: absolute;top: 0;bottom: 0;background-color: #26a69a;border-radius: 2px;background-clip: padding-box;transition: width .3s linear;}
+.md-progress .indeterminate {background-color: #26a69a; }
+.md-progress .indeterminate:before {content: '';position: absolute;background-color: inherit;top: 0;left: 0;bottom: 0;will-change: left, right;-webkit-animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite; }
+.md-progress .indeterminate:after {content: '';position: absolute;background-color: inherit;top: 0;left: 0;bottom: 0;will-change: left, right;-webkit-animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;-webkit-animation-delay: 1.15s;animation-delay: 1.15s; }
 
-@-webkit-keyframes indeterminate {
-    0% {
-        left: -35%;
-        right: 100%; }
-    60% {
-        left: 100%;
-        right: -90%; }
-    100% {
-        left: 100%;
-        right: -90%; } }
-@keyframes indeterminate {
-    0% {
-        left: -35%;
-        right: 100%; }
-    60% {
-        left: 100%;
-        right: -90%; }
-    100% {
-        left: 100%;
-        right: -90%; } }
-@-webkit-keyframes indeterminate-short {
-    0% {
-        left: -200%;
-        right: 100%; }
-    60% {
-        left: 107%;
-        right: -8%; }
-    100% {
-        left: 107%;
-        right: -8%; } }
-@keyframes indeterminate-short {
-    0% {
-        left: -200%;
-        right: 100%; }
-    60% {
-        left: 107%;
-        right: -8%; }
-    100% {
-        left: 107%;
-        right: -8%; } }
+@-webkit-keyframes indeterminate { 0% {left: -35%;right: 100%; } 60% {left: 100%;right: -90%; } 100% {left: 100%;right: -90%; } }
+@keyframes indeterminate { 0% {left: -35%;right: 100%; } 60% {left: 100%;right: -90%; } 100% {left: 100%;right: -90%; } }
+@-webkit-keyframes indeterminate-short { 0% {left: -200%;right: 100%; } 60% {left: 107%;right: -8%; } 100% {left: 107%;right: -8%; } }
+@keyframes indeterminate-short { 0% {left: -200%;right: 100%; } 60% {left: 107%;right: -8%; } 100% {left: 107%;right: -8%; } }

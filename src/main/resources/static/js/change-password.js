@@ -1,158 +1,143 @@
-(function () {
+var Checker = (function () {
 
-    var passwordStatus;
-    var changePassword;
     var newPass;
     var blacklist = [];
-    var meter;
-    var suggestionElement;
+    var weaknessPanel, weaknessStatus, weaknessStatusText, weaknessReport;
+    var passwordProgress;
 
-    function showError(message) {
-        passwordStatus.css({'background-color': '#f44336', 'color': 'white'});
-        passwordStatus.html(message);
-        changePassword.attr('disabled', true);
-    }
-
-    function showSuccess(message) {
-        passwordStatus.css({'background-color': '#4CAF50', 'color': 'white'});
-        passwordStatus.html(message);
-        changePassword.attr('disabled', false);
-    }
-
-    function renderSuggestions(suggestions, warning) {
-        if (!warning && !(suggestions.length > 0)) {
-            suggestionElement.hide(500);
-            return;
-        }
-
-        suggestionElement.show(500);
-
-        if (!this.warningWrapper)
-            this.warningWrapper = suggestionElement.find('#warning-wrapper');
-        
-        if (!this.suggestionWrapper)
-            this.suggestionWrapper = suggestionElement.find('#suggestion-wrapper');
-
-        if (warning) {
-            this.warningWrapper.show();
-            suggestionElement.find('#warning').html(warning);
-        } else {
-            this.warningWrapper.hide();
-        }
-        
-        if (suggestions.length > 0) {
-            this.suggestionWrapper.show();
-            suggestionElement.find('#suggestions').html(
-                $.map(suggestions, function (suggestion) {
-                return '<li>'+suggestion+'</li>';
-            }).join(''));
-        } else {
-            this.suggestionWrapper.hide();
-        }
-    }
-
-    function onChangePasswords(passwordObj) {
-        var suggestions = [];
-        var warning;
-
-        if (window.zxcvbn && passwordObj.new && passwordObj.new !== newPass) {
-            var analysis = zxcvbn(passwordObj.new, blacklist);
-            meter.value = analysis.score;
-            suggestions = analysis.feedback.suggestions;
-            warning = analysis.feedback.warning;
-        }
-
-        newPass = passwordObj.new;
-        renderSuggestions(suggestions, warning);
-
-        if (passwordObj.isEmpty())
-             return;
-
-        if (!passwordObj.hasEnoughLength()) {
-            showError('Passwords should be at least 8 characters');
-            return;
-        }
-
-        if (!passwordObj.passwordsMatch()) {
-            showError('Passwords don\'t match');
-            return;
-        }
-
-
-        if (window.zxcvbn && meter.value < 2) {
-            showError('Password is very weak');
-            return;
-        }
-
-        showSuccess('All Set!');
-    }
-
-    function loadScript(url) {
-        var async_load = function() {
-            var first, s;
-            s = document.createElement('script');
-            s.src = url;
-            s.type = 'text/javascript';
-            s.async = true;
-            first = document.getElementsByTagName('script')[0];
-            return first.parentNode.insertBefore(s, first);
+    function getDefaultResponse(password) {
+        return {
+            value: password,
+            valid: true
         };
+    }
 
-        if (window.attachEvent) {
-            window.attachEvent('onload', async_load);
-        } else {
-            window.addEventListener('load', async_load, false);
+    function getWeaknessStatus(analysis) {
+        switch (analysis.score) {
+            case 0:
+                return 'Extremely Weak';
+            case 1:
+                return 'Weak';
+            case 2:
+                return 'OK';
+            case 3:
+                return 'Good';
+            case 4:
+                return 'Very Good';
+            default:
+                return 'No Status';
         }
     }
 
-    loadScript('https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js');
+    function getProgressColor(analysis) {
+        switch (analysis.score) {
+            case 1:
+                return '#DA4453';
+            case 2:
+                return '#FB8C00';
+            case 3:
+                return '#FFD600';
+            case 4:
+                return '#37BC9B';
+            default:
+                return 'red';
+        }
+    }
+
+    function getSuggestions(analysis) {
+        var suggestions = analysis.feedback.suggestions || [];
+        return $.map(suggestions, function (suggestion) {
+            if (suggestion !== '')
+                return '<li>'+suggestion+'</li>';
+        }).join('');
+    }
+
+    function generateReport(analysis) {
+        var report = 'Your password can be cracked in <em><strong>'
+            + analysis.crack_times_display.offline_slow_hashing_1e4_per_second +
+            '</strong></em> on fast computers<br><br>';
+        report += 'Guesses : <em>' + analysis.guesses + '</em><br><br>';
+
+        report += 'Cracking Times : <br><strong>Fastest</strong>: <em>' + analysis.crack_times_display.offline_fast_hashing_1e10_per_second +
+            ' (' + analysis.crack_times_seconds.offline_fast_hashing_1e10_per_second + ' s)</em><br>' +
+
+            '<strong>Fast</strong>: <em>' + analysis.crack_times_display.offline_slow_hashing_1e4_per_second +
+            ' (' + analysis.crack_times_seconds.offline_slow_hashing_1e4_per_second + ' s)</em><br>' +
+
+            '<strong>Slow</strong>: <em>' + analysis.crack_times_display.online_no_throttling_10_per_second +
+            ' (' + analysis.crack_times_seconds.online_no_throttling_10_per_second + ' s)</em><br>' +
+
+            '<strong>Slower</strong>: <em>' + analysis.crack_times_display.online_throttling_100_per_hour +
+            ' (' + analysis.crack_times_seconds.online_throttling_100_per_hour + ' s)</em><br><br>';
+
+        var suggestions = getSuggestions(analysis);
+        if (suggestions !== '') {
+            report += '<strong>Suggestions</strong>';
+            report += '<ul>' + suggestions + '</ul>'
+        }
+
+        return report;
+    }
+
+    function renderAnalysis(analysis) {
+        weaknessStatus.show();
+        weaknessStatusText.text(getWeaknessStatus(analysis));
+        passwordProgress.css('background-color', getProgressColor(analysis));
+        passwordProgress.css('width', analysis.score/4*100 + '%');
+
+        weaknessReport.attr('data-content', generateReport(analysis));
+    }
+
+    function getWarning(analysis) {
+        var warning = analysis.feedback.warning;
+        return warning !== '' ? warning: "Weak Password";
+    }
+
+    function getValidity(analysis) {
+        var response = getDefaultResponse(analysis.password);
+        response.valid = analysis.score > 1;
+        response.message = getWarning(analysis);
+        return response;
+    }
+
+    function checkPasswordStrength(password, callback) {
+        // If zxcvbn is not loaded, return password as valid
+        if (!window.zxcvbn || password === newPass) {
+            callback(getDefaultResponse(password));
+            return;
+        }
+
+        newPass = password;
+        var analysis = zxcvbn(password, blacklist);
+
+        callback(getValidity(analysis));
+        renderAnalysis(analysis);
+    }
 
     /* main */ (function () {
-        var oldPass = $('#old-passord');
-        var newPass = $('#password');
-        var confirmPass = $('#confirm-password');
+        weaknessPanel = $('.suggestions');
+        weaknessStatus = weaknessPanel.find('#weakness-status');
+        weaknessStatusText = weaknessStatus.find('#status-text');
+        weaknessReport = weaknessStatus.find('#weakness-report');
+        passwordProgress = weaknessPanel.find('#password-progress');
 
-        // Enable skipping old password field if it doesn't exist
-        var skip = !oldPass.length;
-
-        var password = {
-            old: null,
-            new: null,
-            confirm: null,
-
-            isEmpty: function () {
-                return !((skip || this.old) && this.new && this.confirm);
-            },
-
-            hasEnoughLength: function () {
-                return !this.isEmpty() &&
-                    (skip || this.old.length >= 8) &&
-                    this.new.length >= 8 &&
-                    this.confirm.length >= 8
-            },
-
-            passwordsMatch: function () {
-                return this.new === this.confirm;
-            }
-        };
-
-        function passwordChangeFactory(type) {
-            return function (event) {
-                password[type] = event.target.value;
-                onChangePasswords(password);
-            }
-        }
-
-        oldPass.on('keyup', $.debounce(250, passwordChangeFactory('old')));
-        newPass.on('keyup', $.debounce(250, passwordChangeFactory('new')));
-        confirmPass.on('keyup', $.debounce(250, passwordChangeFactory('confirm')));
-
-        passwordStatus = $('#password-status');
-        changePassword = $('#submit');
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js', function () {
+            // Show suggestions only when zxcvbn is loaded
+            weaknessPanel.show();
+        });
 
         blacklist = PageDetails.blacklisted;
 
-        meter = document.getElementById('password-strength-meter');
-        suggestionElement = $('.password-suggestions');
-    })();
+        $('[data-toggle="popover"]').popover();
+        $("input,select,textarea").not("[type=submit]").jqBootstrapValidation();
+    }());
+
+    return {
+        check: checkPasswordStrength
+    }
 }());
+
+function zxcvbn_callback($el, value, callback) {
+    // Check password and show warnings
+    Checker.check(value, callback);
+}
