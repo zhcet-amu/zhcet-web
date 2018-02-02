@@ -25,6 +25,7 @@ public class FirebaseService {
     private final FirebaseLocator firebaseLocator;
 
     private final boolean disabled;
+    private final String firebaseConfig;
     private boolean uninitialized;
 
     private GoogleCredential googleCredential;
@@ -35,6 +36,7 @@ public class FirebaseService {
         this.firebaseLocator = firebaseLocator;
         log.info(ConsoleHelper.blue("Initializing Firebase"));
         disabled = firebase.isDisabled();
+        firebaseConfig = firebase.getConfig();
 
         if (disabled) {
             log.warn(ConsoleHelper.red("CONFIG (Firebase): Firebase is disabled"));
@@ -51,6 +53,10 @@ public class FirebaseService {
 
     public static FirebaseToken getToken(String token) throws ExecutionException, InterruptedException {
         return FirebaseAuth.getInstance().verifyIdTokenAsync(token).get();
+    }
+
+    public String getConfig() {
+        return firebaseConfig;
     }
 
     public String getStorageBucket() {

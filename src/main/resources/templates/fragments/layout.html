@@ -200,6 +200,36 @@
     <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js"></script>
 </th:block>
 
+<th:block th:fragment="firebase_config">
+    <script th:inline="javascript">
+        (function (firebase) {
+            /* Initialize Firebase */
+            var config = /*[[${@firebaseService.config}]]*/ null;
+
+            var defaultConfig = {
+                apiKey: "AIzaSyDPzDrlYgC1GlPooyvCmEOEBeQhLeJuggU",
+                authDomain: "zhcet-web-amu.firebaseapp.com",
+                databaseURL: "https://zhcet-web-amu.firebaseio.com",
+                projectId: "zhcet-web-amu",
+                storageBucket: "zhcet-web-amu.appspot.com",
+                messagingSenderId: "632575632330"
+            };
+
+            if (config !== null) {
+                config = JSON.parse(config);
+            } else {
+                config = defaultConfig;
+            }
+
+            try {
+                firebase.initializeApp(config);
+            } catch (e) {
+                console.log('Firebase Initialization Error', e)
+            }
+        }(firebase));
+    </script>
+</th:block>
+
 <th:block th:fragment="firebase_auth">
     <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-auth.js"></script>
 </th:block>
@@ -208,14 +238,14 @@
     <div th:replace="this :: firebase"></div>
     <div th:replace="this :: firebase_auth"></div>
     <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-database.js"></script>
-    <script th:src="@{/js/config.js}"></script>
+    <div th:replace="this:: firebase_config"></div>
     <script th:src="@{/js/authentication.js}"></script>
 </th:block>
 
 <th:block th:fragment="firebase_messaging">
     <div th:replace="this :: firebase"></div>
     <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js"></script>
-    <script th:src="@{/js/config.js}"></script>
+    <div th:replace="this:: firebase_config"></div>
     <script th:src="@{/js/messaging.js}"></script>
 </th:block>
 

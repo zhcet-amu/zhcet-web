@@ -72,6 +72,10 @@ flyway:
 #
 # These will be automatically overridden from values in application-secrets-(dev/prod) according to the active profile
 zhcet:
+  email:
+    disabled: true
+  firebase:
+    disabled: true
   security:
     pepper: some_nice_pepper
     roles:
