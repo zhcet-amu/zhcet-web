@@ -10,7 +10,7 @@
     <!--/*@thymesVar id="course" type="amu.zhcet.data.course.Course"*/-->
     <div class="row" th:if="${course}">
         <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
-            <div th:replace="fragments/layout :: toolbar"></div>
+            <div th:replace="fragments/toolbar"></div>
             <div class="text-xs-right">
                 <input id="course-code" th:value="${course.code}" type="text" hidden>
                 <a th:href="@{|/admin/department/floated/${course.code}|}" th:if="${floated}">
@@ -68,7 +68,7 @@
                 <div class="card-body collapse in">
                     <div class="card-block">
                         <form class="form" th:action="@{|/admin/department/courses/${course.code}/edit|}" method="post" th:object="${course}">
-                            <div th:replace="fragments/layout :: success(condition = ${course_success}, message = ${course_success})"></div>
+                            <div th:replace="fragments/flash :: success(condition = ${course_success}, message = ${course_success})"></div>
                             <div th:replace="department/fragments/course_form"></div>
                             <div class="form-actions right">
                                 <button type="submit" class="btn btn-primary">

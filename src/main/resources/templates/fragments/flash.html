@@ -1,0 +1,15 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<div th:fragment="error" th:if="${condition}" class="alert alert-dismissible alert-danger">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong th:if="${error_title}" th:text="${error_title}"></strong>
+    <div th:utext="${error}">Fix this and try and try again</div>
+</div>
+
+<div th:fragment="success" th:if="${condition}" class="alert alert-dismissible alert-success">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong th:if="${success_title}" th:text="${success_title}"></strong>
+    <span th:utext="${message}">Fix this and try and try again</span>
+</div>
+
+</html>

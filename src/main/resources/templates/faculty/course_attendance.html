@@ -11,7 +11,7 @@
     <!--/*@thymesVar id="incharge" type="amu.zhcet.data.course.incharge.CourseInCharge"*/-->
     <div class="row" th:if="${incharge}">
         <div class="col-xs-12">
-            <div th:replace="fragments/layout :: toolbar"></div>
+            <div th:replace="fragments/toolbar"></div>
         </div>
         <div class="col-xs-12 col-xl-9">
             <div th:replace="faculty/fragments/attendance"></div>
@@ -61,8 +61,8 @@
 
 </script>
 <script th:src="@{/js/file-uploader.js}"></script>
-<div th:replace="fragments/layout :: datatables"></div>
-<div th:replace="fragments/layout :: datatables_export"></div>
+<div th:replace="fragments/scripts :: datatables"></div>
+<div th:replace="fragments/scripts :: datatables_export"></div>
 <script th:src="@{/js/attendance-upload.js}"></script>
 </body>
 </html>

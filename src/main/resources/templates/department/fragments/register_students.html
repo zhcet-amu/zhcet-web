@@ -22,7 +22,7 @@
                     Download the <a th:href="@{/csv/registration_format.csv}">registration format</a>
                 </div>
                 <br/>
-                <div th:replace="fragments/layout :: uploader(id = 'registration_upload')"></div>
+                <div th:replace="fragments/uploader(id = 'registration_upload')"></div>
                 <div th:if="${registered}" class="alert alert-dismissible alert-success">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     <strong>Updated!</strong> Students were successfully registered<br/>

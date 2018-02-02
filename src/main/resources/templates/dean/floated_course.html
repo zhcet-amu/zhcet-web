@@ -12,7 +12,7 @@
 <!--/*@thymesVar id="registration" type="amu.zhcet.data.course.registration.CourseRegistration"*/-->
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean_admin', subPage = 'floated_page')">
     <div class="row" th:if="${floatedCourse}">
-        <div th:replace="fragments/layout :: toolbar"></div>
+        <div th:replace="fragments/toolbar"></div>
         <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Unknown Error!</strong>
@@ -36,8 +36,8 @@
     </div>
 </div>
 <script th:src="@{/js/file-uploader.js}"></script>
-<div th:replace="fragments/layout :: datatables"></div>
-<div th:replace="fragments/layout :: datatables_export"></div>
+<div th:replace="fragments/scripts :: datatables"></div>
+<div th:replace="fragments/scripts :: datatables_export"></div>
 <script th:src="@{/js/floated-course-common.js}"></script>
 </body>
 </html>

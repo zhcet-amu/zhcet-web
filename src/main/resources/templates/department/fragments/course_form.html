@@ -8,10 +8,10 @@
     <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
     <!--/*@thymesVar id="type" type="amu.zhcet.data.course.CourseType"*/-->
     <div th:each="error : ${#fields.detailedErrors('*')}">
-        <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+        <div th:replace="fragments/flash :: error(condition = true, error = ${error})"></div>
     </div>
     <div th:each="error : ${course_errors}">
-        <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+        <div th:replace="fragments/flash :: error(condition = true, error = ${error})"></div>
     </div>
     <div class="col-md-6">
         <h4 class="form-section"><i class="icon-head"></i> Basic Info</h4>

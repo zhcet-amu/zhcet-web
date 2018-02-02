@@ -73,7 +73,7 @@
                  th:src="${@viewService.getAvatarUrl(user.details.originalAvatarUrl)}"
                  class="rounded-circle height-200" alt="Profile Picture"/>
             <form th:action="@{/profile/picture}" enctype="multipart/form-data" method="post" class="pt-2">
-                <div th:replace="fragments/layout :: uploader(id = 'avatar_upload', btn_choose = 'Change Avatar', upload_types = 'image/*')"></div>
+                <div th:replace="fragments/uploader(id = 'avatar_upload', btn_choose = 'Change Avatar', upload_types = 'image/*')"></div>
                 <div th:each="success : ${avatar_success}" class="alert alert-dismissible alert-success">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     <span th:text="${success}">Your profile was updated successfully!</span>
@@ -90,7 +90,7 @@
         <div class="row">
             <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
                 <div th:each="error : ${#fields.detailedErrors('*')}">
-                    <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                    <div th:replace="fragments/flash :: error(condition = true, error = ${error})"></div>
                 </div>
                 <div class="form-body">
                     <div th:if="${success}" class="alert alert-dismissible alert-success">

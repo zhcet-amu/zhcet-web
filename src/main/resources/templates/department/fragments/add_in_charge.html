@@ -19,8 +19,8 @@
                 Search for faculty by faculty ID or name and set multiple in-charge in one go!
             </div>
             <br>
-            <div th:replace="fragments/layout :: success(condition = ${float_success}, message = ${float_success})"></div>
-            <div th:replace="fragments/layout :: error(condition = ${float_error}, error = ${float_success})"></div>
+            <div th:replace="fragments/flash :: success(condition = ${float_success}, message = ${float_success})"></div>
+            <div th:replace="fragments/flash :: error(condition = ${float_error}, error = ${float_success})"></div>
             <div id="incharge-action">
                 <div class="row">
                     <div class="col-md-9">
@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <br>
-                <div th:replace="fragments/layout :: success(condition = ${incharge_success}, message = ${incharge_success})"></div>
+                <div th:replace="fragments/flash :: success(condition = ${incharge_success}, message = ${incharge_success})"></div>
                 <input type="submit" value="Save" class="btn btn-primary float-xs-right">
             </form>
         </div>

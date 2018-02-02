@@ -23,9 +23,9 @@
                                         </span>
                             </div>
                         </fieldset>
-                        <div th:replace="fragments/layout :: success(condition = ${link_sent}, success_title = 'Sent!', message = ${link_sent})"></div>
-                        <div th:replace="fragments/layout :: error(condition = ${invalid_email}, error = ${invalid_email})"></div>
-                        <div th:replace="fragments/layout :: error(condition = ${duplicate_email}, error = ${duplicate_email})"></div>
+                        <div th:replace="fragments/flash :: success(condition = ${link_sent}, success_title = 'Sent!', message = ${link_sent})"></div>
+                        <div th:replace="fragments/flash :: error(condition = ${invalid_email}, error = ${invalid_email})"></div>
+                        <div th:replace="fragments/flash :: error(condition = ${duplicate_email}, error = ${duplicate_email})"></div>
                     </form>
                 </div>
             </div>
@@ -40,8 +40,8 @@
                     <form th:action="@{/profile/confirm_email}" method="post">
                         <button type="submit" class="btn btn-primary block">Resend Verification Link</button>
                         <br>
-                        <div th:replace="fragments/layout :: success(condition = ${link_sent}, success_title = 'Sent!', message = ${link_sent})"></div>
-                        <div th:replace="fragments/layout :: error(condition = ${invalid_email}, error = ${invalid_email})"></div>
+                        <div th:replace="fragments/flash :: success(condition = ${link_sent}, success_title = 'Sent!', message = ${link_sent})"></div>
+                        <div th:replace="fragments/flash :: error(condition = ${invalid_email}, error = ${invalid_email})"></div>
                     </form>
                 </div>
             </div>

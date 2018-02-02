@@ -1,0 +1,105 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="backstretch">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js" type="text/javascript"></script>
+</th:block>
+
+<th:block th:fragment="typeahead">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.jquery.min.js"></script>
+</th:block>
+
+<th:block th:fragment="data_details">
+    <script th:src="@{/webjars/momentjs/min/moment.min.js}"></script>
+    <script th:src="@{/webjars/jquery-throttle-debounce-plugin/jquery.ba-throttle-debounce.min.js}"></script>
+</th:block>
+
+<!-- DataTables -->
+<th:block th:fragment="datatables">
+    <link th:href="@{/webjars/datatables/css/dataTables.bootstrap4.min.css}" type="text/css" rel="stylesheet"/>
+    <script th:src="@{/webjars/datatables/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/webjars/datatables/js/dataTables.bootstrap4.min.js}"></script>
+</th:block>
+
+<th:block th:fragment="datatables_export">
+    <link th:href="@{/webjars/datatables-buttons/css/buttons.dataTables.min.css}" rel="stylesheet" \>
+    <link th:href="@{/webjars/datatables-buttons/css/buttons.bootstrap4.min.css}" rel="stylesheet">
+    <script th:src="@{/webjars/datatables-buttons/js/dataTables.buttons.min.js}"></script>
+    <script th:src="@{/webjars/datatables-buttons/js/buttons.bootstrap4.min.js}"></script>
+    <script th:src="@{/webjars/datatables-buttons/js/buttons.flash.min.js}"></script>
+    <script th:src="@{/webjars/jszip/jszip.min.js}"></script>
+    <script th:src="@{/webjars/pdfmake/build/pdfmake.min.js}"></script>
+    <script th:src="@{/webjars/pdfmake/build/vfs_fonts.js}"></script>
+    <script th:src="@{/webjars/datatables-buttons/js/buttons.html5.min.js}"></script>
+    <script th:src="@{/webjars/datatables-buttons/js/buttons.print.min.js}"></script>
+</th:block>
+
+<th:block th:fragment="datatables_select">
+    <link th:href="@{/webjars/datatables.net-select-bs/css/select.bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{/webjars/datatables.net-select/js/dataTables.select.min.js}"></script>
+</th:block>
+
+<!-- Firebase -->
+<th:block th:fragment="firebase">
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js"></script>
+</th:block>
+
+<th:block th:fragment="firebase_config">
+    <script th:inline="javascript">
+        (function (firebase) {
+            /* Initialize Firebase */
+            var config = /*[[${@firebaseService.config}]]*/ null;
+
+            var defaultConfig = {
+                apiKey: "AIzaSyDPzDrlYgC1GlPooyvCmEOEBeQhLeJuggU",
+                authDomain: "zhcet-web-amu.firebaseapp.com",
+                databaseURL: "https://zhcet-web-amu.firebaseio.com",
+                projectId: "zhcet-web-amu",
+                storageBucket: "zhcet-web-amu.appspot.com",
+                messagingSenderId: "632575632330"
+            };
+
+            if (config !== null) {
+                config = JSON.parse(config);
+            } else {
+                config = defaultConfig;
+            }
+
+            try {
+                firebase.initializeApp(config);
+            } catch (e) {
+                console.log('Firebase Initialization Error', e)
+            }
+        }(firebase));
+    </script>
+</th:block>
+
+<th:block th:fragment="firebase_auth">
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-auth.js"></script>
+</th:block>
+
+<th:block th:fragment="firebase_login">
+    <div th:replace="this :: firebase"></div>
+    <div th:replace="this :: firebase_auth"></div>
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-database.js"></script>
+    <div th:replace="this:: firebase_config"></div>
+    <script th:src="@{/js/authentication.js}"></script>
+</th:block>
+
+<th:block th:fragment="firebase_messaging">
+    <div th:replace="this :: firebase"></div>
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js"></script>
+    <div th:replace="this:: firebase_config"></div>
+    <script th:src="@{/js/messaging.js}"></script>
+</th:block>
+
+<th:block th:fragment="scripts">
+    <script th:src="@{/webjars/jquery/dist/jquery.min.js}" type="text/javascript"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/vendor/bundle.min.js}" type="text/javascript"></script>
+    <script th:src="@{/webjars/muicss/dist/js/mui.min.js}"></script>
+    <script th:src="@{/webjars/toastr/build/toastr.min.js}"></script>
+    <script th:src="@{/js/app.js}" type="text/javascript"></script>
+    <div th:replace="this :: firebase_messaging"></div>
+</th:block>
+
+</html>

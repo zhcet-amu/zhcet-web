@@ -23,7 +23,7 @@
         <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
         <div class="row" th:if="${department}">
             <div class="col-xs-12">
-                <div th:replace="fragments/layout :: toolbar"></div>
+                <div th:replace="fragments/toolbar"></div>
                 <div class="row">
                     <div class="col-md-10 col-xl-8 offset-md-1 offset-xl-2">
                         <div id="action-area">
@@ -32,8 +32,8 @@
                                 Search for courses by course code or title and float multiple courses in one go!
                             </div>
                             <br>
-                            <div th:replace="fragments/layout :: success(condition = ${float_success}, message = ${float_success})"></div>
-                            <div th:replace="fragments/layout :: error(condition = ${float_error}, error = ${float_error})"></div>
+                            <div th:replace="fragments/flash :: success(condition = ${float_success}, message = ${float_success})"></div>
+                            <div th:replace="fragments/flash :: error(condition = ${float_error}, error = ${float_error})"></div>
                             <input class="courses twitter-typeahead form-control round mb-1" autocomplete="off" placeholder="Search" />
 
                             <div class="bs-callout-primary callout-border-left p-1">
@@ -97,7 +97,7 @@
         </div>
     </div>
 </div>
-<div th:replace="fragments/layout :: typeahead"></div>
+<div th:replace="fragments/scripts :: typeahead"></div>
 <script th:inline="javascript">
     var PageDetails = {
         department: [[${department.code}]]

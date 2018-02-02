@@ -12,7 +12,7 @@
     <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
 
     <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2" th:with="hide_warnings = true">
-        <div th:replace="fragments/layout :: toolbar"></div>
+        <div th:replace="fragments/toolbar"></div>
         <div th:replace="user/fragments/button_panel"></div>
         <div th:replace="user/fragments/password_notice"></div>
     </div>
@@ -24,7 +24,7 @@
     </div>
 </div>
 <script th:src="@{/js/file-uploader.js}"></script>
-<div th:replace="fragments/layout :: firebase_auth"></div>
+<div th:replace="fragments/scripts :: firebase_auth"></div>
 <script th:src="@{/js/authentication.js}"></script>
 <script>
     $('.file-uploader').initUpload({

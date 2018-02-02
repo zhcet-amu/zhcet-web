@@ -12,7 +12,7 @@
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage = 'floated_page')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="row">
         <div class="col-xs-12">
-            <div th:replace="fragments/layout :: toolbar"></div>
+            <div th:replace="fragments/toolbar"></div>
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Floated Courses</h4>
@@ -107,11 +107,11 @@
         </div>
     </div>
 </div>
-<div th:replace="fragments/layout :: datatables"></div>
-<div th:replace="fragments/layout :: datatables_export"></div>
+<div th:replace="fragments/scripts :: datatables"></div>
+<div th:replace="fragments/scripts :: datatables_export"></div>
 <script th:src="@{/js/data-utils.js}"></script>
 <script th:src="@{/js/floated-datatable.js}"></script>
-<div th:replace="fragments/layout :: data_details"></div>
+<div th:replace="fragments/scripts :: data_details"></div>
 <link rel="stylesheet" th:href="@{/css/datatables-select.css}">
 </body>
 </html>

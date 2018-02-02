@@ -10,7 +10,7 @@
     <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
     <div class="row" th:if="${department}">
         <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
-            <div th:replace="fragments/layout :: toolbar"></div>
+            <div th:replace="fragments/toolbar"></div>
             <div class="row" sec:authorize="hasRole('ROLE_DEPARTMENT_SUPER_ADMIN')">
                 <div class="col-xs-12 col-md-10 col-lg-8 col-xl-6 offset-md-1 offset-lg-2 offset-xl-3">
                     <div class="mui-form">

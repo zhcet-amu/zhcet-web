@@ -1,0 +1,25 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="pagination" class="text-xs-center pages">
+    <!--/*@thymesVar id="currentPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="minPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="maxPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="pageUrl" type="java.lang.String"*/-->
+    <nav aria-label="Page navigation">
+        <ul class="pagination pagination-round">
+            <li th:class="|page-item ${currentPage <= minPage ? 'disabled' : ''}|">
+                <a class="page-link" th:href="@{|/${pageUrl}|(page=${currentPage - 1})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            <li th:each="num : ${#numbers.sequence(minPage, maxPage)}" th:class="|page-item ${currentPage == num ? 'active' : ''}|">
+                <a class="page-link" th:href="@{|/${pageUrl}|(page=${num})}" th:text="${num}">1</a>
+            </li>
+            <li th:class="|page-item ${currentPage >= maxPage ? 'disabled' : ''}|">
+                <a class="page-link" th:href="@{|/${pageUrl}|(page=${currentPage + 1})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

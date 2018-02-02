@@ -25,7 +25,7 @@
                     Only attended and delivered columns of the file are editable, changes in other fields are ignored
                 </div>
                 <br/>
-                <div th:replace="fragments/layout :: uploader(id = 'attendance_upload')"></div>
+                <div th:replace="fragments/uploader(id = 'attendance_upload')"></div>
                 <div th:if="${updated}" class="alert alert-dismissible alert-success">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     <strong>Updated!</strong> Student attendance was successfully updated<br/>

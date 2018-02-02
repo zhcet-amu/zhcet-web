@@ -19,7 +19,7 @@
                         <h4 class="form-section"><i class="material-icons md-24 md-dark">book</i>Student CSV</h4>
                         <div>Download the <a th:href="@{/csv/student_format.csv}">student format</a></div>
                         <br/>
-                        <div th:replace="fragments/layout :: uploader(id = 'student_upload')"></div>
+                        <div th:replace="fragments/uploader(id = 'student_upload')"></div>
                         <div id="student-progress" style="display: none">
                             <div class="waiting">Please Wait...</div>
                             <div class="md-progress">
@@ -30,9 +30,9 @@
                                 <span class="percentage float-xs-right">0%</span>
                             </small>
                         </div>
-                        <div th:replace="fragments/layout :: error(condition = ${student_unknown_error}, error_title = 'Unknown Error!', error = 'We don\'t know what happened. Please contact site admin')"></div>
+                        <div th:replace="fragments/flash :: error(condition = ${student_unknown_error}, error_title = 'Unknown Error!', error = 'We don\'t know what happened. Please contact site admin')"></div>
                         <div th:each="error : ${students_errors}">
-                            <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                            <div th:replace="fragments/flash :: error(condition = true, error = ${error})"></div>
                         </div>
                     </div>
                 </form>
@@ -100,7 +100,7 @@
                                     </table>
                             </div>
                             <div th:each="error : ${confirmRegistration.errors}">
-                                <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                                <div th:replace="fragments/flash :: error(condition = true, error = ${error})"></div>
                             </div>
                         </div>
                         <div class="modal-footer">

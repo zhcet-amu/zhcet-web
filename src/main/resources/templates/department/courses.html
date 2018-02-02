@@ -14,7 +14,7 @@
         <!-- Show if Department Found -->
         <div class="row" th:if="${department}">
             <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
-                <div th:replace="fragments/layout :: toolbar"></div>
+                <div th:replace="fragments/toolbar"></div>
                 <div class="card" style="background-color:#f5f5f5;">
                     <div class="card-header">
                         <h4 class="card-title">Department Courses</h4>
@@ -41,8 +41,8 @@
                             </a>
                             <button id="toggle-floated" class="btn btn-secondary btn-round">Floated Course</button>
                             <hr>
-                            <div th:replace="fragments/layout :: success(condition = ${course_success}, message = ${course_success})"></div>
-                            <div th:replace="fragments/layout :: error(condition = ${course_error}, error = ${course_error})"></div>
+                            <div th:replace="fragments/flash :: success(condition = ${course_success}, message = ${course_success})"></div>
+                            <div th:replace="fragments/flash :: error(condition = ${course_error}, error = ${course_error})"></div>
                             <div id="courses">
                                 <input class="fuzzy-search form-control round mb-1" placeholder="Search" />
                                 <div class="row">

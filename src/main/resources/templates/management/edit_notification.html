@@ -20,11 +20,11 @@
         <div class="row">
             <!--/*@thymesVar id="notification" type="amu.zhcet.notification.Notification"*/-->
             <div class="col-xs-12" th:if="${notification}">
-                <div th:replace="fragments/layout :: toolbar"></div>
+                <div th:replace="fragments/toolbar"></div>
 
                 <form id="notification" th:action="@{|/management/notifications/${notification.id}/edit|}" method="post" th:object="${notification}">
                     <div th:each="error : ${#fields.detailedErrors('*')}">
-                        <div th:replace="fragments/layout :: error(condition = true, error = ${error})"></div>
+                        <div th:replace="fragments/flash :: error(condition = true, error = ${error})"></div>
                     </div>
                     <div class="form-group">
                         <div class="position-relative has-icon-left">

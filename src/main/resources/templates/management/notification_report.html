@@ -15,7 +15,7 @@
     <div class="container-fluid" th:if="${notification}">
         <div class="row">
             <div class="col-xs-12">
-                <div th:replace="fragments/layout :: toolbar"></div>
+                <div th:replace="fragments/toolbar"></div>
             </div>
         </div>
 
@@ -129,8 +129,8 @@
         </div>
     </div>
 </div>
-<div th:replace="fragments/layout :: datatables"></div>
-<div th:replace="fragments/layout :: datatables_export"></div>
+<div th:replace="fragments/scripts :: datatables"></div>
+<div th:replace="fragments/scripts :: datatables_export"></div>
 <script>
     (function () {
         $('#report').DataTable({

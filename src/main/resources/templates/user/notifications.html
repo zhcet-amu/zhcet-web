@@ -30,9 +30,9 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-lg-10 offset-lg-1 col-xl-8 offset-xl-2">
-                <div th:replace="fragments/layout :: toolbar"></div>
+                <div th:replace="fragments/toolbar"></div>
 
-                <div th:replace="fragments/layout :: success(condition = ${notification_success}, message = ${notification_success})"></div>
+                <div th:replace="fragments/flash :: success(condition = ${notification_success}, message = ${notification_success})"></div>
 
                 <div class="col-xs-12" th:unless="${notifications.isEmpty()}">
                     <div class="float-xs-right">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
 
-                <div th:replace="fragments/layout :: pagination(pageUrl = 'notifications')"></div>
+                <div th:replace="fragments/pagination(pageUrl = 'notifications')"></div>
 
                 <!--/*@thymesVar id="notificationRecipient" type="amu.zhcet.core.notification.recipient.NotificationRecipient"*/-->
 
@@ -93,7 +93,7 @@
                         </div>
                     </div>
                 </div>
-                <div th:replace="fragments/layout :: pagination(pageUrl = 'notifications')"></div>
+                <div th:replace="fragments/pagination(pageUrl = 'notifications')"></div>
             </div>
         </div>
     </div>

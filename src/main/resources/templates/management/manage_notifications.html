@@ -42,9 +42,9 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-                <div th:replace="fragments/layout :: toolbar"></div>
-                <div th:replace="fragments/layout :: success(condition = ${notification_success}, message = ${notification_success})"></div>
-                <div th:replace="fragments/layout :: pagination(pageUrl = 'management/notifications')"></div>
+                <div th:replace="fragments/toolbar"></div>
+                <div th:replace="fragments/flash :: success(condition = ${notification_success}, message = ${notification_success})"></div>
+                <div th:replace="fragments/pagination(pageUrl = 'management/notifications')"></div>
 
                 <!--/*@thymesVar id="notification" type="amu.zhcet.notification.Notification"*/-->
 
@@ -154,7 +154,7 @@
                         </blockquote>
                     </div>
                 </div>
-                <div th:replace="fragments/layout :: pagination(pageUrl = 'management/notifications')"></div>
+                <div th:replace="fragments/pagination(pageUrl = 'management/notifications')"></div>
             </div>
         </div>
     </div>
