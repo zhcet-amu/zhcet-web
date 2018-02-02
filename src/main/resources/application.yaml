@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: secrets
+    include: dev, secrets
 
   jpa:
     hibernate:
@@ -63,12 +63,23 @@ logging:
 flyway:
   baseline-on-migrate: true
 
+# Please don't add any secrets here, create a new file application-secrets.yaml and override these settings there
+# Or see application-dev.yaml or application-prod.yaml and add development or production related settings in
+# application-secrets-dev.yaml / application-secrets.prod.yaml
+#
+# Obviously, you can override any of these settings using any other Spring Profiles method
+# This area only defines default properties and documents all possible secret configurations
+#
+# These will be automatically overridden from values in application-secrets-(dev/prod) according to the active profile
 zhcet:
-  url: http://localhost:8080/
   email:
     disabled: true
+    address: email_address_here
+    password: email_password_here
   firebase:
     disabled: true
+    config: config here
+    service-account: service_account_json content here
   security:
     pepper: some_nice_pepper
     roles:

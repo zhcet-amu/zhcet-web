@@ -1,0 +1,9 @@
+# Production related settings
+
+spring:
+  profiles:
+    include: secrets-prod # Add production secrets
+
+zhcet:
+  url: http://zhcet.amu.ac.in/
+  use-cdn: true

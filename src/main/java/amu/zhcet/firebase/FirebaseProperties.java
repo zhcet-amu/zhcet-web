@@ -12,6 +12,10 @@ public class FirebaseProperties {
      */
     private boolean disabled;
     /**
+     * Firebase config for initialization (Not implemented yet)
+     */
+    private String config;
+    /**
      * Service Account JSON for the Firebase Project
      */
     private String serviceAccount;
