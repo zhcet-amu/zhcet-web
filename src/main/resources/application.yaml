@@ -17,9 +17,9 @@ spring:
       max-request-size: 10MB
 
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://localhost:3306/zhcet?useSSL=false
+    username: zhcetuser
+    password: zhcetpass
 
   mail:
     host: smtp.gmail.com
