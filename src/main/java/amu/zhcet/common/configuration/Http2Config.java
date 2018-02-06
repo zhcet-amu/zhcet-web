@@ -2,7 +2,7 @@ package amu.zhcet.common.configuration;
 
 import io.undertow.UndertowOptions;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
+import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Configuration;
 public class Http2Config {
 
     @Bean
-    UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory() {
-        UndertowEmbeddedServletContainerFactory factory = new UndertowEmbeddedServletContainerFactory();
+    UndertowServletWebServerFactory undertowServletWebServerFactory() {
+        UndertowServletWebServerFactory factory = new UndertowServletWebServerFactory();
         factory.addBuilderCustomizers(
                 builder -> builder.setServerOption(UndertowOptions.ENABLE_HTTP2, true));
 

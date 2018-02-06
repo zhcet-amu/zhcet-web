@@ -4,9 +4,9 @@ import amu.zhcet.common.model.BaseEntity;
 import amu.zhcet.data.user.User;
 import lombok.*;
 import org.hibernate.envers.Audited;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data

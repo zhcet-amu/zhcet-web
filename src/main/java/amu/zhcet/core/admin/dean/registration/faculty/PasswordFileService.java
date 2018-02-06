@@ -62,13 +62,14 @@ class PasswordFileService {
 
         @Override
         public void run() {
-            PasswordFile passwordFile = passwordFileRepository.findOne(id);
-            log.warn("Deleting password file {}. Created Time: {}, Expiry Time: {}, Current Time: {}",
-                    id, passwordFile.getCreatedTime(), passwordFile.getExpiryTime(), LocalDateTime.now());
-            passwordFile.setDeleted(true);
+            passwordFileRepository.findById(id).ifPresent(passwordFile -> {
+                log.warn("Deleting password file {}. Created Time: {}, Expiry Time: {}, Current Time: {}",
+                        id, passwordFile.getCreatedTime(), passwordFile.getExpiryTime(), LocalDateTime.now());
+                passwordFile.setDeleted(true);
 
-            storageService.delete(FileType.CSV, passwordFile.getLink());
-            passwordFileRepository.save(passwordFile);
+                storageService.delete(FileType.CSV, passwordFile.getLink());
+                passwordFileRepository.save(passwordFile);
+            });
         }
     }
 

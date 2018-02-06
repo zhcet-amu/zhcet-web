@@ -24,8 +24,8 @@ public class CourseService {
         this.courseRepository = courseRepository;
     }
 
-    public Course getCourse(String code) {
-        return courseRepository.findOne(code);
+    public Optional<Course> getCourse(String code) {
+        return courseRepository.findByCode(code);
     }
 
     public List<Course> getAllActiveCourse(Department department, boolean active) {
@@ -58,7 +58,7 @@ public class CourseService {
     }
 
     public void deleteCourse(Course course) {
-        courseRepository.delete(course.getCode());
+        courseRepository.delete(course);
     }
 
     private static void sanitizeCourse(Course course) {

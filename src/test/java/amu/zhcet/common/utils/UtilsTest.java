@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

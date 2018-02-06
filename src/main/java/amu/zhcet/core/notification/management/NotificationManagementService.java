@@ -27,7 +27,7 @@ class NotificationManagementService {
     }
 
     public Page<Notification> getNotifications(int page) {
-        PageRequest pageRequest = new PageRequest(page - 1, PAGE_SIZE, Sort.Direction.DESC, "sentTime");
+        PageRequest pageRequest = PageRequest.of(page - 1, PAGE_SIZE, Sort.Direction.DESC, "sentTime");
         return notificationRepository.findBySenderUserId(Auditor.getLoggedInUsername(), pageRequest);
     }
 

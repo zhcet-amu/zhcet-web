@@ -1,9 +1,7 @@
-package amu.zhcet.common.configuration;
+package amu.zhcet.data.config;
 
 import amu.zhcet.ApplicationProperties;
 import amu.zhcet.common.utils.ConsoleHelper;
-import amu.zhcet.data.config.Configuration;
-import amu.zhcet.data.config.ConfigurationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;

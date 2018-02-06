@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
@@ -74,22 +75,18 @@ public class PermissionManager {
     }
 
     public boolean checkCourse(Authentication user, String courseCode) {
-        Course course = courseService.getCourse(courseCode);
-        if (course == null) // If course isn't found, leave it to Controller
-            return checkDepartment(user, null);
-        else
-            return checkDepartment(user, course.getDepartment().getCode());
+        Optional<Course> courseOptional = courseService.getCourse(courseCode);
+        // If course isn't found, leave it to Controller
+        return courseOptional.map(course -> checkDepartment(user, course.getDepartment().getCode())).orElse(checkDepartment(user, null));
     }
 
     public boolean checkNotificationCreator(Authentication user, String notificationId) {
         boolean hasSendingPermission = hasPermission(user.getAuthorities(), Role.TEACHING_STAFF) ||
                 hasPermission(user.getAuthorities(), Role.DEVELOPMENT_ADMIN);
         try {
-            Notification notification = notificationRepository.findOne(Long.parseLong(notificationId));
-            if (notification == null) // If notification isn't found, leave it to Controller
-                return hasSendingPermission;
-            else
-                return hasSendingPermission && notification.getSender().getUserId().equals(user.getName());
+            Optional<Notification> notificationOptional = notificationRepository.findById(Long.parseLong(notificationId));
+            // If notification isn't found, leave it to Controller
+            return notificationOptional.map(notification -> hasSendingPermission && notification.getSender().getUserId().equals(user.getName())).orElse(hasSendingPermission);
         } catch (NumberFormatException nfe) {
             return true;
         }
@@ -97,9 +94,9 @@ public class PermissionManager {
 
     public boolean checkNotificationRecipient(Authentication user, String notificationId) {
         try {
-            NotificationRecipient notification = notificationRecipientRepository.findOne(Long.parseLong(notificationId));
+            Optional<NotificationRecipient> notificationOptional = notificationRecipientRepository.findById(Long.parseLong(notificationId));
             // If notification is not found, leave it to Controller
-            return notification == null || notification.getRecipient().getUserId().equals(user.getName());
+            return notificationOptional.map(notification -> notification.getRecipient().getUserId().equals(user.getName())).orElse(true);
         } catch (NumberFormatException nfe) {
             return true;
         }

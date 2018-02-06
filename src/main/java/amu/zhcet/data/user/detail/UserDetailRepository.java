@@ -1,5 +1,5 @@
 package amu.zhcet.data.user.detail;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface UserDetailRepository extends JpaRepository<UserDetail, String> { }
+public interface UserDetailRepository extends CrudRepository<UserDetail, String> { }

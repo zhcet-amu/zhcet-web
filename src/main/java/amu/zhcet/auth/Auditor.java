@@ -17,17 +17,19 @@ public class Auditor implements AuditorAware<String> {
         return getLoggedInAuthentication().flatMap(authentication -> Optional.of((UserAuth) authentication.getPrincipal()));
     }
 
-    public static String getLoggedInUsername() {
-        Optional<Authentication> authenticationOptional = getLoggedInAuthentication();
-        if (!authenticationOptional.isPresent() || !(authenticationOptional.get().getPrincipal() instanceof User))
-            return "UNAUTHENTICATED";
+    public static Optional<String> getLoggedInUsernameOptional() {
+        return getLoggedInAuthentication()
+                .filter(authentication -> authentication.getPrincipal() instanceof User)
+                .map(authentication -> (User) authentication.getPrincipal())
+                .map(User::getUsername);
+    }
 
-        String username = ((User) authenticationOptional.get().getPrincipal()).getUsername();
-        return username == null ? "UNAUTHENTICATED" : username;
+    public static String getLoggedInUsername() {
+        return getLoggedInUsernameOptional().orElse("UNAUTHENTICATED");
     }
 
     @Override
-    public String getCurrentAuditor() {
-        return getLoggedInUsername();
+    public Optional<String> getCurrentAuditor() {
+        return getLoggedInUsernameOptional();
     }
 }

@@ -31,7 +31,9 @@ public class EmailService{
         }
     }
 
-    private static void setBasicInfo(MimeMessageHelper mailMessage, String from, String to, String subject, String[] bcc) throws MessagingException {
+    private void setBasicInfo(MimeMessageHelper mailMessage, String from, String to, String subject, String[] bcc) throws MessagingException {
+        if (disabled)
+            return;
         mailMessage.setSubject(subject);
         mailMessage.setFrom(from);
         mailMessage.setTo(to);

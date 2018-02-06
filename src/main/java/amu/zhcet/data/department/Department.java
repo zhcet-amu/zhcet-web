@@ -3,11 +3,11 @@ package amu.zhcet.data.department;
 import amu.zhcet.common.model.BaseEntity;
 import lombok.*;
 import org.hibernate.envers.Audited;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 

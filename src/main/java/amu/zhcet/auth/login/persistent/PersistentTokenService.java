@@ -6,7 +6,6 @@ import org.springframework.security.web.authentication.rememberme.PersistentReme
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.Date;
 
@@ -29,21 +28,19 @@ public class PersistentTokenService implements PersistentTokenRepository {
     @Override
     @Transactional
     public void updateToken(String series, String tokenValue, Date lastUsed) {
-        PersistentLogin persistentLogin = persistentLoginRepository.findOne(series);
-        persistentLogin.setToken(tokenValue);
-        persistentLogin.setLastUsed(lastUsed);
-        persistentLoginRepository.save(persistentLogin);
+        persistentLoginRepository.findById(series).ifPresent(persistentLogin -> {
+            persistentLogin.setToken(tokenValue);
+            persistentLogin.setLastUsed(lastUsed);
+            persistentLoginRepository.save(persistentLogin);
+        });
     }
 
     @Override
     @Transactional
     public PersistentRememberMeToken getTokenForSeries(String seriesId) {
-        try {
-            return getTokenFromLogin(persistentLoginRepository.getOne(seriesId));
-        } catch (EntityNotFoundException e) {
-            log.error("Can't retrieve auth", e);
-            return null;
-        }
+        return persistentLoginRepository.findById(seriesId)
+                .map(PersistentTokenService::getTokenFromLogin)
+                .orElse(null);
     }
 
     @Override

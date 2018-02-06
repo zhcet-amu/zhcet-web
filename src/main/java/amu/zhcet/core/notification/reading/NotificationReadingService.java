@@ -45,13 +45,13 @@ public class NotificationReadingService {
 
     public Page<NotificationRecipient> getNotifications(int page) {
         String userId = Auditor.getLoggedInUsername();
-        PageRequest pageRequest = new PageRequest(page - 1, PAGE_SIZE, Sort.Direction.DESC, "notification.sentTime");
+        PageRequest pageRequest = PageRequest.of(page - 1, PAGE_SIZE, Sort.Direction.DESC, "notification.sentTime");
         return notificationRecipientRepository.findByRecipientUserId(userId, pageRequest);
     }
 
     public Page<NotificationRecipient> getFavoriteNotifications(int page) {
         String userId = Auditor.getLoggedInUsername();
-        PageRequest pageRequest = new PageRequest(page - 1, PAGE_SIZE, Sort.Direction.DESC, "notification.sentTime");
+        PageRequest pageRequest = PageRequest.of(page - 1, PAGE_SIZE, Sort.Direction.DESC, "notification.sentTime");
         return notificationRecipientRepository.findByRecipientUserIdAndFavorite(userId, true, pageRequest);
     }
 

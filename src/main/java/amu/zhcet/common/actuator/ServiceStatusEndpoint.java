@@ -6,12 +6,11 @@ import amu.zhcet.firebase.FirebaseService;
 import amu.zhcet.security.SecurePropertyConfig;
 import lombok.Getter;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.Endpoint;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 
-@Component
-public class ServiceStatus implements Endpoint<ServiceStatus.Status> {
+@Endpoint(id = "services-status")
+public class ServiceStatusEndpoint {
 
     @Getter
     @ToString
@@ -39,29 +38,13 @@ public class ServiceStatus implements Endpoint<ServiceStatus.Status> {
     private final EmailProperties emailProperties;
     private final FirebaseService firebaseService;
 
-    @Autowired
-    public ServiceStatus(EmailProperties emailProperties, FirebaseService firebaseService) {
+    public ServiceStatusEndpoint(EmailProperties emailProperties, FirebaseService firebaseService) {
         this.emailProperties = emailProperties;
         this.firebaseService = firebaseService;
     }
 
-    @Override
-    public String getId() {
-        return "service-status";
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isSensitive() {
-        return true;
-    }
-
-    @Override
-    public Status invoke() {
+    @ReadOperation
+    public Status getStatus() {
         Status status = new Status();
 
         status.email.enabled = !emailProperties.isDisabled();

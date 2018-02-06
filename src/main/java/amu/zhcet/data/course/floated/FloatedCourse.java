@@ -8,9 +8,9 @@ import amu.zhcet.data.course.registration.CourseRegistration;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;

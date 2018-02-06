@@ -1,6 +1,6 @@
 package amu.zhcet.auth.verification;
 
-import amu.zhcet.common.model.BaseEntity;
+import amu.zhcet.common.model.BaseIdEntity;
 import amu.zhcet.data.user.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,13 +16,9 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class VerificationToken extends BaseEntity {
+public class VerificationToken extends BaseIdEntity {
 
     private static final int EXPIRATION = 60 * 3;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
     @NotNull
     private String email;

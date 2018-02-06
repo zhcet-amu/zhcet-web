@@ -2,15 +2,15 @@ package amu.zhcet.core.admin.dean.edit;
 
 import amu.zhcet.data.user.Gender;
 import lombok.Data;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
-public class UserEditModel {
+class UserEditModel {
     @NotBlank
     @Size(max = 255)
     private String userName;

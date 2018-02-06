@@ -5,13 +5,12 @@ import amu.zhcet.data.department.Department;
 import amu.zhcet.data.user.detail.UserDetail;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.envers.Audited;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Arrays;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 @Entity
 @Audited
 @Builder
-@DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true, exclude="details")

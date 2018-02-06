@@ -89,7 +89,7 @@ public class UserService {
     }
 
     public Iterable<User> getAll() {
-        return userRepository.findAll(new PageRequest(0, 10, Sort.Direction.DESC, "createdAt"));
+        return userRepository.findAll(PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt"));
     }
 
     public static Stream<User> verifiedUsers(Stream<User> users) {

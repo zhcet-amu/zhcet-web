@@ -8,6 +8,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Slf4j
 @Service
 @CacheConfig(cacheNames = "configuration")
@@ -22,15 +24,20 @@ public class ConfigurationCacheService {
         this.modelMapper = modelMapper;
     }
 
+    @Transactional
+    public Configuration getConfig() {
+        return configurationRepository.findById(0L).orElse(null);
+    }
+
     @Cacheable
     public Configuration getConfigCache() {
-        return configurationRepository.findOne(0L);
+        return getConfig();
     }
 
     @CacheEvict(allEntries = true)
     public void save(Configuration configuration) {
         configuration.setId(0L); // Set ID to 0 as there is only 1 config instance
-        Configuration saved = configurationRepository.findOne(0L);
+        Configuration saved = getConfig();
 
         if (saved.equals(configuration)) {
             log.warn("Same configuration saved. Returning...");

@@ -57,7 +57,7 @@ public class FloatedCourseService {
     }
 
     public void unfloatCourse(FloatedCourse floatedCourse) {
-        floatedCourseRepository.delete(floatedCourse.getId());
+        floatedCourseRepository.delete(floatedCourse);
     }
 
     public void save(FloatedCourse floatedCourse) {

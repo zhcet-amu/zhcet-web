@@ -1,7 +1,7 @@
 package amu.zhcet.security.ratelimit;
 
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * This class was a naive implementation of rate limiting which would
@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * thus, it has been disabled till a better implementation is thought of
  */
 //@Configuration
-public class RateLimitConfiguration extends WebMvcConfigurerAdapter {
+public class RateLimitConfiguration implements WebMvcConfigurer {
 
     private final RateLimitInterceptor rateLimitInterceptor;
 

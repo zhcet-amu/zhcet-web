@@ -28,7 +28,7 @@ public class CachedNotificationService {
 
     @Cacheable(value = "unread_notifications", key = "#userId")
     public Page<NotificationRecipient> getUnreadNotifications(String userId) {
-        PageRequest pageRequest = new PageRequest(0, NotificationReadingService.PAGE_SIZE, Sort.Direction.DESC, "notification.sentTime");
+        PageRequest pageRequest = PageRequest.of(0, NotificationReadingService.PAGE_SIZE, Sort.Direction.DESC, "notification.sentTime");
         return notificationRecipientRepository.findByRecipientUserIdAndSeen(userId, false, pageRequest);
     }
 
@@ -39,7 +39,7 @@ public class CachedNotificationService {
             notificationRecipient.setSeen(true);
             notificationRecipient.setReadTime(LocalDateTime.now());
         }
-        notificationRecipientRepository.save(notificationRecipients);
+        notificationRecipientRepository.saveAll(notificationRecipients);
     }
 
     @CacheEvict(value = "unread_notifications", key = "#userId")

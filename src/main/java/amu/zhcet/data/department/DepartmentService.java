@@ -24,10 +24,6 @@ public class DepartmentService {
         return departmentRepository.findAll();
     }
 
-    public Department findOne(String code) {
-        return departmentRepository.findOne(code);
-    }
-
     public Optional<Department> findByName(String name) {
         return departmentRepository.findByName(name);
     }
@@ -37,7 +33,7 @@ public class DepartmentService {
     }
 
     private boolean existsCode(String code) {
-        return departmentRepository.exists(code);
+        return departmentRepository.existsById(code);
     }
 
     public void addDepartment(Department department) {

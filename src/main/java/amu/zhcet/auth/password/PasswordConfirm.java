@@ -1,8 +1,8 @@
 package amu.zhcet.auth.password;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data

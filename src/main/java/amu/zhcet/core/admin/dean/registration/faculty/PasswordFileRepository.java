@@ -1,5 +1,5 @@
 package amu.zhcet.core.admin.dean.registration.faculty;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-interface PasswordFileRepository extends CrudRepository<PasswordFile, String> { }
+interface PasswordFileRepository extends JpaRepository<PasswordFile, String> { }
