@@ -1,0 +1,1 @@
+DELETE FROM user WHERE user_id = 'dep1234' OR user_id = 'fac1234' or user_id = 'gf1032';
