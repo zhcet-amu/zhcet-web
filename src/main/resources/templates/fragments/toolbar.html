@@ -2,15 +2,15 @@
      class="content-header row" style="margin-bottom: 10px;" th:fragment="toolbar">
     <div class="content-header-left col-md-6 col-xs-12">
         <div th:if="${page_title}">
-            <h3 class="content-header-title mb-0" th:text="${page_title}"></h3>
+            <h4 class="content-header-title mb-0" th:text="${page_title}"></h4>
             <p class="text-muted mb-0" th:text="${page_subtitle}"></p>
         </div>
     </div>
     <div class="content-header-right col-md-6 col-xs-12" >
-        <h5 class="float-md-right capsule p-small bg-primary text-white text-xs-center" th:text="|Session : ${@configurationService.getSessionName()}|"></h5>
+        <h6 class="float-md-right capsule p-small bg-primary text-white text-xs-center" th:text="|Session : ${@configurationService.getSessionName()}|"></h6>
     </div>
     <div class="content-header-lead col-xs-12 mt-1" th:if="${page_description}">
-        <p class="lead" th:text="${page_description}"></p>
+        <p th:text="${page_description}" style="font-weight: 200; font-size: large"></p>
     </div>
     <!--/*@thymesVar id="page_path" type="amu.zhcet.common.page.PathChain"*/-->
     <div class="breadcrumb-wrapper col-xs-12" th:if="${page_path}">

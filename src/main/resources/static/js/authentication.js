@@ -162,9 +162,8 @@ var Authentication = (function ($, App, firebase) {
 
         function init() {
             $(document).ready(function () {
-                firebase.auth().onAuthStateChanged(function (user) {
-                    if (!user) attemptSignIn();
-                });
+                if (!firebase.auth().currentUser)
+                    attemptSignIn();
             });
         }
 

@@ -2,7 +2,9 @@ package amu.zhcet.firebase.auth.grant;
 
 import amu.zhcet.auth.Auditor;
 import amu.zhcet.auth.UserAuth;
+import amu.zhcet.data.user.Role;
 import amu.zhcet.firebase.FirebaseService;
+import amu.zhcet.security.permission.PermissionManager;
 import com.google.firebase.auth.FirebaseAuth;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,7 @@ public class TokenGrantService {
             Map<String, Object> claims = new HashMap<>();
             claims.put("type", user.getType().toString());
             claims.put("department", user.getDepartment().getName());
+            claims.put("dean_admin", PermissionManager.hasPermission(user.getAuthorities(), Role.DEAN_ADMIN));
             String token = FirebaseAuth.getInstance().createCustomTokenAsync(user.getUsername(), claims).get();
             return fromUser(user, token);
         } catch (InterruptedException | ExecutionException e) {
