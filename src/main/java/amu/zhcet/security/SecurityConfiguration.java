@@ -7,6 +7,7 @@ import amu.zhcet.firebase.auth.FirebaseAuthenticationProvider;
 import amu.zhcet.firebase.auth.FirebaseAutheticationFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
@@ -84,6 +85,10 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 .expressionHandler(securityExpressionHandler)
+
+                .requestMatchers(EndpointRequest.toAnyEndpoint())
+                .hasRole(Role.DEVELOPMENT_ADMIN.name())
+
                 .antMatchers("/").permitAll()
 
                 .antMatchers("/profile/**").authenticated()

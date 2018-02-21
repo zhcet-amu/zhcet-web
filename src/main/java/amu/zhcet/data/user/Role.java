@@ -2,6 +2,7 @@ package amu.zhcet.data.user;
 
 public enum Role {
 
+    USER(0, "Common role to all authenticated users"),
     STUDENT(1, "Lowest priority role. Allows user to see its attendance"),
     TEACHING_STAFF(2, "Allows user to send notifications"),
     FACULTY(3, "Allows to update attendance of courses taught by user and send notifications"),

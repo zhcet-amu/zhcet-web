@@ -66,6 +66,8 @@ public class RoleManagementController {
         // Remove unimplemented roles
         roles.remove(Role.TEACHING_STAFF);
         roles.remove(Role.SUPER_FACULTY);
+        // Remove common role
+        roles.remove(Role.USER);
         roles.sort(Comparator.comparingInt(Role::getOrder));
         model.addAttribute("roles", roles);
 
