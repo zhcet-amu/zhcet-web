@@ -20,7 +20,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
@@ -34,7 +33,6 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final PersistentTokenService persistentTokenService;
     private final AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource;
-    private final DefaultWebSecurityExpressionHandler securityExpressionHandler;
     private final SessionRegistry sessionRegistry;
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final FirebaseAutheticationFilter firebaseAutheticationFilter;
@@ -43,13 +41,11 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public SecurityConfiguration(
             PersistentTokenService persistentTokenService,
             AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource,
-            DefaultWebSecurityExpressionHandler securityExpressionHandler,
             SessionRegistry sessionRegistry,
             AuthenticationFailureHandler authenticationFailureHandler,
             FirebaseAutheticationFilter firebaseAutheticationFilter) {
         this.persistentTokenService = persistentTokenService;
         this.authenticationDetailsSource = authenticationDetailsSource;
-        this.securityExpressionHandler = securityExpressionHandler;
         this.sessionRegistry = sessionRegistry;
         this.authenticationFailureHandler = authenticationFailureHandler;
         this.firebaseAutheticationFilter = firebaseAutheticationFilter;
@@ -84,7 +80,6 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(firebaseAutheticationFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeRequests()
-                .expressionHandler(securityExpressionHandler)
 
                 .requestMatchers(EndpointRequest.toAnyEndpoint())
                 .hasRole(Role.DEVELOPMENT_ADMIN.name())
@@ -126,14 +121,13 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .formLogin()
-                .authenticationDetailsSource(authenticationDetailsSource)
                 .loginPage("/login").permitAll()
+                .authenticationDetailsSource(authenticationDetailsSource)
                 .failureHandler(authenticationFailureHandler)
-                .usernameParameter("username")
-                .passwordParameter("password")
 
                 .and()
-                .logout().logoutSuccessUrl("/login?logout").permitAll()
+                .logout().permitAll()
+                .logoutSuccessUrl("/login?logout")
 
                 .and()
                 .rememberMe()
@@ -142,6 +136,9 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .tokenRepository(persistentTokenService)
 
                 .and()
-                .sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry);
+                .sessionManagement()
+                .maximumSessions(1)
+                .sessionRegistry(sessionRegistry)
+                .expiredUrl("/login?expired");
     }
 }
