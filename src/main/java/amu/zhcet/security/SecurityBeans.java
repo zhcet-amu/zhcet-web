@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
@@ -23,6 +24,10 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -63,6 +68,29 @@ public class SecurityBeans {
         DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
         defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy);
         return defaultWebSecurityExpressionHandler;
+    }
+
+    @Bean
+    RoleHierarchy roleHierarchy(SecureProperties secureProperties) {
+        Map<String, List<String>> roleHierarchyMapping = secureProperties.getRoles().getHierarchy();
+
+        StringWriter roleHierarchyDescriptionBuffer = new StringWriter();
+        PrintWriter roleHierarchyDescriptionWriter = new PrintWriter(roleHierarchyDescriptionBuffer);
+
+        for (Map.Entry<String, List<String>> entry : roleHierarchyMapping.entrySet()) {
+
+            String currentRole = entry.getKey();
+            List<String> impliedRoles = entry.getValue();
+
+            for (String impliedRole : impliedRoles) {
+                String roleMapping = currentRole + " > " + impliedRole;
+                roleHierarchyDescriptionWriter.println(roleMapping);
+            }
+        }
+
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy(roleHierarchyDescriptionBuffer.toString());
+        return roleHierarchy;
     }
 
     /**
