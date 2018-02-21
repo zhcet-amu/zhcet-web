@@ -1,0 +1,1 @@
+update user set password = concat('{bcrypt}', ifnull(password, ""));
