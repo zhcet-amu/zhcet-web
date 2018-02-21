@@ -72,7 +72,7 @@ public class EmailVerificationController {
     public String resetPassword(Model model, @RequestParam("auth") String token){
         String result = emailVerificationService.validate(token);
         if (result != null) {
-            log.warn("Email Verification Error", result);
+            log.warn("Email Verification Error {}", result);
             model.addAttribute("error", result);
         } else {
             emailVerificationService.confirmEmail(token);

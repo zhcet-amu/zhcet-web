@@ -5,5 +5,5 @@ spring:
     include: secrets-dev # Add development secrets
 
 zhcet:
-  url: http://localhost:8080/
+  url: http://localhost:8080
   use-cdn: false

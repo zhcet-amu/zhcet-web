@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="container"
-      th:include="fragments/login :: login(title = 'Verify Email', message = 'Verify Email')" lang="en"
-      data-textdirection="ltr" class="loading">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" data-textdirection="ltr" class="loading">
+<th:block th:fragment="container" th:include="fragments/login :: login(page_title = 'Verify Email', message = 'Verify Email')">
 <div class="card-body collapse in">
     <div class="card-block">
         <div th:replace="fragments/flash :: success(condition = ${success}, success_title = 'Verified!', message = ${success})"></div>
@@ -13,4 +12,5 @@
         </div>
     </div>
 </div>
+</th:block>
 </html>
