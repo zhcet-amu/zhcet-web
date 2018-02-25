@@ -1,14 +1,12 @@
 package amu.zhcet.firebase.messaging;
 
-import amu.zhcet.common.markdown.MarkDownService;
 import amu.zhcet.common.utils.ConsoleColors;
 import amu.zhcet.common.utils.ConsoleHelper;
-import amu.zhcet.core.notification.Notification;
-import amu.zhcet.core.notification.recipient.NotificationRecipient;
 import amu.zhcet.firebase.FirebaseService;
 import amu.zhcet.firebase.messaging.model.SendRequest;
 import amu.zhcet.firebase.messaging.model.SendResponse;
 import feign.Feign;
+import feign.FeignException;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
@@ -22,14 +20,12 @@ import org.springframework.stereotype.Service;
 public class FirebaseMessagingService {
 
     private final FirebaseService firebaseService;
-    private final MarkDownService markDownService;
 
     private MessagingClient messagingClient;
 
     @Autowired
-    public FirebaseMessagingService(FirebaseService firebaseService, MarkDownService markDownService) {
+    public FirebaseMessagingService(FirebaseService firebaseService) {
         this.firebaseService = firebaseService;
-        this.markDownService = markDownService;
 
         boolean canSendMessage = firebaseService.canProceed();
         String color = canSendMessage ? ConsoleColors.GREEN : ConsoleColors.RED;
@@ -38,26 +34,22 @@ public class FirebaseMessagingService {
 
     /**
      * Sends a push notification to notification recipient user using FCM token
-     * NotificationBody and DataBody is created for FCM HTTP V1 API using the Notification content passed
+     * NotificationBody and DataBody is created for FCM HTTP V1 API using the SendRequest content passed
      * If FCM token of user is not found, sending is skipped
-     * @param notificationRecipient Notification Recipient
+     * @param sendRequest FCM request
      */
     @Async
-    public void sendMessage(NotificationRecipient notificationRecipient) {
+    public void sendMessage(SendRequest sendRequest) {
         if (!firebaseService.canProceed())
             return;
 
-        String fcmToken = notificationRecipient.getRecipient().getDetails().getFcmToken();
+        try {
+            SendResponse sendResponse = getMessagingClient().sendMessage(firebaseService.getToken(), sendRequest);
 
-        if (fcmToken == null)
-            return;
-
-        Notification notification = notificationRecipient.getNotification();
-
-        SendRequest request = RequestMapper.createRequest(notification, fcmToken, markDownService::render);
-        SendResponse sendResponse = getMessagingClient().sendMessage(firebaseService.getToken(), request);
-
-        log.info("Sent Broadcast : {}", sendResponse);
+            log.info("Sent Broadcast : {}", sendResponse);
+        } catch (FeignException feignException) {
+            log.error("Sending FCM failed", feignException);
+        }
     }
 
     private MessagingClient getMessagingClient() {

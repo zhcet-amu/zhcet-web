@@ -1,14 +1,37 @@
-package amu.zhcet.firebase.messaging;
+package amu.zhcet.core.notification.sending;
 
+import amu.zhcet.common.markdown.MarkDownService;
 import amu.zhcet.core.notification.Notification;
+import amu.zhcet.core.notification.recipient.NotificationRecipient;
+import amu.zhcet.firebase.messaging.FirebaseMessagingService;
 import amu.zhcet.firebase.messaging.model.SendRequest;
 import amu.zhcet.firebase.messaging.model.request.*;
+import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
 
-class RequestMapper {
+@Service
+class FirebaseNotificationSender {
 
-    public static SendRequest createRequest(Notification notification, String fcmToken, Function<String, String> renderer) {
+    private final FirebaseMessagingService firebaseMessagingService;
+    private final MarkDownService markDownService;
+
+    FirebaseNotificationSender(FirebaseMessagingService firebaseMessagingService, MarkDownService markDownService) {
+        this.firebaseMessagingService = firebaseMessagingService;
+        this.markDownService = markDownService;
+    }
+
+    public void sendFirebaseNotification(NotificationRecipient notificationRecipient) {
+        String fcmToken = notificationRecipient.getRecipient().getDetails().getFcmToken();
+        if (fcmToken == null)
+            return;
+
+        Notification notification = notificationRecipient.getNotification();
+
+        firebaseMessagingService.sendMessage(FirebaseNotificationSender.createRequest(notification, fcmToken, markDownService::render));
+    }
+
+    private static SendRequest createRequest(Notification notification, String fcmToken, Function<String, String> renderer) {
         NotificationBody notificationBody = NotificationBody.builder()
                 .title("New Notification")
                 .body(notification.getTitle())

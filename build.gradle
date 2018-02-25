@@ -57,7 +57,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-undertow")
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-properties-migrator")
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity4")
     implementation 'javax.interceptor:javax.interceptor-api:1.2.1' // TODO: Remove when workaround fix is found

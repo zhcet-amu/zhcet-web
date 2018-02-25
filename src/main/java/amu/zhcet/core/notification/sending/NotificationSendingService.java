@@ -5,7 +5,6 @@ import amu.zhcet.core.notification.recipient.CachedNotificationService;
 import amu.zhcet.core.notification.recipient.NotificationRecipient;
 import amu.zhcet.data.user.User;
 import amu.zhcet.email.EmailSendingService;
-import amu.zhcet.firebase.messaging.FirebaseMessagingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -20,19 +19,19 @@ import java.time.LocalDateTime;
 public class NotificationSendingService {
 
     private final EmailSendingService emailSendingService;
-    private final FirebaseMessagingService firebaseMessagingService;
+    private final FirebaseNotificationSender firebaseNotificationSender;
     private final CachedNotificationService cachedNotificationService;
     private final UserExtractor userExtractor;
 
     @Autowired
     public NotificationSendingService(
             EmailSendingService emailSendingService,
-            FirebaseMessagingService firebaseMessagingService,
+            FirebaseNotificationSender firebaseNotificationSender,
             CachedNotificationService cachedNotificationService,
             UserExtractor userExtractor
     ) {
         this.emailSendingService = emailSendingService;
-        this.firebaseMessagingService = firebaseMessagingService;
+        this.firebaseNotificationSender = firebaseNotificationSender;
         this.cachedNotificationService = cachedNotificationService;
         this.userExtractor = userExtractor;
     }
@@ -108,6 +107,7 @@ public class NotificationSendingService {
         cachedNotificationService.save(notificationRecipient);
         cachedNotificationService.resetUnreadCount(user.getUserId());
         emailSendingService.sendEmailForNotification(notificationRecipient);
-        firebaseMessagingService.sendMessage(notificationRecipient);
+        firebaseNotificationSender.sendFirebaseNotification(notificationRecipient);
     }
+
 }

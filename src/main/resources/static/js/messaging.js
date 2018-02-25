@@ -50,7 +50,9 @@
         playSound();
         toastr.info(payload.notification.body, payload.notification.title);
         var countHolder = $('#notification-count');
-        var notificationCount = parseInt(countHolder.text().replace('+', '')) + 1;
+        var notificationCount = parseInt(countHolder.text()) + 1;
+        if (notificationCount === 1)
+            countHolder.attr('hidden', false);
         countHolder.text(notificationCount);
         $('#new-count').text(notificationCount + ' NEW');
         addNotification(payload);

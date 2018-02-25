@@ -7,12 +7,8 @@
     .editor-toolbar.fullscreen, .CodeMirror-fullscreen, .editor-preview-side {
         z-index: 1200
     }
-
-    i.gray {
-        color: #777;
-        margin-bottom: 4px;
-    }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification_manager', subPage='send_notification')" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
     <div class="container">
@@ -70,12 +66,13 @@
 <script>
     (function () {
         new SimpleMDE({
-            element: $("#notification-editor")[0]
+            element: $("#notification-editor")[0],
+            autosave: {
+                enabled: true,
+                uniqueId: 'zhcetNotificationSender'
+            }
         });
-
-        // TODO: Add autosave feature
     }());
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 </body>
 </html>

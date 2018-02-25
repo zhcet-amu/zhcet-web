@@ -32,7 +32,12 @@ public class CachedNotificationService {
         return notificationRecipientRepository.findByRecipientUserIdAndSeen(userId, false, pageRequest);
     }
 
-    @CacheEvict(value = "unread_notifications", key = "#userId")
+    @Cacheable(value = "unread_notification_count", key = "#userId")
+    public long getUnreadNotificationCount(String userId) {
+        return notificationRecipientRepository.countByRecipientUserIdAndSeen(userId, false);
+    }
+
+    @CacheEvict(cacheNames = {"unread_notifications", "unread_notification_count"}, key = "#userId")
     public void markRead(String userId) {
         List<NotificationRecipient> notificationRecipients = notificationRecipientRepository.findByRecipientUserIdAndSeen(userId, false);
         for (NotificationRecipient notificationRecipient : notificationRecipients) {
@@ -42,7 +47,7 @@ public class CachedNotificationService {
         notificationRecipientRepository.saveAll(notificationRecipients);
     }
 
-    @CacheEvict(value = "unread_notifications", key = "#userId")
+    @CacheEvict(cacheNames = {"unread_notifications", "unread_notification_count"}, key = "#userId")
     public void resetUnreadCount(String userId) {
         // Do nothing
     }

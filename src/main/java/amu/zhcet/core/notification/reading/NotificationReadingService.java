@@ -38,9 +38,9 @@ public class NotificationReadingService {
         return cachedNotificationService.getUnreadNotifications(userId).getContent();
     }
 
-    public String getUnreadNotificationCount() {
-        int size = getUnreadNotifications().size();
-        return size + (size >= 10 ? "" : "");
+    public long getUnreadNotificationCount() {
+        String userId = Auditor.getLoggedInUsername();
+        return cachedNotificationService.getUnreadNotificationCount(userId);
     }
 
     public Page<NotificationRecipient> getNotifications(int page) {

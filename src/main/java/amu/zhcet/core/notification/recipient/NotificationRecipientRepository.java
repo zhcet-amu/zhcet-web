@@ -16,4 +16,6 @@ public interface NotificationRecipientRepository extends JpaRepository<Notificat
 
     Page<NotificationRecipient> findByRecipientUserIdAndFavorite(String userId, boolean favorite, Pageable pageable);
 
+    long countByRecipientUserIdAndSeen(String userId, boolean seen);
+
 }
