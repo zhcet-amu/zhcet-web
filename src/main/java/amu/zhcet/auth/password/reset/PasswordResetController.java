@@ -78,7 +78,7 @@ class PasswordResetController {
                     log.warn("Token Verification : Password Reset : {}", tve.getMessage());
                     redirectAttributes.addAttribute("error", tve.getMessage());
                 } catch (PasswordValidationException pve) {
-                    log.info("Password Verification Exception", pve);
+                    log.debug("Password Verification Exception", pve);
                     redirectAttributes.addFlashAttribute("pass_errors", pve.getMessage());
                 }
             }

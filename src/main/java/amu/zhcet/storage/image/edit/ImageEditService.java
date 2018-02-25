@@ -46,10 +46,10 @@ public class ImageEditService {
     private byte[] getNormalizedImage(ImageUpload imageUpload, Integer size) throws IOException {
         BufferedImage image = ImageIO.read(imageUpload.getInputStream());
 
-        log.info("Original Image Size : {}", Utils.humanReadableByteCount(imageUpload.getSize(), true));
+        log.debug("Original Image Size : {}", Utils.humanReadableByteCount(imageUpload.getSize(), true));
 
         if (size != null) {
-            log.info("Resizing image to size : {}", size);
+            log.debug("Resizing image to size : {}", size);
             byte[] resizedImage = generateThumbnail(image, imageUpload.getExtension(), size);
 
             if (resizedImage != null)
@@ -57,20 +57,20 @@ public class ImageEditService {
             else
                 return imageUpload.getBytes();
         } else {
-            log.info("Not resizing image");
+            log.debug("Not resizing image");
             return imageUpload.getBytes();
         }
     }
 
     private byte[] generateThumbnail(BufferedImage image, String format, int pixels) throws IOException {
-        log.info("Original Image Resolution : {}x{}", image.getHeight(), image.getWidth());
+        log.debug("Original Image Resolution : {}x{}", image.getHeight(), image.getWidth());
 
         BufferedImage newImage = null;
         if (Math.max(image.getHeight(), image.getWidth()) > pixels) {
-            log.info("Image larger than {} pixels. Resizing...", pixels);
+            log.debug("Image larger than {} pixels. Resizing...", pixels);
             Scalr.Mode mode = image.getHeight() > image.getWidth() ? Scalr.Mode.FIT_TO_WIDTH : Scalr.Mode.FIT_TO_HEIGHT;
             newImage = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, mode, pixels, pixels);
-            log.info("New Image Resolution : {}x{}", newImage.getHeight(), newImage.getWidth());
+            log.debug("New Image Resolution : {}x{}", newImage.getHeight(), newImage.getWidth());
         }
 
         newImage = crop(newImage, pixels);
@@ -91,9 +91,9 @@ public class ImageEditService {
         float ratio = getRatio(image);
         if (Math.abs(ratio - 1) < 0.2)
             return image;
-        log.info("Image Aspect Ratio {} not within confines... Cropping...", ratio);
+        log.debug("Image Aspect Ratio {} not within confines... Cropping...", ratio);
         pixels = Math.min(pixels, Math.min(image.getHeight(), image.getWidth()));
-        log.info("Cropping image to largest square center crop : {} pixels", pixels);
+        log.debug("Cropping image to largest square center crop : {} pixels", pixels);
         return Scalr.crop(image, (image.getWidth() - pixels) / 2, (image.getHeight() - pixels) / 2, pixels, pixels);
     }
 

@@ -37,7 +37,7 @@ class ResetTokenSender {
     private void sendMail(PasswordResetToken token) {
         User user = token.getUser();
         String relativeUrl = String.format("/login/password/reset?hash=%s&auth=%s", SecurityUtils.getHash(user.getUserId()), token.getToken());
-        log.info("Password reset link generated : {}", relativeUrl);
+        log.debug("Password reset link generated : {}", relativeUrl);
 
         LinkMessage linkMessage = getPayLoad(user, relativeUrl);
         linkMailService.sendEmail(linkMessage, false);

@@ -36,9 +36,9 @@ public class FirebaseStorageService {
         if (!firebaseService.canProceed())
             return CompletableFuture.completedFuture(Optional.empty());
 
-        log.info("Uploading file '{}' of type {}...", path, contentType);
+        log.debug("Uploading file '{}' of type {}...", path, contentType);
         Bucket bucket = firebaseService.getBucket();
-        log.info("Bucket used : " + bucket.getName());
+        log.debug("Bucket used : " + bucket.getName());
         String uuid = UUID.randomUUID().toString();
         log.info("Firebase Download Token : {}", uuid);
         Map<String, String> map = new HashMap<>();
@@ -51,9 +51,9 @@ public class FirebaseStorageService {
                 .build();
         BlobInfo uploaded = bucket.getStorage().create(uploadContent, content);
 
-        log.info("File Uploaded");
-        log.info("Media Link : {}", uploaded.getMediaLink());
-        log.info("Metadata : {}", uploaded.getMetadata().toString());
+        log.debug("File Uploaded");
+        log.debug("Media Link : {}", uploaded.getMediaLink());
+        log.debug("Metadata : {}", uploaded.getMetadata().toString());
 
         String link = String.format("https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media&auth=%s",
                 uploaded.getBucket(), URLEncoder.encode(uploaded.getName(), "UTF-8"), uuid);

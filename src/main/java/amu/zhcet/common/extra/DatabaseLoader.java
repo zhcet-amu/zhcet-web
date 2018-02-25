@@ -11,7 +11,7 @@ public class DatabaseLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info("Running DatabaseLoader");
-        log.info("Currently, no task to run");
+        log.debug("Running DatabaseLoader");
+        log.debug("Currently, no task to run");
     }
 }

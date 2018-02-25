@@ -70,7 +70,7 @@ public class LinkMailService {
 
         if (allowUnSubscribe) {
             String unSubscribeUrl = getUnSubscribeUrl(linkMessage.getRecipientEmail());
-            log.info("Adding Un-Subscribe Link {}", unSubscribeUrl);
+            log.debug("Adding Un-Subscribe Link {}", unSubscribeUrl);
 
             linkMessage.setUnSubscribeUrl(unSubscribeUrl);
         }

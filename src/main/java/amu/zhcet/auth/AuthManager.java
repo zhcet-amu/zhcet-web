@@ -46,7 +46,7 @@ public class AuthManager {
      * @param user User for which the privilege is to be granted
      */
     public void grantChangePasswordPrivilege(User user) {
-        log.info("Granting change password privilege to {}", user);
+        log.debug("Granting change password privilege to {}", user);
         userDetailService.grantPrivilege(user, "PASSWORD_CHANGE_PRIVILEGE");
     }
 

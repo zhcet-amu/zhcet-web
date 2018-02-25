@@ -45,7 +45,7 @@ class PasswordFileService {
         passwordFileRepository.save(passwordFile);
 
         Date expiryDate = Date.from(passwordFile.getExpiryTime().toInstant(OffsetDateTime.now().getOffset()));
-        log.info("Scheduling to delete password file at : {}", expiryDate);
+        log.debug("Scheduling to delete password file at : {}", expiryDate);
         scheduler.schedule(new DeletePasswordFile(passwordFile.getId()), expiryDate);
 
         return passwordFile;

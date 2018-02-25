@@ -4,7 +4,6 @@ import amu.zhcet.common.utils.ConsoleHelper;
 import amu.zhcet.common.utils.Utils;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.Order;
@@ -29,7 +28,6 @@ public class ConfigurationService {
 
     private void updateConfiguration(Configuration configurationModel) {
         configuration = configurationModel;
-        Hibernate.initialize(configuration);
         log.info(ConsoleHelper.green("Static Configuration Set : {}"), configuration);
     }
 

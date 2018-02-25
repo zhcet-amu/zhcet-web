@@ -33,14 +33,14 @@ public class ImageUtils {
 
     public static void checkImageSize(ImageUpload imageUpload) {
         if (imageUpload.getSize() > MAX_FILE_SIZE) {
-            log.info("Image larger than 2 MB : {}", imageUpload.getName());
+            log.debug("Image larger than 2 MB : {}", imageUpload.getName());
             throw new ImageUploadException("File should be smaller than 2 MB");
         }
     }
 
     public static void checkImageFormat(ImageUpload imageUpload) {
         if (isUnallowedType(imageUpload.getName(), false) || isUnallowedType(imageUpload.getContentType(), true)) {
-            log.info("Image should be of valid type : {}", imageUpload.getName());
+            log.debug("Image should be of valid type : {}", imageUpload.getName());
             throw new ImageUploadException("File type must be image, found " + imageUpload.getContentType());
         }
     }

@@ -60,7 +60,7 @@ class FacultyUploadService {
             float duration = (System.nanoTime() - startTime)/1000000f;
             status.setDuration(duration);
             status.setFinished(true);
-            log.info("Saved {} Faculty in {} ms", facultyMembers.size(), duration);
+            log.debug("Saved {} Faculty in {} ms", facultyMembers.size(), duration);
         } catch (Exception exception) {
             log.error("Error while saving faculty", exception);
             status.setMessage(exception.getMessage());

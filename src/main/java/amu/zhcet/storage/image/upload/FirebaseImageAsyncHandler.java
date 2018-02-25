@@ -48,18 +48,18 @@ public class FirebaseImageAsyncHandler {
             return;
         }
 
-        log.info("Saving firebase URL to avatar for user : {}", user.getUsername());
+        log.debug("Saving firebase URL to avatar for user : {}", user.getUsername());
 
         User storedUser = stored.get();
         if (uploadedImage.isThumbnail()) {
-            log.info("Saving link as thumbnail");
+            log.debug("Saving link as thumbnail");
             storedUser.getDetails().setAvatarUrl(url);
         } else {
-            log.info("Saving link as avatar");
+            log.debug("Saving link as avatar");
             storedUser.getDetails().setOriginalAvatarUrl(url);
         }
 
-        log.info("Saving user...");
+        log.debug("Saving user...");
         AuthManager.updateAvatar(user, storedUser.getDetails().getAvatarUrl());
         userService.save(storedUser);
 

@@ -40,7 +40,7 @@ class InChargeManagementService {
                         courseInChargeService::deleteCourseInCharge,
                         sameInCharge -> { /* Do nothing */ },
                         (oldInCharge, newInCharge) -> {
-                            log.info("Changing section of {} to {}", oldInCharge, newInCharge.getSection());
+                            log.debug("Changing section of {} to {}", oldInCharge, newInCharge.getSection());
                             oldInCharge.setSection(newInCharge.getSection());
                             courseInChargeService.saveCourseInCharge(oldInCharge);
                         }

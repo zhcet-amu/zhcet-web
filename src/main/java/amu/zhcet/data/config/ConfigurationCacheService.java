@@ -40,12 +40,12 @@ public class ConfigurationCacheService {
         Configuration saved = getConfig();
 
         if (saved.equals(configuration)) {
-            log.warn("Same configuration saved. Returning...");
+            log.debug("Same configuration saved. Returning...");
             return;
         }
 
         modelMapper.map(configuration, saved);
-        log.info("Saving configuration: {}", saved);
+        log.debug("Saving configuration: {}", saved);
         configurationRepository.save(saved);
     }
 

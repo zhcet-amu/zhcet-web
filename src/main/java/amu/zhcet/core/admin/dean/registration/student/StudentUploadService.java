@@ -51,7 +51,7 @@ class StudentUploadService {
             float duration = (System.nanoTime() - startTime)/1000000f;
             status.setDuration(duration);
             status.setFinished(true);
-            log.info("Saved {} Students in {} ms", students.size(), duration);
+            log.debug("Saved {} Students in {} ms", students.size(), duration);
         } catch (Exception exception) {
             log.error("Error while saving students", exception);
             status.setMessage(exception.getMessage());

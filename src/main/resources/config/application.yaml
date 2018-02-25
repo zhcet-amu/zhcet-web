@@ -58,6 +58,9 @@ server:
 logging:
   file: logs/spring.log
   path: logs/
+  level:
+    root: INFO
+    amu.zhcet: TRACE
 
 # Please don't add any secrets here, create a new file application-secrets.yaml and override these settings there
 # Or see application-dev.yaml or application-prod.yaml and add development or production related settings in

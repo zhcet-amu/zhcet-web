@@ -37,7 +37,7 @@ class AvatarService {
     private static void checkIfUploadingAllowed(User user) {
         ZonedDateTime lastUpdated = user.getDetails().getAvatarUpdated();
         if (lastUpdated != null) {
-            log.info("User {} last updated its avatar at {}", user.getUserId(), lastUpdated.toString());
+            log.debug("User {} last updated its avatar at {}", user.getUserId(), lastUpdated.toString());
 
             long timeElapsed = getElapsedTime(user);
             if (timeElapsed < AVATAR_TIMEOUT_HOURS) {

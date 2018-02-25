@@ -12,7 +12,7 @@ public class MigrationStrategy implements FlywayMigrationStrategy {
 
     @Override
     public void migrate(Flyway flyway) {
-        log.info("Applying migrations...");
+        log.debug("Applying migrations...");
         try {
             flyway.migrate();
         } catch (FlywayException f) {

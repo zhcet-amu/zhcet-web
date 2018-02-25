@@ -90,7 +90,7 @@ class EmailVerificationService {
 
     public void sendMail(VerificationToken token) {
         String relativeUrl = "/login/verify?auth=" + token.getToken();
-        log.info("Verification link generated : {}", relativeUrl);
+        log.debug("Verification link generated : {}", relativeUrl);
 
         linkMailService.sendEmail(getPayLoad(token.getEmail(), token.getUser(), relativeUrl), false);
     }

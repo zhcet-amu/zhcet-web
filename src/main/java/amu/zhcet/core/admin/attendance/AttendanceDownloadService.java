@@ -71,7 +71,7 @@ public class AttendanceDownloadService {
         SortUtils.sortCourseAttendance(courseRegistrations);
         String fileName = fileSystemStorageService.generateFileName(authority + "_" + meta + ".csv");
 
-        log.info("Writing CSV to a file : {}", fileName);
+        log.debug("Writing CSV to a file : {}", fileName);
 
         csvProcessor.writeAll(fileSystemStorageService.load(FileType.CSV, fileName).toFile(),
                 courseRegistrations.stream()
@@ -79,7 +79,7 @@ public class AttendanceDownloadService {
                     .collect(Collectors.toList()), true
         );
 
-        log.info("File Written!");
+        log.debug("File Written!");
 
         return new FileInputStream(fileSystemStorageService.load(FileType.CSV, fileName).toFile());
     }

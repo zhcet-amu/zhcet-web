@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -57,7 +58,7 @@ public class FirebaseAuthenticationProvider implements AuthenticationProvider, M
 
         try {
             FirebaseToken decodedToken = FirebaseService.getToken(token);
-            log.info("User Claims: {}", decodedToken.getClaims());
+            log.debug("User Claims: {}", decodedToken.getClaims());
 
             UserDetails user = retrieveUser(decodedToken);
             if (user == null)
@@ -73,7 +74,7 @@ public class FirebaseAuthenticationProvider implements AuthenticationProvider, M
 
             return createSuccessAuthentication(user, authentication);
         } catch (InterruptedException | ExecutionException e) {
-            log.info("Unable to decode Firebase token");
+            log.warn("Unable to decode Firebase token");
             throwBadCredentialsException();
         } catch (UsernameNotFoundException une) {
             throwBadCredentialsException();
@@ -134,7 +135,7 @@ public class FirebaseAuthenticationProvider implements AuthenticationProvider, M
 
     @Override
     @Autowired(required = false)
-    public void setMessageSource(MessageSource messageSource) {
+    public void setMessageSource(@NonNull MessageSource messageSource) {
         this.messages = new MessageSourceAccessor(messageSource);
     }
 }

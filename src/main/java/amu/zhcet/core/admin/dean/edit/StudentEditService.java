@@ -111,7 +111,7 @@ class StudentEditService {
         if (section == null || section.length() < 3)
             throw new IllegalArgumentException("Section should be of at least 3 characters");
 
-        log.info("Changing sections of {} to {}", enrolments, section);
+        log.debug("Changing sections of {} to {}", enrolments, section);
         studentConsumer(enrolments, student -> student.setSection(section));
     }
 
@@ -121,7 +121,7 @@ class StudentEditService {
         if (status == null || status.length() != 1)
             throw new IllegalArgumentException("Status should be of 1 character");
 
-        log.info("Changing statuses of {} to {}", enrolments, status);
+        log.debug("Changing statuses of {} to {}", enrolments, status);
         studentConsumer(enrolments, student -> student.setStatus(status.charAt(0)));
     }
 }

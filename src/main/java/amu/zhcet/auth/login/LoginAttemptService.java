@@ -39,7 +39,7 @@ public class LoginAttemptService {
         this.configurationService = configurationService;
 
         RemovalListener<String, Integer> removalListener = (key, value, cause) ->
-                log.info("Login Key {} with value {} was removed because : {}",
+                log.debug("Login Key {} with value {} was removed because : {}",
                 key, value, cause);
 
         attemptsCache = Caffeine
@@ -86,7 +86,7 @@ public class LoginAttemptService {
     public void loginAttempt(AuditEvent auditEvent, WebAuthenticationDetails details) {
         String requestUri = (String) auditEvent.getData().get("requestUrl");
         if (requestUri != null) {
-            log.info("Ignoring Access Denied Authentication Failure for URL : {}", requestUri);
+            log.debug("Ignoring Access Denied Authentication Failure for URL : {}", requestUri);
             return;
         }
 
@@ -94,13 +94,13 @@ public class LoginAttemptService {
         if (auditEvent.getType().equals(AuthenticationAuditListener.AUTHENTICATION_FAILURE)) {
             Object type = auditEvent.getData().get("type");
             if (type != null && type.toString().equals(BadCredentialsException.class.getName())) {
-                log.info("Login Failed. Incrementing Attempts");
+                log.debug("Login Failed. Incrementing Attempts");
                 loginFailed(details.getRemoteAddress(), auditEvent.getPrincipal());
             } else if(type != null) {
-                log.info("Login Failed due to {}", type.toString());
+                log.debug("Login Failed due to {}", type.toString());
             }
         } else if (auditEvent.getType().equals(PathAuthorizationAuditListener.SUCCESS)) {
-            log.info("Login Succeeded. Invalidating");
+            log.debug("Login Succeeded. Invalidating");
             loginSucceeded(details.getRemoteAddress(), auditEvent.getPrincipal());
         }
     }
@@ -122,7 +122,7 @@ public class LoginAttemptService {
     private void loginFailed(String ip, String username) {
         String key = getKey(ip, username);
         if (isBlocked(key)) {
-            log.info("IP {} is already blocked, even correct attempts will be marked wrong, hence ignoring", key);
+            log.debug("IP {} is already blocked, even correct attempts will be marked wrong, hence ignoring", key);
             return;
         }
 

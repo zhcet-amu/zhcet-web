@@ -41,17 +41,17 @@ class FirebaseLocator {
         String json = properties.getServiceAccount();
 
         if (json == null) {
-            log.info(filename + " not found in Properties. Trying resources");
+            log.debug(filename + " not found in Properties. Trying resources");
             json = getFromResources(filename);
         }
 
         if (json == null) {
-            log.info(filename + " not found in class resources. Maybe debug build? Trying to load another way");
+            log.debug(filename + " not found in class resources. Maybe debug build? Trying to load another way");
             json = getFromClassLoader(filename);
         }
 
         if (json == null) {
-            log.info(filename + " not found in class loader resource as well... Using last resort...");
+            log.debug(filename + " not found in class loader resource as well... Using last resort...");
             json = getFromEnvironment();
         }
 

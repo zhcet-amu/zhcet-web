@@ -106,7 +106,7 @@ public class FirebaseAccountMergeService {
         }
 
         if (user.isEmailVerified() && user.getEmail() != null && !user.getEmail().equals(token.getEmail())) {
-            log.info("User email is already verified, skipping mail merge");
+            log.debug("User email is already verified, skipping mail merge");
             return;
         }
 

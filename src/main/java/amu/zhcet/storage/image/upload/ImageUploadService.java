@@ -69,13 +69,13 @@ public class ImageUploadService {
 
     private void uploadToCloud(UserAuth user, Image avatarImage, UploadedImage uploadedAvatar) {
         // Save user information in database
-        log.info("Saving user info with uploaded image");
+        log.debug("Saving user info with uploaded image");
         uploadedAvatar.setUser(user.getUsername());
         fileImageUploadService.save(uploadedAvatar);
         // Send to cloud
         log.info("Sending to firebase...");
         firebaseImageAsyncHandler.handleUploadedImage(user, avatarImage, uploadedAvatar);
-        log.info("Sent");
+        log.debug("Sent");
     }
 
 }
