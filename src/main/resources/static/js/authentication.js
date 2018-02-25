@@ -144,6 +144,8 @@ var Authentication = (function ($, App, firebase) {
      */
     function auth() {
         function signOut() {
+            // Clear the FCM token
+            window.localStorage.removeItem('fcmTokenSentToServer');
             return firebase.auth().signOut();
         }
 

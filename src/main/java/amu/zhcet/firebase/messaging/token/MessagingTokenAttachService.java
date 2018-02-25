@@ -28,6 +28,11 @@ class MessagingTokenAttachService {
             return;
 
         userService.findById(userId).ifPresent(user -> {
+            if (token.equals(user.getDetails().getFcmToken())) {
+                log.debug("FCM token {} unchanged for user {}", token, user.getUserId());
+                return;
+            }
+
             user.getDetails().setFcmToken(token);
             log.info("Added FCM token {} to user : {}", token, user.getUserId());
             userService.save(user);
