@@ -1,8 +1,8 @@
-package amu.zhcet.core.shared.attendance.download;
+package amu.zhcet.core.admin.attendance;
 
 import amu.zhcet.common.utils.SortUtils;
 import amu.zhcet.data.attendance.Attendance;
-import amu.zhcet.data.attendance.AttendanceUpload;
+import amu.zhcet.core.admin.faculty.attendance.upload.AttendanceUpload;
 import amu.zhcet.data.config.ConfigurationService;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.storage.FileSystemStorageService;

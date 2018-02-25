@@ -1,6 +1,6 @@
 package amu.zhcet.common.utils;
 
-import amu.zhcet.data.attendance.AttendanceUpload;
+import amu.zhcet.core.admin.faculty.attendance.upload.AttendanceUpload;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;

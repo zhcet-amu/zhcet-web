@@ -1,6 +1,5 @@
 package amu.zhcet.core.admin.faculty.attendance.upload;
 
-import amu.zhcet.data.attendance.AttendanceUpload;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import lombok.Data;
 import org.springframework.util.Assert;

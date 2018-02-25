@@ -1,6 +1,6 @@
 package amu.zhcet.common.utils;
 
-import amu.zhcet.data.attendance.AttendanceUpload;
+import amu.zhcet.core.admin.faculty.attendance.upload.AttendanceUpload;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.user.student.Student;
 import org.junit.Test;

@@ -1,6 +1,5 @@
 package amu.zhcet.core.admin.faculty.attendance.upload;
 
-import amu.zhcet.data.attendance.AttendanceUpload;
 import amu.zhcet.data.course.incharge.CourseInCharge;
 import amu.zhcet.data.course.incharge.CourseInChargeService;
 import amu.zhcet.data.course.registration.CourseRegistration;
@@ -27,7 +26,6 @@ class AttendanceUploadAdapter {
         this.courseInChargeService = courseInChargeService;
         this.uploadService = uploadService;
     }
-
 
     UploadResult<AttendanceUpload> fileToUpload(MultipartFile file) throws IOException {
         return uploadService.handleUpload(AttendanceUpload.class, file);

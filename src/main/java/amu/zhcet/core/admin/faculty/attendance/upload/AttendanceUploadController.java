@@ -1,7 +1,6 @@
 package amu.zhcet.core.admin.faculty.attendance.upload;
 
 import amu.zhcet.common.utils.SortUtils;
-import amu.zhcet.data.attendance.AttendanceUpload;
 import amu.zhcet.data.course.incharge.CourseInCharge;
 import amu.zhcet.data.course.incharge.CourseInChargeNotFoundException;
 import amu.zhcet.data.course.incharge.CourseInChargeService;

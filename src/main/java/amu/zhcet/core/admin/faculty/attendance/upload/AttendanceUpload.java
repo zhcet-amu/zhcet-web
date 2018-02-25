@@ -1,4 +1,4 @@
-package amu.zhcet.data.attendance;
+package amu.zhcet.core.admin.faculty.attendance.upload;
 
 import amu.zhcet.common.model.Meta;
 import com.j256.simplecsv.common.CsvColumn;

@@ -1,4 +1,4 @@
-package amu.zhcet.core.shared.course.registration.upload;
+package amu.zhcet.data.course.registration.upload;
 
 import com.j256.simplecsv.common.CsvColumn;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package amu.zhcet.core.shared.attendance.download;
+package amu.zhcet.core.admin.attendance;
 
 import amu.zhcet.common.utils.StringUtils;
 import amu.zhcet.core.error.ErrorUtils;

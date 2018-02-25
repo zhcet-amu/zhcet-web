@@ -1,4 +1,4 @@
-package amu.zhcet.core.shared.course.registration.upload;
+package amu.zhcet.data.course.registration.upload;
 
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.registration.CourseRegistration;

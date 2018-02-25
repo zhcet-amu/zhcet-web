@@ -2,17 +2,14 @@ package amu.zhcet.firebase.auth.link;
 
 import amu.zhcet.auth.AuthManager;
 import amu.zhcet.auth.UserAuth;
-import amu.zhcet.core.notification.ChannelType;
-import amu.zhcet.core.notification.Notification;
-import amu.zhcet.core.notification.sending.NotificationSendingService;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
-import amu.zhcet.data.user.UserType;
 import amu.zhcet.firebase.FirebaseService;
 import com.google.common.base.Strings;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +22,13 @@ public class FirebaseAccountMergeService {
 
     private final FirebaseService firebaseService;
     private final UserService userService;
-    private final NotificationSendingService notificationSendingService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    FirebaseAccountMergeService(FirebaseService firebaseService, UserService userService, NotificationSendingService notificationSendingService) {
+    FirebaseAccountMergeService(FirebaseService firebaseService, UserService userService, ApplicationEventPublisher eventPublisher) {
         this.firebaseService = firebaseService;
         this.userService = userService;
-        this.notificationSendingService = notificationSendingService;
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -102,7 +99,8 @@ public class FirebaseAccountMergeService {
                 userService.findById(duplicateUser.getUserId()).ifPresent(dupe -> {
                     log.info("Cleared email info from duplicate user, {}", dupe.getEmail());
                 });
-                sendEmailChangeNotification(duplicateUser, user, token.getEmail());
+
+                eventPublisher.publishEvent(new DuplicateEmailEvent(user, duplicateUser, token.getEmail()));
             }
 
         }
@@ -119,24 +117,6 @@ public class FirebaseAccountMergeService {
             user.setEmail(token.getEmail());
             user.setEmailVerified(false);
         }
-    }
-
-    private void sendEmailChangeNotification(User recipient, User claimant, String email) {
-        Notification notification = Notification.builder()
-                .automated(true)
-                .channelType(fromUser(recipient))
-                .recipientChannel(recipient.getUserId())
-                .sender(claimant)
-                .title("Email Claimed")
-                .message(String.format("Your previously set email **%s** is now claimed by `%s` *(%s)*.\n" +
-                        "Please change it or claim it back by verifying it", email, claimant.getName(), claimant.getUserId()))
-                .build();
-
-        notificationSendingService.sendNotification(notification);
-    }
-
-    private ChannelType fromUser(User user) {
-        return user.getType() == UserType.STUDENT ? ChannelType.STUDENT : ChannelType.FACULTY;
     }
 
 }
