@@ -31,6 +31,19 @@ table td {
     margin: 0;
 }
 
+.border-rounded-15 {
+    border-radius: 15px;
+}
+
+.email-status {
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.email-status > i {
+    padding-bottom: 2px;
+}
+
 .capsule {
     background-color: #ddd;
     border-radius: 1.8rem;
@@ -254,6 +267,9 @@ small > blockquote {
 
 i.gray {
     color: #777;
+}
+
+.margin-b-small {
     margin-bottom: 4px;
 }
 

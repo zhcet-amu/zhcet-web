@@ -1,0 +1,90 @@
+<div xmlns:th="http://www.thymeleaf.org" class="row">
+    <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
+    <div class="col-xs-12">
+        <div class="text-bold-700">Email</div>
+        <hr>
+    </div>
+    <div class="col-xs-12 col-lg-8">
+        <form class="form-horizontal form-simple" action="#"
+              th:action="@{/profile/email/register}" method="post">
+            <div class="row">
+                <div class="col-xs-12 col-lg-6">
+                    <fieldset class="form-group controls position-relative has-icon-left mb-0">
+                        <input type="email" class="form-control" name="email"
+                               id="email" placeholder="Email" th:value="${user.email}" required/>
+                        <div class="form-control-position">
+                            <i class="material-icons margin-b-small">mail_outline</i>
+                        </div>
+                        <p class="help-block"></p>
+                    </fieldset>
+                </div>
+                <div class="col-xs-12 col-lg-4">
+                    <button id="submit" type="submit" class="btn btn-primary" th:text="${user.email != null ? 'Change' : 'Register'}"></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div th:replace="fragments/flash :: success(condition = ${email_success}, message = ${email_success})"></div>
+                    <div th:replace="fragments/flash :: error(condition = ${email_error}, error = ${email_error})"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-xs-12">
+        <div th:if="${user.email}">
+                <span th:class="|email-status ${user.emailVerified ? 'alert-success' : 'alert-warning'}|">
+                    <span th:text="${user.emailVerified ? 'Verified' : 'Pending Verification'}"></span>
+                    <i class="material-icons md-18" th:text="${user.emailVerified ? 'verified_user' : 'info'}">done</i>
+                </span>
+            <div th:if="${user.emailVerified}" class="row">
+                <div class="col-xs-12">
+                    <span style="font-size: 16px" th:text="|Email ${user.emailUnsubscribed ? 'Unsubscribed' : 'Subscribed'}|"></span>
+                    <button th:class="|ml-1 mui-btn mui-btn--fab mui-btn--small mui-btn--${user.emailUnsubscribed ? 'primary' : 'danger'}|"
+                            data-toggle="modal" data-target="#unsubscribe">
+                        <i class="material-icons" th:text="${user.emailUnsubscribed ? 'done' : 'close'}" style="margin: -10px"></i>
+                    </button>
+                    <div class="modal fade text-xs-left" id="unsubscribe" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div th:class="|modal-header bg-${user.emailUnsubscribed ? 'success' : 'danger'} white|">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title" th:text="|${user.emailUnsubscribed ? 'Subscribe' : 'Unsubscribe'} Email|">Unsubscribe Email</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div th:class="|alert alert-${user.emailUnsubscribed ? 'success' : 'danger'}|" role="alert">
+                                        <p th:if="${user.emailUnsubscribed}"><span class="text-bold-600">Great!</span> You'll receive alerts or notice like update of attendance in email!</p>
+                                        <p th:unless="${user.emailUnsubscribed}"><span class="text-bold-600">Beware!</span> Any alerts or notice like update of attendance won't be sent as email!</p>
+                                    </div>
+                                    <p>If you wish to continue, please click the button below</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+                                    <a th:href="@{/profile/email/unsubscribe(unsubscribe=${!user.emailUnsubscribed})}">
+                                        <button type="button" th:class="|btn btn-outline-${user.emailUnsubscribed ? 'success' : 'danger'}|"
+                                                th:text="|${user.emailUnsubscribed ? 'S' : 'Uns' }ubscribe|">Unsubscribe</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div th:unless="${user.emailVerified}" style="display: inline">
+                <form th:action="@{/profile/email/resend_link}" method="post" style="display: inline">
+                    <button type="submit" class="btn btn-round btn-outline-warning ml-1" data-toggle="tooltip" data-original-title="Resend Verification Link">
+                        <i class="material-icons">link</i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div th:unless="${user.email}">
+            <span class="email-status alert-danger">
+                <span>Email Not Registered</span>
+                <i class="material-icons md-18">info</i>
+            </span>
+        </div>
+    </div>
+</div>

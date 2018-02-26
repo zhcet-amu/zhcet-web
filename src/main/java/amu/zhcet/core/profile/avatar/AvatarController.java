@@ -35,7 +35,7 @@ public class AvatarController {
             redirectAttributes.addFlashAttribute("flash_messages", Flash.error("Failed to upload avatar"));
         }
 
-        return "redirect:/profile";
+        return "redirect:/profile/settings";
     }
 
 }

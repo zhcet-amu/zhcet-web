@@ -11,8 +11,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 @Data
 @Entity
@@ -45,7 +45,7 @@ public class UserDetail extends BaseEntity {
     private Gender gender;
     @Past
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dob;
+    private LocalDate dob;
 
     private ZonedDateTime avatarUpdated;
 

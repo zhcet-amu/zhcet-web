@@ -2,18 +2,16 @@ package amu.zhcet.auth.verification;
 
 import amu.zhcet.common.utils.Utils;
 import amu.zhcet.data.user.User;
-import amu.zhcet.data.user.UserNotFoundException;
 import amu.zhcet.data.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Controller
@@ -32,29 +30,36 @@ public class EmailVerificationController {
         try {
             VerificationToken token = emailVerificationService.generate(email);
             emailVerificationService.sendMail(token);
-            redirectAttributes.addFlashAttribute("link_sent", "Verification link sent to '" + email + "'!");
+            redirectAttributes.addFlashAttribute("email_success", "Verification link sent to '" + email + "'!");
         } catch (DuplicateEmailException de) {
             log.warn("Duplicate Email", de);
-            redirectAttributes.addFlashAttribute("duplicate_email", de.getMessage());
+            redirectAttributes.addFlashAttribute("email_error", de.getMessage());
+        } catch (RuntimeException re) {
+            log.warn("Error sending verification link", re);
+            redirectAttributes.addFlashAttribute("email_error", re.getMessage());
         }
     }
 
-    @PostMapping("/profile/register_email")
+    @PostMapping("/profile/email/register")
     public String registerEmail(RedirectAttributes redirectAttributes, @RequestParam String email) {
-        if (Utils.isValidEmail(email)) {
+        User user = userService.getLoggedInUser().orElseThrow(() -> new AccessDeniedException("403"));
+
+        if (user.getEmail() != null && user.getEmail().equals(email)) {
+            redirectAttributes.addFlashAttribute("email_error", "New email is same as previous one");
+        } else if (Utils.isValidEmail(email)) {
             sendVerificationLink(email, redirectAttributes);
         } else {
             log.warn("Invalid Email", email);
             redirectAttributes.addFlashAttribute("email", email);
-            redirectAttributes.addFlashAttribute("invalid_email", "The provided email is invalid!");
+            redirectAttributes.addFlashAttribute("email_error", "The provided email is invalid!");
         }
 
-        return "redirect:/profile";
+        return "redirect:/profile/settings#account";
     }
 
-    @PostMapping("/profile/confirm_email")
-    public String registerEmail(RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        User user = userService.getLoggedInUser().orElseThrow(UserNotFoundException::new);
+    @PostMapping("/profile/email/resend_link")
+    public String registerEmail(RedirectAttributes redirectAttributes) {
+        User user = userService.getLoggedInUser().orElseThrow(() -> new AccessDeniedException("403"));
 
         String email = user.getEmail();
 
@@ -62,13 +67,13 @@ public class EmailVerificationController {
             sendVerificationLink(email, redirectAttributes);
         } else {
             log.warn("Invalid Email", email);
-            redirectAttributes.addFlashAttribute("invalid_email", "The provided email is invalid!");
+            redirectAttributes.addFlashAttribute("email_error", "The provided email is invalid!");
         }
 
-        return "redirect:/profile";
+        return "redirect:/profile/settings#account";
     }
 
-    @GetMapping("/login/verify")
+    @GetMapping("/login/email/verify")
     public String resetPassword(Model model, @RequestParam("auth") String token){
         String result = emailVerificationService.validate(token);
         if (result != null) {

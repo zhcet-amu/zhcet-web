@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head"></head>
+<style>
+    .list-group-item > i {
+        margin-bottom: 3px;
+    }
+</style>
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'profile')" sec:authorize="isAuthenticated()">
+    <!--/*@thymesVar id="student" type="amu.zhcet.data.user.student.Student"*/-->
+    <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
+
+    <div class="container" th:with="hide_warnings = true">
+        <div th:replace="fragments/toolbar"></div>
+        <div class="row">
+            <div class="col-xs-12 col-md-4 col-lg-3">
+                <div class="list-group" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action" id="profile-tab" data-toggle="list" href="#profile" role="tab" aria-controls="profile">
+                        <i class="material-icons">account_circle</i> Profile
+                    </a>
+                    <a class="list-group-item list-group-item-action" id="account-tab" data-toggle="list" href="#account" role="tab" aria-controls="home">
+                        <i class="material-icons">verified_user</i> Account
+                    </a>
+                    <a class="list-group-item list-group-item-action" id="security-tab" data-toggle="list" href="#security" role="tab" aria-controls="messages">
+                        <i class="material-icons">security</i> Security
+                    </a>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-8 col-lg-9">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="list-profile-list">
+                        <div class="mui-panel">
+                            <h4>Public Profile</h4>
+                            <hr>
+                            <div th:replace="user/fragments/profile_form"></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="account" role="tabpanel" aria-labelledby="list-home-list">
+                        <div class="mui-panel">
+                            <h4>Account Details</h4>
+                            <hr>
+                            <div th:replace="user/fragments/account"></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="list-messages-list">...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/file-uploader.js}"></script>
+<div th:replace="fragments/scripts :: firebase_auth"></div>
+<script th:src="@{/js/authentication.js}"></script>
+<script th:src="@{/js/vendor/jqBootstrapValidation.min.js}"></script>
+<script>
+    $('.file-uploader').initUpload({
+        fileTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'],
+        error: function (message) {
+            toastr.error(message);
+        }
+    });
+
+    Authentication.auth.init();
+
+    // Tab Selection
+
+    $('#list-tab a').on('click', function () {
+        $('.list-group-item').removeClass('active');
+        $(this).addClass('active');
+        $(this).tab('show');
+    });
+
+    function hashChange() {
+        var hash = window.location.hash;
+        if (!hash) {
+            hash = '#profile';
+        }
+
+        $(hash + '-tab').click();
+    }
+
+    window.onhashchange = hashChange;
+    hashChange();
+
+    // Validation
+    $("input,select,textarea").not("[type=submit]").jqBootstrapValidation();
+</script>
+<script th:src="@{/js/link-account.js}"></script>
+</body>
+</html>

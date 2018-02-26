@@ -88,4 +88,15 @@ public class ViewService {
                 .collect(Collectors.toList());
     }
 
+    public String getStatus(char status) {
+        switch (status) {
+            case 'G':
+                return "Graduated";
+            case 'N':
+                return "Name Removed";
+            default:
+                return "Active";
+        }
+    }
+
 }

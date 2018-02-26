@@ -42,13 +42,7 @@ public class ProfileController {
         User user = userService.getLoggedInUser().orElseThrow(() -> new AccessDeniedException("403"));
         model.addAttribute("user", user);
 
-        if (!model.containsAttribute("user_details"))
-            model.addAttribute("user_details", user.getDetails());
-
         model.addAttribute("page_title", "Profile");
-        model.addAttribute("page_subtitle", "Profile Settings for " + user.getName());
-        model.addAttribute("page_description", "Manage Profile Details and Information");
-        model.addAttribute("genders", Gender.values());
 
         if (user.getType().equals(UserType.STUDENT)) {
             studentService.getLoggedInStudent().ifPresent(student -> model.addAttribute("student", student));
@@ -57,6 +51,27 @@ public class ProfileController {
         }
 
         return "user/profile";
+    }
+
+    @GetMapping("/settings")
+    public String profileSettings(Model model) {
+        User user = userService.getLoggedInUser().orElseThrow(() -> new AccessDeniedException("403"));
+        model.addAttribute("user", user);
+
+        if (!model.containsAttribute("user_details"))
+            model.addAttribute("user_details", user.getDetails());
+
+        model.addAttribute("page_title", "Profile Settings");
+        model.addAttribute("page_subtitle", "Profile Settings for " + user.getName());
+        model.addAttribute("page_description", "Manage Profile Details and Account");
+        model.addAttribute("genders", Gender.values());
+
+        if (user.getType().equals(UserType.STUDENT)) {
+            studentService.getLoggedInStudent().ifPresent(student -> model.addAttribute("student", student));
+        } else {
+            facultyService.getLoggedInMember().ifPresent(facultyMember -> model.addAttribute("faculty", facultyMember));
+        }
+        return "user/edit_profile";
     }
 
     @PostMapping("/details")
@@ -70,7 +85,7 @@ public class ProfileController {
             redirectAttributes.addFlashAttribute("success", true);
         }
 
-        return "redirect:/profile";
+        return "redirect:/profile/settings";
     }
 
 }

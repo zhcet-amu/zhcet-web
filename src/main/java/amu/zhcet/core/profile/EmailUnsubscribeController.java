@@ -33,11 +33,11 @@ public class EmailUnsubscribeController {
         return "Unsubscribed";
     }
 
-    @GetMapping("/profile/email")
+    @GetMapping("/profile/email/unsubscribe")
     public String unsubscribeEmail(@RequestParam(required = false) Boolean unsubscribe) {
         User user = userService.getLoggedInUser().orElseThrow(() -> new AccessDeniedException("403"));
         userService.unsubscribeEmail(user, unsubscribe != null && unsubscribe);
-        return "redirect:/profile";
+        return "redirect:/profile/settings#account";
     }
 
 }

@@ -1,0 +1,29 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
+
+    <div th:replace="user/fragments/account_email"></div>
+    <div class="row mt-1" th:if="${user.emailVerified}">
+        <div class="col-xs-12">
+            <div class="text-bold-700">Password</div>
+            <hr>
+        </div>
+        <div class="col-xs-12">
+            <a class="mui-btn mui-btn--raised mui-btn--danger" th:href="@{/profile/password/change}">Change Password</a>
+            <div th:if="${@authService.isFullyAuthenticated(user)}">
+                <small><i class="material-icons gray margin-b-small md-18">info_outline</i> Forgot Password? Reset it <a th:href="@{/login/password/forgot}">here</a></small>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-1" th:if="${@authService.isFullyAuthenticated(user)}">
+        <div class="col-xs-12">
+            <div class="text-bold-700">Social Accounts</div>
+            <hr>
+        </div>
+        <div class="col-xs-12">
+            <button id="link-google" class="btn btn-round btn-info" style="display: none">Link Google Account</button>
+            <div id="loader" class="md-progress" style="visibility: hidden">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+    </div>
+</div>

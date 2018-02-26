@@ -2,6 +2,7 @@ package amu.zhcet.auth.password.change;
 
 import amu.zhcet.auth.password.PasswordValidationException;
 import amu.zhcet.auth.password.PasswordChange;
+import amu.zhcet.common.flash.Flash;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserNotFoundException;
 import amu.zhcet.data.user.UserService;
@@ -64,8 +65,8 @@ class PasswordChangeController {
         } else  {
             try {
                 passwordChangeService.changePassword(user, passwordChange);
-                redirectAttributes.addFlashAttribute("password_change_success", "Password was changed successfully");
-                return "redirect:/profile";
+                redirectAttributes.addFlashAttribute("flash_messages", Flash.success("Password was changed successfully"));
+                return "redirect:/profile/settings#account";
             } catch (PasswordValidationException pve) {
                 redirectAttributes.addFlashAttribute("pass_errors", pve.getMessage());
             }
