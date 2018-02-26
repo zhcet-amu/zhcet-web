@@ -37,10 +37,11 @@ spring:
 management:
   endpoints:
     web:
-      expose: '*'
+      exposure:
+        include: '*'
   endpoint:
     health:
-      show-details: true
+      show-details: when_authorized
 
 server:
   http2:
