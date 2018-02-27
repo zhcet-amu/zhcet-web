@@ -113,6 +113,12 @@ table td {
     padding: 3px;
 }
 
+.info-box {
+    background-color: #FFF9C4;
+    border-radius: 3px;
+    color: rgba(0, 0, 0, .7);
+}
+
 .align-middle, .material-icons {
     vertical-align: middle;
 }

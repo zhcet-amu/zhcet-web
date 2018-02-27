@@ -4,7 +4,6 @@ import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
 import amu.zhcet.security.permission.PermissionManager;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -67,10 +66,6 @@ public class UserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = getUser(username);
-
-        // Since we are using lazy properties, we have to initialize Department
-        // So that the proxy object is replaced by its actual implementation
-        Hibernate.initialize(user.getDepartment());
 
         Collection<GrantedAuthority> authorities = getAuthorities(user);
         return new UserAuth(user, authorities);

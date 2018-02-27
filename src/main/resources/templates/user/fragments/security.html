@@ -1,0 +1,98 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
+
+    <div th:fragment="content" class="row">
+        <div class="col-xs-12">
+            <div class="text-bold-700">Two Factor Authentication</div>
+            <hr>
+        </div>
+        <div class="col-xs-12">
+            <small class="flex-center info-box">
+                <i class="material-icons md-18">lightbulb_outline</i> Two Factor Authentication adds an extra layer of security
+                by requiring a One Time Password on each login.
+            </small>
+            <div class="text-xs-center">
+                <button id="instruction-toggle" class="mui-btn mui-btn--raised text-info mt-1">Show Instructions</button>
+            </div>
+            <div id="extra-info" class="mt-1" style="display: none">
+                <small class="flex-center info-box">
+                    <i class="material-icons md-18">info_outline</i> Instead of the traditional way of sending SMS, this OTP is self changing
+                    and generates on your mobile device using apps like Google Authenticator
+                </small>
+                <div class="mt-1" style="font-size: 90%">
+                    Please follow the steps:
+                    <ul>
+                        <li>
+                            First, you'll need to install one of the authenticator apps like <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Google Authenticator</a>
+                            or <a href="https://authy.com/" target="_blank">Authy</a>
+                        </li>
+                        <li>
+                            Click on <code>Enable</code> below
+                        </li>
+                        <li>
+                            You'll be taken to a screen with a QR Code, scan it in the application. (Preferred) <br>
+                            <code>OR</code> <br>
+                            Manually enter the secret in the app along with the details of the account and site (Discouraged)
+                        </li>
+                        <li>
+                            Enter the <code>6 digit code</code> shown in the app and click save. <br>
+                            <strong>Note: </strong>
+                            The two factor auth will not be enabled until successfully entering the six digit code from the app.
+                            <br>
+                            If the page gets reloaded and the QR code changes, you will have to re-scan it and enter the new code
+                        </li>
+                        <li>Two Factor Authentication will be enabled!</li>
+                    </ul>
+
+                    If you wish to know more instead of following the steps below, you can read the working of
+                    <a href="https://support.google.com/accounts/answer/1066447?hl=en" target="_blank">Google Authenticator</a>
+                </div>
+            </div>
+            <div th:if="${user.using2fa}" class="mt-1">
+                <form th:action="@{/profile/2fa/disable}" method="post">
+                    <button type="submit" class="mui-btn mui-btn--raised mui-btn--danger">Disable 2FA</button>
+                </form>
+                <small class="flex-center info-box">
+                    <i class="material-icons md-18">lightbulb_outline</i> Lost the old secret? Just disable 2FA and re-enable
+                </small>
+            </div>
+            <div th:unless="${user.using2fa}">
+                <div th:if="${user.totpSecret != null}">
+                    <small class="flex-center info-box">
+                        <i class="material-icons md-18">info_outline</i> Your last scanned secret is still stored with us.
+                        Would you like to just retain the previous secret or create a new one?
+                    </small>
+                    <small class="flex-center info-box">
+                        <i class="material-icons md-18">lightbulb_outline</i> If you choose to just enable the authentication,
+                        you will need to have the previous secret with you. We recommend creating a new one
+                    </small>
+                    <small class="flex-center info-box">
+                        <i class="material-icons md-18">warning</i> Once you create a new secret, old secret will stop working, so please use caution
+                    </small>
+                </div>
+                <form th:action="@{/profile/2fa/enable}" method="post" class="mt-1">
+                    <div class="form-group" th:if="${user.totpSecret != null}">
+                        <label for="retain">Retain Previous Secret</label>&nbsp;
+                        <input type="checkbox" id="retain" data-color="primary" name="retain" class="switchery">
+                    </div>
+                    <button class="mui-btn mui-btn--raised mui-btn--primary">Enable 2FA</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script th:fragment="script">
+        (function () {
+            var instructionsPanel = $('#extra-info');
+            var toggleButton = $('#instruction-toggle');
+            toggleButton.on('click', function () {
+                if (instructionsPanel.css('display') === 'none') {
+                    toggleButton.text('Hide Instructions');
+                    instructionsPanel.show();
+                } else {
+                    toggleButton.text('Show Instructions');
+                    instructionsPanel.hide();
+                }
+            });
+        }());
+    </script>
+</div>

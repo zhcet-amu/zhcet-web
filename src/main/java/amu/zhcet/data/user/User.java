@@ -40,7 +40,7 @@ public class User extends BaseEntity {
     private String name;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Department department;
 
     private boolean enabled = true;

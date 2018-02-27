@@ -134,7 +134,7 @@ public class LoginAttemptService {
                 String tries = String.format("%d out of %d tries left!", triesLeft(key), getMaxRetries());
                 String coolDown = "IP will be blocked for " + coolDownPeriod + " after all tries are exhausted";
 
-                String errorMessage = ((BadCredentialsException) exception).getMessage();
+                String errorMessage = extractMessage((BadCredentialsException) exception, message);
 
                 // If the error is about OTP, tell frontend that OTP is required
                 if (errorMessage.toLowerCase().contains("otp")) {
@@ -148,6 +148,14 @@ public class LoginAttemptService {
         }
 
         model.addAttribute("login_error", message);
+    }
+
+    private String extractMessage(BadCredentialsException exception, String defaultMessage) {
+        String message = exception.getMessage();
+
+        if (message.toLowerCase().contains("bad credentials"))
+            return defaultMessage;
+        return message;
     }
 
     @Data

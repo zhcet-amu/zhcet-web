@@ -1,6 +1,61 @@
-<img th:src="${qr_url}" alt="">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head(page_title = 'QR Code')"></head>
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
-<form th:action="@{/profile/2fa/enable}" method="post">
-    <input type="text" name="code">
-    <button type="submit">Submit</button>
-</form>
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'profile')" sec:authorize="isAuthenticated()">
+    <!--/*@thymesVar id="student" type="amu.zhcet.data.user.student.Student"*/-->
+    <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
+
+    <div class="container">
+        <div th:replace="fragments/toolbar"></div>
+        <div class="mui-panel text-xs-center">
+            <h3>Scan QR Code</h3>
+            <hr>
+            <img th:src="${secret.qrUrl}" alt="QR Code">
+
+            <div class="row">
+                <div class="col-xs-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-1">
+                    <p>Scan the QR code through the app (recommended) <code>or</code> enter
+                        <a href="#" data-toggle="modal" data-target="#secretModal">this</a> secret manually,
+                        and enter the 6 digit code displayed in the app below</p>
+                    <small class="flex-center info-box m-1">
+                        <i class="material-icons md-18">info_outline</i> Reloading the page will change the QR code, requiring you to rescan it
+                    </small>
+
+                    <form th:action="@{/profile/2fa/confirm}" method="post">
+                        <input type="text" name="secret" th:value="${secret.secret}" hidden>
+                        <fieldset class="input-group">
+                            <input placeholder="Code" class="form-control" type="number" name="code" required>
+                        </fieldset>
+                        <br>
+                        <a th:href="@{/profile/settings#security}" class="btn btn-secondary">Cancel</a>
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="modal fade" id="secretModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">OTP Secret</h5>
+                        </div>
+                        <div class="modal-body">
+                            <code th:text="${secret.secret}"></code>
+                            <p>Please enter the above code carefully in the authenticator app</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
