@@ -19,6 +19,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -56,31 +57,6 @@ public class LoginAttemptService {
 
     private int getBlockDuration() {
         return configurationService.getConfigCache().getBlockDuration();
-    }
-
-    public String getErrorMessage(HttpServletRequest request) {
-        String defaultMessage = "Username or Password is incorrect!";
-
-        Object exception = request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-        Object rawUsername = request.getSession().getAttribute(UsernameAuthenticationFailureHandler.USERNAME);
-        if (exception == null)
-            return defaultMessage;
-
-        String ip = Utils.getClientIP(request);
-        String coolDownPeriod = getBlockDuration() + " " + LoginAttemptService.TIME_UNIT;
-        if(exception instanceof LockedException || isBlocked(ip)) {
-            return "IP blocked for <strong>" + coolDownPeriod + "</strong> since last wrong login attempt";
-        } else if (exception instanceof BadCredentialsException && rawUsername instanceof String) {
-            String username = (String) rawUsername;
-            String key = getKey(ip, username);
-            String tries = String.format("%d out of %d tries left!" , triesLeft(key), getMaxRetries());
-            String message = "IP will be blocked for " + coolDownPeriod + " after all tries are exhausted";
-            return defaultMessage + "<br><strong>" + tries  + "</strong> " + message;
-        } else if (exception instanceof DisabledException) {
-            return "User is disabled from site";
-        }
-
-        return defaultMessage;
     }
 
     public void loginAttempt(AuditEvent auditEvent, WebAuthenticationDetails details) {
@@ -137,6 +113,41 @@ public class LoginAttemptService {
 
     private int triesLeft(String key) {
         return getMaxRetries() - getFromCache(key);
+    }
+
+    public void addErrors(Model model, HttpServletRequest request) {
+        String message = "Username or Password is incorrect!";
+
+        Object exception = request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+        Object rawUsername = request.getSession().getAttribute(UsernameAuthenticationFailureHandler.USERNAME);
+
+        // If exception is null, show default message
+        if (exception != null) {
+            String ip = Utils.getClientIP(request);
+            String coolDownPeriod = getBlockDuration() + " " + LoginAttemptService.TIME_UNIT;
+
+            if (exception instanceof LockedException || isBlocked(ip)) {
+                message = "IP blocked for <strong>" + coolDownPeriod + "</strong> since last wrong login attempt";
+            } else if (exception instanceof BadCredentialsException && rawUsername instanceof String) {
+                String username = (String) rawUsername;
+                String key = getKey(ip, username);
+                String tries = String.format("%d out of %d tries left!", triesLeft(key), getMaxRetries());
+                String coolDown = "IP will be blocked for " + coolDownPeriod + " after all tries are exhausted";
+
+                String errorMessage = ((BadCredentialsException) exception).getMessage();
+
+                // If the error is about OTP, tell frontend that OTP is required
+                if (errorMessage.toLowerCase().contains("otp")) {
+                    model.addAttribute("otp_required", true);
+                }
+
+                message = errorMessage + "<br><strong>" + tries + "</strong> " + coolDown;
+            } else if (exception instanceof DisabledException) {
+                message = "User is disabled from site";
+            }
+        }
+
+        model.addAttribute("login_error", message);
     }
 
     @Data

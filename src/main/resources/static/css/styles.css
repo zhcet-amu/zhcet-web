@@ -1,7 +1,5 @@
-html,
-body {
+html, body {
     height: 100%;
-    font-size: 16px;
 }
 
 body {
@@ -17,11 +15,7 @@ table td {
     cursor: pointer;
 }
 
-.bg-danger {
-    color: #eee
-}
-
-.bg-success {
+.bg-danger, .bg-success {
     color: #eee;
 }
 
@@ -110,11 +104,16 @@ table td {
     background-color: rgba(206, 147, 216, 0.3)
 }
 
-.align-middle {
-    vertical-align: middle;
+.flex-center {
+    display: flex;
+    align-items: center;
 }
 
-.material-icons {
+.flex-center > * {
+    padding: 3px;
+}
+
+.align-middle, .material-icons {
     vertical-align: middle;
 }
 

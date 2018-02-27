@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="card-block">
-                <!--/*@thymesVar id="studentModel" type="amu.zhcet.core.admin.dean.edit.student.StudentEditModel"*/-->
+                <!--/*@thymesVar id="studentModel" type="amu.zhcet.core.admin.dean.edit.StudentEditModel"*/-->
                 <form class="form" th:action="@{'/admin/dean/students/' + ${student.user.userId}}" method="post" th:object="${studentModel}">
                     <div class="row">
                         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
@@ -136,6 +136,12 @@
                                         <label for="account-enabled">Account Enabled</label>&nbsp;
                                         <input type="checkbox" id="account-enabled" data-color="success"
                                                class="switchery" th:field="*{userEnabled}">
+                                    </div>
+
+                                    <div class="form-group col-xs-12 mb-2" th:if="${studentModel.hasTotpSecret}">
+                                        <label for="2fa-enabled">2 Factor Authentication</label>&nbsp;
+                                        <input type="checkbox" id="2fa-enabled" data-color="info"
+                                               class="switchery" th:field="*{userUsing2fa}">
                                     </div>
 
                                     <div class="form-group col-xs-12 mb-2">

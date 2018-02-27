@@ -28,7 +28,9 @@ class FacultyEditService {
     }
 
     public FacultyEditModel fromFaculty(FacultyMember facultyMember) {
-        return modelMapper.map(facultyMember, FacultyEditModel.class);
+        FacultyEditModel facultyEditModel = modelMapper.map(facultyMember, FacultyEditModel.class);
+        facultyEditModel.setHasTotpSecret(facultyMember.getUser().getTotpSecret() != null);
+        return facultyEditModel;
     }
 
     @Transactional

@@ -47,6 +47,8 @@ public class User extends BaseEntity {
     private boolean passwordChanged;
     private boolean emailVerified;
     private boolean emailUnsubscribed;
+    private boolean using2fa;
+    private String totpSecret;
 
     @NotNull
     @JsonIgnore

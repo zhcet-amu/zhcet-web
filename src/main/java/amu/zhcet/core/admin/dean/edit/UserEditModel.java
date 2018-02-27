@@ -24,4 +24,7 @@ class UserEditModel {
     @Enumerated(EnumType.STRING)
     private Gender userDetailsGender;
     private boolean userEnabled;
+    private boolean userUsing2fa;
+
+    private transient boolean hasTotpSecret;
 }

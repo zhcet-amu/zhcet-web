@@ -1,0 +1,6 @@
+<img th:src="${qr_url}" alt="">
+
+<form th:action="@{/profile/2fa/enable}" method="post">
+    <input type="text" name="code">
+    <button type="submit">Submit</button>
+</form>

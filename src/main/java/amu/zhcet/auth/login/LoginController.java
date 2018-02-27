@@ -37,7 +37,7 @@ public class LoginController {
         SecurityUtils.clearStaleAuthorities(authentication);
 
         if (error != null) {
-            model.addAttribute("login_error", loginAttemptService.getErrorMessage(request));
+            loginAttemptService.addErrors(model, request);
         }
 
         return "user/login";

@@ -1,6 +1,5 @@
 package amu.zhcet.security;
 
-import amu.zhcet.auth.UserDetailService;
 import amu.zhcet.auth.login.persistent.PersistentTokenService;
 import amu.zhcet.data.user.Role;
 import amu.zhcet.firebase.auth.FirebaseAuthenticationProvider;
@@ -13,13 +12,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
@@ -52,15 +51,13 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public void configureAuthentication(AuthenticationManagerBuilder authBuilder, UserDetailService userDetailsService, PasswordEncoder passwordEncoder) throws Exception {
-        authBuilder
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder);
+    public void configureFirebaseAuthentication(AuthenticationManagerBuilder authBuilder, FirebaseAuthenticationProvider firebaseAuthenticationProvider) {
+        authBuilder.authenticationProvider(firebaseAuthenticationProvider);
     }
 
     @Autowired
-    public void configureFirebaseAuthentication(AuthenticationManagerBuilder authBuilder, FirebaseAuthenticationProvider firebaseAuthenticationProvider) {
-        authBuilder.authenticationProvider(firebaseAuthenticationProvider);
+    public void configureCustomAuthentication(AuthenticationManagerBuilder authBuilder, DaoAuthenticationProvider daoAuthenticationProvider) {
+        authBuilder.authenticationProvider(daoAuthenticationProvider);
     }
 
     @Autowired

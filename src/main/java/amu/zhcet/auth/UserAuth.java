@@ -22,17 +22,30 @@ public class UserAuth extends org.springframework.security.core.userdetails.User
     private final Department department;
     private final boolean emailVerified;
     private final boolean passwordChanged;
+    private final boolean using2fa;
     private String avatar;
+    @Setter(value = AccessLevel.NONE)
+    private transient String totpSecret;
 
-    UserAuth(User user, boolean blocked, Collection<? extends GrantedAuthority> authorities) {
-        super(user.getUserId(), user.getPassword(), user.isEnabled(), true, true, !blocked, authorities);
+    UserAuth(User user, Collection<? extends GrantedAuthority> authorities) {
+        super(user.getUserId(), user.getPassword(), user.isEnabled(), true, true, true, authorities);
         this.name = user.getName();
         this.email = user.getEmail();
         this.type = user.getType();
         this.department = user.getDepartment();
         this.emailVerified = user.isEmailVerified();
         this.passwordChanged = user.isPasswordChanged();
+        this.using2fa = user.isUsing2fa();
         this.avatar = user.getDetails().getAvatarUrl();
+
+        this.totpSecret = user.getTotpSecret();
+    }
+
+    public String getTotpSecret() {
+        String secret = totpSecret;
+        // We clear the secret after one read
+        this.totpSecret = null;
+        return secret;
     }
 
 }

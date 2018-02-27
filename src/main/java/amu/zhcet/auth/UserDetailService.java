@@ -1,7 +1,5 @@
 package amu.zhcet.auth;
 
-import amu.zhcet.auth.login.LoginAttemptService;
-import amu.zhcet.common.utils.Utils;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
 import amu.zhcet.security.permission.PermissionManager;
@@ -19,7 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,16 +28,11 @@ public class UserDetailService implements UserDetailsService {
 
     private final UserService userService;
     private final PermissionManager permissionManager;
-    private final LoginAttemptService loginAttemptService;
-
-    @Autowired // Field injection is required as the value will change on each request
-    private HttpServletRequest request;
 
     @Autowired
-    public UserDetailService(UserService userService, PermissionManager permissionManager, LoginAttemptService loginAttemptService) {
+    public UserDetailService(UserService userService, PermissionManager permissionManager) {
         this.userService = userService;
         this.permissionManager = permissionManager;
-        this.loginAttemptService = loginAttemptService;
     }
 
     /**
@@ -80,11 +72,8 @@ public class UserDetailService implements UserDetailsService {
         // So that the proxy object is replaced by its actual implementation
         Hibernate.initialize(user.getDepartment());
 
-        String ip = Utils.getClientIP(request);
-        boolean isBlocked = loginAttemptService.isBlocked(LoginAttemptService.getKey(ip, user.getUserId()));
-
         Collection<GrantedAuthority> authorities = getAuthorities(user);
-        return new UserAuth(user, isBlocked, authorities);
+        return new UserAuth(user, authorities);
     }
 
     /**
