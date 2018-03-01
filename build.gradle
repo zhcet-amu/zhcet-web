@@ -69,8 +69,8 @@ dependencies {
         exclude group: 'commons-logging', module: 'commons-logging'
     }
     implementation 'org.modelmapper:modelmapper:1.1.1'
-    implementation 'com.github.iamareebjamal:spring-data-jpa-datatables:v4.3.2'
-    implementation 'com.google.firebase:firebase-admin:5.7.0'
+    implementation 'com.github.iamareebjamal:spring-data-jpa-datatables:v4.3.3'
+    implementation 'com.google.firebase:firebase-admin:5.9.0'
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.imgscalr:imgscalr-lib:4.2'
     implementation 'com.github.ben-manes.caffeine:caffeine:2.6.0'

@@ -3,17 +3,14 @@ package amu.zhcet.firebase.messaging;
 import amu.zhcet.common.utils.ConsoleColors;
 import amu.zhcet.common.utils.ConsoleHelper;
 import amu.zhcet.firebase.FirebaseService;
-import amu.zhcet.firebase.messaging.model.SendRequest;
-import amu.zhcet.firebase.messaging.model.SendResponse;
-import feign.Feign;
-import feign.FeignException;
-import feign.jackson.JacksonDecoder;
-import feign.jackson.JacksonEncoder;
-import feign.okhttp.OkHttpClient;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Service
@@ -21,7 +18,7 @@ public class FirebaseMessagingService {
 
     private final FirebaseService firebaseService;
 
-    private MessagingClient messagingClient;
+    private final FirebaseMessaging firebaseMessaging;
 
     @Autowired
     public FirebaseMessagingService(FirebaseService firebaseService) {
@@ -30,38 +27,30 @@ public class FirebaseMessagingService {
         boolean canSendMessage = firebaseService.canProceed();
         String color = canSendMessage ? ConsoleColors.GREEN : ConsoleColors.RED;
         log.info(ConsoleHelper.color(color, "CONFIG (Firebase): Firebase Messaging Running : {}"), canSendMessage);
+
+        if (canSendMessage) {
+            firebaseMessaging = FirebaseMessaging.getInstance();
+        } else {
+            firebaseMessaging = null;
+        }
     }
 
     /**
      * Sends a push notification to notification recipient user using FCM token
-     * NotificationBody and DataBody is created for FCM HTTP V1 API using the SendRequest content passed
      * If FCM token of user is not found, sending is skipped
-     * @param sendRequest FCM request
+     * @param message FCM Message
      */
     @Async
-    public void sendMessage(SendRequest sendRequest) {
+    public void sendMessage(Message message) {
         if (!firebaseService.canProceed())
             return;
 
         try {
-            SendResponse sendResponse = getMessagingClient().sendMessage(firebaseService.getToken(), sendRequest);
-
-            log.info("Sent Broadcast : {}", sendResponse);
-        } catch (FeignException feignException) {
-            log.error("Sending FCM failed", feignException);
+            String response = firebaseMessaging.sendAsync(message).get();
+            log.info("Sent Broadcast : {}", response);
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Sending FCM failed", e);
         }
-    }
-
-    private MessagingClient getMessagingClient() {
-        if (messagingClient == null) {
-            messagingClient = Feign.builder()
-                    .client(new OkHttpClient())
-                    .decoder(new JacksonDecoder())
-                    .encoder(new JacksonEncoder())
-                    .target(MessagingClient.class, firebaseService.getMessagingServer());
-        }
-
-        return messagingClient;
     }
 
 }
