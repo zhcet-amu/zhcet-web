@@ -1,7 +1,6 @@
 package amu.zhcet.email;
 
 import amu.zhcet.common.utils.ConsoleHelper;
-import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,24 +17,21 @@ public class EmailService{
     private final boolean disabled;
 
     private final JavaMailSender sender;
-    private final String senderEmail;
 
     @Autowired
     public EmailService(JavaMailSender sender, EmailProperties emailProperties) {
         this.sender = sender;
         this.disabled = emailProperties.isDisabled();
-        this.senderEmail = emailProperties.getAddress();
 
         if (disabled) {
             log.warn(ConsoleHelper.red("CONFIG (Email): Email sending is disabled"));
         }
     }
 
-    private void setBasicInfo(MimeMessageHelper mailMessage, String from, String to, String subject, String[] bcc) throws MessagingException {
+    private void setBasicInfo(MimeMessageHelper mailMessage, String to, String subject, String[] bcc) throws MessagingException {
         if (disabled)
             return;
         mailMessage.setSubject(subject);
-        mailMessage.setFrom(from);
         mailMessage.setTo(to);
         if (bcc != null)
             mailMessage.setBcc(bcc);
@@ -45,7 +41,7 @@ public class EmailService{
         MimeMessage mimeMessage = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setText(body);
-        setBasicInfo(helper, senderEmail, emailAddress, subject, bcc);
+        setBasicInfo(helper, emailAddress, subject, bcc);
         return mimeMessage;
     }
 
@@ -53,7 +49,7 @@ public class EmailService{
         MimeMessage mimeMessage = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
         helper.setText(body, true);
-        setBasicInfo(helper, senderEmail, emailAddress, subject, bcc);
+        setBasicInfo(helper, emailAddress, subject, bcc);
         return mimeMessage;
     }
 
@@ -71,10 +67,6 @@ public class EmailService{
                 log.error("Error extracting information", e);
             }
             return;
-        }
-
-        if (Strings.isNullOrEmpty(senderEmail)) {
-            log.error("Sender Email not configured. Skipping...");
         }
 
         sender.send(mimeMessage);

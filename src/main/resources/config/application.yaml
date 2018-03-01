@@ -26,6 +26,8 @@ spring:
     port: 587
     properties:
       mail:
+        transport:
+          protocol: smtp
         smtp:
           auth: true
           starttls:
