@@ -21,9 +21,6 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
-    maven { url "http://repo.spring.io/snapshot" }
-    maven { url "http://repo.spring.io/milestone" }
 }
 
 springBoot  {
@@ -35,13 +32,6 @@ def flexmark_version = "0.28.24"
 
 configurations {
     compile.exclude module: "spring-boot-starter-tomcat"
-}
-
-configure(allprojects) {
-    apply plugin: 'propdeps'
-    apply plugin: 'propdeps-maven'
-    apply plugin: 'propdeps-idea'
-    apply plugin: 'propdeps-eclipse'
 }
 
 dependencies {

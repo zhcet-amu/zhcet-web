@@ -10,7 +10,7 @@ public class FirebaseProperties {
     /**
      * Firebase Services are disabled if set to true
      */
-    private boolean disabled;
+    private boolean disabled = true;
     /**
      * Firebase config for initialization (Not implemented yet)
      */

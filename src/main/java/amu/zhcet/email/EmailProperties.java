@@ -10,6 +10,10 @@ public class EmailProperties {
     /**
      * Email Services are disabled in the project if set to true
      */
-    private boolean disabled;
+    private boolean disabled = true;
+    /**
+     * Email Address to be used to send emails
+     */
+    private String address;
 
 }

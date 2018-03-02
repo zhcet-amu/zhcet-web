@@ -1,6 +1,7 @@
 package amu.zhcet.email;
 
 import amu.zhcet.common.utils.ConsoleHelper;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,24 +15,28 @@ import java.io.IOException;
 @Slf4j
 @Service
 public class EmailService{
-    private final boolean disabled;
-
     private final JavaMailSender sender;
+    private final String senderEmail;
 
     @Autowired
     public EmailService(JavaMailSender sender, EmailProperties emailProperties) {
         this.sender = sender;
-        this.disabled = emailProperties.isDisabled();
+        this.senderEmail = emailProperties.getAddress();
 
-        if (disabled) {
+        if (emailProperties.isDisabled()) {
             log.warn(ConsoleHelper.red("CONFIG (Email): Email sending is disabled"));
         }
     }
 
-    private void setBasicInfo(MimeMessageHelper mailMessage, String to, String subject, String[] bcc) throws MessagingException {
-        if (disabled)
+    private boolean isDisabled() {
+        return !EmailConfiguration.isEmailSet();
+    }
+
+    private void setBasicInfo(MimeMessageHelper mailMessage, String from, String to, String subject, String[] bcc) throws MessagingException {
+        if (isDisabled())
             return;
         mailMessage.setSubject(subject);
+        mailMessage.setFrom(from);
         mailMessage.setTo(to);
         if (bcc != null)
             mailMessage.setBcc(bcc);
@@ -41,7 +46,7 @@ public class EmailService{
         MimeMessage mimeMessage = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setText(body);
-        setBasicInfo(helper, emailAddress, subject, bcc);
+        setBasicInfo(helper, senderEmail, emailAddress, subject, bcc);
         return mimeMessage;
     }
 
@@ -49,12 +54,12 @@ public class EmailService{
         MimeMessage mimeMessage = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
         helper.setText(body, true);
-        setBasicInfo(helper, emailAddress, subject, bcc);
+        setBasicInfo(helper, senderEmail, emailAddress, subject, bcc);
         return mimeMessage;
     }
 
     private void sendMail(MimeMessage mimeMessage) throws MessagingException {
-        if (disabled) {
+        if (isDisabled()) {
             try {
                 log.warn("Skipping mail because of property override.\n" +
                         "Sender: {}\n" +
@@ -69,7 +74,12 @@ public class EmailService{
             return;
         }
 
+        if (Strings.isNullOrEmpty(senderEmail)) {
+            log.error("Sender Email not configured. Skipping...");
+        }
+
         sender.send(mimeMessage);
+        log.debug("Mail Sent!");
     }
 
     void sendHtmlMail(String email, String subject, String html, String[] bcc) {
