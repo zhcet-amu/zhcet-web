@@ -18,6 +18,10 @@ public class AuthService {
         return user.isPasswordChanged() && user.isEmailVerified() && user.getEmail() != null;
     }
 
+    public static boolean isFullyAuthenticated(UserAuth user) {
+        return user.isPasswordChanged() && user.isEmailVerified() && user.getEmail() != null;
+    }
+
     public static List<String> getPendingTasks(User user) {
         List<String> pendingTasks = new ArrayList<>();
         if (user.getEmail() == null)

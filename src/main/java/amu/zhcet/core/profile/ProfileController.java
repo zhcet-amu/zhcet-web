@@ -10,6 +10,7 @@ import amu.zhcet.data.user.student.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -75,6 +76,7 @@ public class ProfileController {
     }
 
     @PostMapping("/details")
+    @PreAuthorize("@authService.isFullyAuthenticated(principal)")
     public String saveProfile(@ModelAttribute @Valid UserDetail userDetail, BindingResult result, RedirectAttributes redirectAttributes) {
         User user = userService.getLoggedInUser().orElseThrow(() -> new AccessDeniedException("403"));
         if (result.hasErrors()) {
