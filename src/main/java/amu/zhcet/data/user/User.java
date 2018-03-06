@@ -55,6 +55,7 @@ public class User extends BaseEntity {
     @Size(min = 4, max = 100)
     private String password;
     private String roles;
+    private String pendingRoles;
     @NotNull
     @Enumerated(EnumType.STRING)
     private UserType type;
@@ -71,16 +72,34 @@ public class User extends BaseEntity {
     }
 
     public void setRoles(Set<String> roles) {
-        this.roles = String.join(",", roles);
+        if (roles == null) // A user is always a USER
+            this.roles = Role.USER.toString();
+        else
+            this.roles = String.join(",", roles);
     }
 
     public List<String> getRoles() {
-        if (roles == null)
+        return separate(roles);
+    }
+
+    private static List<String> separate(String commaSeparated) {
+        if (commaSeparated == null)
             return null;
 
-        return Arrays.stream(roles.split(","))
+        return Arrays.stream(commaSeparated.split(","))
                 .map(String::trim)
                 .collect(Collectors.toList());
+    }
+
+    public void setPendingRoles(Set<String> roles) {
+        if (roles == null)
+            this.pendingRoles = null;
+        else
+            this.pendingRoles = String.join(",", roles);
+    }
+
+    public List<String> getPendingRoles() {
+        return separate(pendingRoles);
     }
 
     @PrePersist

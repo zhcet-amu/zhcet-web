@@ -1,6 +1,6 @@
 package amu.zhcet.common.actuator;
 
-import amu.zhcet.core.ViewService;
+import amu.zhcet.auth.AuthService;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 public class LoggedInEndoint {
 
     private final ModelMapper modelMapper;
-    private final ViewService viewService;
+    private final AuthService authService;
 
-    public LoggedInEndoint(ModelMapper modelMapper, ViewService viewService) {
+    public LoggedInEndoint(ModelMapper modelMapper, AuthService authService) {
         this.modelMapper = modelMapper;
-        this.viewService = viewService;
+        this.authService = authService;
     }
 
     @Data
@@ -41,7 +41,7 @@ public class LoggedInEndoint {
 
     @ReadOperation
     public List<LoggedUser> getLoggedInUsers() {
-        return viewService.getUsersFromSessionRegistry()
+        return authService.getUsersFromSessionRegistry()
                 .stream()
                 .map(customUser -> modelMapper.map(customUser, LoggedUser.class))
                 .collect(Collectors.toList());

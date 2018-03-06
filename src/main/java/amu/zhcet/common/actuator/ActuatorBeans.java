@@ -1,7 +1,7 @@
 package amu.zhcet.common.actuator;
 
+import amu.zhcet.auth.AuthService;
 import amu.zhcet.auth.login.LoginAttemptService;
-import amu.zhcet.core.ViewService;
 import amu.zhcet.email.EmailProperties;
 import amu.zhcet.firebase.FirebaseService;
 import org.modelmapper.ModelMapper;
@@ -16,8 +16,8 @@ public class ActuatorBeans {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnEnabledEndpoint
-    public LoggedInEndoint loggedInEndpoint(ModelMapper modelMapper, ViewService viewService) {
-        return new LoggedInEndoint(modelMapper, viewService);
+    public LoggedInEndoint loggedInEndpoint(ModelMapper modelMapper, AuthService authService) {
+        return new LoggedInEndoint(modelMapper, authService);
     }
 
     @Bean

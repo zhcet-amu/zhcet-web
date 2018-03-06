@@ -9,6 +9,7 @@ import amu.zhcet.data.user.faculty.FacultyMember;
 import amu.zhcet.email.EmailSendingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -21,6 +22,7 @@ public class AttendanceUploadListener {
         this.notificationSendingService = notificationSendingService;
     }
 
+    @Async
     @EventListener
     public void handleAttendanceUpload(AttendanceUploadEvent attendanceUploadEvent) {
         log.info("Attendance Uploaded by {}. Sending Notification", attendanceUploadEvent.getCourseInCharge());

@@ -7,6 +7,7 @@ import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserType;
 import amu.zhcet.auth.verification.DuplicateEmailEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,6 +19,7 @@ public class DuplicateEmailListener {
         this.notificationSendingService = notificationSendingService;
     }
 
+    @Async
     @EventListener
     public void handleDuplicateEmail(DuplicateEmailEvent duplicateEmailEvent) {
         sendEmailChangeNotification(duplicateEmailEvent.getDuplicateUser(), duplicateEmailEvent.getUser(), duplicateEmailEvent.getEmail());

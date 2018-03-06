@@ -53,7 +53,7 @@
                             <td class="created-date" th:text="${#temporals.format(member.createdAt)}"></td>
                             <td>
                                 <th:block th:each="role: ${member.user.roles}">
-                                    <div class="tag tag-danger" th:text="${@viewService.roleFilter(role)}"></div><br>
+                                    <div class="tag tag-danger" th:text="${@authService.roleFilter(role)}"></div><br>
                                 </th:block>
                             </td>
                             <td style="padding: 5px;">

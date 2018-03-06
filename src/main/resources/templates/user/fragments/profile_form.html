@@ -14,6 +14,7 @@
             <div>
                 To complete these actions, please head to <a class="mui-btn mui-btn--raised mui-btn--primary" th:href="@{/profile/settings#account}">Account</a>
             </div>
+            <small><em>You may need to login again to refresh your permissions</em></small>
         </div>
     </div>
     <div th:if="${@authService.isFullyAuthenticated(user)}" class="row">

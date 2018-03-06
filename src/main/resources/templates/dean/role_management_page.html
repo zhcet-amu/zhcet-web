@@ -27,18 +27,24 @@
 
             <div class="card-body collapse in">
                 <div class="card-block">
+                    <div class="alert alert-danger" th:unless="${@authService.isFullyAuthenticated(user)}">
+                        The user has not verified itself yet. We do not recommend adding any role to the user as it
+                        would unconditionally give user access to the permissions while their account may be in a vulnerable,
+                        unprotected and unverified condition.
+                    </div>
+
                     <form id="role-form" th:action="@{|/admin/dean/roles/user/${user.userId}|}" method="post">
 
                         <th:block th:each="role : ${roles}"
-                                  th:with="reachableRole = ${@viewService.getOnlyReachableRoles(user.roles)},
-                                           containsReachableRole = ${@viewService.containsRole(reachableRole, role)}">
+                                  th:with="reachableRole = ${@authService.getOnlyReachableRoles(user.roles)},
+                                           containsReachableRole = ${@authService.containsRole(reachableRole, role)}">
                             <fieldset class="checkbox">
                                 <label class="hover-cursor">
                                     <input class="role-checkbox" type="checkbox" th:value="${role}" name="roles"
                                            th:id="${#strings.toLowerCase(role)}"
-                                           th:checked="${@viewService.containsRole(user.roles, role) || containsReachableRole}"
+                                           th:checked="${@authService.containsRole(user.roles, role) || containsReachableRole}"
                                            th:disabled="${containsReachableRole}">
-                                    <strong><span th:text="${@viewService.roleFilter(role)}"></span></strong> -
+                                    <strong><span th:text="${@authService.roleFilter(role)}"></span></strong> -
                                 </label>
                                 <em><span th:text="${role.description}"></span></em>
                             </fieldset>

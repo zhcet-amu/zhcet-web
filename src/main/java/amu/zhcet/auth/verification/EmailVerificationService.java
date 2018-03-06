@@ -158,7 +158,7 @@ class EmailVerificationService {
         user.setEmail(email);
         user.setEmailVerified(true);
         userService.save(user);
-        eventPublisher.publishEvent(new EmailVerifiedEvent(user, true));
+        eventPublisher.publishEvent(new EmailVerifiedEvent(user));
     }
 
     private LinkMessage getPayLoad(String recipientEmail, User user, String url) {
@@ -195,7 +195,7 @@ class EmailVerificationService {
 
         userService.save(user);
         log.debug("Saved user email");
-        eventPublisher.publishEvent(new EmailVerifiedEvent(user, false));
+        eventPublisher.publishEvent(new EmailVerifiedEvent(user));
     }
 
 }

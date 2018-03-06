@@ -9,4 +9,9 @@ import lombok.Data;
 public class EmailVerifiedEvent {
     private final User user;
     private final boolean verified;
+
+    public EmailVerifiedEvent(User user) {
+        this.user = user;
+        this.verified = user.isEmailVerified();
+    }
 }

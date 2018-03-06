@@ -61,8 +61,10 @@ public class FacultyService {
 
         if (facultyMember.getUser().getUserId() == null)
             facultyMember.getUser().setUserId(facultyMember.getFacultyId());
-        if (facultyMember.getUser().getRoles() == null || facultyMember.getUser().getRoles().isEmpty())
-            facultyMember.getUser().setRoles(Collections.singleton(Role.FACULTY.toString()));
+        if (facultyMember.getUser().getRoles() == null || facultyMember.getUser().getRoles().isEmpty()) {
+            facultyMember.getUser().setRoles(Collections.singleton(Role.USER.toString()));
+            facultyMember.getUser().setPendingRoles(Collections.singleton(Role.FACULTY.toString()));
+        }
 
         facultyMember.getUser().setPassword(passwordEncoder.encode(facultyMember.getUser().getPassword()));
 

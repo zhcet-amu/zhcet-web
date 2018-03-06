@@ -79,8 +79,10 @@ public class StudentService {
 
         if (student.getUser().getUserId() == null)
             student.getUser().setUserId(student.getEnrolmentNumber());
-        if (student.getUser().getRoles() == null || student.getUser().getRoles().isEmpty())
-            student.getUser().setRoles(Collections.singleton(Role.STUDENT.toString()));
+        if (student.getUser().getRoles() == null || student.getUser().getRoles().isEmpty()) {
+            student.getUser().setRoles(Collections.singleton(Role.USER.toString()));
+            student.getUser().setPendingRoles(Collections.singleton(Role.STUDENT.toString()));
+        }
         if (student.getUser().getPassword() == null)
             student.getUser().setPassword(student.getFacultyNumber());
 
