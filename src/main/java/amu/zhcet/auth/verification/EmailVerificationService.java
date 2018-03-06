@@ -8,8 +8,10 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Optional;
@@ -24,12 +26,14 @@ class EmailVerificationService {
     private final LinkMailService linkMailService;
     private final VerificationTokenRepository verificationTokenRepository;
     private final Cache<String, LocalDateTime> emailCache;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public EmailVerificationService(UserService userService, LinkMailService linkMailService, VerificationTokenRepository verificationTokenRepository) {
+    public EmailVerificationService(UserService userService, LinkMailService linkMailService, VerificationTokenRepository verificationTokenRepository, ApplicationEventPublisher eventPublisher) {
         this.userService = userService;
         this.linkMailService = linkMailService;
         this.verificationTokenRepository = verificationTokenRepository;
+        this.eventPublisher = eventPublisher;
 
         this.emailCache = Caffeine.newBuilder()
                 .maximumSize(10000)
@@ -53,41 +57,108 @@ class EmailVerificationService {
         return verificationToken;
     }
 
-    public VerificationToken generate(String email) {
-        Optional<User> userOptional = userService.getUserByEmail(email);
-        if (userOptional.isPresent() && !userOptional.get().getEmail().equals(userService.getLoggedInUser()
-                .orElseThrow(() -> new IllegalStateException("No user logged in")).getEmail()))
-            throw new DuplicateEmailException(email);
+    /**
+     * Generates the verification token and sends the email to the specified user
+     *
+     * If any user with the same email exists, throws a {@link DuplicateEmailException}
+     *
+     * @param email String email for which the verification token is to be generated
+     */
+    public void generate(String email) {
+        User loggedInUser = userService.getLoggedInUser()
+                .orElseThrow(() -> new IllegalStateException("No user logged in"));
+        Optional<User> userOptional = userService.getUserByEmail(email)
+                .filter(user -> !user.getUserId().equals(loggedInUser.getUserId()));
 
-        return createVerificationToken(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            if (user.isEmailVerified()) {
+                // Another user is present which has the same verified email
+                // Throw exception notifying about the situation
+                throw new DuplicateEmailException(email);
+            } else {
+                // The user has not yet verified his/her email and yet another user
+                // asked for the same email, this may happen when the first user was
+                // mischievous and just trying emails but couldn't verify, we will
+                // transfer the email to current user
+
+                log.warn("User {} has requested email {} which was requested already by {}",
+                        loggedInUser, email, user);
+                log.info("Resetting {} email and transferring to {}", user, loggedInUser);
+
+                user.setEmail(null);
+                eventPublisher.publishEvent(new DuplicateEmailEvent(loggedInUser, loggedInUser, email));
+                userService.save(user);
+            }
+        }
+
+        VerificationToken token = createVerificationToken(email);
+        sendMail(token);
     }
 
-    public String validate(String token) {
+    /**
+     * Retrieves the verification token from database and validates it by performing checks
+     * that it exists, is not already used and not expired. If any of the validation fails,
+     * throws an {@link IllegalStateException} with the corresponding message
+     * @param token String token ID
+     * @return {@link VerificationToken}
+     */
+    private VerificationToken getAndValidateOrThrow(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
 
         if (verificationToken == null)
-            return "Token: " + token + " is invalid";
+            throw new IllegalStateException("Token: " + token + " is invalid");
 
         if (verificationToken.isUsed())
-            return "Token: " + token + " is already used! Please request another link!";
+            throw new IllegalStateException("Token: " + token + " is already used! Please request another link!");
 
         Calendar cal = Calendar.getInstance();
-        if ((verificationToken.getExpiry().getTime() - cal.getTime().getTime()) <= 0) {
-            return "Token: " + token + " has expired";
-        }
+        if ((verificationToken.getExpiry().getTime() - cal.getTime().getTime()) <= 0)
+            throw new IllegalStateException("Token: " + token + " has expired");
 
-        return null;
+        return verificationToken;
     }
 
-    public void confirmEmail(String token) {
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+    /**
+     * Validated a verification token and invalidates it by setting as used already and saves in the database
+     * Then sets the new email to the user account and sets it to be verified and publishes an event stating same
+     * @param token String token ID
+     */
+    @Transactional
+    public void verifyEmail(String token) {
+        VerificationToken verificationToken = getAndValidateOrThrow(token);
+
         verificationToken.setUsed(true);
         verificationTokenRepository.save(verificationToken);
 
+        String email = verificationToken.getEmail();
         User user = verificationToken.getUser();
-        user.setEmail(verificationToken.getEmail());
+
+        Optional<User> userOptional = userService.getUserByEmail(email)
+                .filter(us -> !us.getUserId().equals(user.getUserId()));
+
+        if (userOptional.isPresent()) {
+            // Some other user has the same email as in this token, this should not happen
+            // But this is possible in the scenario of a verification lag. If that user is verified,
+            // we will throw an exception and if that user is not verified, we will favour this user
+            // and transfer the email from him/her to this user
+
+            User duplicateEmailUser = userOptional.get();
+            if (duplicateEmailUser.isEmailVerified()) {
+                throw new DuplicateEmailException(email);
+            } else {
+                log.warn("User {} verified it's email {} owned by another user {}", user, email, duplicateEmailUser);
+                duplicateEmailUser.setEmail(null);
+                userService.save(user);
+                eventPublisher.publishEvent(new DuplicateEmailEvent(user, duplicateEmailUser, email));
+            }
+        }
+
+        user.setEmail(email);
         user.setEmailVerified(true);
         userService.save(user);
+        eventPublisher.publishEvent(new EmailVerifiedEvent(user, true));
     }
 
     private LinkMessage getPayLoad(String recipientEmail, User user, String url) {
@@ -104,6 +175,12 @@ class EmailVerificationService {
                 .build();
     }
 
+    /**
+     * Sends mail to the user to be verified and saves the user with the email and status to be unverified
+     * Also, publishes an event notifying the same
+     * @param token {@link VerificationToken} token to be sent email with respect to
+     */
+    @Transactional
     public void sendMail(VerificationToken token) {
         String relativeUrl = "/login/email/verify?auth=" + token.getToken();
         log.debug("Verification link generated : {}", relativeUrl);
@@ -118,6 +195,7 @@ class EmailVerificationService {
 
         userService.save(user);
         log.debug("Saved user email");
+        eventPublisher.publishEvent(new EmailVerifiedEvent(user, false));
     }
 
 }

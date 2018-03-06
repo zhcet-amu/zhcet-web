@@ -1,10 +1,12 @@
 package amu.zhcet.auth;
 
+import amu.zhcet.auth.password.change.PasswordChangeEvent;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
 import amu.zhcet.security.permission.PermissionManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,11 +29,13 @@ public class UserDetailService implements UserDetailsService {
 
     private final UserService userService;
     private final PermissionManager permissionManager;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public UserDetailService(UserService userService, PermissionManager permissionManager) {
+    public UserDetailService(UserService userService, PermissionManager permissionManager, ApplicationEventPublisher eventPublisher) {
         this.userService = userService;
         this.permissionManager = permissionManager;
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -93,7 +97,7 @@ public class UserDetailService implements UserDetailsService {
 
     /**
      * Update current authentication by cloning it with password
-     * Also saves the user with new password
+     * Also saves the user with new password and publishes an event denoting the same
      *
      * Used when there is a need to dynamically update a user's password like
      * when resetting it or changing it. This is the only method in the project
@@ -103,6 +107,7 @@ public class UserDetailService implements UserDetailsService {
     void cloneWithPassword(User user) {
         user.setPasswordChanged(true);
         userService.save(user);
+        eventPublisher.publishEvent(new PasswordChangeEvent(user));
     }
 
     /**

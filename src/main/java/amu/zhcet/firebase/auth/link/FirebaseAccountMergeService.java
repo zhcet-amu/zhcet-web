@@ -2,6 +2,8 @@ package amu.zhcet.firebase.auth.link;
 
 import amu.zhcet.auth.AuthManager;
 import amu.zhcet.auth.UserAuth;
+import amu.zhcet.auth.verification.DuplicateEmailEvent;
+import amu.zhcet.auth.verification.EmailVerifiedEvent;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
 import amu.zhcet.firebase.FirebaseService;
@@ -91,6 +93,9 @@ public class FirebaseAccountMergeService {
 
             if (token.isEmailVerified()) {
                 log.warn("New user has verified email, unconditionally exchanging emails from previous user");
+
+                if (duplicateUser.isEmailVerified())
+                    eventPublisher.publishEvent(new EmailVerifiedEvent(duplicateUser, false));
 
                 duplicateUser.setEmail(null);
                 duplicateUser.setEmailVerified(false);

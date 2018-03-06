@@ -5,7 +5,7 @@ import amu.zhcet.core.notification.Notification;
 import amu.zhcet.core.notification.sending.NotificationSendingService;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserType;
-import amu.zhcet.firebase.auth.link.DuplicateEmailEvent;
+import amu.zhcet.auth.verification.DuplicateEmailEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 

@@ -28,8 +28,7 @@ public class EmailVerificationController {
 
     private void sendVerificationLink(String email, RedirectAttributes redirectAttributes) {
         try {
-            VerificationToken token = emailVerificationService.generate(email);
-            emailVerificationService.sendMail(token);
+            emailVerificationService.generate(email);
             redirectAttributes.addFlashAttribute("email_success", "Verification link sent to '" + email + "'!");
         } catch (DuplicateEmailException de) {
             log.warn("Duplicate Email", de);
@@ -58,7 +57,7 @@ public class EmailVerificationController {
     }
 
     @PostMapping("/profile/email/resend_link")
-    public String registerEmail(RedirectAttributes redirectAttributes) {
+    public String resendLink(RedirectAttributes redirectAttributes) {
         User user = userService.getLoggedInUser().orElseThrow(() -> new AccessDeniedException("403"));
 
         String email = user.getEmail();
@@ -74,15 +73,15 @@ public class EmailVerificationController {
     }
 
     @GetMapping("/login/email/verify")
-    public String resetPassword(Model model, @RequestParam("auth") String token){
-        String result = emailVerificationService.validate(token);
-        if (result != null) {
-            log.warn("Email Verification Error {}", result);
-            model.addAttribute("error", result);
-        } else {
-            emailVerificationService.confirmEmail(token);
+    public String verifyEmail(Model model, @RequestParam("auth") String token) {
+        try {
+            emailVerificationService.verifyEmail(token);
             model.addAttribute("success", "Your email was successfully verified!");
+        } catch (IllegalStateException | DuplicateEmailException ie) {
+            log.warn("Email Verification Error {}", ie.getMessage());
+            model.addAttribute("error", ie.getMessage());
         }
+
         return "user/verify_email";
     }
 
