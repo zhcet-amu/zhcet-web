@@ -70,7 +70,7 @@ public class LinkMailService {
     public void sendEmail(LinkMessage linkMessage, boolean allowUnSubscribe) {
         normalizeMessage(linkMessage);
 
-        if (allowUnSubscribe) {
+        if (allowUnSubscribe && linkMessage.getBcc() == null) {
             String unSubscribeUrl = getUnSubscribeUrl(linkMessage.getRecipientEmail());
             log.debug("Adding Un-Subscribe Link {}", unSubscribeUrl);
 
@@ -78,7 +78,7 @@ public class LinkMailService {
         }
 
         log.info("Sending Email: {}", linkMessage);
-        emailService.sendHtmlMail(linkMessage.getRecipientEmail(), linkMessage.getSubject(), getHtml(linkMessage));
+        emailService.sendHtmlMail(linkMessage.getRecipientEmail(), linkMessage.getSubject(), getHtml(linkMessage), linkMessage.getBcc());
     }
 
     public void sendEmail(LinkMessage linkMessage) {

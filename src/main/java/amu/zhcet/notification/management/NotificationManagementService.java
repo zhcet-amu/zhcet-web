@@ -1,9 +1,9 @@
-package amu.zhcet.core.notification.management;
+package amu.zhcet.notification.management;
 
 import amu.zhcet.auth.Auditor;
-import amu.zhcet.core.notification.Notification;
-import amu.zhcet.core.notification.NotificationRepository;
-import amu.zhcet.core.notification.recipient.NotificationRecipient;
+import amu.zhcet.notification.Notification;
+import amu.zhcet.notification.NotificationRepository;
+import amu.zhcet.notification.recipient.NotificationRecipient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

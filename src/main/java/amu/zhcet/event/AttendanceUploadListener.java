@@ -1,19 +1,22 @@
 package amu.zhcet.event;
 
 import amu.zhcet.core.admin.faculty.attendance.upload.AttendanceUploadEvent;
-import amu.zhcet.core.notification.ChannelType;
-import amu.zhcet.core.notification.Notification;
-import amu.zhcet.core.notification.sending.NotificationSendingService;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.user.faculty.FacultyMember;
-import amu.zhcet.email.EmailSendingService;
+import amu.zhcet.email.LinkMessage;
+import amu.zhcet.notification.ChannelType;
+import amu.zhcet.notification.Notification;
+import amu.zhcet.notification.sending.NotificationSendingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
+
 @Slf4j
 @Component
+@Transactional
 public class AttendanceUploadListener {
 
     private final NotificationSendingService notificationSendingService;
@@ -44,7 +47,14 @@ public class AttendanceUploadListener {
 
     private void sendNotification(FacultyMember sender, Course course) {
         Notification notification = fromStudent(sender, course);
-        notification.setMeta(EmailSendingService.ATTENDANCE_TYPE);
+        notification.setLinkMessageConverter(notification1 -> LinkMessage.builder()
+                .title(notification1.getTitle())
+                .subject(String.format("ZHCET Course %s %s", notification1.getRecipientChannel(), notification1.getTitle()))
+                .relativeLink("/dashboard/student/attendance")
+                .linkText("View Attendance")
+                .preMessage(notification1.getMessage() + "\nPlease click the button below to view your attendance")
+                .markdown(true)
+                .build());
         notificationSendingService.sendNotification(notification);
     }
 

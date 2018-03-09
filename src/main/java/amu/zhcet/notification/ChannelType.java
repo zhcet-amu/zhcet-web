@@ -1,4 +1,4 @@
-package amu.zhcet.core.notification;
+package amu.zhcet.notification;
 
 import amu.zhcet.common.utils.StringUtils;
 

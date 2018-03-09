@@ -1,7 +1,7 @@
-package amu.zhcet.core.notification.recipient;
+package amu.zhcet.notification.recipient;
 
 import amu.zhcet.common.model.BaseIdEntity;
-import amu.zhcet.core.notification.Notification;
+import amu.zhcet.notification.Notification;
 import amu.zhcet.data.user.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

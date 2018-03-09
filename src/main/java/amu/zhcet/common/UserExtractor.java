@@ -1,4 +1,4 @@
-package amu.zhcet.core.notification.sending;
+package amu.zhcet.common;
 
 import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.floated.FloatedCourse;
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 
 @Slf4j
 @Service
-class UserExtractor {
+public class UserExtractor {
 
     private final FloatedCourseService floatedCourseService;
     private final CourseInChargeService courseInChargeService;
@@ -44,7 +44,7 @@ class UserExtractor {
             log.warn("No {} found with ID {}", type, id);
     }
 
-    void fromFloatedCourse(String floatedCourseId, Consumer<User> consumer) {
+    public void fromFloatedCourse(String floatedCourseId, Consumer<User> consumer) {
         Optional<FloatedCourse> floatedCourseOptional = floatedCourseService.getFloatedCourseByCode(floatedCourseId);
         floatedCourseOptional.ifPresent(floatedCourse -> {
             List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
@@ -53,12 +53,12 @@ class UserExtractor {
         reportMissing(floatedCourseOptional, "floated course", floatedCourseId);
     }
 
-    void fromSection(String section, Consumer<User> consumer) {
+    public void fromSection(String section, Consumer<User> consumer) {
         studentService.getBySection(section)
                 .forEach(student -> consumer.accept(student.getUser()));
     }
 
-    void fromStudentId(String studentId, Consumer<User> consumer) {
+    public void fromStudentId(String studentId, Consumer<User> consumer) {
         Optional<Student> recipient = studentService.getByEnrolmentNumber(studentId);
         if (!recipient.isPresent())
             recipient = studentService.getByFacultyNumber(studentId);
@@ -67,13 +67,13 @@ class UserExtractor {
         reportMissing(recipient, "student", studentId);
     }
 
-    void fromFacultyId(String facultyId, Consumer<User> consumer) {
+    public void fromFacultyId(String facultyId, Consumer<User> consumer) {
         Optional<FacultyMember> recipientOptional = facultyService.getById(facultyId);
         recipientOptional.ifPresent(facultyMember -> consumer.accept(facultyMember.getUser()));
         reportMissing(recipientOptional, "faculty", facultyId);
     }
 
-    void fromTaughtCourse(String courseId, String inChargeId, Consumer<User> consumer) {
+    public void fromTaughtCourse(String courseId, String inChargeId, Consumer<User> consumer) {
         Optional<FacultyMember> recipientOptional = facultyService.getById(inChargeId);
         recipientOptional.ifPresent(facultyMember -> {
             courseInChargeService.getCourseByFaculty(facultyMember)

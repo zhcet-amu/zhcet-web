@@ -1,9 +1,9 @@
 package amu.zhcet.core.error;
 
 import amu.zhcet.auth.UserAuth;
-import amu.zhcet.core.notification.Notification;
-import amu.zhcet.core.notification.NotificationNotFoundException;
-import amu.zhcet.core.notification.recipient.NotificationRecipient;
+import amu.zhcet.notification.Notification;
+import amu.zhcet.notification.NotificationNotFoundException;
+import amu.zhcet.notification.recipient.NotificationRecipient;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.CourseNotFoundException;
 import amu.zhcet.data.department.Department;

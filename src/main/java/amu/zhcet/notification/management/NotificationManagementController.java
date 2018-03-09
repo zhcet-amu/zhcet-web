@@ -1,8 +1,8 @@
-package amu.zhcet.core.notification.management;
+package amu.zhcet.notification.management;
 
 import amu.zhcet.common.utils.NotificationUtils;
 import amu.zhcet.core.error.ErrorUtils;
-import amu.zhcet.core.notification.Notification;
+import amu.zhcet.notification.Notification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

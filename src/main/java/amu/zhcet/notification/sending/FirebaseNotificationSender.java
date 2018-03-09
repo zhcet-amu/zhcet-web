@@ -1,8 +1,8 @@
-package amu.zhcet.core.notification.sending;
+package amu.zhcet.notification.sending;
 
 import amu.zhcet.common.markdown.MarkDownService;
-import amu.zhcet.core.notification.Notification;
-import amu.zhcet.core.notification.recipient.NotificationRecipient;
+import amu.zhcet.notification.Notification;
+import amu.zhcet.notification.recipient.NotificationRecipient;
 import amu.zhcet.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.Message;
 import org.springframework.stereotype.Service;

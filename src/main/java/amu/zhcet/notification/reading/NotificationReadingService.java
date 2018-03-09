@@ -1,9 +1,9 @@
-package amu.zhcet.core.notification.reading;
+package amu.zhcet.notification.reading;
 
 import amu.zhcet.auth.Auditor;
-import amu.zhcet.core.notification.recipient.CachedNotificationService;
-import amu.zhcet.core.notification.recipient.NotificationRecipient;
-import amu.zhcet.core.notification.recipient.NotificationRecipientRepository;
+import amu.zhcet.notification.recipient.CachedNotificationService;
+import amu.zhcet.notification.recipient.NotificationRecipient;
+import amu.zhcet.notification.recipient.NotificationRecipientRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;

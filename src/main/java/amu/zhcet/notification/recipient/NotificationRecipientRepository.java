@@ -1,4 +1,4 @@
-package amu.zhcet.core.notification.recipient;
+package amu.zhcet.notification.recipient;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,23 +1,27 @@
-package amu.zhcet.email;
+package amu.zhcet.notification.sending;
 
-import amu.zhcet.core.notification.Notification;
-import amu.zhcet.core.notification.recipient.NotificationRecipient;
+import amu.zhcet.data.user.User;
+import amu.zhcet.data.user.UserService;
+import amu.zhcet.email.LinkMailService;
+import amu.zhcet.email.LinkMessage;
+import amu.zhcet.notification.Notification;
+import amu.zhcet.notification.recipient.NotificationRecipient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
-public class EmailSendingService {
-
-    // Meta tags for automated notifications used to identify custom made emails
-    public static final String ATTENDANCE_TYPE = "ATTENDANCE_TYPE";
+public class EmailNotificationSender {
 
     private final LinkMailService linkMailService;
 
     @Autowired
-    public EmailSendingService(LinkMailService linkMailService) {
+    public EmailNotificationSender(LinkMailService linkMailService) {
         this.linkMailService = linkMailService;
     }
 
@@ -33,27 +37,24 @@ public class EmailSendingService {
         linkMailService.sendEmail(payLoad);
     }
 
-    private LinkMessage getPayLoadForAttendance(Notification notification) {
-        return LinkMessage.builder()
-                .title(notification.getTitle())
-                .subject(String.format("ZHCET Course %s %s", notification.getRecipientChannel(), notification.getTitle()))
-                .relativeLink("/dashboard/student/attendance")
-                .linkText("View Attendance")
-                .preMessage(notification.getMessage() + "\nPlease click the button below to view your attendance")
-                .markdown(true)
-                .build();
+    public void sendEmailForNotification(Notification notification, List<User> users) {
+        List<String> emails = UserService.verifiedUsers(users.stream())
+                .map(User::getEmail)
+                .collect(Collectors.toList());
+
+        if (emails.isEmpty()) {
+            log.debug("No emails found for notification {}", notification);
+            return;
+        }
+
+        LinkMessage payload = notification.getLinkMessageConverter() == null ?
+                getPayLoad(notification) :
+                notification.getLinkMessageConverter().apply(notification);
+        payload.setBcc(emails);
+        linkMailService.sendEmail(payload);
     }
 
     private LinkMessage getPayLoad(Notification notification) {
-        if (notification.isAutomated() && notification.getMeta() != null) {
-            switch (notification.getMeta()) {
-                case ATTENDANCE_TYPE:
-                    return getPayLoadForAttendance(notification);
-                default:
-                    // Do Nothing
-            }
-        }
-
         return LinkMessage.builder()
                 .title(notification.getTitle())
                 .subject("ZHCET Notification : " + notification.getTitle())

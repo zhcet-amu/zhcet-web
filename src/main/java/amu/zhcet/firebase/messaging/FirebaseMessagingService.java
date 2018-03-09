@@ -49,7 +49,7 @@ public class FirebaseMessagingService {
             String response = firebaseMessaging.sendAsync(message).get();
             log.info("Sent Broadcast : {}", response);
         } catch (InterruptedException | ExecutionException e) {
-            log.error("Sending FCM failed", e);
+            log.error("Sending FCM failed {}", e);
         }
     }
 

@@ -1,7 +1,7 @@
-package amu.zhcet.core.notification.sending;
+package amu.zhcet.notification.sending;
 
-import amu.zhcet.core.notification.ChannelType;
-import amu.zhcet.core.notification.Notification;
+import amu.zhcet.notification.ChannelType;
+import amu.zhcet.notification.Notification;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
 import lombok.extern.slf4j.Slf4j;

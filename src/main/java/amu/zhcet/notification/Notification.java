@@ -1,8 +1,9 @@
-package amu.zhcet.core.notification;
+package amu.zhcet.notification;
 
 import amu.zhcet.common.model.BaseIdEntity;
-import amu.zhcet.core.notification.recipient.NotificationRecipient;
 import amu.zhcet.data.user.User;
+import amu.zhcet.email.LinkMessage;
+import amu.zhcet.notification.recipient.NotificationRecipient;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Function;
 
 @Data
 @Entity
@@ -42,6 +44,9 @@ public class Notification extends BaseIdEntity {
     private boolean automated;
 
     private transient int seenCount;
+    private transient boolean stopEmailPropagation;
+    private transient boolean stopFirebasePropagation;
+    private transient Function<Notification, LinkMessage> linkMessageConverter;
 
     @NotAudited
     @OneToMany(mappedBy = "notification")

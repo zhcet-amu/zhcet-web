@@ -1,8 +1,8 @@
 package amu.zhcet.event;
 
-import amu.zhcet.core.notification.ChannelType;
-import amu.zhcet.core.notification.Notification;
-import amu.zhcet.core.notification.sending.NotificationSendingService;
+import amu.zhcet.notification.ChannelType;
+import amu.zhcet.notification.Notification;
+import amu.zhcet.notification.sending.NotificationSendingService;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserType;
 import amu.zhcet.auth.verification.DuplicateEmailEvent;

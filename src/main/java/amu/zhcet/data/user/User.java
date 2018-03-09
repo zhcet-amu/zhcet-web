@@ -73,6 +73,10 @@ public class User extends BaseEntity {
         details.setUserId(id);
     }
 
+    public boolean isEmailVerified() {
+        return emailVerified && email != null;
+    }
+
     public void setRoles(Set<String> roles) {
         if (roles == null) // A user is always a USER
             this.roles = Role.USER.toString();

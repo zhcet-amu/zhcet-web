@@ -1,8 +1,8 @@
-package amu.zhcet.core.notification.reading;
+package amu.zhcet.notification.reading;
 
 import amu.zhcet.common.utils.NotificationUtils;
 import amu.zhcet.core.error.ErrorUtils;
-import amu.zhcet.core.notification.recipient.NotificationRecipient;
+import amu.zhcet.notification.recipient.NotificationRecipient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

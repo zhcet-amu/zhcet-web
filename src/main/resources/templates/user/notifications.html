@@ -51,7 +51,7 @@
 
                 <div th:replace="fragments/pagination(pageUrl = 'notifications')"></div>
 
-                <!--/*@thymesVar id="notificationRecipient" type="amu.zhcet.core.notification.recipient.NotificationRecipient"*/-->
+                <!--/*@thymesVar id="notificationRecipient" type="amu.zhcet.notification.recipient.NotificationRecipient"*/-->
 
                 <div th:if="${notifications.isEmpty()}" class="text-xs-center text-muted">
                     <h3>No notifications</h3>

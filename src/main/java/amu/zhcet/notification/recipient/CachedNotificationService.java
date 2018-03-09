@@ -1,8 +1,8 @@
-package amu.zhcet.core.notification.recipient;
+package amu.zhcet.notification.recipient;
 
-import amu.zhcet.core.notification.Notification;
-import amu.zhcet.core.notification.NotificationRepository;
-import amu.zhcet.core.notification.reading.NotificationReadingService;
+import amu.zhcet.notification.Notification;
+import amu.zhcet.notification.NotificationRepository;
+import amu.zhcet.notification.reading.NotificationReadingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -54,6 +54,10 @@ public class CachedNotificationService {
 
     public void save(NotificationRecipient notificationRecipient) {
         notificationRecipientRepository.save(notificationRecipient);
+    }
+
+    public void saveAll(List<NotificationRecipient> notificationRecipients) {
+        notificationRecipientRepository.saveAll(notificationRecipients);
     }
 
     public void save(Notification notification) {

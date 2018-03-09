@@ -1,10 +1,10 @@
 package amu.zhcet.security.permission;
 
 import amu.zhcet.auth.UserAuth;
-import amu.zhcet.core.notification.Notification;
-import amu.zhcet.core.notification.NotificationRepository;
-import amu.zhcet.core.notification.recipient.NotificationRecipient;
-import amu.zhcet.core.notification.recipient.NotificationRecipientRepository;
+import amu.zhcet.notification.Notification;
+import amu.zhcet.notification.NotificationRepository;
+import amu.zhcet.notification.recipient.NotificationRecipient;
+import amu.zhcet.notification.recipient.NotificationRecipientRepository;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.CourseService;
 import amu.zhcet.data.course.floated.FloatedCourseService;
