@@ -4,6 +4,21 @@ spring:
   profiles:
     include: secrets-prod # Add production secrets
 
+  resources:
+    cache:
+      cachecontrol:
+        max-age: 31536000
+        s-max-age: 31536000
+        cache-public: true
+    chain:
+      enabled: true
+      cache: true
+      gzipped: true
+      html-application-cache: true
+      strategy:
+        content:
+          enabled: true
+
 zhcet:
   url: http://zhcet.amu.ac.in
   use-cdn: true

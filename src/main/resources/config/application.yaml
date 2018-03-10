@@ -21,22 +21,6 @@ spring:
     username: zhcetuser
     password: zhcetpass
 
-  resources:
-    cache:
-      cachecontrol:
-        max-age: 31536000
-        s-max-age: 31536000
-        cache-public: true
-    chain:
-      enabled: true
-      cache: true
-      gzipped: true
-      html-application-cache: true
-      strategy:
-        content:
-          enabled: true
-
-
   mail:
     host: smtp.gmail.com
     port: 587
