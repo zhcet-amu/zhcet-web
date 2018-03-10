@@ -43,6 +43,7 @@ public class User extends BaseEntity {
     @ManyToOne
     private Department department;
 
+    @Builder.Default
     private boolean enabled = true;
     private boolean passwordChanged;
     private boolean emailVerified;
@@ -63,6 +64,7 @@ public class User extends BaseEntity {
     @Valid
     @NotNull
     @PrimaryKeyJoinColumn
+    @Builder.Default
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserDetail details = new UserDetail();
 

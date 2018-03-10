@@ -29,24 +29,19 @@ public class Student extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private HallCode hallCode;
     private String section;
-    private Integer registrationYear = getYear();
+    private Integer registrationYear;
+    @Builder.Default
     private Character status = 'A';
 
     @NotNull
     @PrimaryKeyJoinColumn
+    @Builder.Default
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private User user = new User();
 
     public Student(User user, String facultyNumber) {
         this.user = user;
         setFacultyNumber(facultyNumber);
-    }
-
-    private Integer getYear() {
-        if (getCreatedAt() == null)
-            return null;
-
-        return getCreatedAt().getYear();
     }
 
     @PrePersist
