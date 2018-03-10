@@ -52,10 +52,11 @@
         course: [[${floatedCourse.course.code}]]
     }
 </script>
-<div th:replace="fragments/scripts :: typeahead"></div>
-<script th:src="@{/js/file-uploader.js}"></script>
+<script th:replace="fragments/scripts :: blockui"></script>
+<script th:replace="fragments/scripts :: typeahead"></script>
 <script th:src="@{/js/fuzzyhound.js}"></script>
 <script th:src="@{/js/floated-course.js}"></script>
+<script th:src="@{/js/file-uploader.js}"></script>
 <div th:replace="fragments/scripts :: datatables"></div>
 <div th:replace="fragments/scripts :: datatables_export"></div>
 <script th:src="@{/js/floated-course-common.js}"></script>

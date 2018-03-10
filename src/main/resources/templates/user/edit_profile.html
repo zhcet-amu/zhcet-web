@@ -76,9 +76,9 @@
 
         // Tab Selection
 
-        $('#list-tab a').on('click', function () {
-            $('.list-group-item').removeClass('active');
-            $(this).addClass('active');
+        const groupItem = $('.list-group-item');
+        groupItem.on('click', function () {
+            groupItem.removeClass('active');
             $(this).tab('show');
         });
 
@@ -88,7 +88,7 @@
                 hash = '#profile';
             }
 
-            $(hash + '-tab').click();
+            $(hash + '-tab').tab('show');
         }
 
         window.onhashchange = hashChange;

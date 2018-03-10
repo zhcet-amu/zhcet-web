@@ -10,7 +10,7 @@
         modal.find('#link').attr('href', '/admin/dean/students/' + data['enrolmentNumber']);
 
         modal.find('#avatar').attr('src', 'https://zhcet-backend.firebaseapp.com/static/img/account.svg');
-        if (data['avatar-url'] !== '' || data['original-avatar-url'] !== '') {
+        if ((data['avatar-url'] && data['avatar-url'] !== '') || (data['original-avatar-url'] && data['original-avatar-url'] !== '')) {
             var avatar = data['original-avatar-url'];
             if (avatar === '')
                 avatar = data['avatar-url'];

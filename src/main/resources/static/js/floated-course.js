@@ -29,14 +29,13 @@
     }
 
     var all = false;
-    var blockInchargeUI = App.blockUI;
     var department = PageDetails.department;
     var index = ["facultyId", "userName"];
     var baseUrl = "/admin/department/" + department + "/api/faculty";
     var actionArea = $('#incharge-action');
-    blockInchargeUI(actionArea, true);
+    App.blockUI(actionArea);
     fuzzyhound.setSource(baseUrl, index, function () {
-        blockInchargeUI(actionArea, false);
+        actionArea.unblock();
     });
 
     /* main */ (function () {
@@ -72,9 +71,9 @@
         var toggle = $('#toggle-more');
         toggle.click(function () {
             all = !all;
-            blockInchargeUI(actionArea, true);
+            App.blockUI(actionArea);
             fuzzyhound.setSource(baseUrl + '?all=' + all, index, function () {
-                blockInchargeUI(actionArea, false);
+                actionArea.unblock();
             });
             toggle.text(all ? 'Less' : 'More');
         });

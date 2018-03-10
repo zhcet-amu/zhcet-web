@@ -121,7 +121,10 @@ var Checker = (function () {
         weaknessReport = weaknessStatus.find('#weakness-report');
         passwordProgress = weaknessPanel.find('#password-progress');
 
-        loadScript('https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js', function () {
+        $.ajaxSetup({
+            cache: true
+        });
+        $.getScript('https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js').done(function () {
             // Show suggestions only when zxcvbn is loaded
             weaknessPanel.show();
         });

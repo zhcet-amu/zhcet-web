@@ -33,25 +33,6 @@ var loadImages = function (images) {
     return Promise.all(promises);
 };
 
-function loadScript(url, onload) {
-    var async_load = function() {
-        var first, s;
-        s = document.createElement('script');
-        s.src = url;
-        s.type = 'text/javascript';
-        s.async = true;
-        s.onload = onload;
-        first = document.getElementsByTagName('script')[0];
-        return first.parentNode.insertBefore(s, first);
-    };
-
-    if (window.attachEvent) {
-        window.attachEvent('onload', async_load);
-    } else {
-        window.addEventListener('load', async_load, false);
-    }
-}
-
 var App = (function () {
 
     if (!!window.toastr) {
@@ -59,24 +40,20 @@ var App = (function () {
         toastr.options.closeButton = true;
     }
 
-    function blockUI(element, block) {
-        if (block) {
-            element.block({
-                message: '<div class="icon-spinner9 icon-spin icon-lg"></div>',
-                overlayCSS: {
-                    backgroundColor: "#fff",
-                    opacity: .8,
-                    cursor: "wait"
-                },
-                css: {
-                    border: 0,
-                    padding: 0,
-                    backgroundColor: "transparent"
-                }
-            });
-        } else {
-            element.unblock();
-        }
+    function blockUI(element) {
+        element.block({
+            message: '<div class="icon-spinner9 icon-spin icon-lg"></div>',
+            overlayCSS: {
+                backgroundColor: "#fff",
+                opacity: .8,
+                cursor: "wait"
+            },
+            css: {
+                border: 0,
+                padding: 0,
+                backgroundColor: "transparent"
+            }
+        });
     }
 
     function getCsrfTokens() {

@@ -91,11 +91,11 @@
     var courses = null;
     var actionArea = $('#action-area');
 
-    App.blockUI(actionArea, true);
+    App.blockUI(actionArea);
     fuzzyhound.setSource("/admin/department/" + department + "/api/courses",
         ["code", "title"],
         function(response) {
-        App.blockUI(actionArea, false);
+            actionArea.unblock();
             courses = response;
         });
 

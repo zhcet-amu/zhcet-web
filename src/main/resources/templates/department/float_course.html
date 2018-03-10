@@ -97,7 +97,8 @@
         </div>
     </div>
 </div>
-<div th:replace="fragments/scripts :: typeahead"></div>
+<script th:replace="fragments/scripts :: blockui"></script>
+<script th:replace="fragments/scripts :: typeahead"></script>
 <script th:inline="javascript">
     var PageDetails = {
         department: [[${department.code}]]
