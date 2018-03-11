@@ -36,9 +36,6 @@ spring:
           starttls:
             enable: true
 
-  thymeleaf:
-    mode: HTML5
-
 management:
   endpoints:
     web:

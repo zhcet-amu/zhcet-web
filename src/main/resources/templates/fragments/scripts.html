@@ -53,33 +53,7 @@
 </th:block>
 
 <th:block th:fragment="firebase_config">
-    <script th:inline="javascript">
-        (function (firebase) {
-            /* Initialize Firebase */
-            var config = /*[[${@firebaseService.config}]]*/ null;
-
-            var defaultConfig = {
-                apiKey: "AIzaSyDPzDrlYgC1GlPooyvCmEOEBeQhLeJuggU",
-                authDomain: "zhcet-web-amu.firebaseapp.com",
-                databaseURL: "https://zhcet-web-amu.firebaseio.com",
-                projectId: "zhcet-web-amu",
-                storageBucket: "zhcet-web-amu.appspot.com",
-                messagingSenderId: "632575632330"
-            };
-
-            if (config !== null) {
-                config = JSON.parse(config);
-            } else {
-                config = defaultConfig;
-            }
-
-            try {
-                firebase.initializeApp(config);
-            } catch (e) {
-                console.log('Firebase Initialization Error', e)
-            }
-        }(firebase));
-    </script>
+    <script th:src="@{/js/firebase-config.js}"></script>
 </th:block>
 
 <th:block th:fragment="firebase_auth">

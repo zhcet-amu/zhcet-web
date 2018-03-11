@@ -4,6 +4,9 @@ spring:
   profiles:
     include: secrets-prod # Add production secrets
 
+  thymeleaf:
+    cache: true
+
   resources:
     cache:
       cachecontrol:

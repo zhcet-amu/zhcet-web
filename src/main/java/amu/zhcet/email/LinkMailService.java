@@ -24,7 +24,9 @@ public class LinkMailService {
     private final TemplateEngine htmlTemplateEngine;
     private final MarkDownService markDownService;
 
-    public LinkMailService(EmailService emailService, ConfigurationService configurationService, @Qualifier("emailEngine") TemplateEngine htmlTemplateEngine, MarkDownService markDownService) {
+    public LinkMailService(EmailService emailService, ConfigurationService configurationService,
+                           @Qualifier("extraTemplateEngine") TemplateEngine htmlTemplateEngine,
+                           MarkDownService markDownService) {
         this.emailService = emailService;
         this.configurationService = configurationService;
         this.htmlTemplateEngine = htmlTemplateEngine;
