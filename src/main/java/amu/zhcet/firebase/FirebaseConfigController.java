@@ -57,7 +57,7 @@ public class FirebaseConfigController {
                 .body(rendered);
     }
 
-    @Cacheable("firebase-config")
+    @Cacheable("firebase-messaging-sw")
     @GetMapping("/firebase-messaging-sw.js")
     public ResponseEntity<String> firebaseMessagingSw() {
         String rendered = templateEngine.process("js/firebase-messaging-sw", getFirebaseContext());
