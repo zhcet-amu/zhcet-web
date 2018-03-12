@@ -5,19 +5,19 @@
         <ul id="main-menu-navigation" data-menu="menu-navigation" class="navigation navigation-main">
             <li th:class="|nav-item ${pageId == null ? 'active' : ''} |" th:if="${pageId == null}">
                 <a th:href="@{/}">
-                    <i class="icon-home"></i>
+                    <i class="material-icons">home</i>
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Home</span>
                 </a>
             </li>
             <li th:class="|nav-item ${pageId == 'student_attendance' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_STUDENT')">
                 <a th:href="@{/dashboard/student/attendance}" href="attendance.html">
-                    <i class="icon-calendar"></i>
+                    <i class="material-icons md-18">event</i>
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Attendance</span>
                 </a>
             </li>
             <li th:class="|nav-item ${pageId == 'dean' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
                 <a th:href="@{/admin/dean}" href="dean.html">
-                    <i class="icon-cog3"></i>
+                    <i class="material-icons md-18">school</i>
                     <span data-i18n="nav.project.main" class="menu-title">Dean Panel</span>
                 </a>
                 <ul class="menu-content">
@@ -31,7 +31,7 @@
             </li>
             <li th:class="|nav-item ${pageId == 'department' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
                 <a th:href="@{/admin/department}" href="department.html">
-                    <i class="icon-archive3"></i>
+                    <i class="material-icons md-18">account_balance</i>
                     <span data-i18n="nav.project.main" class="menu-title">Department Panel</span>
                 </a>
                 <ul class="menu-content">
@@ -43,19 +43,19 @@
             </li>
             <li class="nav-item" sec:authorize="!isAuthenticated()">
                 <a th:href="@{/login}" href="login.html">
-                    <i class="icon-stack-2"></i>
+                    <i class="material-icons md-18">lock</i>
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Login</span>
                 </a>
             </li>
             <li th:class="|nav-item ${pageId == 'faculty_courses' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_FACULTY')">
                 <a th:href="@{/admin/faculty/courses}" href="floatedCourse.html">
-                    <i class="icon-layers"></i>
+                    <i class="material-icons md-18">library_books</i>
                     <span data-i18n="nav.page_layouts.main" class="menu-title">Course Management</span>
                 </a>
             </li>
             <li th:class="|nav-item ${pageId == 'notification_management' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_TEACHING_STAFF')">
                 <a th:href="@{/management/notification/send}">
-                    <i class="icon-bell4"></i>
+                    <i class="material-icons md-18">notifications_active</i>
                     <span data-i18n="nav.project.main" class="menu-title">Notification</span>
                 </a>
                 <ul class="menu-content">
@@ -65,7 +65,7 @@
             </li>
             <li th:class="|nav-item ${pageId == 'profile' ? 'active' : ''} |" sec:authorize="isAuthenticated()">
                 <a th:href="@{/profile}" href="profile.html">
-                    <i class="icon-head"></i>
+                    <i class="material-icons md-18">account_circle</i>
                     <span data-i18n="nav.project.main" class="menu-title">Profile</span>
                 </a>
             </li>

@@ -1,11 +1,11 @@
 <div class="card" th:fragment="add_department" xmlns:th="http://www.thymeleaf.org" lang="en">
     <div class="card-header">
         <h4 class="card-title">Add Department</h4>
-        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+        <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
         <div class="heading-elements">
             <ul class="list-inline mb-0">
-                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
+                <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
             </ul>
         </div>
     </div>
@@ -33,7 +33,7 @@
                         </div>
                         <div th:replace="fragments/flash :: success(condition = ${dept_success}, success_title = 'Uploaded!', message = 'Department was added successfully!')"></div>
                         <button type="submit" class="btn btn-primary float-xs-right">
-                            <i class="icon-check2"></i> Add
+                            <i class="material-icons">check</i> Add
                         </button>
                     </div>
                 </div>

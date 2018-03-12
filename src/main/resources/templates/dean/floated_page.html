@@ -5,6 +5,12 @@
     .type {
         background-color: #E1BEE7;
         font-weight:100;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    #type {
+        padding-right: 8px;
     }
 </style>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
@@ -16,11 +22,11 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Floated Courses</h4>
-                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
-                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                            <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
+                            <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -78,7 +84,7 @@
                     <h5 id="department" class="capsule p-small">Computer</h5>
                     <br>
                     <div style="text-align: center">
-                        <span class="capsule p-small type"><i id="type_icon" class="icon-book"></i>&nbsp;<span id="type">Theory</span></span>
+                        <span class="capsule p-small type"><i id="type_icon" class="material-icons md-dark">class</i>&nbsp;<span id="type">Theory</span></span>
                     </div>
                     <br>
                     <div>

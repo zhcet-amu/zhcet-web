@@ -16,7 +16,7 @@
                 <a th:href="@{|/admin/department/floated/${course.code}|}" th:if="${floated}">
                     <button class="btn btn-round btn-primary mb-2">Manage Floated Course</button>
                 </a>
-                <a th:href="@{|/admin/department/${department.code}/float/${course.code}|}" th:unless="${floated}">
+                <a th:href="@{|/admin/department/float/${course.code}|}" th:unless="${floated}">
                     <button class="btn btn-round btn-info mb-2">Float Course</button>
                 </a>
                 <button class="btn btn-round btn-danger mb-2" data-toggle="modal" data-target="#delete">Delete Course</button>
@@ -56,11 +56,11 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title" id="basic-layout-icons">Edit Course</h4>
-                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
-                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                            <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
+                            <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                             <div th:replace="department/fragments/course_form"></div>
                             <div class="form-actions right">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="icon-check2"></i> Save
+                                    <i class="material-icons md-18">check</i> Save
                                 </button>
                             </div>
                         </form>

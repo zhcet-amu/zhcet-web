@@ -15,12 +15,12 @@
                 <div class="card" style="background-color: #f9f9f9">
                     <div class="card-header">
                         <h4 class="card-title">Floated Courses</h4>
-                        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                        <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
                         These are the courses managed by you this session
                         <div class="heading-elements">
                             <ul class="list-inline mb-0">
-                                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                                <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
+                                <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -49,10 +49,12 @@
                                                         <strong><span th:class="|code tag tag-pill tag-glow ${@viewService.getClassForCourse(course)}|" th:text="${course.code}"></span></strong> :
                                                         <span class="title" th:text="${course.title}"></span>
                                                     </h4>
-                                                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                                                    <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
                                                     <div class="heading-elements">
                                                         <ul class="list-inline mb-0">
-                                                            <li><a th:href="${url}" data-toggle="tooltip" data-placement="top" data-original-title="Manage Attendance"><i class="icon-paper"></i></a></li>
+                                                            <li><a th:href="${url}" data-toggle="tooltip" data-placement="top" data-original-title="Manage Attendance">
+                                                                <i class="material-icons md-18">event</i>
+                                                            </a></li>
                                                         </ul>
                                                     </div>
                                                 </div>

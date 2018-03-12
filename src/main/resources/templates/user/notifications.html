@@ -19,7 +19,7 @@
     }
 
     .fav {
-        padding: 0 0 5px 0;
+        padding: 0 0 2px 0;
     }
 </style>
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
@@ -62,19 +62,19 @@
                         <div class="card">
                             <div th:class="|card-header ${notificationRecipient.seen ? '' : 'new'}|">
                                 <h4 class="title" th:utext="${@markDownService.render(notificationRecipient.notification.title)}"></h4>
-                                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                                <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
                                 <div class="heading-elements">
                                     <ul class="list-inline mb-0">
                                         <li>
                                             <form method="get" th:action="@{|/notifications/${notificationRecipient.id}/${notificationRecipient.favorite ? 'unmark' : 'mark'}/favorite|}">
                                                 <input type="text" name="page" th:value="${currentPage}" hidden>
                                                 <button type="submit" class="fav btn btn-icon btn-pure">
-                                                    <i th:class="${notificationRecipient.favorite ? 'icon-star-full' : 'icon-star-empty'}"></i>
+                                                    <i class="material-icons" th:text="${notificationRecipient.favorite ? 'star' : 'star_border'}"></i>
                                                 </button>
                                             </form>
                                         </li>
-                                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                                        <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
+                                        <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -84,7 +84,7 @@
                             <blockquote class="mb-2">
                                 <span>From : <code th:text="${notificationRecipient.notification.sender.name}"></code>
                                     <span th:if="${notificationRecipient.notification.automated}">
-                                        <i data-toggle="tooltip" data-original-title="Automated" class="icon-asterisk"></i>
+                                        <i data-toggle="tooltip" data-original-title="Automated" class="material-icons">autorenew</i>
                                     </span>
                                 </span>
                                 <small class="float-xs-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notificationRecipient.notification.sentTime)}"></em></small>

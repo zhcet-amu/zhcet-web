@@ -4,33 +4,7 @@
       data-textdirection="ltr"
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
-<style>
-    .title, .title > p {
-        padding: 0;
-        margin: 0;
-    }
-
-    .card-header {
-        min-height: 55px;
-    }
-
-    .head-icon {
-        padding: 0 5px 3px 5px;
-    }
-
-    .bg-light-gray {
-        background-color: #ddd;
-    }
-
-    table.statistics td {
-        padding: .5rem;
-    }
-
-    .accordion-title, .accordion-title:hover, .accordion-title:visited, .accordion-title:focus {
-        text-decoration: none;
-        color: #333;
-    }
-</style>
+<link rel="stylesheet" th:href="@{/css/notification.css}">
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification', subPage='manage_notification')" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
@@ -81,24 +55,26 @@
                     <div class="card">
                         <div class="card-header">
                             <h4 class="title" th:utext="${@markDownService.render(notification.title)}"></h4>
-                            <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                            <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
                             <div class="heading-elements">
                                 <ul class="list-inline mb-0">
                                     <li>
                                         <form method="get" th:action="@{|/management/notifications/${notification.id}/edit|}">
                                             <input type="text" name="page" th:value="${currentPage}" hidden>
-                                            <button type="submit" class="head-icon btn btn-icon btn-pure">
-                                                <i data-toggle="tooltip" data-original-title="Edit Notification" class="icon-android-create"></i>
+                                            <button type="submit" data-toggle="tooltip" data-original-title="Edit Notification"
+                                                    class="head-icon btn btn-icon btn-pure">
+                                                <i class="material-icons md-18">edit</i>
                                             </button>
                                         </form>
                                     </li>
                                     <li>
-                                        <button class="head-icon btn btn-icon btn-pure" th:onclick="|NotificationManager.deleteNotification(${notification.id})|">
-                                            <i data-toggle="tooltip" data-original-title="Delete Notification" class="icon-trash4"></i>
+                                        <button class="head-icon btn btn-icon btn-pure" data-toggle="tooltip" data-original-title="Delete Notification"
+                                                th:onclick="|NotificationManager.deleteNotification(${notification.id})|">
+                                            <i class="material-icons md-18">delete</i>
                                         </button>
                                     </li>
-                                    <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                                    <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
+                                        <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -112,27 +88,27 @@
                                         <div class="bg-light-gray px-1">
                                             <table class="statistics collapse in">
                                                 <tr>
-                                                    <td><i class="icon-share4"></i></td>
+                                                    <td><i class="material-icons">share</i></td>
                                                     <td>Type</td>
                                                     <td th:text="${notification.channelType}"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><i class="icon-fast-forward2"></i></td>
+                                                    <td><i class="material-icons">group</i></td>
                                                     <td>Recipient</td>
                                                     <td th:text="${notification.recipientChannel}"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><i class="icon-bell4"></i></td>
+                                                    <td><i class="material-icons">notifications_active</i></td>
                                                     <td>Received</td>
                                                     <td th:text="${notification.notificationRecipients.size()}"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><i class="icon-eye6"></i></td>
+                                                    <td><i class="material-icons">visibility</i></td>
                                                     <td>Seen</td>
                                                     <td th:text="${notification.seenCount}"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><i class="icon-paper"></i></td>
+                                                    <td><i class="material-icons">receipt</i></td>
                                                     <td><a th:href="@{|/management/notifications/${notification.id}/report|}">Report</a></td>
                                                     <td></td>
                                                 </tr>
@@ -146,7 +122,7 @@
                         <blockquote class="mb-2">
                                 <span>From : <code th:text="${notification.sender.name}"></code>
                                     <span th:if="${notification.automated}">
-                                        <i data-toggle="tooltip" data-original-title="Automated" class="icon-asterisk"></i>
+                                        <i data-toggle="tooltip" data-original-title="Automated" class="material-icons">autorenew</i>
                                     </span>
                                 </span>
                             <small class="float-xs-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notification.sentTime)}"></em></small>

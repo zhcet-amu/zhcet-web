@@ -36,9 +36,9 @@
             modal.find('#email').html('No Email Registered');
 
         if (data['is-verified'])
-            modal.find('#verified i').addClass('icon-check2');
+            modal.find('#verified i').text('check');
         else
-            modal.find('#verified i').removeClass('icon-check2');
+            modal.find('#verified i').text('');
 
         if (data['createdAt'] && data['createdAt'] !== '')
             modal.find('#registered-at').html(moment(DataUtils.fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));

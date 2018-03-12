@@ -23,3 +23,12 @@ table.statistics td {
     text-decoration: none;
     color: #333;
 }
+
+.statistics tr td i {
+    color: #555;
+}
+
+.accordion-title, .accordion-title:hover, .accordion-title:visited, .accordion-title:focus {
+    text-decoration: none;
+    color: #333;
+}

@@ -14,11 +14,11 @@
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title" id="from-actions-top-left">Student Details</h4>
-                <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
                 <div class="heading-elements">
                     <ul class="list-inline mb-0">
-                        <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
-                        <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
+                        <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
                     </ul>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                             <span>Registration Year : </span><span th:text="${student.registrationYear}"></span></span>
                         </div>
                     </div>
-                    <span th:text="${student.user.email}"></span><span th:if="${student.user.emailVerified}" style="margin-left: 5px;"><i class="icon-check2"></i></span>
+                    <span th:text="${student.user.email}"></span><span th:if="${student.user.emailVerified}" style="margin-left: 5px;"><i class="material-icons md-18">check</i></span>
                     <br>
                 </div>
             </div>
@@ -171,7 +171,7 @@
                                    class="btn btn-block btn-danger">Edit Roles</a>
                                 <br>
                                 <button type="submit" class="btn btn-primary float-xs-right">
-                                    <i class="icon-check2"></i> Update
+                                    <i class="material-icons">check</i> Update
                                 </button>
                                 <br><br>
                             </div>
