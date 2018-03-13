@@ -10,7 +10,7 @@
                 <span class="badge"><i class="material-icons">group_work</i>
                 <span th:text="${course.category}"></span></span>&nbsp;
                 <span class="join">
-                    <span class="capsule p-small type" th:if="${course.type != null}"><i th:class="${course.type.name() == 'T' ? 'icon-book' : 'icon-lab'}"></i>&nbsp;<span th:text="${course.type}"></span></span>&nbsp;
+                    <span class="capsule p-small type" th:if="${course.type != null}"><i class="material-icons md-dark" th:text="${course.type.name() == 'T' ? 'class' : 'opacity'}"></i>&nbsp;<span th:text="${course.type}"></span></span>&nbsp;
                     <span th:class="|capsule p-small ${(course.compulsory != null && course.compulsory) ? 'bg-primary' : 'bg-info'} text-white|" th:text="${(course.compulsory != null && course.compulsory) ? 'Compulsory' : 'Optional'}"></span>
                 </span>
             </h5>
