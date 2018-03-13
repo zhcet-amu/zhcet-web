@@ -13,17 +13,17 @@ public class StorageProperties {
 
     @Data
     public static class Csv {
-        private String location = "upload-dir/csv";
+        private String location = "app-root/upload-dir/csv";
     }
 
     @Data
     public static class Image {
-        private String location = "upload-dir/img";
+        private String location = "app-root/upload-dir/img";
     }
 
     @Data
     public static class Document {
-        private String location = "upload-dir/doc";
+        private String location = "app-root/upload-dir/doc";
     }
 
 }

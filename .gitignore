@@ -17,13 +17,11 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
-# Upload directory
-/upload-dir/
+# App's root directory
+/app-root/
 
 service-account.json
 application-secrets*
 secret.properties
-
-logs/
 
 sentry.properties

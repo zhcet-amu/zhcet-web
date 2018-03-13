@@ -48,7 +48,7 @@ public class FirebaseConfigController {
     public ResponseEntity<String> firebaseConfig() {
         String rendered = templateEngine.process("js/firebase-config", getFirebaseContext());
 
-        return ResponseEntity.accepted()
+        return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("text/javascript"))
                 .cacheControl(CacheControl
                         .maxAge(365, TimeUnit.DAYS)
@@ -62,7 +62,7 @@ public class FirebaseConfigController {
     public ResponseEntity<String> firebaseMessagingSw() {
         String rendered = templateEngine.process("js/firebase-messaging-sw", getFirebaseContext());
 
-        return ResponseEntity.accepted()
+        return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("text/javascript"))
                 .cacheControl(CacheControl
                         .maxAge(1, TimeUnit.DAYS)

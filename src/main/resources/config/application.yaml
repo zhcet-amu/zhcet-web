@@ -56,11 +56,11 @@ server:
     accesslog:
       enabled: true
       pattern: '%t %l %h %u "%r" %s %b "%{i,Referer}" "%{i,User-Agent}" (%D ms)'
-      dir: logs/access
+      dir: app-root/logs/access
 
 logging:
-  file: logs/spring.log
-  path: logs/
+  file: app-root/logs/spring.log
+  path: app-root/logs/
   level:
     root: INFO
     amu.zhcet: TRACE
