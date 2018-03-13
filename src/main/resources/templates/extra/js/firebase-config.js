@@ -1,5 +1,5 @@
 (function (firebase) {
-    var config = /*[(${config})]*/ null;
+    var config = /*[(${config == null ? 'null' : config})]*/ null;
 
     var defaultConfig = {
         apiKey: "AIzaSyDPzDrlYgC1GlPooyvCmEOEBeQhLeJuggU",

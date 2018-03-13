@@ -4,7 +4,7 @@
 importScripts('https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/4.10.1/firebase-messaging.js');
 
-var config = /*[(${config})]*/ null;
+var config = /*[(${config == null ? 'null' : config})]*/ null;
 const defaultConfig = {
     apiKey: "AIzaSyDPzDrlYgC1GlPooyvCmEOEBeQhLeJuggU",
     authDomain: "zhcet-web-amu.firebaseapp.com",
