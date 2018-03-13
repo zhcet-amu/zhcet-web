@@ -1,7 +1,7 @@
 package amu.zhcet.common;
 
-import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.floated.FloatedCourse;
+import amu.zhcet.data.course.floated.FloatedCourseService;
 import amu.zhcet.data.course.incharge.CourseInChargeService;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import amu.zhcet.data.user.User;
@@ -13,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Collections;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -34,56 +34,43 @@ public class UserExtractor {
         this.facultyService = facultyService;
     }
 
-    private static void sendToCourseRegistrations(List<CourseRegistration> courseRegistrations, Consumer<User> consumer) {
-        for (CourseRegistration courseRegistration : courseRegistrations)
-            consumer.accept(courseRegistration.getStudent().getUser());
+    public Stream<User> fromFloatedCourse(String floatedCourseId) {
+        return floatedCourseService.getFloatedCourseByCode(floatedCourseId)
+                .map(FloatedCourse::getCourseRegistrations)
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(CourseRegistration::getStudent)
+                .map(Student::getUser);
     }
 
-    private <T> void reportMissing(Optional<T> optional, String type, String id) {
-        if (!optional.isPresent())
-            log.warn("No {} found with ID {}", type, id);
+    public Stream<User> fromSection(String section) {
+        return studentService.getBySection(section)
+                .stream()
+                .map(Student::getUser);
     }
 
-    public void fromFloatedCourse(String floatedCourseId, Consumer<User> consumer) {
-        Optional<FloatedCourse> floatedCourseOptional = floatedCourseService.getFloatedCourseByCode(floatedCourseId);
-        floatedCourseOptional.ifPresent(floatedCourse -> {
-            List<CourseRegistration> courseRegistrations = floatedCourse.getCourseRegistrations();
-            sendToCourseRegistrations(courseRegistrations, consumer);
-        });
-        reportMissing(floatedCourseOptional, "floated course", floatedCourseId);
-    }
-
-    public void fromSection(String section, Consumer<User> consumer) {
-        studentService.getBySection(section)
-                .forEach(student -> consumer.accept(student.getUser()));
-    }
-
-    public void fromStudentId(String studentId, Consumer<User> consumer) {
+    public Optional<User> fromStudentId(String studentId) {
         Optional<Student> recipient = studentService.getByEnrolmentNumber(studentId);
         if (!recipient.isPresent())
             recipient = studentService.getByFacultyNumber(studentId);
 
-        recipient.ifPresent(student -> consumer.accept(student.getUser()));
-        reportMissing(recipient, "student", studentId);
+        return recipient.map(Student::getUser);
     }
 
-    public void fromFacultyId(String facultyId, Consumer<User> consumer) {
-        Optional<FacultyMember> recipientOptional = facultyService.getById(facultyId);
-        recipientOptional.ifPresent(facultyMember -> consumer.accept(facultyMember.getUser()));
-        reportMissing(recipientOptional, "faculty", facultyId);
+    public Optional<User> fromFacultyId(String facultyId) {
+        return facultyService.getById(facultyId)
+                .map(FacultyMember::getUser);
     }
 
-    public void fromTaughtCourse(String courseId, String inChargeId, Consumer<User> consumer) {
-        Optional<FacultyMember> recipientOptional = facultyService.getById(inChargeId);
-        recipientOptional.ifPresent(facultyMember -> {
-            courseInChargeService.getCourseByFaculty(facultyMember)
-                    .stream()
-                    .filter(inCharge ->
-                            inCharge.getFloatedCourse().getCourse().getCode().equals(courseId))
-                    .forEach(inCharge ->
-                            sendToCourseRegistrations(courseInChargeService.getCourseRegistrations(inCharge), consumer));
-        });
-        reportMissing(recipientOptional, "faculty", inChargeId);
+    public Stream<User> fromTaughtCourse(String courseId, String inChargeId) {
+        return facultyService.getById(inChargeId)
+                .map(courseInChargeService::getCourseByFaculty)
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(courseInCharge -> courseInCharge.getFloatedCourse().getCourse().getCode().equals(courseId))
+                .flatMap(courseInCharge -> courseInChargeService.getCourseRegistrations(courseInCharge).stream())
+                .map(CourseRegistration::getStudent)
+                .map(Student::getUser);
     }
 
 }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,37 +85,35 @@ public class NotificationSendingService {
     // same email to everyone
 
     private void sendToTaughtCourse(Notification notification) {
-        List<User> users = new ArrayList<>();
-        userExtractor.fromTaughtCourse(notification.getRecipientChannel(),
-                notification.getSender().getUserId(),
-                users::add);
-        sendUserNotifications(notification, users);
+        sendUserNotifications(notification,
+                userExtractor.fromTaughtCourse(
+                        notification.getRecipientChannel(),
+                        notification.getSender().getUserId())
+                        .collect(Collectors.toList()));
     }
 
     private void sendToSection(Notification notification) {
-        List<User> users = new ArrayList<>();
-        userExtractor.fromSection(notification.getRecipientChannel(),
-                users::add);
-        sendUserNotifications(notification, users);
+        sendUserNotifications(notification, userExtractor
+                .fromSection(notification.getRecipientChannel())
+                .collect(Collectors.toList()));
     }
 
     private void sendToCourse(Notification notification) {
-        List<User> users = new ArrayList<>();
-        userExtractor.fromFloatedCourse(notification.getRecipientChannel(),
-                users::add);
-        sendUserNotifications(notification, users);
+        sendUserNotifications(notification, userExtractor
+                .fromFloatedCourse(notification.getRecipientChannel())
+                .collect(Collectors.toList()));
     }
 
     // Singular notifications can be sent individually and hence can be personalized
 
     private void sendToFaculty(Notification notification) {
-        userExtractor.fromFacultyId(notification.getRecipientChannel(),
-                user -> sendUserNotification(notification, user));
+        userExtractor.fromFacultyId(notification.getRecipientChannel())
+                .ifPresent(user -> sendUserNotification(notification, user));
     }
 
     private void sendToStudent(Notification notification) {
-        userExtractor.fromStudentId(notification.getRecipientChannel(),
-                user -> sendUserNotification(notification, user));
+        userExtractor.fromStudentId(notification.getRecipientChannel())
+                .ifPresent(user -> sendUserNotification(notification, user));
     }
 
     private void sendUserNotification(Notification notification, User user) {
