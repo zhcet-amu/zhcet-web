@@ -14,7 +14,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaRepositories(repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class)
 @EnableConfigurationProperties({ApplicationProperties.class, SecureProperties.class,
-        EmailProperties.class, StorageProperties.class, FirebaseProperties.class})
+        EmailProperties.class, StorageProperties.class, FirebaseProperties.class,
+        StorageProperties.class})
 public class CoreApplication {
 
     public static void main(String[] args) {
