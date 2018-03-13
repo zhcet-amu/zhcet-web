@@ -15,11 +15,11 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 public class NotificationSendingServiceTest {
@@ -63,30 +63,42 @@ public class NotificationSendingServiceTest {
         verify(cachedNotificationService).save(notification);
     }
 
+    private String[] userIds = {"Prakash", "Mahesh", "Rajesh"};
+    private List<User> userList = Stream.of(userIds)
+            .map(id -> User.builder().userId(id).build())
+            .collect(Collectors.toList());
+
+
+    private void setBehaviour() {
+        when(userExtractor.fromTaughtCourse(any(), any()))
+                .thenReturn(userList.stream());
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<NotificationRecipient> getRecipients() {
+        ArgumentCaptor<List> notificationRecipientArgumentCaptor = ArgumentCaptor.forClass(List.class);
+        verify(cachedNotificationService).saveAll(notificationRecipientArgumentCaptor.capture());
+
+        return (List<NotificationRecipient>) notificationRecipientArgumentCaptor.getValue();
+    }
+
     @Test
     public void saveNotificationRecipient() {
         Notification notification = getNotification();
 
-        ArgumentCaptor<Consumer> consumerCaptor = ArgumentCaptor.forClass(Consumer.class);
-        ArgumentCaptor<NotificationRecipient> notificationRecipientArgumentCaptor = ArgumentCaptor.forClass(NotificationRecipient.class);
-
+        setBehaviour();
         notificationSendingService.sendNotification(notification);
 
-        verify(userExtractor).fromTaughtCourse(eq(notification.getRecipientChannel()), eq(sender.getUserId()), consumerCaptor.capture());
-
-        String[] userIds = {"Prakash", "Mahesh", "Rajesh"};
-        Stream.of(userIds)
-                .map(id -> User.builder().userId(id).build())
-                .forEach(user -> consumerCaptor.getValue().accept(user));
-
         Stream.of(userIds).forEach(id -> verify(cachedNotificationService).resetUnreadCount(id));
-        verify(cachedNotificationService, times(3)).save(notificationRecipientArgumentCaptor.capture());
-        notificationRecipientArgumentCaptor.getAllValues().forEach(notificationRecipient -> {
+
+        List<NotificationRecipient> recipients = getRecipients();
+
+        verify(emailSendingService).sendEmailForNotification(notification, userList);
+
+        recipients.forEach(notificationRecipient -> {
             assertTrue(Arrays.asList(userIds).contains(notificationRecipient.getRecipient().getUserId()));
             assertEquals(notification, notificationRecipient.getNotification());
             verify(cachedNotificationService).resetUnreadCount(notificationRecipient.getRecipient().getUserId());
-            verify(cachedNotificationService).save(notificationRecipient);
-            verify(emailSendingService).sendEmailForNotification(notificationRecipient);
             verify(firebaseNotificationSender).sendFirebaseNotification(notificationRecipient);
         });
     }
@@ -96,26 +108,14 @@ public class NotificationSendingServiceTest {
         Notification notification = getNotification();
         notification.setStopEmailPropagation(true);
 
-        ArgumentCaptor<Consumer> consumerCaptor = ArgumentCaptor.forClass(Consumer.class);
-        ArgumentCaptor<NotificationRecipient> notificationRecipientArgumentCaptor = ArgumentCaptor.forClass(NotificationRecipient.class);
-
+        setBehaviour();
         notificationSendingService.sendNotification(notification);
 
-        verify(userExtractor).fromTaughtCourse(eq(notification.getRecipientChannel()), eq(sender.getUserId()), consumerCaptor.capture());
+        List<NotificationRecipient> recipients = getRecipients();
 
-        String[] userIds = {"Prakash", "Mahesh", "Rajesh"};
-        Stream.of(userIds)
-                .map(id -> User.builder().userId(id).build())
-                .forEach(user -> consumerCaptor.getValue().accept(user));
-
-        verify(cachedNotificationService, times(3)).save(notificationRecipientArgumentCaptor.capture());
-        notificationRecipientArgumentCaptor.getAllValues().forEach(notificationRecipient -> {
-            assertTrue(Arrays.asList(userIds).contains(notificationRecipient.getRecipient().getUserId()));
-            assertEquals(notification, notificationRecipient.getNotification());
-            verify(cachedNotificationService).save(notificationRecipient);
-            verify(cachedNotificationService).resetUnreadCount(notificationRecipient.getRecipient().getUserId());
+        verify(emailSendingService, never()).sendEmailForNotification(notification, userList);
+        recipients.forEach(notificationRecipient -> {
             verify(emailSendingService, never()).sendEmailForNotification(notificationRecipient);
-            verify(firebaseNotificationSender).sendFirebaseNotification(notificationRecipient);
         });
     }
 
@@ -124,25 +124,12 @@ public class NotificationSendingServiceTest {
         Notification notification = getNotification();
         notification.setStopFirebasePropagation(true);
 
-        ArgumentCaptor<Consumer> consumerCaptor = ArgumentCaptor.forClass(Consumer.class);
-        ArgumentCaptor<NotificationRecipient> notificationRecipientArgumentCaptor = ArgumentCaptor.forClass(NotificationRecipient.class);
-
+        setBehaviour();
         notificationSendingService.sendNotification(notification);
 
-        verify(userExtractor).fromTaughtCourse(eq(notification.getRecipientChannel()), eq(sender.getUserId()), consumerCaptor.capture());
+        List<NotificationRecipient> recipients = getRecipients();
 
-        String[] userIds = {"Prakash", "Mahesh", "Rajesh"};
-        Stream.of(userIds)
-                .map(id -> User.builder().userId(id).build())
-                .forEach(user -> consumerCaptor.getValue().accept(user));
-
-        verify(cachedNotificationService, times(3)).save(notificationRecipientArgumentCaptor.capture());
-        notificationRecipientArgumentCaptor.getAllValues().forEach(notificationRecipient -> {
-            assertTrue(Arrays.asList(userIds).contains(notificationRecipient.getRecipient().getUserId()));
-            assertEquals(notification, notificationRecipient.getNotification());
-            verify(cachedNotificationService).save(notificationRecipient);
-            verify(cachedNotificationService).resetUnreadCount(notificationRecipient.getRecipient().getUserId());
-            verify(emailSendingService).sendEmailForNotification(notificationRecipient);
+        recipients.forEach(notificationRecipient -> {
             verify(firebaseNotificationSender, never()).sendFirebaseNotification(notificationRecipient);
         });
     }
