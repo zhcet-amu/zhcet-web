@@ -39,7 +39,6 @@ public class Notification extends BaseIdEntity {
     @Enumerated(EnumType.STRING)
     private ChannelType channelType;
     private boolean scheduled;
-    @Builder.Default
     private LocalDateTime sentTime = LocalDateTime.now();
     private boolean automated;
 

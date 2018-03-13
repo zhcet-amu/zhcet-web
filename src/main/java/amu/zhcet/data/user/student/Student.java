@@ -30,12 +30,10 @@ public class Student extends BaseEntity {
     private HallCode hallCode;
     private String section;
     private Integer registrationYear;
-    @Builder.Default
     private Character status = 'A';
 
     @NotNull
     @PrimaryKeyJoinColumn
-    @Builder.Default
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private User user = new User();
 

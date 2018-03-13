@@ -26,10 +26,8 @@ public class FacultyMember extends BaseEntity {
     @NotNull
     @PrimaryKeyJoinColumn
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Builder.Default
     private User user = new User();
 
-    @Builder.Default
     private boolean working = true;
     private String designation;
 
