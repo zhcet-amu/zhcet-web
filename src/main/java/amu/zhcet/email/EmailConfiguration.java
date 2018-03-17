@@ -13,8 +13,8 @@ public class EmailConfiguration {
 
     private static boolean EMAIL_ENABLED;
 
-    @Autowired(required = false)
-    public EmailConfiguration(JavaMailSender javaMailSender, EmailProperties emailProperties) {
+    public EmailConfiguration(@Autowired(required = false) JavaMailSender javaMailSender,
+                              EmailProperties emailProperties) {
         if (javaMailSender == null || Strings.isNullOrEmpty(emailProperties.getAddress())) {
             log.error(ConsoleHelper.red("CONFIG (Email): Email or Password not found {}"), emailProperties.getAddress());
             EMAIL_ENABLED = false;
