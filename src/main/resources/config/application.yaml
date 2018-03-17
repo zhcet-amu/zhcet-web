@@ -3,6 +3,8 @@ spring:
     include: dev, secrets
 
   jpa:
+    # TODO: Provide better solution for lazy loading
+    open-in-view: true
     hibernate:
       ddl-auto: validate
     properties:
