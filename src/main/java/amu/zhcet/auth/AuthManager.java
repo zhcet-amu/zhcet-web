@@ -34,8 +34,13 @@ public class AuthManager {
      * @param user User for which the roles have to be updated containing the new roles
      */
     public void updateRoles(User user) {
-        Authentication authentication = getAndValidateAuthentication(user);
-        userDetailService.cloneWithRoles(authentication, user);
+        try {
+            Authentication authentication = getAndValidateAuthentication(user);
+            userDetailService.cloneWithRoles(authentication, user);
+        } catch (IllegalStateException ile) {
+            log.info("No need to update roles. User is not logged in", ile.getMessage());
+            userDetailService.saveUser(user);
+        }
     }
 
     /**
