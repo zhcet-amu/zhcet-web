@@ -75,6 +75,10 @@ public class UserDetailService implements UserDetailsService {
         return new UserAuth(user, authorities);
     }
 
+    void saveUser(User user) {
+        userService.save(user);
+    }
+
     /**
      * Update current authentication by cloning it with new roles
      * Also saves the user with new roles
@@ -91,7 +95,7 @@ public class UserDetailService implements UserDetailsService {
                 authentication.getCredentials(),
                 authorities);
 
-        userService.save(user);
+        saveUser(user);
         SecurityContextHolder.getContext().setAuthentication(clone);
     }
 
@@ -126,5 +130,4 @@ public class UserDetailService implements UserDetailsService {
     static void logout() {
         SecurityContextHolder.getContext().setAuthentication(null);
     }
-
 }
