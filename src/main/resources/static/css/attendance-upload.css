@@ -1,0 +1,22 @@
+input.attendance {
+    width: 70px;
+}
+
+input.attendance.delivered {
+    display: inline;
+}
+
+.eq {
+    visibility: hidden;
+    padding: 5px;
+    border-radius: 50px;
+}
+
+.eq:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.td-delivered:hover .eq {
+    visibility: visible;
+}
