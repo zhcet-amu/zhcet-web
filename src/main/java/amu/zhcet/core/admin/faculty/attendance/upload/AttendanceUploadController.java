@@ -1,6 +1,7 @@
 package amu.zhcet.core.admin.faculty.attendance.upload;
 
 import amu.zhcet.common.utils.SortUtils;
+import amu.zhcet.core.admin.attendance.AttendanceMapper;
 import amu.zhcet.data.course.incharge.CourseInCharge;
 import amu.zhcet.data.course.incharge.CourseInChargeNotFoundException;
 import amu.zhcet.data.course.incharge.CourseInChargeService;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -27,16 +29,34 @@ public class AttendanceUploadController {
 
     private final CourseInChargeService courseInChargeService;
     private final AttendanceUploadService attendanceUploadService;
+    private final AttendanceMapper attendanceMapper;
 
     @Autowired
-    public AttendanceUploadController(CourseInChargeService courseInChargeService, AttendanceUploadService attendanceUploadService) {
+    public AttendanceUploadController(CourseInChargeService courseInChargeService, AttendanceUploadService attendanceUploadService, AttendanceMapper attendanceMapper) {
         this.courseInChargeService = courseInChargeService;
         this.attendanceUploadService = attendanceUploadService;
+        this.attendanceMapper = attendanceMapper;
     }
 
     @Data
     private static class AttendanceModel {
         private List<AttendanceUpload> uploadList;
+    }
+
+    @GetMapping
+    public String edit(RedirectAttributes attributes, @PathVariable String code) {
+        CourseInCharge courseInCharge = courseInChargeService.getCourseInCharge(code).orElseThrow(CourseInChargeNotFoundException::new);
+        AttendanceModel attendanceModel = new AttendanceModel();
+
+        List<AttendanceUpload> attendanceUploads = courseInChargeService.getCourseRegistrations(courseInCharge)
+                .stream()
+                .map(attendanceMapper::fromCourseRegistration)
+                .collect(Collectors.toList());
+        SortUtils.sortAttendanceUpload(attendanceUploads);
+        attendanceModel.setUploadList(attendanceUploads);
+        attributes.addFlashAttribute("attendanceModel", attendanceModel);
+
+        return "redirect:/admin/faculty/courses/{code}/attendance";
     }
 
     @PostMapping

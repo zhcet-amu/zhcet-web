@@ -5,6 +5,10 @@
         <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
         <div class="heading-elements">
             <ul class="list-inline mb-0">
+                <li><a th:href="@{|/admin/faculty/courses/${incharge.code}/attendance/edit|}"
+                        data-toggle="tooltip" data-original-title="Edit Attendance">
+                    <i class="material-icons">edit</i>
+                </a></li>
                 <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
                 <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
             </ul>

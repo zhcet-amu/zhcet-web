@@ -35,34 +35,11 @@
     /*<![CDATA[*/
     var threshold = /*[[${@configurationService.getThreshold()}]]*/ 75;
     /*]]>*/
-
-    function update(node) {
-        var cell = $(node);
-
-        var attended = cell.find('.attended').val();
-        var delivered = cell.find('.delivered').val();
-        var percent = attended/delivered*100;
-
-        if (percent < threshold)
-            cell.addClass('bg-danger');
-        else
-            cell.removeClass('bg-danger');
-
-        cell.find('.percent').text(truncateDecimals(percent, 2) + '%')
-    }
-
-    var truncateDecimals = function (number, digits) {
-        var multiplier = Math.pow(10, digits),
-            adjustedNum = number * multiplier,
-            truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
-
-        return truncatedNum / multiplier;
-    };
-
 </script>
 <script th:src="@{/js/file-uploader.js}"></script>
 <div th:replace="fragments/scripts :: datatables"></div>
 <div th:replace="fragments/scripts :: datatables_export"></div>
 <script th:src="@{/js/attendance-upload.js}"></script>
+<link rel="stylesheet" th:href="@{/css/attendance-upload.css}">
 </body>
 </html>
