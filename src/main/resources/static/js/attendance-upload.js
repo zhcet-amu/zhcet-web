@@ -37,7 +37,7 @@
 
     $('.eq').on('click', function () {
        const delivered = $(this.parentElement).find('.delivered').val();
-       $('.delivered').val(delivered);
+       $('.delivered').val(delivered).click();
     });
 
     var truncateDecimals = function (number, digits) {
