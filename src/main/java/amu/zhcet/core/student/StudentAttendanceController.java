@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequestMapping("/dashboard/student/attendance")
@@ -34,6 +36,10 @@ public class StudentAttendanceController {
         model.addAttribute("page_description", "View attendance of floated courses this session");
         model.addAttribute("sessionCode", session);
         model.addAttribute("attendances", attendanceService.getAttendanceByStudent(student, session));
+
+        List<String> sessions = studentService.getStudentSessions(student);
+        if (sessions.size() > 1)
+            model.addAttribute("sessions", studentService.getStudentSessions(student));
 
         return "student/attendance";
     }

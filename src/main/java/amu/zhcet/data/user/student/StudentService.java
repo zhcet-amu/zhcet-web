@@ -34,6 +34,14 @@ public class StudentService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public List<String> getStudentSessions(String enrolmentNumber) {
+        return studentRepository.getStudentSessions(enrolmentNumber);
+    }
+
+    public List<String> getStudentSessions(Student student) {
+        return getStudentSessions(student.getEnrolmentNumber());
+    }
+
     public Optional<Student> getLoggedInStudent() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();

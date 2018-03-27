@@ -8,6 +8,22 @@
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'student_attendance')" sec:authorize="hasRole('ROLE_STUDENT')">
     <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
         <div th:replace="fragments/toolbar"></div>
+        <div class="row" th:if="${sessions}">
+            <div class="col-xs-12 col-md-4 offset-md-8"
+                 th:with="defaultSession = ${sessionCode != null ? sessionCode : @configurationService.getDefaultSessionCode()}">
+                <form class="mui-form">
+                    <div class="mui-select">
+                        <select name="Session" id="session" onChange="window.location.href=this.value">
+                            <option th:each="sessionCode : ${sessions}"
+                                    th:value="@{./attendance(session=${sessionCode})}"
+                                    th:selected="${defaultSession == sessionCode}"
+                                    th:text="${@configurationService.getSessionName(sessionCode)}"></option>
+                        </select>
+                        <label for="session">Session</label>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title">Attendance</h4>
