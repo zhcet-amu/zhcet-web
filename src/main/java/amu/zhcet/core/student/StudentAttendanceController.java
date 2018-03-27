@@ -4,12 +4,15 @@ import amu.zhcet.data.attendance.AttendanceService;
 import amu.zhcet.data.user.student.Student;
 import amu.zhcet.data.user.student.StudentNotFoundException;
 import amu.zhcet.data.user.student.StudentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+@Slf4j
 @Controller
 @RequestMapping("/dashboard/student/attendance")
 public class StudentAttendanceController {
@@ -24,12 +27,13 @@ public class StudentAttendanceController {
     }
 
     @GetMapping
-    public String attendance(Model model) {
+    public String attendance(Model model, @RequestParam(required = false) String session) {
         Student student = studentService.getLoggedInStudent().orElseThrow(StudentNotFoundException::new);
         model.addAttribute("page_title", "Attendance");
         model.addAttribute("page_subtitle", "Attendance Panel for " + student.getEnrolmentNumber() + " | " + student.getUser().getName());
         model.addAttribute("page_description", "View attendance of floated courses this session");
-        model.addAttribute("attendances", attendanceService.getAttendanceByStudent(student));
+        model.addAttribute("sessionCode", session);
+        model.addAttribute("attendances", attendanceService.getAttendanceByStudent(student, session));
 
         return "student/attendance";
     }

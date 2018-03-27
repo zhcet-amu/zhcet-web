@@ -32,7 +32,7 @@ public class Utils {
     }
 
     public static String getSessionName(String sessionCode) {
-        if (sessionCode.charAt(0) == 'A')
+        if (sessionCode.toUpperCase().charAt(0) == 'A')
             return "Autumn '" + sessionCode.substring(1);
         else
             return "Winter '" + sessionCode.substring(1);

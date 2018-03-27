@@ -6,8 +6,8 @@
             <p class="text-muted mb-0" th:text="${page_subtitle}"></p>
         </div>
     </div>
-    <div class="content-header-right col-md-6 col-xs-12" >
-        <h6 class="float-md-right capsule p-small bg-primary text-white text-xs-center" th:text="|Session : ${@configurationService.getSessionName()}|"></h6>
+    <div class="content-header-right col-md-6 col-xs-12" th:with="sessionCode = ${sessionCode != null ? sessionCode : @configurationService.getDefaultSessionCode()}">
+        <h6 class="float-md-right capsule p-small bg-primary text-white text-xs-center" th:text="|Session : ${@configurationService.getSessionName(sessionCode)}|"></h6>
     </div>
     <div class="content-header-lead col-xs-12 mt-1" th:if="${page_description}">
         <p th:text="${page_description}" style="font-weight: 200; font-size: large"></p>

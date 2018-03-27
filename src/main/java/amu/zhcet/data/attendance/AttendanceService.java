@@ -6,6 +6,7 @@ import amu.zhcet.data.user.student.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nullable;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
@@ -21,8 +22,15 @@ public class AttendanceService {
     }
 
     @Transactional
+    public List<Attendance> getAttendanceByStudent(Student student, @Nullable String sessionCode) {
+        if (sessionCode == null)
+            sessionCode = ConfigurationService.getDefaultSessionCode();
+        return attendanceRepository.getByCourseRegistration_StudentAndCourseRegistration_FloatedCourse_Session(student, sessionCode);
+    }
+
+    @Transactional
     public List<Attendance> getAttendanceByStudent(Student student) {
-        return attendanceRepository.getByCourseRegistration_StudentAndCourseRegistration_FloatedCourse_Session(student, ConfigurationService.getDefaultSessionCode());
+        return getAttendanceByStudent(student, null);
     }
 
     @Transactional

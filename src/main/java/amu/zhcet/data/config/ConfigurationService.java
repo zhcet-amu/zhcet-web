@@ -63,6 +63,10 @@ public class ConfigurationService {
         return Utils.getSessionName(getSession());
     }
 
+    public String getSessionName(String code) {
+        return Utils.getSessionName(code);
+    }
+
     @Transactional
     public void save(Configuration configuration) {
         configurationCacheService.save(configuration);

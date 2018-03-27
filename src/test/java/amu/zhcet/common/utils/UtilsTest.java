@@ -35,6 +35,15 @@ public class UtilsTest {
     }
 
     @Test
+    public void testSessionNameGenerationLowerCase() {
+        String codeAutumn = "a17";
+        String codeWinter = "w18";
+
+        assertEquals("Autumn '17", Utils.getSessionName(codeAutumn));
+        assertEquals("Winter '18", Utils.getSessionName(codeWinter));
+    }
+
+    @Test
     public void testValidEmail() {
         assertEquals(true, Utils.isValidEmail("jamal.areeb@gmail.com"));
         assertEquals(false, Utils.isValidEmail("jamal.areeb"));
