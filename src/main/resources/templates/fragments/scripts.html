@@ -47,6 +47,12 @@
     <script th:src="@{/js/vendor/list.min.js}"></script>
 </th:block>
 
+<th:block th:fragment="switchery">
+    <link rel="stylesheet" th:href="@{/webjars/switchery/dist/switchery.min.css}">
+    <script th:src="@{/webjars/switchery/dist/switchery.min.js}"></script>
+    <script th:src="@{/js/switchery.js}"></script>
+</th:block>
+
 <!-- Firebase -->
 <th:block th:fragment="firebase">
     <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js"></script>
