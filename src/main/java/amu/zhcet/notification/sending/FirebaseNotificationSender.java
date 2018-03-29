@@ -25,7 +25,7 @@ class FirebaseNotificationSender {
         if (fcmToken == null)
             return;
 
-        firebaseMessagingService.sendMessage(createMessage(notificationRecipient.getNotification(), fcmToken, markDownService::render));
+        firebaseMessagingService.sendMessage(createMessage(notificationRecipient.getNotification(), fcmToken, markDownService::render), fcmToken);
     }
 
     private static Message createMessage(Notification notification, String fcmToken, Function<String, String> renderer) {
