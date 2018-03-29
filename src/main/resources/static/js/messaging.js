@@ -28,11 +28,11 @@
     }
 
     function isTokenSentToServer(token) {
-        return window.localStorage.getItem('fcmTokenSentToServer') === token;
+        return parseInt(window.localStorage.getItem('fcmTokenSentToServer')) === token.hashCode();
     }
 
     function setTokenSentToServer(token) {
-        window.localStorage.setItem('fcmTokenSentToServer', token);
+        window.localStorage.setItem('fcmTokenSentToServer', token.hashCode());
     }
 
     function playSound() {
@@ -59,6 +59,14 @@
     }
 
     /* main */ (function () {
+        String.prototype.hashCode = function() {
+            var hash = 0, i = 0, len = this.length;
+            while ( i < len ) {
+                hash  = ((hash << 5) - hash + this.charCodeAt(i++)) << 0;
+            }
+            return hash;
+        };
+
         messaging.requestPermission()
             .then(function() {
                 getToken();
