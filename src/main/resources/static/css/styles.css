@@ -176,3 +176,12 @@ i.gray {
 #toast-container {
     margin-top: 60px;
 }
+
+.notification-header {
+    display: inline-block;
+}
+
+.dropdown-notification .notification-tag {
+    top: 4px;
+    left: -4px;
+}

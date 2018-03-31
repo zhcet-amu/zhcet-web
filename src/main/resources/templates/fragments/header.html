@@ -38,13 +38,8 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
                             <li class="dropdown-menu-header">
-                                <h6 class="dropdown-header m-0">
-                                    <a th:href="@{/notifications}">
-                                        <span class="grey darken-2">Notifications</span>
-                                        <!-- TODO: Add icons to notifications -->
-                                        <span id="new-count" class="notification-tag tag tag-default tag-danger float-xs-right m-0" th:text="|${notifCount} NEW|"></span>
-                                    </a>
-                                </h6>
+                                <h6 class="dropdown-header notification-header m-0"><span class="grey darken-2">Notifications</span></h6>
+                                <span id="new-count" class="notification-tag tag tag-default tag-danger float-xs-right m-0" th:text="|${notifCount} NEW|"></span>
                             </li>
                             <li id="notification-panel" class="list-group scrollable-container">
                                 <div th:each="notification : ${@notificationReadingService.getUnreadNotifications()}" class="list-group-item">
