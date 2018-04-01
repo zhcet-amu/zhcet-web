@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 label-control" for="site">Maximum Retries
-                                        <i class="material-icons helper" data-toggle="tooltip" data-original-title="Maximum failed attempts before an IP is blocked">info_outline</i>
+                                        <i class="material-icons helper" data-toggle="tooltip" data-original-title="Maximum failed attempts before a user is blocked">info_outline</i>
                                     </label>
                                     <div class="col-md-3">
                                         <input type="number" id="max-retries" min="3" max="10" class="form-control" th:field="*{maxRetries}">
@@ -69,12 +69,12 @@
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 label-control" for="site">Block Duration
-                                        <i class="material-icons helper" data-toggle="tooltip" data-original-title="Duration for which the IP should be blocked">info_outline</i>
+                                        <i class="material-icons helper" data-toggle="tooltip" data-original-title="Duration for which the user should be blocked">info_outline</i>
                                     </label>
                                     <div class="col-md-3">
                                         <div class="input-group">
-                                            <input type="number" id="block-duration" min="3" max="24" class="form-control" th:field="*{blockDuration}">
-                                            <span class="input-group-addon">hours</span>
+                                            <input type="number" id="block-duration" min="5" max="120" class="form-control" th:field="*{blockDuration}">
+                                            <span class="input-group-addon">minutes</span>
                                         </div>
                                     </div>
                                 </div>

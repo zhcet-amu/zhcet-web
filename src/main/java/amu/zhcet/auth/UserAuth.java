@@ -27,8 +27,8 @@ public class UserAuth extends org.springframework.security.core.userdetails.User
     @Setter(value = AccessLevel.NONE)
     private transient String totpSecret;
 
-    UserAuth(User user, Collection<? extends GrantedAuthority> authorities) {
-        super(user.getUserId(), user.getPassword(), user.isEnabled(), true, true, true, authorities);
+    UserAuth(User user, boolean locked, Collection<? extends GrantedAuthority> authorities) {
+        super(user.getUserId(), user.getPassword(), user.isEnabled(), true, true, !locked, authorities);
         this.name = user.getName();
         this.email = user.getEmail();
         this.type = user.getType();

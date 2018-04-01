@@ -31,7 +31,7 @@ public class LoginAttemptListener {
 
         WebAuthenticationDetails details = (WebAuthenticationDetails) auditEvent.getData().get("details");
 
-        loginAttemptService.loginAttempt(auditEvent, details);
+        loginAttemptService.loginAttempt(auditEvent);
 
         if (details != null) {
             stringBuilder.append("\n  Remote IP address: ").append(details.getRemoteAddress());

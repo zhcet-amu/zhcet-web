@@ -16,8 +16,8 @@ public class BlockedEndpoint {
     }
 
     @ReadOperation
-    public List<LoginAttemptService.BlockedIp> getBlockedIps() {
-        return loginAttemptService.getBlockedIps();
+    public List<LoginAttemptService.BlockedUser> getBlockedUsers() {
+        return loginAttemptService.getBlockedUsers();
     }
 
 }

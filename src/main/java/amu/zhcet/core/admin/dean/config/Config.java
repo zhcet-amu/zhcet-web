@@ -26,7 +26,7 @@ class Config {
     @Min(3)
     @Max(10)
     private int maxRetries;
-    @Min(3)
-    @Max(24)
+    @Min(5)
+    @Max(120)
     private int blockDuration;
 }

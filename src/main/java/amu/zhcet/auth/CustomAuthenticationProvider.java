@@ -37,8 +37,7 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
         String userId = (String) authentication.getPrincipal();
         CustomAuthenticationDetails details = (CustomAuthenticationDetails) authentication.getDetails();
 
-        String ip = details.getRemoteAddress();
-        boolean isBlocked = loginAttemptService.isBlocked(LoginAttemptService.getKey(ip, userId));
+        boolean isBlocked = loginAttemptService.isBlocked(userId);
 
         if (isBlocked) {
             log.debug("User account is locked");

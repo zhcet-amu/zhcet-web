@@ -31,7 +31,7 @@ public class Configuration extends BaseEntity {
     @Min(3)
     @Max(10)
     private int maxRetries = 5;
-    @Min(3)
-    @Max(24)
-    private int blockDuration = 6; // hours
+    @Min(5)
+    @Max(120)
+    private int blockDuration = 10; // minutes
 }

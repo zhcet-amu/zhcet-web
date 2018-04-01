@@ -2,7 +2,6 @@ package amu.zhcet.auth.login;
 
 import amu.zhcet.auth.login.handler.UsernameAuthenticationFailureHandler;
 import amu.zhcet.auth.login.listener.PathAuthorizationAuditListener;
-import amu.zhcet.common.utils.Utils;
 import amu.zhcet.data.config.ConfigurationService;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -17,7 +16,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.web.WebAttributes;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -30,7 +28,7 @@ import java.util.stream.Collectors;
 @Service
 public class LoginAttemptService {
 
-    private static final TimeUnit TIME_UNIT = TimeUnit.HOURS;
+    private static final TimeUnit TIME_UNIT = TimeUnit.MINUTES;
 
     private final Cache<String, Integer> attemptsCache;
     private final ConfigurationService configurationService;
@@ -59,7 +57,7 @@ public class LoginAttemptService {
         return configurationService.getConfigCache().getBlockDuration();
     }
 
-    public void loginAttempt(AuditEvent auditEvent, WebAuthenticationDetails details) {
+    public void loginAttempt(AuditEvent auditEvent) {
         String requestUri = (String) auditEvent.getData().get("requestUrl");
         if (requestUri != null) {
             log.debug("Ignoring Access Denied Authentication Failure for URL : {}", requestUri);
@@ -71,18 +69,14 @@ public class LoginAttemptService {
             Object type = auditEvent.getData().get("type");
             if (type != null && type.toString().equals(BadCredentialsException.class.getName())) {
                 log.debug("Login Failed. Incrementing Attempts");
-                loginFailed(details.getRemoteAddress(), auditEvent.getPrincipal());
+                loginFailed(auditEvent.getPrincipal());
             } else if(type != null) {
                 log.debug("Login Failed due to {}", type.toString());
             }
         } else if (auditEvent.getType().equals(PathAuthorizationAuditListener.SUCCESS)) {
             log.debug("Login Succeeded. Invalidating");
-            loginSucceeded(details.getRemoteAddress(), auditEvent.getPrincipal());
+            loginSucceeded(auditEvent.getPrincipal());
         }
-    }
-
-    public static String getKey(String ip, String username) {
-        return ip + "~" + username;
     }
 
     private int getFromCache(String key) {
@@ -90,20 +84,18 @@ public class LoginAttemptService {
         return attempts != null ? attempts : 0;
     }
 
-    private void loginSucceeded(String ip, String username) {
-        String key = getKey(ip, username);
-        attemptsCache.invalidate(key);
+    private void loginSucceeded(String username) {
+        attemptsCache.invalidate(username);
     }
 
-    private void loginFailed(String ip, String username) {
-        String key = getKey(ip, username);
-        if (isBlocked(key)) {
-            log.debug("IP {} is already blocked, even correct attempts will be marked wrong, hence ignoring", key);
+    private void loginFailed(String username) {
+        if (isBlocked(username)) {
+            log.debug("User {} is already blocked, even correct attempts will be marked wrong, hence ignoring", username);
             return;
         }
 
-        int attempts = getFromCache(key);
-        attemptsCache.put(key, ++attempts);
+        int attempts = getFromCache(username);
+        attemptsCache.put(username, ++attempts);
         log.info("Attempts : {}, Max Attempts : {}", attempts, getMaxRetries());
     }
 
@@ -122,17 +114,15 @@ public class LoginAttemptService {
         Object rawUsername = request.getSession().getAttribute(UsernameAuthenticationFailureHandler.USERNAME);
 
         // If exception is null, show default message
-        if (exception != null) {
-            String ip = Utils.getClientIP(request);
+        if (exception != null && rawUsername instanceof String) {
             String coolDownPeriod = getBlockDuration() + " " + LoginAttemptService.TIME_UNIT;
 
-            if (exception instanceof LockedException || isBlocked(ip)) {
-                message = "IP blocked for <strong>" + coolDownPeriod + "</strong> since last wrong login attempt";
-            } else if (exception instanceof BadCredentialsException && rawUsername instanceof String) {
-                String username = (String) rawUsername;
-                String key = getKey(ip, username);
-                String tries = String.format("%d out of %d tries left!", triesLeft(key), getMaxRetries());
-                String coolDown = "IP will be blocked for " + coolDownPeriod + " after all tries are exhausted";
+            String username = (String) rawUsername;
+            if (exception instanceof LockedException || isBlocked(username)) {
+                message = "User blocked for <strong>" + coolDownPeriod + "</strong> since last wrong login attempt";
+            } else if (exception instanceof BadCredentialsException) {
+                String tries = String.format("%d out of %d tries left!", triesLeft(username), getMaxRetries());
+                String coolDown = "User will be blocked for " + coolDownPeriod + " after all tries are exhausted";
 
                 String errorMessage = extractMessage((BadCredentialsException) exception, message);
 
@@ -160,17 +150,17 @@ public class LoginAttemptService {
 
     @Data
     @AllArgsConstructor
-    public static class BlockedIp {
-        private String ip;
+    public static class BlockedUser {
+        private String user;
         private int attempts;
         private boolean blocked;
     }
 
-    public List<BlockedIp> getBlockedIps() {
+    public List<BlockedUser> getBlockedUsers() {
         return attemptsCache.asMap()
                 .entrySet()
                 .stream()
-                .map(entry -> new BlockedIp(entry.getKey(), entry.getValue(), isBlocked(entry.getKey())))
+                .map(entry -> new BlockedUser(entry.getKey(), entry.getValue(), isBlocked(entry.getKey())))
                 .collect(Collectors.toList());
     }
 }

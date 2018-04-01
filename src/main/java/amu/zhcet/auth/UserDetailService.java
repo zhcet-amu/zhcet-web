@@ -1,5 +1,6 @@
 package amu.zhcet.auth;
 
+import amu.zhcet.auth.login.LoginAttemptService;
 import amu.zhcet.auth.password.change.PasswordChangeEvent;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
@@ -29,12 +30,14 @@ public class UserDetailService implements UserDetailsService {
 
     private final UserService userService;
     private final PermissionManager permissionManager;
+    private final LoginAttemptService loginAttemptService;
     private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public UserDetailService(UserService userService, PermissionManager permissionManager, ApplicationEventPublisher eventPublisher) {
+    public UserDetailService(UserService userService, PermissionManager permissionManager, LoginAttemptService loginAttemptService, ApplicationEventPublisher eventPublisher) {
         this.userService = userService;
         this.permissionManager = permissionManager;
+        this.loginAttemptService = loginAttemptService;
         this.eventPublisher = eventPublisher;
     }
 
@@ -72,7 +75,7 @@ public class UserDetailService implements UserDetailsService {
         User user = getUser(username);
 
         Collection<GrantedAuthority> authorities = getAuthorities(user);
-        return new UserAuth(user, authorities);
+        return new UserAuth(user, loginAttemptService.isBlocked(username), authorities);
     }
 
     void saveUser(User user) {
