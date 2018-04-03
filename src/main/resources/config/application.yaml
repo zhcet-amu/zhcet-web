@@ -58,11 +58,15 @@ server:
     accesslog:
       enabled: true
       pattern: '%t %l %h %u "%r" %s %b "%{i,Referer}" "%{i,User-Agent}" (%D ms)'
-      dir: app-root/logs/access
+      dir: "${zhcet.storage.root-dir}/logs/access"
+  servlet:
+    session:
+      cookie:
+        http-only: true
 
 logging:
-  file: app-root/logs/spring.log
-  path: app-root/logs/
+  file: "${zhcet.storage.root-dir}/logs/spring.log"
+  path: "${zhcet.storage.root-dir}/logs"
   level:
     root: INFO
     amu.zhcet: TRACE
@@ -80,6 +84,8 @@ zhcet:
     disabled: true
   firebase:
     disabled: true
+  storage:
+    root-dir: app-root
   security:
     pepper: some_nice_pepper
     roles:
