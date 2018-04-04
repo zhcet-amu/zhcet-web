@@ -4,11 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="fragments/layout :: head"></head>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-<style>
-    .editor-toolbar.fullscreen, .CodeMirror-fullscreen, .editor-preview-side {
-        z-index: 2000
-    }
-</style>
+
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification_manager', subPage='send_notification')" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
     <div class="container">
@@ -30,7 +26,10 @@
                             </div>
                         </div>
                     </div>
-                    <textarea name="notification" id="notification-editor" th:field="*{message}"></textarea>
+                    <div class="form-group">
+                        <textarea name="notification" class="form-control" id="notification-editor"
+                                  rows="10" th:field="*{message}" title="Message" required></textarea>
+                    </div>
 
                     <div class="row">
                         <div class="col-md-6">
@@ -62,17 +61,5 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<script>
-    (function () {
-        new SimpleMDE({
-            element: $("#notification-editor")[0],
-            autosave: {
-                enabled: true,
-                uniqueId: 'zhcetNotificationSender'
-            }
-        });
-    }());
-</script>
 </body>
 </html>

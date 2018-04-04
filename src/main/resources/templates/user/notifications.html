@@ -61,7 +61,7 @@
                     <div class="col-xs-12">
                         <div class="card">
                             <div th:class="|card-header ${notificationRecipient.seen ? '' : 'new'}|">
-                                <h4 class="title" th:utext="${@markDownService.render(notificationRecipient.notification.title)}"></h4>
+                                <h4 class="title" th:text="${notificationRecipient.notification.title}"></h4>
                                 <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
                                 <div class="heading-elements">
                                     <ul class="list-inline mb-0">
@@ -79,7 +79,7 @@
                                 </div>
                             </div>
                             <div class="card-body collapse in">
-                                <div class="card-block" th:utext="${@markDownService.render(notificationRecipient.notification.message)}"></div>
+                                <div class="card-block" th:text="${notificationRecipient.notification.message}"></div>
                             </div>
                             <blockquote class="mb-2">
                                 <span>From : <code th:text="${notificationRecipient.notification.sender.name}"></code>

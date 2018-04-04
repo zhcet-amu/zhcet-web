@@ -46,9 +46,9 @@
                                     <div class="media">
                                         <div class="media-left valign-middle"><i class="material-icons icon-bg-circle bg-gray">notifications_none</i></div>
                                         <div class="media-body">
-                                            <h6 class="media-heading" th:utext="${@markDownService.render(notification.notification.title)}">99% Server load</h6>
+                                            <h6 class="media-heading" th:text="${notification.notification.title}">99% Server load</h6>
                                             <hr>
-                                            <p class="notification-text font-small-3 text-muted" th:utext="${@markDownService.render(notification.notification.message)}">Aliquam tincidunt mauris eu risus.</p>
+                                            <p class="notification-text font-small-3 text-muted" th:text="${notification.notification.message}">Aliquam tincidunt mauris eu risus.</p>
                                             <small>
                                                 <blockquote>From <code th:text="${notification.notification.sender.name}">dean</code>
                                                     <span th:if="${notification.notification.automated}"><i class="material-icons">autorenew</i></span>

@@ -1,6 +1,5 @@
 package amu.zhcet.email;
 
-import amu.zhcet.common.markdown.MarkDownService;
 import amu.zhcet.data.config.ConfigurationService;
 import amu.zhcet.security.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,15 +21,12 @@ public class LinkMailService {
     private final EmailService emailService;
     private final ConfigurationService configurationService;
     private final TemplateEngine htmlTemplateEngine;
-    private final MarkDownService markDownService;
 
     public LinkMailService(EmailService emailService, ConfigurationService configurationService,
-                           @Qualifier("extraTemplateEngine") TemplateEngine htmlTemplateEngine,
-                           MarkDownService markDownService) {
+                           @Qualifier("extraTemplateEngine") TemplateEngine htmlTemplateEngine) {
         this.emailService = emailService;
         this.configurationService = configurationService;
         this.htmlTemplateEngine = htmlTemplateEngine;
-        this.markDownService = markDownService;
     }
 
     private String normalizeUrl(String url) {
@@ -51,12 +47,6 @@ public class LinkMailService {
 
         if (linkMessage.getLink() == null && linkMessage.getRelativeLink() != null)
             linkMessage.setLink(normalizeUrl(linkMessage.getRelativeLink()));
-
-        if (linkMessage.isMarkdown()) {
-            linkMessage.setTitle(markDownService.render(linkMessage.getTitle()));
-            linkMessage.setPreMessage(markDownService.render(linkMessage.getPreMessage()));
-            linkMessage.setPostMessage(markDownService.render(linkMessage.getPostMessage()));
-        }
     }
 
     private String getHtml(LinkMessage linkMessage) {

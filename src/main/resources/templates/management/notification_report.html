@@ -23,7 +23,7 @@
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="title" th:utext="${@markDownService.render(notification.title)}"></h4>
+                        <h4 class="title" th:text="${notification.title}"></h4>
                         <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
                         <div class="heading-elements">
                             <ul class="list-inline mb-0">
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="card-body collapse in">
-                        <div class="card-block" th:utext="${@markDownService.render(notification.message)}"></div>
+                        <div class="card-block" th:text="${notification.message}"></div>
                     </div>
                     <blockquote class="mb-2">
                         <span>From : <code th:text="${notification.sender.name}"></code>

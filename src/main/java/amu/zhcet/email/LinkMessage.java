@@ -24,7 +24,6 @@ public class LinkMessage {
     private String postMessage;
     private String unSubscribeUrl;
     private String preview;
-    private boolean markdown;
 
     public static class LinkMessageBuilder {
 
@@ -55,8 +54,7 @@ public class LinkMessage {
                     preMessage,
                     postMessage,
                     unSubscribeUrl,
-                    preview,
-                    markdown
+                    preview
             );
 
             linkMessage.normalizeBcc();

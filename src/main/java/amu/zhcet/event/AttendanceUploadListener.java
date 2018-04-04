@@ -40,7 +40,7 @@ public class AttendanceUploadListener {
                 .recipientChannel(course.getCode())
                 .sender(sender.getUser())
                 .title("Attendance Update")
-                .message(String.format("The attendance for course **%s** - *%s* has just been updated",
+                .message(String.format("The attendance for course %s - %s has just been updated",
                         course.getCode(), course.getTitle()))
                 .build();
     }
@@ -53,7 +53,6 @@ public class AttendanceUploadListener {
                 .relativeLink("/dashboard/student/attendance")
                 .linkText("View Attendance")
                 .preMessage(notification1.getMessage() + "\nPlease click the button below to view your attendance")
-                .markdown(true)
                 .build());
         notificationSendingService.sendNotification(notification);
     }

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,6 +56,7 @@ public class EmailNotificationSender {
     }
 
     private LinkMessage getPayLoad(Notification notification) {
+        sanitize(notification);
         return LinkMessage.builder()
                 .title(notification.getTitle())
                 .subject("ZHCET Notification : " + notification.getTitle())
@@ -62,7 +64,15 @@ public class EmailNotificationSender {
                 .linkText("View Notifications")
                 .preMessage("You got a notification from `" + notification.getSender().getName() + "` : \n\n" +
                         notification.getMessage() + "\n\nPlease click the button below to view notifications")
-                .markdown(true)
                 .build();
+    }
+
+    private void sanitize(Notification notification) {
+        String title = notification.getTitle();
+        if (title != null)
+            notification.setTitle(HtmlUtils.htmlEscape(title));
+        String message = notification.getMessage();
+        if (message != null)
+            notification.setMessage(HtmlUtils.htmlEscape(message));
     }
 }
