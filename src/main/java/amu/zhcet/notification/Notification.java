@@ -45,6 +45,7 @@ public class Notification extends BaseIdEntity {
     private transient int seenCount;
     private transient boolean stopEmailPropagation;
     private transient boolean stopFirebasePropagation;
+    private transient String icon = "https://zhcet-backend.firebaseapp.com/static/img/icon.png";
     private transient Function<Notification, LinkMessage> linkMessageConverter;
 
     @NotAudited
