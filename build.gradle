@@ -28,7 +28,7 @@ springBoot  {
 }
 
 def hibernate_version = "5.2.12.Final"
-def flexmark_version = "0.28.24"
+def flexmark_version = "0.32.20"
 
 configurations {
     compile.exclude module: "spring-boot-starter-tomcat"
@@ -48,8 +48,8 @@ dependencies {
     implementation 'javax.interceptor:javax.interceptor-api:1.2.1' // TODO: Remove when workaround fix is found
     implementation 'mysql:mysql-connector-java'
     implementation "org.hibernate:hibernate-envers:${hibernate_version}"
-    implementation "org.flywaydb:flyway-core:5.0.5"
-    implementation "com.j256.simplecsv:simplecsv:2.2"
+    implementation "org.flywaydb:flyway-core:5.0.7"
+    implementation "com.j256.simplecsv:simplecsv:2.3"
     implementation "org.apache.commons:commons-text:1.2"
     implementation 'commons-validator:commons-validator:1.6', {
         exclude group: 'commons-logging', module: 'commons-logging'
@@ -59,17 +59,17 @@ dependencies {
     implementation 'com.google.firebase:firebase-admin:5.9.0'
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.imgscalr:imgscalr-lib:4.2'
-    implementation 'com.github.ben-manes.caffeine:caffeine:2.6.0'
+    implementation 'com.github.ben-manes.caffeine:caffeine:2.6.2'
     implementation 'org.jboss.aerogear:aerogear-otp-java:1.0.0'
 
     // Sentry
-    implementation 'io.sentry:sentry-spring:1.6.5'
-    implementation 'io.sentry:sentry-logback:1.6.5'
+    implementation 'io.sentry:sentry-spring:1.7.3'
+    implementation 'io.sentry:sentry-logback:1.7.3'
 
     // Open Feign
-    implementation 'io.github.openfeign:feign-core:9.5.1'
-    implementation 'io.github.openfeign:feign-okhttp:9.5.1'
-    implementation 'io.github.openfeign:feign-jackson:9.5.1'
+    // implementation 'io.github.openfeign:feign-core:9.5.1'
+    // implementation 'io.github.openfeign:feign-okhttp:9.5.1'
+    // implementation 'io.github.openfeign:feign-jackson:9.5.1'
 
     // Markdown Processor
     implementation "com.vladsch.flexmark:flexmark:${flexmark_version}"

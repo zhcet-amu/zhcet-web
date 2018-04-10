@@ -12,11 +12,12 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -37,7 +38,7 @@ class EmailVerificationService {
 
         this.emailCache = Caffeine.newBuilder()
                 .maximumSize(10000)
-                .expireAfterWrite(10, TimeUnit.MINUTES)
+                .expireAfterWrite(Duration.of(10, ChronoUnit.MINUTES))
                 .build();
     }
 

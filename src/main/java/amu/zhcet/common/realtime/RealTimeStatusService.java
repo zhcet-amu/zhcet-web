@@ -5,8 +5,9 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -20,7 +21,7 @@ public class RealTimeStatusService {
         invalidStatus.setInvalid(true);
 
         this.realTimeStatusCache = Caffeine.newBuilder()
-                .expireAfterWrite(20, TimeUnit.MINUTES)
+                .expireAfterWrite(Duration.of(20, ChronoUnit.MINUTES))
                 .maximumSize(100)
                 .build();
     }

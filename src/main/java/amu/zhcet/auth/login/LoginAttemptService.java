@@ -20,15 +20,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class LoginAttemptService {
 
-    private static final TimeUnit TIME_UNIT = TimeUnit.MINUTES;
+    private static final TemporalUnit TIME_UNIT = ChronoUnit.MINUTES;
 
     private final Cache<String, Integer> attemptsCache;
     private final ConfigurationService configurationService;
@@ -45,7 +47,7 @@ public class LoginAttemptService {
                 .newBuilder()
                 .maximumSize(10000)
                 .removalListener(removalListener)
-                .expireAfterWrite(getBlockDuration(), TIME_UNIT)
+                .expireAfterWrite(Duration.of(getBlockDuration(), TIME_UNIT))
                 .build(key -> 0);
     }
 

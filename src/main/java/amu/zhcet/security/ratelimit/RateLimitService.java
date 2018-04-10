@@ -4,14 +4,16 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 
 @Slf4j
 /* Decommissioned */
 public class RateLimitService {
 
     private static final int EXPIRE_TIME = 30;
-    private static final TimeUnit TIME_UNIT = TimeUnit.SECONDS;
+    private static final TemporalUnit TIME_UNIT = ChronoUnit.SECONDS;
 
     private final Cache<String, Integer> attemptsCache;
 
@@ -19,7 +21,7 @@ public class RateLimitService {
         attemptsCache = Caffeine
                 .newBuilder()
                 .maximumSize(1000)
-                .expireAfterWrite(EXPIRE_TIME, TIME_UNIT)
+                .expireAfterWrite(Duration.of(EXPIRE_TIME, TIME_UNIT))
                 .build();
     }
 

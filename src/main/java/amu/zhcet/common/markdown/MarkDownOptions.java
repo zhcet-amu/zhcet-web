@@ -3,6 +3,8 @@ package amu.zhcet.common.markdown;
 import com.vladsch.flexmark.ext.anchorlink.AnchorLinkExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
 import com.vladsch.flexmark.ext.emoji.EmojiExtension;
+import com.vladsch.flexmark.ext.emoji.EmojiImageType;
+import com.vladsch.flexmark.ext.emoji.EmojiShortcutType;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
@@ -41,7 +43,8 @@ public class MarkDownOptions {
                 // anchor links
                 .set(ANCHORLINKS_ANCHOR_CLASS, "md-header-link")
                 // emoji
-                .set(EmojiExtension.USE_IMAGE_URLS, true)
+                .set(EmojiExtension.USE_SHORTCUT_TYPE, EmojiShortcutType.ANY_GITHUB_PREFERRED)
+                .set(EmojiExtension.USE_IMAGE_TYPE, EmojiImageType.IMAGE_ONLY)
                 // extensions
                 .set(Parser.EXTENSIONS, Arrays.asList(
                         TablesExtension.create(),
