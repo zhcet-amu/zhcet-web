@@ -89,7 +89,7 @@ dependencies {
     implementation 'org.webjars:toastr:2.1.2'
     implementation 'org.webjars:momentjs:2.19.3'
     implementation 'org.webjars:jquery-throttle-debounce-plugin:1.1'
-    implementation 'org.webjars.npm:muicss:0.9.3'
+    implementation 'org.webjars.bower:mui:0.9.38'
     implementation 'org.webjars:jquery-blockui:2.70'
     implementation 'org.webjars.npm:corejs-typeahead:1.1.1'
 
