@@ -137,12 +137,12 @@
 <script th:inline="javascript">
     var NotificationManager = (function () {
         var page = 1;
+        const deleteLink = $('#delete-link');
+        const baseUrl = deleteLink.attr('href');
 
         function deleteNotification(id) {
-            var deleteLink = $('#delete-link');
-            var baseUrl = deleteLink.attr('href');
-            baseUrl += id + '/delete';
-            deleteLink.attr('href', baseUrl);
+            const url = baseUrl +  id + '/delete';
+            deleteLink.attr('href', url);
             $('#delete').modal();
         }
 
