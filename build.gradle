@@ -27,7 +27,6 @@ springBoot  {
     buildInfo()
 }
 
-def hibernate_version = "5.2.12.Final"
 def flexmark_version = "0.32.22"
 
 configurations {
@@ -47,7 +46,7 @@ dependencies {
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity4")
     implementation 'javax.interceptor:javax.interceptor-api:1.2.1' // TODO: Remove when workaround fix is found
     implementation 'mysql:mysql-connector-java'
-    implementation "org.hibernate:hibernate-envers:${hibernate_version}"
+    implementation "org.hibernate:hibernate-envers"
     implementation "org.flywaydb:flyway-core:5.0.7"
     implementation "com.j256.simplecsv:simplecsv:2.3"
     implementation "org.apache.commons:commons-text:1.2"
