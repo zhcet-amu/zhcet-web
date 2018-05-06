@@ -28,7 +28,7 @@ springBoot  {
 }
 
 def hibernate_version = "5.2.12.Final"
-def flexmark_version = "0.32.20"
+def flexmark_version = "0.32.22"
 
 configurations {
     compile.exclude module: "spring-boot-starter-tomcat"
