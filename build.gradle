@@ -55,7 +55,7 @@ dependencies {
     }
     implementation 'org.modelmapper:modelmapper:1.1.1'
     implementation 'com.github.darrachequesne:spring-data-jpa-datatables:5.0.0'
-    implementation 'com.google.firebase:firebase-admin:5.9.0'
+    implementation 'com.google.firebase:firebase-admin:6.1.0'
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.imgscalr:imgscalr-lib:4.2'
     implementation 'com.github.ben-manes.caffeine:caffeine:2.6.2'
