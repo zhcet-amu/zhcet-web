@@ -98,7 +98,7 @@ dependencies {
     implementation 'org.webjars.bower:datatables.net-select:1.2.3'
     implementation 'org.webjars.bower:datatables.net-select-bs:1.2.2'
     implementation 'org.webjars:jszip:3.1.0'
-    implementation 'org.webjars.bower:pdfmake:0.1.34'
+    implementation 'org.webjars.bower:pdfmake:0.1.36'
 
     implementation 'org.webjars:webjars-locator-core'
 
