@@ -44,7 +44,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity4")
-    implementation 'javax.interceptor:javax.interceptor-api:1.2.1' // TODO: Remove when workaround fix is found
+    implementation 'javax.interceptor:javax.interceptor-api:1.2.2' // TODO: Remove when workaround fix is found
     implementation 'mysql:mysql-connector-java'
     implementation "org.hibernate:hibernate-envers"
     implementation "org.flywaydb:flyway-core:5.0.7"
