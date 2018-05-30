@@ -86,7 +86,7 @@ dependencies {
     implementation "org.webjars:jquery:3.2.1"
     implementation 'org.webjars:tether:1.4.0'
     implementation 'org.webjars:toastr:2.1.2'
-    implementation 'org.webjars:momentjs:2.19.3'
+    implementation 'org.webjars:momentjs:2.22.1'
     implementation 'org.webjars:jquery-throttle-debounce-plugin:1.1'
     implementation 'org.webjars.bower:mui:0.9.38'
     implementation 'org.webjars:jquery-blockui:2.70'
