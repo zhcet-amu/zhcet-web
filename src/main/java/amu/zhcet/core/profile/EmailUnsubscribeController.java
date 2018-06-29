@@ -3,7 +3,7 @@ package amu.zhcet.core.profile;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserNotFoundException;
 import amu.zhcet.data.user.UserService;
-import amu.zhcet.security.SecurityUtils;
+import amu.zhcet.security.CryptoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,7 +27,7 @@ public class EmailUnsubscribeController {
     @GetMapping("/login/unsubscribe")
     public String unsubscribe(@RequestParam String email, @RequestParam String conf) {
         User user = userService.getUserByEmail(email).orElseThrow(UserNotFoundException::new);
-        if (!SecurityUtils.hashMatches(email, conf))
+        if (!CryptoUtils.hashMatches(email, conf))
             return "Invalid Entry";
         userService.unsubscribeEmail(user, true);
         return "Unsubscribed";

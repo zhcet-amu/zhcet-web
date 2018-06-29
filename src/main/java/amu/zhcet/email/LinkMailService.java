@@ -1,7 +1,7 @@
 package amu.zhcet.email;
 
 import amu.zhcet.data.config.ConfigurationService;
-import amu.zhcet.security.SecurityUtils;
+import amu.zhcet.security.CryptoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class LinkMailService {
 
     private String getUnSubscribeUrl(String recipient) {
         return String.format("%s/login/unsubscribe?email=%s&conf=%s",
-                configurationService.getBaseUrl(), recipient, SecurityUtils.getHash(recipient));
+                configurationService.getBaseUrl(), recipient, CryptoUtils.getHash(recipient));
     }
 
     private String render(String template, Map<String, Object> payload) {

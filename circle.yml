@@ -1,21 +1,39 @@
-machine:
-  timezone:
-    Asia/Kolkata
-  java:
-    version:
-      oraclejdk8
-  environment:
-    TERM: dumb
+version: 2
+jobs:
+  build:
+    working_directory: ~/zhcet
+    docker:
+      - image: circleci/openjdk:10-jdk-browsers
+        environment:
+          TZ: "/usr/share/zoneinfo/Asia/Kolkata"
 
-general:
-  artifacts:
-    - "build/reports/tests" # preserve the generated HTML test reports
-    - "build/libs"
+    environment:
+      TZ: "/usr/share/zoneinfo/Asia/Kolkata"
 
-test:
-  override:
-    - ./gradlew build
-    - ./gradlew bootJar
-  post:
-    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-    - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}
+
+      - run:
+          name: Download Dependencies
+          command: ./gradlew dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}
+
+      - run:
+          name: Run Tests
+          command: ./gradlew build
+
+      - run:
+          name: Run Tests
+          command: ./gradlew bootJar
+
+      - store_artifacts:
+          path: build/libs
+          destination: jar
+      - store_test_results:
+          path: build/reports/tests

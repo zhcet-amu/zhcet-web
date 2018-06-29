@@ -1,6 +1,6 @@
 package amu.zhcet.common.utils;
 
-import amu.zhcet.security.SecurityUtils;
+import amu.zhcet.security.CryptoUtils;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -12,14 +12,14 @@ public class SecurityUtilsTest {
     public void testHashMatches() {
         String email = "jamal.areeb@gmail.com";
 
-        String hash = SecurityUtils.getHash(email);
-        assertThat(SecurityUtils.hashMatches(email, hash), equalTo(true));
+        String hash = CryptoUtils.getHash(email);
+        assertThat(CryptoUtils.hashMatches(email, hash), equalTo(true));
     }
 
     @Test
     public void testGeneratePasswordLength() {
         int length = 16;
-        String generated = SecurityUtils.generatePassword(length);
+        String generated = CryptoUtils.generatePassword(length);
         assertThat(generated.length(), equalTo(length));
     }
 
