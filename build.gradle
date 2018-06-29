@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.2.RELEASE'
+        springBootVersion = '2.0.3.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -102,7 +102,7 @@ dependencies {
 
     implementation 'org.webjars:webjars-locator-core'
 
-    compileOnly "org.projectlombok:lombok"
+    compileOnly "org.projectlombok:lombok:1.18.0"
 
     testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation("org.springframework.boot:spring-boot-starter-test")
