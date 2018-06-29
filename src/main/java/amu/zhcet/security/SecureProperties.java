@@ -20,7 +20,7 @@ public class SecureProperties {
      * A predefined random secure string to be used for miscellaneous hashing in project.
      * This *must* be set for security purposes and *must* NOT be changed for the entire span of the project
      */
-    private String pepper = SecurityUtils.getPepper();
+    private String pepper = CryptoUtils.getPepper();
     /**
      * The role hierarchy of the project
      */

@@ -6,7 +6,7 @@ import amu.zhcet.data.department.DepartmentRepository;
 import amu.zhcet.data.user.UserRepository;
 import amu.zhcet.data.user.UserService;
 import amu.zhcet.data.user.faculty.FacultyMember;
-import amu.zhcet.security.SecurityUtils;
+import amu.zhcet.security.CryptoUtils;
 import amu.zhcet.storage.csv.CsvParserService;
 import amu.zhcet.storage.csv.Confirmation;
 import amu.zhcet.storage.csv.UploadResult;
@@ -76,7 +76,7 @@ class FacultyRegistrationAdapter {
     }
 
     private static FacultyMember fromFacultyUpload(FacultyUpload facultyUpload) {
-        String password = SecurityUtils.generatePassword(PASS_LENGTH);
+        String password = CryptoUtils.generatePassword(PASS_LENGTH);
         facultyUpload.setPassword(password);
         FacultyMember facultyMember = new FacultyMember();
         facultyMember.setFacultyId(StringUtils.capitalizeAll(facultyUpload.getFacultyId()));

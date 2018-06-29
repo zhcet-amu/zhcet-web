@@ -15,8 +15,8 @@ public class SecurePropertyConfig {
     @Autowired
     SecurePropertyConfig(SecureProperties secureProperties) {
         String pepper = secureProperties.getPepper();
-        if (!Strings.isNullOrEmpty(pepper) && !pepper.equals(SecurityUtils.getPepper())) {
-            SecurityUtils.setPepper(pepper);
+        if (!Strings.isNullOrEmpty(pepper) && !pepper.equals(CryptoUtils.getPepper())) {
+            CryptoUtils.setPepper(pepper);
             log.info(ConsoleHelper.green("Applied pepper to application"));
             PEPPER_SET = true;
         } else {

@@ -4,7 +4,7 @@ import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserService;
 import amu.zhcet.email.LinkMailService;
 import amu.zhcet.email.LinkMessage;
-import amu.zhcet.security.SecurityUtils;
+import amu.zhcet.security.CryptoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,7 +36,7 @@ class ResetTokenSender {
 
     private void sendMail(PasswordResetToken token) {
         User user = token.getUser();
-        String relativeUrl = String.format("/login/password/reset?hash=%s&auth=%s", SecurityUtils.getHash(user.getUserId()), token.getToken());
+        String relativeUrl = String.format("/login/password/reset?hash=%s&auth=%s", CryptoUtils.getHash(user.getUserId()), token.getToken());
         log.debug("Password reset link generated : {}", relativeUrl);
 
         LinkMessage linkMessage = getPayLoad(user, relativeUrl);

@@ -6,7 +6,7 @@ import amu.zhcet.auth.password.PasswordValidator;
 import amu.zhcet.auth.password.PasswordReset;
 import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.user.User;
-import amu.zhcet.security.SecurityUtils;
+import amu.zhcet.security.CryptoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,7 +63,7 @@ class PasswordResetService {
     private PasswordResetToken getAndValidate(String hash, String token) throws TokenValidationException {
         PasswordResetToken passwordResetToken = resetTokenService.findByToken(token);
 
-        if (passwordResetToken == null || !SecurityUtils.hashMatches(passwordResetToken.getUser().getUserId(), hash))
+        if (passwordResetToken == null || !CryptoUtils.hashMatches(passwordResetToken.getUser().getUserId(), hash))
             throw new TokenValidationException("Token: " + token + " is invalid");
 
         if (passwordResetToken.isUsed())
