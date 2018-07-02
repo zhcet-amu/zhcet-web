@@ -19,6 +19,7 @@
                     <th>Name</th>
                     <th>User ID</th>
                     <th>Date</th>
+                    <th>Time</th>
                     <th>Type</th>
                 </tr>
                 </thead>
@@ -29,7 +30,8 @@
                     <tr>
                         <td th:text="${user.name}"></td>
                         <td th:text="${user.userId}"></td>
-                        <td th:text="${user.createdAt != null ? user.createdAt : user.updatedAt }"></td>
+                        <td th:text="${user.createdAt != null ? user.createdAt.toLocalDate() : user.updatedAt.toLocalDate() }"></td>
+                        <td th:text="${user.createdAt != null ? user.createdAt.toLocalTime() : user.updatedAt.toLocalTime() }"></td>
                         <td th:text="${@userService.getType(user)}"></td>
                     </tr>
                 </th:block>
