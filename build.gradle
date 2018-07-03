@@ -83,7 +83,7 @@ dependencies {
     // WebJars
 
     implementation "org.webjars:bootstrap:4.1.0"
-    implementation "org.webjars:jquery:3.2.1"
+    implementation "org.webjars:jquery:3.3.1-1"
     implementation 'org.webjars:tether:1.4.0'
     implementation 'org.webjars:toastr:2.1.2'
     implementation 'org.webjars:momentjs:2.22.1'
