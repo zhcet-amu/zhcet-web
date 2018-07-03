@@ -29,8 +29,7 @@
                     <tr>
                         <td th:text="${user.name}"></td>
                         <td th:text="${user.userId}"></td>
-                        <td th:text="${user.createdAt != null ?
-                        #temporals.format(user.createdAt, 'dd/MMM/yyyy HH:mm') : #temporals.format(user.updatedAt, 'dd/MMM/yyyy HH:mm') }"></td>
+                        <td th:text="${#temporals.format(user.createdAt != null ? user.createdAt : user.updatedAt, 'dd/MMM/yyyy HH:mm') }"></td>
                         <td th:text="${@userService.getType(user)}"></td>
                     </tr>
                 </th:block>
