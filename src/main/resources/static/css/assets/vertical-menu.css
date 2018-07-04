@@ -45,8 +45,8 @@ body.vertical-layout.vertical-menu.menu-expanded .main-menu {
     right: 20px;
     top: 10px; }
   body.vertical-layout.vertical-menu.menu-expanded .main-menu .navigation li.has-sub > a:not(.mm-next):after {
-    content: "\f105";
-    font-family: 'FontAwesome';
+    content: "\e315";
+    font-family: 'Material Icons';
     font-size: 1rem;
     display: inline-block;
     position: absolute;
@@ -127,8 +127,8 @@ body.vertical-layout.vertical-menu.menu-collapsed .main-menu {
         padding: 8px 20px 8px 20px;
         transition: all 0.2s ease; }
       body.vertical-layout.vertical-menu.menu-collapsed .main-menu .main-menu-content > ul.menu-content li.has-sub > a:not(.mm-next):after {
-        content: "\f105";
-        font-family: 'FontAwesome';
+        content: "\e315";
+        font-family: 'Material Icons';
         font-size: 1rem;
         display: inline-block;
         position: absolute;
@@ -299,8 +299,8 @@ body.vertical-layout.vertical-menu.menu-collapsed.menu-flipped .footer {
       font-size: 1.2rem;
       transition: 200ms ease all; }
   .vertical-overlay-menu .main-menu .navigation li.has-sub > a:not(.mm-next):after {
-    content: "\f105";
-    font-family: 'FontAwesome';
+    content: "\e315";
+    font-family: 'Material Icons';
     font-size: 1rem;
     display: inline-block;
     position: absolute;

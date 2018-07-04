@@ -1,61 +1,60 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns"
-      class="vertical-layout vertical-menu 2-columns fixed-navbar">
-<nav class="header-navbar navbar navbar-with-menu navbar-fixed-top navbar-semi-dark navbar-shadow" th:fragment="header">
+      class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
+<nav class="header-navbar navbar-expand-md navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow" th:fragment="header">
     <div class="navbar-wrapper">
         <div class="navbar-header">
-            <ul class="nav navbar-nav">
-                <li class="nav-item mobile-menu hidden-md-up float-xs-left">
+            <ul class="nav navbar-nav flex-row">
+                <li class="nav-item mobile-menu d-md-none mr-auto">
                     <a class="nav-link nav-menu-main menu-toggle hidden-xs"><i class="material-icons font-large-1 md-light">menu</i>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a th:href="@{/}" class="navbar-brand nav-link">
+                    <a th:href="@{/}" class="navbar-brand">
                         <img alt="ZHCET" src="https://zhcet-backend.firebaseapp.com/static/img/logo-big.png"
                              data-expand="https://zhcet-backend.firebaseapp.com/static/img/logo-big.png"
                              data-collapse="https://zhcet-backend.firebaseapp.com/static/img/icon.png"
                              class="brand-logo"/>
                     </a>
                 </li>
-                <li class="nav-item hidden-md-up float-xs-right">
+                <li class="nav-item d-md-none">
                     <a data-toggle="collapse" data-target="#navbar-mobile" class="nav-link open-navbar-container">
                         <i class="material-icons md-light pe-2x icon-icon-rotate-right-right">more_vert</i>
                     </a>
                 </li>
             </ul>
         </div>
-        <div class="navbar-container content container-fluid">
-            <div id="navbar-mobile" class="collapse navbar-toggleable-sm">
-                <ul class="nav navbar-nav">
-                    <li class="nav-item hidden-sm-down"><a class="nav-link nav-menu-main menu-toggle hidden-xs"><i class="material-icons">menu</i></a></li>
+        <div class="navbar-container content">
+            <div id="navbar-mobile" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav mr-auto float-left">
+                    <li class="nav-item d-none d-md-block">
+                        <a class="nav-link nav-menu-main menu-toggle hidden-xs"><i class="material-icons">menu</i></a>
+                    </li>
                 </ul>
-                <ul class="nav navbar-nav float-xs-right" sec:authorize="isAuthenticated()" th:with="notifCount = ${@notificationReadingService.getUnreadNotificationCount()}">
+                <ul class="nav navbar-nav float-right" sec:authorize="isAuthenticated()" th:with="notifCount = ${@notificationReadingService.getUnreadNotificationCount()}">
                     <li class="dropdown dropdown-notification nav-item">
                         <a href="#" data-toggle="dropdown" class="nav-link nav-link-label">
                             <i class="notification-icon material-icons">notifications_none</i>
-                            <span id="notification-count" th:hidden="${notifCount} <= 0" class="tag tag-pill tag-default tag-danger tag-default tag-up" th:text="${notifCount}"></span>
+                            <span id="notification-count" th:hidden="${notifCount} <= 0" class="badge badge-pill badge-default badge-danger badge-default badge-up" th:text="${notifCount}"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
                             <li class="dropdown-menu-header">
-                                <h6 class="dropdown-header notification-header m-0"><span class="grey darken-2">Notifications</span></h6>
-                                <span id="new-count" class="notification-tag tag tag-default tag-danger float-xs-right m-0" th:text="|${notifCount} NEW|"></span>
+                                <h6 class="dropdown-header m-0"><span class="grey darken-2">Notifications</span></h6>
+                                <span id="new-count" class="notification-tag badge badge-default badge-danger float-right m-0" th:text="|${notifCount} NEW|"></span>
                             </li>
-                            <li id="notification-panel" class="list-group scrollable-container">
-                                <div th:each="notification : ${@notificationReadingService.getUnreadNotifications()}" class="list-group-item">
-                                    <div class="media">
-                                        <div class="media-left valign-middle"><i class="material-icons icon-bg-circle bg-gray">notifications_none</i></div>
-                                        <div class="media-body">
-                                            <h6 class="media-heading" th:text="${notification.notification.title}">99% Server load</h6>
-                                            <hr>
-                                            <p class="notification-text font-small-3 text-muted" th:text="${notification.notification.message}">Aliquam tincidunt mauris eu risus.</p>
-                                            <small>
-                                                <blockquote>From <code th:text="${notification.notification.sender.name}">dean</code>
-                                                    <span th:if="${notification.notification.automated}"><i class="material-icons">autorenew</i></span>
-                                                </blockquote>
-                                            </small>
-                                            <small><span class="media-meta text-muted" th:text="${#temporals.format(notification.notification.sentTime)}">Five hour ago</span></small>
-                                        </div>
+                            <li id="notification-panel" class="scrollable-container media-list w-100">
+                                <div th:each="notification : ${@notificationReadingService.getUnreadNotifications()}" class="media">
+                                    <div class="media-left valign-middle"><i class="material-icons icon-bg-circle bg-gray">notifications_none</i></div>
+                                    <div class="media-body">
+                                        <h6 class="media-heading" th:text="${notification.notification.title}">99% Server load</h6>
+                                        <p class="notification-text font-small-3 text-muted" th:text="${notification.notification.message}">Aliquam tincidunt mauris eu risus.</p>
+                                        <small>
+                                            <blockquote>From <code th:text="${notification.notification.sender.name}">dean</code>
+                                                <span th:if="${notification.notification.automated}"><i class="material-icons">autorenew</i></span>
+                                            </blockquote>
+                                        </small>
+                                        <small><span class="media-meta text-muted" th:text="${#temporals.format(notification.notification.sentTime)}">Five hour ago</span></small>
                                     </div>
                                 </div>
                             </li>

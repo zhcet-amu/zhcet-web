@@ -5,7 +5,7 @@
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
 
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage = 'dean_admin')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="container">
         <div class="row">

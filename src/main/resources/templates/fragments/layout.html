@@ -21,42 +21,39 @@
 
     <link rel="shortcut icon" href="https://zhcet-backend.firebaseapp.com/static/img/icon.png" />
 
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Muli:300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <link th:href="@{/webjars/mui/packages/cdn/css/mui.min.css}" rel="stylesheet" type="text/css"/>
     <link th:href="@{/css/assets/bootstrap.css}" rel="stylesheet"/>
     <link th:href="@{/css/assets/bootstrap-extended.css}" type="text/css" rel="stylesheet"/>
     <link th:href="@{/css/assets/components.css}" type="text/css" rel="stylesheet"/>
     <link th:href="@{/css/assets/vertical-menu.css}" type="text/css" rel="stylesheet"/>
-    <link th:href="@{/css/styles.css}" type="text/css" rel="stylesheet"/>
     <link th:href="@{/css/elements.css}" type="text/css" rel="stylesheet"/>
+    <link th:href="@{/css/styles.css}" type="text/css" rel="stylesheet"/>
 </head>
 <body>
 
 <th:block th:fragment="wrapper">
-    <main class="page-row page-row-expanded">
-        <nav th:replace="fragments/header :: header"></nav>
-        <div th:replace="fragments/navigation :: navigation"></div>
-        <div class="app-content content container-fluid">
-            <div class="content-wrapper">
-                <div class="content-body">
-                    <div th:include="this :: content"></div>
-                </div>
+    <nav th:replace="fragments/header :: header"></nav>
+    <div th:replace="fragments/navigation :: navigation"></div>
+    <div class="app-content content container-fluid">
+        <div class="content-wrapper">
+            <div class="content-body">
+                <div th:include="this :: content"></div>
             </div>
         </div>
-    </main>
-    <div class="page-row">
-        <footer class="footer footer-static footer-dark navbar-border">
-            <p class="clearfix text-muted text-sm-center mb-0 px-2" style="font-size: smaller">
-                <span class="float-md-left d-xs-block d-md-inline-block" th:text="|Copyright &copy; ${#temporals.year(#temporals.createNow())} ZHCET, All rights reserved.|"></span>
-                <span class="float-md-right d-xs-block d-md-inline-block">
-                    <a th:href="@{/terms}" target="_blank">Terms of Services</a> |
-                    <a th:href="@{/privacy}" target="_blank">Privacy Policy</a> |
-                    <a href="https://github.com/zhcet-amu/zhcet-web" target="_blank"><i class="material-icons">code</i> View Source</a> |
-                    <a href="https://github.com/zhcet-amu/zhcet-web/graphs/contributors" target="_blank">Developers</a>
-                </span>
-            </p>
-        </footer>
     </div>
+    <footer class="footer footer-static footer-dark navbar-border">
+        <p class="clearfix text-muted text-sm-center mb-0 px-2" style="font-size: smaller">
+            <span class="float-md-left d-xs-block d-md-inline-block" th:text="|Copyright &copy; ${#temporals.year(#temporals.createNow())} ZHCET, All rights reserved.|"></span>
+            <span class="float-md-right d-xs-block d-md-inline-block">
+                <a th:href="@{/terms}" target="_blank">Terms of Services</a> |
+                <a th:href="@{/privacy}" target="_blank">Privacy Policy</a> |
+                <a href="https://github.com/zhcet-amu/zhcet-web" target="_blank"><i class="material-icons">code</i> View Source</a> |
+                <a href="https://github.com/zhcet-amu/zhcet-web/graphs/contributors" target="_blank">Developers</a>
+            </span>
+        </p>
+    </footer>
     <div th:replace="fragments/scripts :: scripts"></div>
 </th:block>
 

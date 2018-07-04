@@ -411,8 +411,8 @@ select.form-control {
   top: 40%;
   right: 20px;
   margin-top: -8px;
-  font-family: 'feather';
-  content: "\e982";
+  font-family: 'Material Icons';
+  content: "\e15b";
   transition: all 300ms linear 0s; }
 
 .collapse-icon a[data-toggle="collapse"]:before {
@@ -420,8 +420,8 @@ select.form-control {
   top: 40%;
   right: 20px;
   margin-top: -8px;
-  font-family: 'feather';
-  content: "\e99d";
+  font-family: 'Material Icons';
+  content: "\e14b";
   transition: all 300ms linear 0s; }
 
 .collapse-icon.left a {
@@ -496,8 +496,8 @@ select.form-control {
 
 .dropdown-toggle::after {
   font-size: 0.8rem;
-  font-family: 'FontAwesome';
-  content: "\f107" !important;
+  font-family: 'Material Icons';
+  content: "\e313" !important;
   border: none !important;
   position: relative;
   top: 0px;
@@ -537,8 +537,8 @@ select.form-control {
         left: auto;
         right: 100%; }
     .dropdown-menu .dropdown-submenu > a:after, .dropdown-menu .dropdown-submenu > button:after {
-      font-family: 'FontAwesome';
-      content: "\f105" !important;
+      font-family: 'Material Icons';
+      content: "\e5cb" !important;
       right: 15px;
       font-size: 1rem;
       float: right;
@@ -1912,8 +1912,8 @@ select.form-control {
   .alert.alert-icon-right[class*=bg-] {
     border-right-color: rgba(0, 0, 0, 0.15) !important; }
   .alert[class*=alert-icon-] .alert-icon {
-    content: '\f2b2';
-    font-family: LineAwesome;
+    content: '\e3c9';
+    font-family: 'Material Icons';
     color: #fff;
     width: 4rem;
     left: -4rem;

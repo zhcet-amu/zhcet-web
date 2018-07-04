@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="fragments/layout :: head"></head>
 
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'department', subPage = 'department_admin')" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->

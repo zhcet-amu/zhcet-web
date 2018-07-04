@@ -1,4 +1,4 @@
-.badge {
+/*.badge {
     padding: 0 0.3rem;
     margin: 0.1rem;
     display: inline-block;
@@ -44,6 +44,7 @@
 .badges > .badge > i {
     margin-bottom: 0.1rem;
 }
+*/
 
 .bg-gray {
     background-color: #777;
