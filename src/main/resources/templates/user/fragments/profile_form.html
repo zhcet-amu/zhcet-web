@@ -18,7 +18,7 @@
         </div>
     </div>
     <div th:if="${@authService.isFullyAuthenticated(user)}" class="row">
-        <div class="col-xs-12 col-lg-4 push-lg-8 text-xs-center">
+        <div class="col-xs-12 col-lg-4 push-lg-8 text-center">
             <h5>Profile Picture</h5>
             <hr>
             <img th:src="${@viewService.getAvatarUrl(user.details.originalAvatarUrl)}"

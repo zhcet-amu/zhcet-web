@@ -36,7 +36,7 @@
             <form method="post" th:action="@{|./${floatedCourse.course.code}/in_charge|}">
                 <div class="in-charge-container">
                     <div class="in-charge" th:each="inCharge : ${floatedCourse.inCharge}">
-                        <div class="row vertical-align text-xs-center">
+                        <div class="row vertical-align text-center">
                             <div class="col-xs-2">
                                 <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
                                      th:src="${@viewService.getAvatarUrl(inCharge.facultyMember.user.details.avatarUrl)}"
@@ -75,7 +75,7 @@
     </div>
     <script id="in-charge-template" type="text/x-tmpl">
         <div class="in-charge new">
-            <div class="row vertical-align text-xs-center">
+            <div class="row vertical-align text-center">
                 <div class="col-xs-2">
                     <img src="{%=o.userDetailsAvatarUrl%}" class="rounded-circle height-50 in-charge-avatar"/>
                 </div>

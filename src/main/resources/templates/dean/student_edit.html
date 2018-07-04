@@ -22,7 +22,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="text-xs-center">
+            <div class="text-center">
                 <div class="card-body">
                     <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
                          th:src="${@viewService.getAvatarUrl(student.user.details.originalAvatarUrl)}"
@@ -181,7 +181,7 @@
             </div>
         </div>
     </div>
-    <div th:unless="${student}" class="row text-xs-center">
+    <div th:unless="${student}" class="row text-center">
         <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
             <h3 class="capsule p-small bg-danger">No such student found</h3>
         </div>

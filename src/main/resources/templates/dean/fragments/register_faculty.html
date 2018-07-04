@@ -36,7 +36,7 @@
                         <div th:replace="fragments/flash :: error(condition = ${file_error}, success_title = 'Error saving password file!', error = 'Registration wasn\'t successful! Please contact site admin')"></div>
                         <div th:replace="fragments/flash :: error(condition = ${faculty_unknown_error}, error_title = 'Unknown Error!', error = 'We don\'t know what happened. Please contact site admin')"></div>
                         <div th:replace="fragments/flash :: success(condition = ${file_saved}, success_title = 'Saved!', message = 'Password file was successfully saved! Click button below to download the file (will expire after 3 hours)')"></div>
-                        <div th:if="${file_saved}" class="row text-xs-center" th:with="fileUrl = @{|/admin/dean/password/${file_saved}|}">
+                        <div th:if="${file_saved}" class="row text-center" th:with="fileUrl = @{|/admin/dean/password/${file_saved}|}">
                             <div class="col-xs-12" th:with="fullFileUrl = @{|${@configurationService.getBaseUrl(#httpServletRequest.getRequestURL())}${fileUrl}|}">
                                 <div class="form-group">
                                     <div class="position-relative has-icon-left">

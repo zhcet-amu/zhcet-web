@@ -18,7 +18,7 @@
                     <i class="material-icons">settings</i> Settings
                 </a>
             </div>
-            <div class="text-xs-center">
+            <div class="text-center">
                 <img width="220px" height="220px" class="border-rounded-15 m-1" th:src="${@viewService.getAvatarUrl(user.details.originalAvatarUrl)}">
                 <p class="lead" th:text="${user.name}"></p>
                 <div th:if="${user.email}">
@@ -127,7 +127,7 @@
                     </div>
                 </div>
             </div>
-            <div th:unless="${@authService.isFullyAuthenticated(user)}" class="text-xs-center">
+            <div th:unless="${@authService.isFullyAuthenticated(user)}" class="text-center">
                 <br>
                 <p class="lead">Profile cannot be seen until email is verified and default password is changed</p>
                 Go to <a th:href="@{/profile/settings}">Profile Settings</a> to complete pending tasks
