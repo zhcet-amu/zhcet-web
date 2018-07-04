@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" data-textdirection="ltr" class="loading">
 <th:block th:fragment="container" th:include="fragments/login :: login(page_title = 'ZHCET Login', message = 'Login with ZHCET')">
-    <div class="card-body collapse in">
-        <div class="card-block">
+    <div class="card-content collapse show">
+        <div class="card-body">
             <form class="form-horizontal form-simple" action="#" th:action="@{/login}" method="post">
                 <fieldset class="form-group position-relative has-icon-left mb-0">
                     <input type="text" class="transparent form-control form-control-lg input-lg" id="username"

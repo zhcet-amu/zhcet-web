@@ -24,8 +24,8 @@
                 </div>
             </div>
 
-            <div class="card-body collapse in">
-                <div class="card-block">
+            <div class="card-content collapse show">
+                <div class="card-body">
                     <div class="alert alert-danger" th:unless="${@authService.isFullyAuthenticated(user)}">
                         The user has not verified itself yet. We do not recommend adding any role to the user as it
                         would unconditionally give user access to the permissions while their account may be in a vulnerable,

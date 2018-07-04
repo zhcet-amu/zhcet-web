@@ -16,8 +16,8 @@
         return [
             '<div class="course card">',
             '<input type="text" class="chosen-code" name="code" value="' + item.code + '" hidden>',
+            '<div class="card-content">',
             '<div class="card-body">',
-            '<div class="card-block">',
             '<h4 class="card-title"><strong>' + item.code + '</strong> - ' + item.title + '</h4>',
             '<p class="card-text">',
             '<span class="capsule p-small category">' + item._item.category + '</span>  ',

@@ -23,12 +23,12 @@
                 </div>
             </div>
             <div class="text-xs-center">
-                <div class="card-block">
+                <div class="card-body">
                     <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
                          th:src="${@viewService.getAvatarUrl(faculty.user.details.originalAvatarUrl)}"
                          class="rounded-circle height-200" alt="Profile Picture"/>
                 </div>
-                <div class="card-block">
+                <div class="card-body">
                     <h4 class="card-subtitle" th:text="${faculty.user.name}">Name</h4>
                     <br>
                     <h5>
@@ -52,7 +52,7 @@
                     <br>
                 </div>
             </div>
-            <div class="card-block">
+            <div class="card-body">
                 <!--/*@thymesVar id="facultyModel" type="amu.zhcet.core.admin.dean.edit.FacultyEditModel"*/-->
                 <form class="form" th:action="|/admin/dean/faculty/${faculty.facultyId}|" method="post" th:object="${facultyModel}">
                     <div class="row">

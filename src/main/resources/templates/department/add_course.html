@@ -23,8 +23,8 @@
                         </ul>
                     </div>
                 </div>
-                <div class="card-body collapse in">
-                    <div class="card-block">
+                <div class="card-content collapse show">
+                    <div class="card-body">
                         <form class="form" th:action="@{|/admin/department/${department.code}/course/add|}" method="post" th:object="${course}">
                             <div th:replace="department/fragments/course_form"></div>
                             <div class="form-actions right">

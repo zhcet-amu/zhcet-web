@@ -78,8 +78,8 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="card-body collapse in">
-                                <div class="card-block" th:text="${notificationRecipient.notification.message}"></div>
+                            <div class="card-content collapse show">
+                                <div class="card-body" th:text="${notificationRecipient.notification.message}"></div>
                             </div>
                             <blockquote class="mb-2">
                                 <span>From : <code th:text="${notificationRecipient.notification.sender.name}"></code>

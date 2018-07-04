@@ -32,8 +32,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="card-body collapse in">
-                        <div class="card-block" th:text="${notification.message}"></div>
+                    <div class="card-content collapse show">
+                        <div class="card-body" th:text="${notification.message}"></div>
                     </div>
                     <blockquote class="mb-2">
                         <span>From : <code th:text="${notification.sender.name}"></code>
@@ -48,7 +48,7 @@
 
             <div class="col-lg-4">
                 <div class="bg-light-gray p-1 mb-1">
-                    <table class="statistics collapse in">
+                    <table class="statistics">
                         <tr>
                             <td><i class="material-icons">share</i></td>
                             <td>Type</td>
@@ -87,8 +87,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="card-body collapse in">
-                        <div class="card-block">
+                    <div class="card-content collapse show">
+                        <div class="card-body">
                             <table id="report" class="table display responsive nowrap">
                                 <thead>
                                 <tr>

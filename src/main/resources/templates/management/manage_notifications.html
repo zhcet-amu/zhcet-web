@@ -78,7 +78,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="card-body collapse in">
+                        <div class="card-content collapse show">
                             <div th:id="|statisticsWrap${notification.id}|" role="tablist" aria-multiselectable="true">
                                 <div class="collapse-icon accordion-icon-rotate">
                                     <div th:id="|statisticsHeader${notification.id}|" class="card-header bg-light-gray">
@@ -86,7 +86,7 @@
                                     </div>
                                     <div th:id="|statisticsAccordion${notification.id}|" role="tabpanel" class="card-collapse collapse" aria-expanded="false" style="height: 0;">
                                         <div class="bg-light-gray px-1">
-                                            <table class="statistics collapse in">
+                                            <table class="statistics">
                                                 <tr>
                                                     <td><i class="material-icons">share</i></td>
                                                     <td>Type</td>
@@ -117,7 +117,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-block" th:text="${notification.message}"></div>
+                            <div class="card-body" th:text="${notification.message}"></div>
                         </div>
                         <blockquote class="mb-2">
                                 <span>From : <code th:text="${notification.sender.name}"></code>

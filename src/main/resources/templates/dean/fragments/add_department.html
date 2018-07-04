@@ -9,8 +9,8 @@
             </ul>
         </div>
     </div>
-    <div class="card-body collapse in">
-        <div class="card-block">
+    <div class="card-content collapse show">
+        <div class="card-body">
             <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
             <form class="mui-form" th:action="@{/admin/dean/departments/add}" method="post"
                   th:object="${department}">

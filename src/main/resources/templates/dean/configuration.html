@@ -27,7 +27,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="card-block">
+                    <div class="card-body">
                         <!--/*@thymesVar id="config" type="amu.zhcet.core.admin.dean.config.Config"*/-->
                         <form class="form form-horizontal" th:action="@{/admin/dean/configuration}" method="post" th:object="${config}">
                             <div th:each="message : ${success}" class="alert alert-dismissible alert-success">
