@@ -14,7 +14,7 @@
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage='config')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
                 <div th:replace="fragments/toolbar"></div>
                 <div class="card">
                     <div class="card-header">
@@ -107,7 +107,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-actions float-xs-right">
+                            <div class="form-actions float-right">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="material-icons">check</i> Save
                                 </button>

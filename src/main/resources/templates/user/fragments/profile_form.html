@@ -3,7 +3,7 @@
     <!--/*@thymesVar id="student" type="amu.zhcet.data.user.student.Student"*/-->
     <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
     <div th:unless="${@authService.isFullyAuthenticated(user)}" class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
             <p class="lead text-gray-dark">Your account is not fully authenticated yet! You need to perform these actions to fully authenticate your account:</p>
             <ul>
                 <li th:each="task : ${@authService.getPendingTasks(user)}" th:text="${task}"></li>
@@ -18,7 +18,7 @@
         </div>
     </div>
     <div th:if="${@authService.isFullyAuthenticated(user)}" class="row">
-        <div class="col-xs-12 col-lg-4 push-lg-8 text-center">
+        <div class="col-lg-4 push-lg-8 text-center">
             <h5>Profile Picture</h5>
             <hr>
             <img th:src="${@viewService.getAvatarUrl(user.details.originalAvatarUrl)}"
@@ -35,7 +35,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-xs-12 col-lg-8 pull-lg-4">
+        <div class="col-lg-8 pull-lg-4">
             <h5>Profile Info</h5>
             <hr>
             <!--/*@thymesVar id="user_details" type="amu.zhcet.data.user.detail.UserDetail"*/-->
@@ -61,8 +61,7 @@
                         </div>
                     </div>
                     <div class="row">
-
-                        <div class="form-group col-xs-12 mb-2">
+                        <div class="form-group col-12 mb-2">
                             <label for="email">
                                 Email
                                 <i class="material-icons md-18 gray"
@@ -76,7 +75,7 @@
                                    th:value="${user.email}"/>
                         </div>
 
-                        <div class="form-group col-xs-12 mb-2">
+                        <div class="form-group col-12 mb-2">
                             <label for="description">Bio</label>
                             <input id="description" name="description"
                                    class="form-control"
@@ -84,7 +83,7 @@
                                    th:field="*{description}"/>
                         </div>
 
-                        <div class="form-group col-xs-12 mb-2">
+                        <div class="form-group col-12 mb-2">
                             <label for="dob">Date of Birth</label>
                             <input id="dob" name="dob"
                                    class="form-control"
@@ -92,7 +91,7 @@
                                    th:field="*{dob}"/>
                         </div>
 
-                        <div class="form-group col-xs-12 mb-2">
+                        <div class="form-group col-12 mb-2">
                             <label for="addressLine1">Address</label>
                             <input id="addressLine1" name="addressLine1"
                                    class="form-control"
@@ -100,7 +99,7 @@
                                    th:field="*{address}"/>
                         </div>
 
-                        <div class="form-group col-xs-12 mb-2">
+                        <div class="form-group col-12 mb-2">
                             <label for="city">City</label>
                             <input id="city" name="city"
                                    class="form-control"
@@ -108,7 +107,7 @@
                                    th:field="*{city}"/>
                         </div>
 
-                        <div class="form-group col-xs-12 mb-2">
+                        <div class="form-group col-12 mb-2">
                             <label for="state">State</label>
                             <input id="state" name="state"
                                    class="form-control"
@@ -116,7 +115,7 @@
                                    th:field="*{state}"/>
                         </div>
 
-                        <div class="form-group col-xs-12 mb-2">
+                        <div class="form-group col-12 mb-2">
                             <label for="phone-numbers">Phone Numbers</label>
                             <input id="phone-numbers"
                                    class="form-control"
@@ -129,7 +128,7 @@
                         <strong>Something went wrong!</strong>
                         <div th:utext="${error}">Fix this and try and try again</div>
                     </div>
-                    <button type="submit" class="btn btn-primary float-xs-right">
+                    <button type="submit" class="btn btn-primary float-right">
                         <i class="material-icons">check</i> Update
                     </button>
                     <br><br>

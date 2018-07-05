@@ -1,13 +1,15 @@
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="email_list" th:if="${!email_list.isEmpty()}">
-    <div class="card" data-toggle="modal" data-target="#email_modal" style="cursor: pointer">
+    <div class="card bg-primary" data-toggle="modal" data-target="#email_modal" style="cursor: pointer">
         <div class="card-body">
-            <div class="media">
-                <div class="p-2 text-center bg-indigo bg-darken-2 media-left media-middle" style="background-color: #3F51B5">
-                    <i class="material-icons font-large-2 md-light">email</i>
-                </div>
-                <div class="p-2 bg-cyan text-white media-body" style="background-color: #7986CB">
-                    <h5>Get Email List</h5>
-                    <h5 class="text-bold-400" th:text="|${email_list.size()} Verified Students|"></h5>
+            <div class="card-content">
+                <div class="media d-flex">
+                    <div class="align-self-center">
+                        <i class="material-icons font-large-2 md-light">email</i>
+                    </div>
+                    <div class="media-body text-white text-right">
+                        <h3 class="text-bold-400 text-white" th:text="|${email_list.size()} Verified Student(s)|"></h3>
+                        <span>Get Email List</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -16,8 +18,8 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Email List</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
                     <textarea th:text="${#strings.listJoin(email_list, ',')}" style="width: 100%"></textarea>

@@ -28,24 +28,26 @@
     <!--/*@thymesVar id="notifications" type="java.util.List"*/-->
 
     <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-lg-10 offset-lg-1 col-xl-8 offset-xl-2">
+        <div class="row justify-content-center">
+            <div class="col-xl-8">
                 <div th:replace="fragments/toolbar"></div>
 
                 <div th:replace="fragments/flash :: success(condition = ${notification_success}, message = ${notification_success})"></div>
 
-                <div class="col-xs-12" th:unless="${notifications.isEmpty()}">
-                    <div class="float-xs-right">
-                        <a th:href="@{/notifications}" th:if="${favorite_page}">
-                            <button class="btn btn-round text-white bg-primary">All Notifications</button>
-                        </a>
-                        <a th:href="@{/notifications/favorite}" th:unless="${favorite_page}">
-                            <button class="btn btn-round text-white" style="background-color: #E91E63">Favorites</button>
-                        </a>
-                        <form th:action="@{/notifications/mark/read}" method="get" style="display: inline-block">
-                            <input type="text" name="page" th:value="${currentPage}" hidden>
-                            <button type="submit" class="btn btn-round text-white bg-success">Mark all as read</button>
-                        </form>
+                <div class="row">
+                    <div class="col-12" th:unless="${notifications.isEmpty()}">
+                        <div class="float-right">
+                            <a th:href="@{/notifications}" th:if="${favorite_page}">
+                                <button class="btn btn-round text-white bg-primary">All Notifications</button>
+                            </a>
+                            <a th:href="@{/notifications/favorite}" th:unless="${favorite_page}">
+                                <button class="btn btn-round text-white" style="background-color: #E91E63">Favorites</button>
+                            </a>
+                            <form th:action="@{/notifications/mark/read}" method="get" style="display: inline-block">
+                                <input type="text" name="page" th:value="${currentPage}" hidden>
+                                <button type="submit" class="btn btn-round text-white bg-success">Mark all as read</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
 
@@ -58,7 +60,7 @@
                 </div>
 
                 <div th:each="notificationRecipient : ${notifications}" class="row">
-                    <div class="col-xs-12">
+                    <div class="col-12">
                         <div class="card">
                             <div th:class="|card-header ${notificationRecipient.seen ? '' : 'new'}|">
                                 <h4 class="title" th:text="${notificationRecipient.notification.title}"></h4>
@@ -87,7 +89,7 @@
                                         <i data-toggle="tooltip" data-original-title="Automated" class="material-icons">autorenew</i>
                                     </span>
                                 </span>
-                                <small class="float-xs-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notificationRecipient.notification.sentTime)}"></em></small>
+                                <small class="float-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notificationRecipient.notification.sentTime)}"></em></small>
                             </blockquote>
                         </div>
                     </div>

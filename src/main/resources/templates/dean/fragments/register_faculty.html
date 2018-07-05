@@ -27,7 +27,7 @@
                             </div>
                             <small class="text-muted">
                                 <span class="completed">0</span>/<span class="total">0</span>
-                                <span class="percentage float-xs-right">0%</span>
+                                <span class="percentage float-right">0%</span>
                             </small>
                         </div>
                         <div th:each="error : ${faculty_errors}">
@@ -37,7 +37,7 @@
                         <div th:replace="fragments/flash :: error(condition = ${faculty_unknown_error}, error_title = 'Unknown Error!', error = 'We don\'t know what happened. Please contact site admin')"></div>
                         <div th:replace="fragments/flash :: success(condition = ${file_saved}, success_title = 'Saved!', message = 'Password file was successfully saved! Click button below to download the file (will expire after 3 hours)')"></div>
                         <div th:if="${file_saved}" class="row text-center" th:with="fileUrl = @{|/admin/dean/password/${file_saved}|}">
-                            <div class="col-xs-12" th:with="fullFileUrl = @{|${@configurationService.getBaseUrl(#httpServletRequest.getRequestURL())}${fileUrl}|}">
+                            <div class="col-12" th:with="fullFileUrl = @{|${@configurationService.getBaseUrl(#httpServletRequest.getRequestURL())}${fileUrl}|}">
                                 <div class="form-group">
                                     <div class="position-relative has-icon-left">
                                         <input type="text" id="download_password" class="form-control" placeholder="Course Code" th:value="${fullFileUrl}">
@@ -69,8 +69,8 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             <h4 class="modal-title">Confirm Faculty Registration</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">
                             <div class="row">

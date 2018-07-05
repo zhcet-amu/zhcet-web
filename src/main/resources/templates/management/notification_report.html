@@ -14,7 +14,7 @@
 
     <div class="container-fluid" th:if="${notification}">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
                 <div th:replace="fragments/toolbar"></div>
             </div>
         </div>
@@ -41,7 +41,7 @@
                                 <i data-toggle="tooltip" data-original-title="Automated" class="material-icons">autorenew</i>
                             </span>
                         </span>
-                        <small class="float-xs-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notification.sentTime)}"></em></small>
+                        <small class="float-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notification.sentTime)}"></em></small>
                     </blockquote>
                 </div>
             </div>
@@ -75,7 +75,7 @@
         </div>
 
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="title">Notification Report</h4>

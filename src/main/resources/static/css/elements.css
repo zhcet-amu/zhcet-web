@@ -1,4 +1,4 @@
-/*.badge {
+.z-badge {
     padding: 0 0.3rem;
     margin: 0.1rem;
     display: inline-block;
@@ -9,42 +9,60 @@
     border: 2px solid #607D8B;
 }
 
-.badge > .badge-content {
+.z-badge > .z-badge-content {
     padding: 0.8rem 0.5rem;
     color: white;
     border-radius: .3rem;
 }
 
-.badge.badge-info {
+.z-badge.z-badge-info {
     color: #03A9F4;
     background-color: #E1F5FE;
     border: 2px solid #03A9F4;
 }
 
-.badge.badge-info > .badge-content {
+.z-badge.z-badge-info > .z-badge-content {
     background-color: #03A9F4;
 }
 
-.badge.badge-success {
+.z-badge.z-badge-success {
     color: #00E676;
     background-color: #d5ffe2;
     border: 2px solid #00E676;
 }
 
-.badge.badge-success > .badge-content {
+.z-badge.z-badge-success > .z-badge-content {
     background-color: #00E676;
 }
 
-.badge.badge-danger {
+.z-badge.z-badge-danger {
     color: #f44336;
     background-color: #ffebee;
     border: 2px solid #f44336;
 }
 
-.badges > .badge > i {
+.z-badges > .z-badge > i {
     margin-bottom: 0.1rem;
 }
-*/
+
+.capsule {
+    background-color: #ddd;
+    border-radius: 1.8rem;
+}
+
+.capsule.p-small {
+    padding: 0.4375rem;
+}
+
+.capsule.p-medium {
+    padding: 0.625rem;
+}
+
+.join {
+    padding: 0.4375rem 0;
+    border-radius: 2rem;
+    background-color: rgba(206, 147, 216, 0.3)
+}
 
 .bg-gray {
     background-color: #777;
@@ -54,7 +72,7 @@
     background-color: #FF5722;
 }
 
-.bg-orange.tag-glow {
+.bg-orange.badge-glow {
     -webkit-box-shadow: 0 0 10px #FF5722;
     box-shadow: 0 0 10px #FF5722;
 }
@@ -63,7 +81,7 @@
     background-color: #E91E63;
 }
 
-.bg-pink.tag-glow {
+.bg-pink.badge-glow {
     -webkit-box-shadow: 0 0 10px #E91E63;
     box-shadow: 0 0 10px #E91E63;
 }

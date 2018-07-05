@@ -17,7 +17,7 @@
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage = 'floated_page')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
             <div th:replace="fragments/toolbar"></div>
             <div class="card">
                 <div class="card-header">
@@ -74,8 +74,8 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Floated Course Info</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body text-center">
                     <h4 id="title" class="card-subtitle">Theory of Computation</h4>

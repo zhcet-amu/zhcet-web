@@ -23,25 +23,6 @@ table td {
     padding-bottom: 2px;
 }
 
-.capsule {
-    background-color: #ddd;
-    border-radius: 1.8rem;
-}
-
-.capsule.p-small {
-    padding: 0.4375rem;
-}
-
-.capsule.p-medium {
-    padding: 0.625rem;
-}
-
-.join {
-    padding: 0.4375rem 0;
-    border-radius: 2rem;
-    background-color: rgba(206, 147, 216, 0.3)
-}
-
 .flex-center {
     display: flex;
     align-items: center;
@@ -156,4 +137,8 @@ i.gray {
 
 #toast-container {
     margin-top: 60px;
+}
+
+tr.bg-danger {
+    color: #eee;
 }

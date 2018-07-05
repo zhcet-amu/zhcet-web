@@ -12,14 +12,14 @@
             </ul>
         </div>
     </div>
-    <div id="remove-student-modal" class="modal fade text-xs-left" role="dialog" aria-hidden="true">
+    <div id="remove-student-modal" class="modal fade text-left" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-danger white">
+                    <h4 class="modal-title">Confirm Student Removal</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Confirm Student Removal</h4>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger" role="alert">
@@ -41,35 +41,33 @@
 
     <div class="card-content collapse show">
         <div class="card-body">
-            <div class="row">
-                <div class="table-responsive">
-                    <table id="registrationTable" class="table display responsive nowrap">
-                        <thead>
-                        <tr>
-                            <th data-toggle="tooltip" data-original-title="Faculty Number">F. No</th>
-                            <th data-toggle="tooltip" data-original-title="Enrolment Number">En. No</th>
-                            <th>Name</th>
-                            <th>Section</th>
-                            <th>Mode</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <th:block th:each="registration: ${courseRegistrations}">
-                            <tr class="student-row">
-                                <td th:text="${registration.student.facultyNumber}"></td>
-                                <td th:text="${registration.student.enrolmentNumber}"></td>
-                                <td th:text="${registration.student.user.name}"></td>
-                                <td th:text="${registration.student.section}"></td>
-                                <td>
-                                    <span th:text="${registration.mode}"></span>
-                                    <i class="remove-student material-icons" th:attr="data-enrolment = ${registration.student.enrolmentNumber}" data-toggle="tooltip" data-original-title="Remove Student">delete</i>
-                                </td>
+                    <div class="table-responsive">
+                        <table id="registrationTable" class="table display responsive nowrap">
+                            <thead>
+                            <tr>
+                                <th data-toggle="tooltip" data-original-title="Faculty Number">F. No</th>
+                                <th data-toggle="tooltip" data-original-title="Enrolment Number">En. No</th>
+                                <th>Name</th>
+                                <th>Section</th>
+                                <th>Mode</th>
                             </tr>
-                        </th:block>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                            </thead>
+                            <tbody>
+                            <th:block th:each="registration: ${courseRegistrations}">
+                                <tr class="student-row">
+                                    <td th:text="${registration.student.facultyNumber}"></td>
+                                    <td th:text="${registration.student.enrolmentNumber}"></td>
+                                    <td th:text="${registration.student.user.name}"></td>
+                                    <td th:text="${registration.student.section}"></td>
+                                    <td>
+                                        <span th:text="${registration.mode}"></span>
+                                        <i class="remove-student material-icons" th:attr="data-enrolment = ${registration.student.enrolmentNumber}" data-toggle="tooltip" data-original-title="Remove Student">delete</i>
+                                    </td>
+                                </tr>
+                            </th:block>
+                            </tbody>
+                        </table>
+                    </div>
         </div>
     </div>
 </div>

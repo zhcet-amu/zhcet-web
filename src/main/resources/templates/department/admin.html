@@ -8,71 +8,73 @@
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'department', subPage = 'department_admin')" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
-    <div class="row" th:if="${department}">
-        <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
-            <div th:replace="fragments/toolbar"></div>
-            <div class="row" sec:authorize="hasRole('ROLE_DEPARTMENT_SUPER_ADMIN')">
-                <div class="col-xs-12 col-md-10 col-lg-8 col-xl-6 offset-md-1 offset-lg-2 offset-xl-3">
-                    <div class="mui-form">
-                        <div class="mui-select">
-                            <label for="type">Select Department</label>
-                            <select id="type" onchange="location = this.value;">
-                                <option th:each="dep : ${@departmentService.findAll()}"
-                                        th:value="@{|/admin/department/${dep.code}|}"
-                                        th:text="${dep.name}"
-                                        th:selected="${dep.code == department.code}">
-                                </option>
-                            </select>
+    <div class="container">
+        <div class="row justify-content-center" th:if="${department}">
+            <div class="col-lg-10">
+                <div th:replace="fragments/toolbar"></div>
+                <div class="row justify-content-center" sec:authorize="hasRole('ROLE_DEPARTMENT_SUPER_ADMIN')">
+                    <div class="col-md-10 col-lg-8 col-xl-6">
+                        <div class="mui-form">
+                            <div class="mui-select">
+                                <label for="type">Select Department</label>
+                                <select id="type" onchange="location = this.value;">
+                                    <option th:each="dep : ${@departmentService.findAll()}"
+                                            th:value="@{|/admin/department/${dep.code}|}"
+                                            th:text="${dep.name}"
+                                            th:selected="${dep.code == department.code}">
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Show if department was supplied -->
-            <div class="row" th:if="${department}">
-                <div class="col-xs-12 col-lg-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <img class="card-img-top img-fluid" src="https://zhcet-backend.firebaseapp.com/static/img/course_generic.jpg" alt="Card image cap">
+                <!-- Show if department was supplied -->
+                <div class="row" th:if="${department}">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <img class="card-img-top img-fluid" src="https://zhcet-backend.firebaseapp.com/static/img/course_generic.jpg" alt="View Courses">
                             <div class="card-body">
-                                <h4 class="card-title">View Courses</h4>
-                                <p class="card-text">View and manage all the courses in department.</p>
-                                <a th:href="@{|/admin/department/${department.code}/courses|}" class="btn btn-outline-danger float-xs-right">All  Courses</a>
+                                <div class="card-body">
+                                    <h4 class="card-title">View Courses</h4>
+                                    <p class="card-text">View and manage all the courses in department.</p>
+                                    <a th:href="@{|/admin/department/${department.code}/courses|}" class="btn btn-outline-danger float-right">All  Courses</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xs-12 col-lg-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <img class="card-img-top img-fluid" src="https://zhcet-backend.firebaseapp.com/static/img/course_generic.jpg" alt="Card image cap">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <img class="card-img-top img-fluid" src="https://zhcet-backend.firebaseapp.com/static/img/course_generic.jpg" alt="Float Courses">
                             <div class="card-body">
-                                <h4 class="card-title">Float Course</h4>
-                                <p class="card-text">Float courses in the current session.</p>
-                                <a th:href="@{|/admin/department/${department.code}/float|}" class="btn btn-outline-info float-xs-right">Float Course</a>
+                                <div class="card-body">
+                                    <h4 class="card-title">Float Course</h4>
+                                    <p class="card-text">Float courses in the current session.</p>
+                                    <a th:href="@{|/admin/department/${department.code}/float|}" class="btn btn-outline-info float-right">Float Course</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xs-12 col-lg-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <img class="card-img-top img-fluid" src="https://zhcet-backend.firebaseapp.com/static/img/course_generic.jpg" alt="Card image cap">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <img class="card-img-top img-fluid" src="https://zhcet-backend.firebaseapp.com/static/img/course_generic.jpg" alt="New Course">
                             <div class="card-body">
-                                <h4 class="card-title">Add Course</h4>
-                                <p class="card-text">Add a new course to the department. </p>
-                                <a th:href="@{|/admin/department/${department.code}/course/add|}" class="btn btn-outline-success float-xs-right">New Course</a>
+                                <div class="card-body">
+                                    <h4 class="card-title">Add Course</h4>
+                                    <p class="card-text">Add a new course to the department. </p>
+                                    <a th:href="@{|/admin/department/${department.code}/course/add|}" class="btn btn-outline-success float-right">New Course</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Show if Department not Found -->
-    <div th:unless="${department}" class="row">
-        <div th:replace="department/fragments/department_not_found"></div>
+        <!-- Show if Department not Found -->
+        <div th:unless="${department}" class="row">
+            <div th:replace="department/fragments/department_not_found"></div>
+        </div>
     </div>
 </div>
 </body>

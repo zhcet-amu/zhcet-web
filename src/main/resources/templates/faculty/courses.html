@@ -9,8 +9,8 @@
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'faculty_courses')" sec:authorize="hasRole('ROLE_FACULTY')">
     <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
                 <div th:replace="fragments/toolbar"></div>
                 <div class="card" style="background-color: #f9f9f9">
                     <div class="card-header">
@@ -44,16 +44,16 @@
                                     <li th:each="incharge : ${courseInCharges}" class="mb-2" th:with="url = |/admin/faculty/courses/${incharge.code}/attendance|">
                                         <a th:href="${url}" style="color: inherit" th:with="course = ${incharge.floatedCourse.course}">
                                             <div class="card" th:with="section = ${#strings.defaultString(incharge.section, 'All')}">
-                                                <div class="card-header">
+                                                <div class="card-header course-header">
                                                     <h4 class="course-title card-title" id="heading-icon">
-                                                        <strong><span th:class="|code tag tag-pill tag-glow ${@viewService.getClassForCourse(course)}|" th:text="${course.code}"></span></strong> :
+                                                        <strong><span th:class="|code badge badge-pill badge-glow ${@viewService.getClassForCourse(course)}|" th:text="${course.code}"></span></strong> :
                                                         <span class="title" th:text="${course.title}"></span>
                                                     </h4>
                                                     <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
                                                     <div class="heading-elements">
                                                         <ul class="list-inline mb-0">
                                                             <li><a th:href="${url}" data-toggle="tooltip" data-placement="top" data-original-title="Manage Attendance">
-                                                                <i class="material-icons md-18">event</i>
+                                                                <i class="material-icons md-18 gray">event</i>
                                                             </a></li>
                                                         </ul>
                                                     </div>

@@ -26,14 +26,14 @@
                     <h3>No notifications</h3>
                 </div>
 
-                <div class="modal fade text-xs-left" id="delete" role="dialog" aria-hidden="true">
+                <div class="modal fade text-left" id="delete" role="dialog" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
+                            <h4 class="modal-title">Delete Notification</h4>
                             <div class="modal-header bg-danger white">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
-                                <h4 class="modal-title">Delete Notification</h4>
                             </div>
                             <div class="modal-body">
                                 <div class="alert alert-danger" role="alert">
@@ -63,14 +63,14 @@
                                             <input type="text" name="page" th:value="${currentPage}" hidden>
                                             <button type="submit" data-toggle="tooltip" data-original-title="Edit Notification"
                                                     class="head-icon btn btn-icon btn-pure">
-                                                <i class="material-icons md-18">edit</i>
+                                                <i class="material-icons md-18 gray">edit</i>
                                             </button>
                                         </form>
                                     </li>
                                     <li>
                                         <button class="head-icon btn btn-icon btn-pure" data-toggle="tooltip" data-original-title="Delete Notification"
                                                 th:onclick="|NotificationManager.deleteNotification(${notification.id})|">
-                                            <i class="material-icons md-18">delete</i>
+                                            <i class="material-icons md-18 gray">delete</i>
                                         </button>
                                     </li>
                                     <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
@@ -125,7 +125,7 @@
                                         <i data-toggle="tooltip" data-original-title="Automated" class="material-icons">autorenew</i>
                                     </span>
                                 </span>
-                            <small class="float-xs-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notification.sentTime)}"></em></small>
+                            <small class="float-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notification.sentTime)}"></em></small>
                         </blockquote>
                     </div>
                 </div>

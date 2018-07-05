@@ -1,15 +1,18 @@
-<div xmlns:th="http://www.thymeleaf.org" th:fragment="faculty/fragment/attendance_download" class="card">
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="faculty/fragment/attendance_download" class="card bg-info">
     <a th:href="${attendance_download_url}" target="_blank">
-        <div class="card-body">
-            <div class="media">
-                <div class="p-2 text-center bg-cyan bg-darken-2 media-left media-middle" style="background-color: #0097A7">
-                    <i class="material-icons font-large-2 md-light">event</i>
+        <div class="card-content">
+            <div class="card-body">
+                <div class="media d-flex">
+                    <div class="align-self-center">
+                        <i class="material-icons font-large-2 md-light">event</i>
+                    </div>
+                    <div class="media-body text-white text-right" th:if="${courseRegistrations != null}" style="background-color: #00BCD4">
+                        <h3 class="text-bold-400 text-white" th:text="|${courseRegistrations.size()} Students|"></h3>
+                        <h4 class="text-bold-600 text-white" th:if="${incharge != null && incharge.section != null}" th:text="|Section : ${incharge.section}|"></h4>
+                        <span>Download Attendance</span>
+                    </div>
                 </div>
-                <div class="p-2 bg-cyan text-white media-body" th:if="${courseRegistrations != null}" style="background-color: #00BCD4">
-                    <h5>Download Attendance</h5>
-                    <h5 class="text-bold-600" th:if="${incharge != null && incharge.section != null}" th:text="|Section : ${incharge.section}|"></h5>
-                    <h5 class="text-bold-400" th:text="|${courseRegistrations.size()} Students|"></h5>
-                </div>
+
             </div>
         </div>
     </a>

@@ -9,7 +9,7 @@
     <div class="container">
         <div class="row">
             <!--/*@thymesVar id="notification" type="amu.zhcet.notification.Notification"*/-->
-            <div class="col-xs-12" th:if="${notification}">
+            <div class="col-12" th:if="${notification}">
                 <div th:replace="fragments/toolbar"></div>
 
                 <form id="notification" th:action="@{|/management/notifications/${notification.id}/edit|}" method="post" th:object="${notification}">
@@ -33,7 +33,7 @@
                     <input th:field="*{channelType}" hidden>
                     <input th:field="*{recipientChannel}" hidden>
 
-                    <button type="submit" class="btn btn-primary float-xs-right">Save</button>
+                    <button type="submit" class="btn btn-primary float-right">Save</button>
                 </form>
             </div>
 
