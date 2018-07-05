@@ -412,7 +412,7 @@ select.form-control {
   right: 20px;
   margin-top: -8px;
   font-family: 'Material Icons';
-  content: "\e15b";
+  content: "remove";
   transition: all 300ms linear 0s; }
 
 .collapse-icon a[data-toggle="collapse"]:before {
@@ -421,7 +421,7 @@ select.form-control {
   right: 20px;
   margin-top: -8px;
   font-family: 'Material Icons';
-  content: "\e14b";
+  content: "add";
   transition: all 300ms linear 0s; }
 
 .collapse-icon.left a {

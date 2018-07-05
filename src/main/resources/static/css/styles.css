@@ -2,6 +2,12 @@ table td {
     vertical-align: middle !important;
 }
 
+.brand-logo {
+    height: 40px;
+    padding-bottom: 5px;
+    margin: 0;
+}
+
 .hover-cursor:hover {
     cursor: pointer;
 }

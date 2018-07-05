@@ -46,7 +46,7 @@
                                 <span id="gender" th:text="${gender}"  th:class="|capsule p-small ${@viewService.getClassForGender(gender)}|">Male</span>
                                 <br><br>
                             </div>
-                            <div th:class="|capsule p-small ${faculty.working ? 'bg-success' : 'bg-danger'}|" style="width: 120px;display: inline-block" th:text="${faculty.working ? 'Working' : 'Inactive'}">Active</div>
+                            <div th:class="|capsule p-small text-white ${faculty.working ? 'bg-success' : 'bg-danger'}|" style="width: 120px;display: inline-block" th:text="${faculty.working ? 'Working' : 'Inactive'}">Active</div>
                             <br>
                             <div class="mt-1">
                                 <span th:text="${faculty.user.email}"></span><span th:if="${faculty.user.emailVerified}" style="margin-left: 5px;"><i class="material-icons md-18">check</i></span>

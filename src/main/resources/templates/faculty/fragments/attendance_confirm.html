@@ -60,9 +60,11 @@
                         <li class="text-danger" th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
                     </ul>
                     <div class="row">
-                        <button id="attendance-confirm" type="submit" class="btn btn-primary float-right">
-                            <i class="material-icons">check</i> Confirm
-                        </button>
+                        <div class="col">
+                            <button id="attendance-confirm" type="submit" class="btn btn-primary float-right">
+                                <i class="material-icons">check</i> Confirm
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

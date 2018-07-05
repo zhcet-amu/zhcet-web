@@ -3,6 +3,9 @@
     var $html = $('html');
     var $body = $('body');
 
+    $.fn.toggleText = function(t1, t2) {
+        return this.text() === t1 ? this.text(t2) : this.text(t1)
+    };
 
     $(window).on('load',function(){
         var rtl;
@@ -82,14 +85,14 @@
         $('a[data-action="collapse"]').on('click',function(e){
             e.preventDefault();
             $(this).closest('.card').children('.card-content').collapse('toggle');
-            $(this).closest('.card').find('[data-action="collapse"] i').toggleClass('ft-minus ft-plus');
+            $(this).closest('.card').find('[data-action="collapse"] i').toggleText('remove', 'add');
 
         });
 
         // Toggle fullscreen
         $('a[data-action="expand"]').on('click',function(e){
             e.preventDefault();
-            $(this).closest('.card').find('[data-action="expand"] i').toggleClass('ft-maximize ft-minimize');
+            $(this).closest('.card').find('[data-action="expand"] i').toggleText("fullscreen_exit", "fullscreen")
             $(this).closest('.card').toggleClass('card-fullscreen');
         });
 
@@ -280,10 +283,10 @@
         if (screenfull.enabled) {
             $(document).on(screenfull.raw.fullscreenchange, function(){
                 if(screenfull.isFullscreen){
-                    $('.nav-link-expand').find('i').toggleClass('ft-minimize ft-maximize');
+                    $('.nav-link-expand').find('i').toggleText("fullscreen_exit", "fullscreen");
                 }
                 else{
-                    $('.nav-link-expand').find('i').toggleClass('ft-maximize ft-minimize');
+                    $('.nav-link-expand').find('i').toggleText("fullscreen_exit", "fullscreen");
                 }
             });
         }
