@@ -61,7 +61,7 @@
                 "</label>" +
                 "</fieldset>" +
                 "</td><td>" +
-                "<span class='tag tag-pill tag-info float-right'>Semester: " + course.semester + "</span>" +
+                "<span class='badge badge-pill badge-info float-right'>Semester: " + course.semester + "</span>" +
                 "</td></tr>"
             );
         });
