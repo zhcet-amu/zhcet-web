@@ -10,23 +10,23 @@ public class ViewService {
 
     public String getClassForCourse(Course course) {
         if (course.getSemester() == null)
-            return "tag-default";
+            return "badge-secondary";
 
         switch (course.getSemester()) {
             case 3:
-                return "tag-danger";
+                return "badge-danger";
             case 4:
-                return "tag-info";
+                return "badge-info";
             case 5:
                 return "bg-pink";
             case 6:
                 return "bg-orange";
             case 7:
-                return "tag-primary";
+                return "badge-primary";
             case 8:
-                return "tag-success";
+                return "badge-success";
             default:
-                return "tag-default";
+                return "badge-secondary";
         }
     }
 

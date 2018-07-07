@@ -6,7 +6,7 @@
 <head th:replace="fragments/layout :: head"></head>
 <link rel="stylesheet" th:href="@{/css/notification.css}">
 
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification', subPage='manage_notification')" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
 
@@ -14,7 +14,7 @@
 
     <div class="container-fluid" th:if="${notification}">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
                 <div th:replace="fragments/toolbar"></div>
             </div>
         </div>
@@ -32,8 +32,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="card-body collapse in">
-                        <div class="card-block" th:text="${notification.message}"></div>
+                    <div class="card-content collapse show">
+                        <div class="card-body" th:text="${notification.message}"></div>
                     </div>
                     <blockquote class="mb-2">
                         <span>From : <code th:text="${notification.sender.name}"></code>
@@ -41,14 +41,14 @@
                                 <i data-toggle="tooltip" data-original-title="Automated" class="material-icons">autorenew</i>
                             </span>
                         </span>
-                        <small class="float-xs-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notification.sentTime)}"></em></small>
+                        <small class="float-right"><em style="vertical-align: bottom" th:text="${#temporals.format(notification.sentTime)}"></em></small>
                     </blockquote>
                 </div>
             </div>
 
             <div class="col-lg-4">
                 <div class="bg-light-gray p-1 mb-1">
-                    <table class="statistics collapse in">
+                    <table class="statistics">
                         <tr>
                             <td><i class="material-icons">share</i></td>
                             <td>Type</td>
@@ -75,7 +75,7 @@
         </div>
 
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="title">Notification Report</h4>
@@ -87,8 +87,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="card-body collapse in">
-                        <div class="card-block">
+                    <div class="card-content collapse show">
+                        <div class="card-body">
                             <table id="report" class="table display responsive nowrap">
                                 <thead>
                                 <tr>

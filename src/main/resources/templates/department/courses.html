@@ -4,16 +4,15 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="fragments/layout :: head"></head>
 <link rel="stylesheet" th:href="@{/css/courses.css}">
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'department', subPage = 'courses')" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <!--/*@thymesVar id="course" type="amu.zhcet.data.course.Course"*/-->
     <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
     <div class="container">
-
         <!-- Show if Department Found -->
-        <div class="row" th:if="${department}">
-            <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
+        <div class="row justify-content-center" th:if="${department}">
+            <div class="col-lg-10 col-xl-8">
                 <div th:replace="fragments/toolbar"></div>
                 <div class="card" style="background-color:#f5f5f5;">
                     <div class="card-header">
@@ -27,8 +26,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="card-body collapse in collapse in">
-                        <div class="card-block">
+                    <div class="card-content collapse show">
+                        <div class="card-body">
                             <a th:href="@{|/admin/department/${department.code}/course/add|}">
                                 <button class="btn btn-outline-primary btn-round">New Course</button>
                             </a>

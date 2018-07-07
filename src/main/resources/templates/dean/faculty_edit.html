@@ -4,162 +4,166 @@
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
 
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage='faculty_page')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
 
     <!--/*@thymesVar id="faculty" type="amu.zhcet.data.user.faculty.FacultyMember"*/-->
-    <div th:if="${faculty}" class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
-        <div th:replace="fragments/toolbar"></div>
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title" id="from-actions-top-left">Faculty Details</h4>
-                <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
-                <div class="heading-elements">
-                    <ul class="list-inline mb-0">
-                        <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
-                        <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="text-xs-center">
-                <div class="card-block">
-                    <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
-                         th:src="${@viewService.getAvatarUrl(faculty.user.details.originalAvatarUrl)}"
-                         class="rounded-circle height-200" alt="Profile Picture"/>
-                </div>
-                <div class="card-block">
-                    <h4 class="card-subtitle" th:text="${faculty.user.name}">Name</h4>
-                    <br>
-                    <h5>
-                        <span th:text="${faculty.facultyId}">14PEB049</span><br>
-                        <span th:text="${faculty.designation}">Faculty Member</span>
-                    </h5>
-                    <div class="row">
-                        <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
-                            <h5 th:text="${faculty.user.department.name}" class="capsule p-small"></h5>
+    <div th:if="${faculty}" class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8">
+                <div th:replace="fragments/toolbar"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title" id="from-actions-top-left">Faculty Details</h4>
+                        <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
+                        <div class="heading-elements">
+                            <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
+                                <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
+                            </ul>
                         </div>
                     </div>
-                    <div id="gender-container" class="mt-1" th:with="gender = ${faculty.user.details.gender}" th:if="${faculty.user.details.gender}">
-                        <span id="gender" th:text="${gender}"  th:class="|capsule p-small ${@viewService.getClassForGender(gender)}|">Male</span>
-                        <br><br>
-                    </div>
-                    <div th:class="|capsule p-small ${faculty.working ? 'bg-success' : 'bg-danger'}|" style="width: 120px;display: inline-block" th:text="${faculty.working ? 'Working' : 'Inactive'}">Active</div>
-                    <br>
-                    <div class="mt-1">
-                        <span th:text="${faculty.user.email}"></span><span th:if="${faculty.user.emailVerified}" style="margin-left: 5px;"><i class="material-icons md-18">check</i></span>
-                    </div>
-                    <br>
-                </div>
-            </div>
-            <div class="card-block">
-                <!--/*@thymesVar id="facultyModel" type="amu.zhcet.core.admin.dean.edit.FacultyEditModel"*/-->
-                <form class="form" th:action="|/admin/dean/faculty/${faculty.facultyId}|" method="post" th:object="${facultyModel}">
-                    <div class="row">
-                        <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
-                            <div th:each="message : ${success}" class="alert alert-dismissible alert-success">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <span th:text="${message}"></span>
-                            </div>
-                            <div th:each="error : ${#fields.detailedErrors('*')}">
-                                <div th:replace="fragments/flash :: error(condition = true, error = ${error})"></div>
-                            </div>
-                            <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <div th:utext="${error}">Fix this and try and try again</div>
-                            </div>
-                            <div class="mui-form">
-                                <div class="mui-select">
-                                    <label for="department">Department</label>
-                                    <select id="department" th:field="*{userDepartmentName}" name="courseCode">
-                                        <option th:each="department : ${departments}"
-                                                th:value="${department.name}"
-                                                th:text="${department.name}"
-                                                class="my-dropdown">
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div class="mui-select">
-                                    <label for="type">Gender</label>
-                                    <select id="type" th:field="*{userDetailsGender}">
-                                        <option value="">Unspecified</option>
-                                        <option th:each="type : ${genders}"
-                                                th:value="${type.name()}"
-                                                th:text="${type}">
-                                        </option>
-                                    </select>
+                    <div class="text-center">
+                        <div class="card-body">
+                            <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
+                                 th:src="${@viewService.getAvatarUrl(faculty.user.details.originalAvatarUrl)}"
+                                 class="rounded-circle height-200" alt="Profile Picture"/>
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-subtitle" th:text="${faculty.user.name}">Name</h4>
+                            <br>
+                            <h5>
+                                <span th:text="${faculty.facultyId}">14PEB049</span><br>
+                                <span th:text="${faculty.designation}">Faculty Member</span>
+                            </h5>
+                            <div class="row">
+                                <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
+                                    <h5 th:text="${faculty.user.department.name}" class="capsule p-small"></h5>
                                 </div>
                             </div>
-                            <div class="form-body">
-                                <div class="row">
-                                    <div class="form-group col-xs-12 mb-2">
-                                        <label for="name">Name</label>
-                                        <input id="name" name="name"
-                                               class="form-control"
-                                               type="text"
-                                               th:field="*{userName}"/>
-                                    </div>
-
-                                    <div class="form-group col-xs-12 mb-2">
-                                        <label for="designation">Designation</label>
-                                        <input id="designation" name="designation"
-                                               class="form-control"
-                                               type="text"
-                                               th:field="*{designation}"/>
-                                    </div>
-
-                                    <div class="form-group col-xs-12 mb-2">
-                                        <label for="working">Working</label>&nbsp;
-                                        <input type="checkbox" id="working" data-color="primary"
-                                               class="switchery" th:field="*{working}">
-                                    </div>
-
-                                    <div class="form-group col-xs-12 mb-2">
-                                        <label for="account-enabled">Account Enabled</label>&nbsp;
-                                        <input type="checkbox" id="account-enabled" data-color="success"
-                                               class="switchery" th:field="*{userEnabled}">
-                                    </div>
-
-                                    <div class="form-group col-xs-12 mb-2" th:if="${facultyModel.hasTotpSecret}">
-                                        <label for="2fa-enabled">2 Factor Authentication</label>&nbsp;
-                                        <input type="checkbox" id="2fa-enabled" data-color="info"
-                                               class="switchery" th:field="*{userUsing2fa}">
-                                    </div>
-
-                                    <div class="form-group col-xs-12 mb-2">
-                                        <label for="email">Email</label>
-                                        <input id="email" name="email"
-                                               class="form-control"
-                                               type="text"
-                                               th:field="*{userEmail}"/>
-                                    </div>
-
-                                    <div class="form-group col-xs-12 mb-2">
-                                        <label for="phone-numbers">Phone Numbers</label>
-                                        <input id="phone-numbers"
-                                               class="form-control"
-                                               type="text"
-                                               th:field="*{userDetailsPhoneNumbers}"/>
-                                    </div>
-
-                                </div>
-                                <a th:href="@{|/admin/dean/roles/user/${faculty.facultyId}/|}"
-                                   class="btn btn-block btn-danger">Edit Roles</a>
-                                <br>
-                                <button type="submit" class="btn btn-primary float-xs-right">
-                                    <i class="material-icons">check</i> Update
-                                </button>
+                            <div id="gender-container" class="mt-1" th:with="gender = ${faculty.user.details.gender}" th:if="${faculty.user.details.gender}">
+                                <span id="gender" th:text="${gender}"  th:class="|capsule p-small ${@viewService.getClassForGender(gender)}|">Male</span>
                                 <br><br>
                             </div>
+                            <div th:class="|capsule p-small text-white ${faculty.working ? 'bg-success' : 'bg-danger'}|" style="width: 120px;display: inline-block" th:text="${faculty.working ? 'Working' : 'Inactive'}">Active</div>
+                            <br>
+                            <div class="mt-1">
+                                <span th:text="${faculty.user.email}"></span><span th:if="${faculty.user.emailVerified}" style="margin-left: 5px;"><i class="material-icons md-18">check</i></span>
+                            </div>
+                            <br>
                         </div>
                     </div>
-                </form>
+                    <div class="card-body">
+                        <!--/*@thymesVar id="facultyModel" type="amu.zhcet.core.admin.dean.edit.FacultyEditModel"*/-->
+                        <form class="form" th:action="|/admin/dean/faculty/${faculty.facultyId}|" method="post" th:object="${facultyModel}">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-10">
+                                    <div th:each="message : ${success}" class="alert alert-dismissible alert-success">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <span th:text="${message}"></span>
+                                    </div>
+                                    <div th:each="error : ${#fields.detailedErrors('*')}">
+                                        <div th:replace="fragments/flash :: error(condition = true, error = ${error})"></div>
+                                    </div>
+                                    <div th:each="error : ${errors}" class="alert alert-dismissible alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <div th:utext="${error}">Fix this and try and try again</div>
+                                    </div>
+                                    <div class="mui-form">
+                                        <div class="mui-select">
+                                            <label for="department">Department</label>
+                                            <select id="department" th:field="*{userDepartmentName}" name="courseCode">
+                                                <option th:each="department : ${departments}"
+                                                        th:value="${department.name}"
+                                                        th:text="${department.name}"
+                                                        class="my-dropdown">
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mui-select">
+                                            <label for="type">Gender</label>
+                                            <select id="type" th:field="*{userDetailsGender}">
+                                                <option value="">Unspecified</option>
+                                                <option th:each="type : ${genders}"
+                                                        th:value="${type.name()}"
+                                                        th:text="${type}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-body">
+                                        <div class="row">
+                                            <div class="form-group col-12 mb-2">
+                                                <label for="name">Name</label>
+                                                <input id="name" name="name"
+                                                       class="form-control"
+                                                       type="text"
+                                                       th:field="*{userName}"/>
+                                            </div>
+
+                                            <div class="form-group col-12 mb-2">
+                                                <label for="designation">Designation</label>
+                                                <input id="designation" name="designation"
+                                                       class="form-control"
+                                                       type="text"
+                                                       th:field="*{designation}"/>
+                                            </div>
+
+                                            <div class="form-group col-12 mb-2">
+                                                <label for="working">Working</label>&nbsp;
+                                                <input type="checkbox" id="working" data-color="primary"
+                                                       class="switchery" th:field="*{working}">
+                                            </div>
+
+                                            <div class="form-group col-12 mb-2">
+                                                <label for="account-enabled">Account Enabled</label>&nbsp;
+                                                <input type="checkbox" id="account-enabled" data-color="success"
+                                                       class="switchery" th:field="*{userEnabled}">
+                                            </div>
+
+                                            <div class="form-group col-12 mb-2" th:if="${facultyModel.hasTotpSecret}">
+                                                <label for="2fa-enabled">2 Factor Authentication</label>&nbsp;
+                                                <input type="checkbox" id="2fa-enabled" data-color="info"
+                                                       class="switchery" th:field="*{userUsing2fa}">
+                                            </div>
+
+                                            <div class="form-group col-12 mb-2">
+                                                <label for="email">Email</label>
+                                                <input id="email" name="email"
+                                                       class="form-control"
+                                                       type="text"
+                                                       th:field="*{userEmail}"/>
+                                            </div>
+
+                                            <div class="form-group col-12 mb-2">
+                                                <label for="phone-numbers">Phone Numbers</label>
+                                                <input id="phone-numbers"
+                                                       class="form-control"
+                                                       type="text"
+                                                       th:field="*{userDetailsPhoneNumbers}"/>
+                                            </div>
+
+                                        </div>
+                                        <a th:href="@{|/admin/dean/roles/user/${faculty.facultyId}/|}"
+                                           class="btn btn-block btn-danger">Edit Roles</a>
+                                        <br>
+                                        <button type="submit" class="btn btn-primary float-right">
+                                            <i class="material-icons">check</i> Update
+                                        </button>
+                                        <br><br>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div th:unless="${faculty}" class="row text-xs-center">
-        <div class="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
+    <div th:unless="${faculty}" class="row justify-content-center text-center">
+        <div class="col-xs-10 col-md-6">
             <h3 class="capsule p-small bg-danger">No such faculty member found</h3>
         </div>
     </div>

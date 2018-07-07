@@ -10,11 +10,11 @@
         margin-top: 8px;
     }
 </style>
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage='config')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
                 <div th:replace="fragments/toolbar"></div>
                 <div class="card">
                     <div class="card-header">
@@ -27,7 +27,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="card-block">
+                    <div class="card-body">
                         <!--/*@thymesVar id="config" type="amu.zhcet.core.admin.dean.config.Config"*/-->
                         <form class="form form-horizontal" th:action="@{/admin/dean/configuration}" method="post" th:object="${config}">
                             <div th:each="message : ${success}" class="alert alert-dismissible alert-success">
@@ -100,14 +100,14 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div id="default-session" class="row text-xs-center" th:hidden="${!config.automatic}">
+                                <div id="default-session" class="row text-center" th:hidden="${!config.automatic}">
                                     <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
                                         <h5 class="capsule p-small bg-primary text-white" th:text="|The applied session is ${config.defaultSession}|"></h5>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-actions float-xs-right">
+                            <div class="form-actions float-right">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="material-icons">check</i> Save
                                 </button>

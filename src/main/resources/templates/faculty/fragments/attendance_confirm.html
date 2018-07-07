@@ -2,14 +2,14 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Course Attendance</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
                 <div>
 
                 </div>
-                <form th:object="${attendanceModel}" th:action="|/admin/faculty/courses/${incharge.code}/attendance/edit/confirm|" method="post" class="card-block">
+                <form th:object="${attendanceModel}" th:action="|/admin/faculty/courses/${incharge.code}/attendance/edit/confirm|" method="post" class="card-body">
                     <div class="row">
                         <div class="table-responsive">
                             <table class="table" id="confirmation">
@@ -41,7 +41,7 @@
                                     </td>
                                     <td>
                                         <span class="percent" th:text="${attendance.delivered == 0 ? 0 : #numbers.formatDecimal(percent,0,2)}+'%'"></span>
-                                        <span class="error-info float-xs-right" style="display: none">
+                                        <span class="error-info float-right" style="display: none">
                                             <i class="gray hover-cursor material-icons" data-toggle="tooltip"
                                                data-original-title="Attended cannot be higher than delivered">info_outline</i>
                                         </span>
@@ -60,9 +60,11 @@
                         <li class="text-danger" th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
                     </ul>
                     <div class="row">
-                        <button id="attendance-confirm" type="submit" class="btn btn-primary float-xs-right">
-                            <i class="material-icons">check</i> Confirm
-                        </button>
+                        <div class="col">
+                            <button id="attendance-confirm" type="submit" class="btn btn-primary float-right">
+                                <i class="material-icons">check</i> Confirm
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

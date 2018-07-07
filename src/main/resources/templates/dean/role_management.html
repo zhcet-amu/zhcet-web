@@ -4,7 +4,7 @@
       data-textdirection="ltr"
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage = 'dean_admin')">
     <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
@@ -22,8 +22,8 @@
             </div>
         </div>
 
-        <div class="card-body collapse in">
-            <div id="payload" class="card-block">
+        <div class="card-content collapse show">
+            <div id="payload" class="card-body">
                 <input class="fuzzy-search form-control round mb-1" placeholder="Search" />
                 <div class="row">
                     <div class="col-md-4">

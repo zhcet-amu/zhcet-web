@@ -5,28 +5,30 @@
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
 <link rel="stylesheet" th:href="@{/css/floated-course.css}">
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 
 <!--/*@thymesVar id="floatedCourse" type="amu.zhcet.data.course.floated.FloatedCourse"*/-->
 <!--/*@thymesVar id="inCharge" type="amu.zhcet.data.course.incharge.CourseInCharge"*/-->
 <!--/*@thymesVar id="registration" type="amu.zhcet.data.course.registration.CourseRegistration"*/-->
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean_admin', subPage = 'floated_page')">
     <div class="row" th:if="${floatedCourse}">
-        <div th:replace="fragments/toolbar"></div>
-        <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Unknown Error!</strong>
-            <div>We don't know what happened!</div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-xl-4">
-                <div th:replace="faculty/fragments/email_list"></div>
-                <div th:with="attendance_download_url = @{|./${floatedCourse.course.code}/attendance.csv|}"
-                     th:insert="faculty/fragments/attendance_download"></div>
-                <div th:replace="department/fragments/register_students"></div>
+        <div class="col-12">
+            <div th:replace="fragments/toolbar"></div>
+            <div th:if="${unknown_error}" class="alert alert-dismissible alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Unknown Error!</strong>
+                <div>We don't know what happened!</div>
             </div>
-            <div class="col-xs-12 col-xl-8">
-                <div th:replace="department/fragments/registered_students"></div>
+            <div class="row">
+                <div class="col-xs-12 col-xl-4">
+                    <div th:replace="faculty/fragments/email_list"></div>
+                    <div th:with="attendance_download_url = @{|./${floatedCourse.course.code}/attendance.csv|}"
+                         th:insert="faculty/fragments/attendance_download"></div>
+                    <div th:replace="department/fragments/register_students"></div>
+                </div>
+                <div class="col-xs-12 col-xl-8">
+                    <div th:replace="department/fragments/registered_students"></div>
+                </div>
             </div>
         </div>
     </div>

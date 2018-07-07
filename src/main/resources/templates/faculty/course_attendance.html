@@ -4,13 +4,13 @@
       data-textdirection="ltr"
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'faculty_courses')" sec:authorize="hasRole('ROLE_FACULTY')">
     <!--/*@thymesVar id="course" type="amu.zhcet.data.course.Course"*/-->
     <!--/*@thymesVar id="incharge" type="amu.zhcet.data.course.incharge.CourseInCharge"*/-->
     <div class="row" th:if="${incharge}">
-        <div class="col-xs-12">
+        <div class="col-12">
             <div th:replace="fragments/toolbar"></div>
         </div>
         <div class="col-xs-12 col-xl-9">

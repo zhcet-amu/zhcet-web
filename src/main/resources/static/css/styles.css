@@ -1,28 +1,15 @@
-html, body {
-    height: 100%;
-}
-
-body {
-    display: table;
-    width: 100%;
-}
-
 table td {
     vertical-align: middle !important;
-}
-
-.hover-cursor:hover {
-    cursor: pointer;
-}
-
-.bg-danger, .bg-success {
-    color: #eee;
 }
 
 .brand-logo {
     height: 40px;
     padding-bottom: 5px;
     margin: 0;
+}
+
+.hover-cursor:hover {
+    cursor: pointer;
 }
 
 .border-rounded-15 {
@@ -40,25 +27,6 @@ table td {
 
 .email-status > i {
     padding-bottom: 2px;
-}
-
-.capsule {
-    background-color: #ddd;
-    border-radius: 1.8rem;
-}
-
-.capsule.p-small {
-    padding: 0.4375rem;
-}
-
-.capsule.p-medium {
-    padding: 0.625rem;
-}
-
-.join {
-    padding: 0.4375rem 0;
-    border-radius: 2rem;
-    background-color: rgba(206, 147, 216, 0.3)
 }
 
 .flex-center {
@@ -177,11 +145,6 @@ i.gray {
     margin-top: 60px;
 }
 
-.notification-header {
-    display: inline-block;
-}
-
-.dropdown-notification .notification-tag {
-    top: 4px;
-    left: -4px;
+tr.bg-danger {
+    color: #eee;
 }

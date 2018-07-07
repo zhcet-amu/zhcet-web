@@ -3,7 +3,7 @@
       xmlns:v-bind="http://www.w3.org/1999/xhtml" lang="en" data-textdirection="ltr" class="loading">
 <head th:replace="fragments/layout :: head"></head>
 
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 <style>
     .material-icons.center-fix {
         margin-left: -2px;
@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-lg-9">
-                    <div class="mui-panel text-xs-center">
+                    <div class="mui-panel text-center">
                         <span v-for="image in images" :key="image.key" class="mr-1">
                             <img height="150px" width="150px" :src="image['.value']" alt="" class="img-thumbnail hover-cursor" @click="showImage(image)">
                         </span>

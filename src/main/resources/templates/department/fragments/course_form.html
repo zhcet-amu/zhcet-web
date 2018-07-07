@@ -8,282 +8,285 @@
     <div th:each="error : ${course_errors}">
         <div th:replace="fragments/flash :: error(condition = true, error = ${error})"></div>
     </div>
-    <div class="col-md-6">
-        <h4 class="form-section">Basic Info</h4>
-        <div class="form-group">
-            <label for="code">Course Code</label>
-            <div class="position-relative has-icon-left">
-                <input type="text" id="code" class="form-control" placeholder="Course Code" th:field="*{code}" required>
-                <div class="form-control-position">
-                    <i class="material-icons gray margin-b-small">code</i>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="title">Course Title</label>
-            <div class="position-relative has-icon-left">
-                <input type="text" id="title" class="form-control" placeholder="Course Title" th:field="*{title}" required>
-                <div class="form-control-position">
-                    <i class="material-icons gray margin-b-small">edit</i>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="department">Department</label>
-            <div class="position-relative has-icon-left">
-                <input type="text" id="department" class="form-control" placeholder="Department" readonly th:value="${department.name}">
-                <div class="form-control-position">
-                    <i class="material-icons gray margin-b-small">account_balance</i>
-                </div>
-            </div>
-        </div>
-
-        <input hidden name="department" th:value="${department.code}">
-
-        <hr>
-
-        <div class="form-group">
-            <label for="category">Category</label>
-            <div class="position-relative has-icon-left">
-                <input type="text" id="category" class="form-control" placeholder="DC" th:field="*{category}">
-                <div class="form-control-position">
-                    <i class="material-icons gray margin-b-small">group_work</i>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="category">Credits</label>
-            <div class="position-relative has-icon-left">
-                <input type="text" id="credits" class="form-control" placeholder="4" th:field="*{credits}">
-                <div class="form-control-position">
-                    <i class="material-icons gray margin-b-small">stars</i>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="semester">Semester</label>
-            <div class="position-relative has-icon-left">
-                <input type="text" id="semester" class="form-control" placeholder="7" th:field="*{semester}">
-                <div class="form-control-position">
-                    <i class="material-icons gray margin-b-small">hourglass_empty</i>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="branch">Branch</label>
-            <div class="position-relative has-icon-left">
-                <input type="text" id="branch" class="form-control" placeholder="PE" th:field="*{branch}">
-                <div class="form-control-position">
-                    <i class="material-icons gray margin-b-small">call_split</i>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <h4 class="form-section">Additional Info</h4>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="active">Active</label>
-                    <div>
-                        <input type="checkbox" id="active" data-color="primary" class="switchery" th:field="*{active}">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="compulsory">Compulsory</label>
-                    <div>
-                        <input type="checkbox" id="compulsory" data-color="primary" class="switchery" th:field="*{compulsory}">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="mui-select">
-            <label for="type">Type</label>
-            <select id="type" th:field="*{type}">
-                <option th:each="type : ${course_types}"
-                        th:value="${type.name()}"
-                        th:text="${type}"
-                        class="my-dropdown">
-                </option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="total">Total Marks</label>
-            <div class="position-relative has-icon-left">
-                <input type="text" id="total" class="form-control" placeholder="100" th:field="*{totalMarks}">
-                <div class="form-control-position">
-                    <i class="material-icons gray margin-b-small">spellcheck</i>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="cw">Internal</label>
-                    <div class="position-relative has-icon-left">
-                        <input type="number" max="100" id="cw" class="form-control" placeholder="15" th:field="*{classWorkMarks}">
-                        <div class="form-control-position">
-                            <i class="material-icons gray margin-b-small">assignment</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="mid-sem">Mid-Sem</label>
-                    <div class="position-relative has-icon-left">
-                        <input type="number" max="100" id="mid-sem" class="form-control" placeholder="25" th:field="*{midSemMarks}">
-                        <div class="form-control-position">
-                            <i class="material-icons gray margin-b-small">linear_scale</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="final">Final</label>
-                    <div class="position-relative has-icon-left">
-                        <input type="number" max="100" id="final" class="form-control" placeholder="60" th:field="*{finalMarks}">
-                        <div class="form-control-position">
-                            <i class="material-icons gray margin-b-small">flag</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <hr>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="lecture">Lecture</label>
-                    <div class="position-relative has-icon-left">
-                        <input type="number" min="0" max="3" step="1" id="lecture" class="form-control" placeholder="3" th:field="*{lecturePart}">
-                        <div class="form-control-position">
-                            <i class="material-icons gray margin-b-small">face</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="tutorial">Tutorial</label>
-                    <div class="position-relative has-icon-left">
-                        <input type="number" min="0" max="3" step="1" id="tutorial" class="form-control" placeholder="1" th:field="*{tutorialPart}">
-                        <div class="form-control-position">
-                            <i class="material-icons gray margin-b-small">receipt</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="practical">Practical</label>
-                    <div class="position-relative has-icon-left">
-                        <input type="number" min="0" max="3" step="1" id="practical" class="form-control" placeholder="0" th:field="*{practicalPart}">
-                        <div class="form-control-position">
-                            <i class="material-icons gray margin-b-small">opacity</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <hr>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="start_year">Start Year</label>
-                    <div class="position-relative has-icon-left">
-                        <input type="number" min="1900" max="2099" step="1" id="start_year" class="form-control" placeholder="2000" th:field="*{startYear}">
-                        <div class="form-control-position">
-                            <i class="material-icons gray margin-b-small">timer</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="finish_year">Finish Year</label>
-                    <div class="position-relative has-icon-left">
-                        <input type="number" min="1900" max="2099" step="1" id="finish_year" class="form-control" placeholder="2016" th:field="*{finishYear}">
-                        <div class="form-control-position">
-                            <i class="material-icons gray margin-b-small">timer_off</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description</label>
-            <div class="position-relative has-icon-left">
-                <textarea id="description" rows="5" class="form-control" placeholder="Description about this course" th:field="*{description}"></textarea>
-                <div class="form-control-position">
-                    <i class="material-icons gray margin-b-small">description</i>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xs-12">
-        <h4 class="form-section">Other Information</h4>
+    <div class="row">
         <div class="col-md-6">
+            <h4 class="form-section">Basic Info</h4>
             <div class="form-group">
-                <label for="syllabus">Syllabus</label>
+                <label for="code">Course Code</label>
                 <div class="position-relative has-icon-left">
-                    <textarea id="syllabus" rows="5" class="form-control" placeholder="Syllabus of this course" th:field="*{syllabus}"></textarea>
+                    <input type="text" id="code" class="form-control" placeholder="Course Code" th:field="*{code}" required>
                     <div class="form-control-position">
-                        <i class="material-icons gray margin-b-small">sort</i>
+                        <i class="material-icons gray margin-b-small">code</i>
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="books">Books</label>
+                <label for="title">Course Title</label>
                 <div class="position-relative has-icon-left">
-                    <textarea id="books" rows="5" class="form-control" placeholder="Books" th:field="*{books}"></textarea>
+                    <input type="text" id="title" class="form-control" placeholder="Course Title" th:field="*{title}" required>
                     <div class="form-control-position">
-                        <i class="material-icons gray margin-b-small">book</i>
+                        <i class="material-icons gray margin-b-small">edit</i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="department">Department</label>
+                <div class="position-relative has-icon-left">
+                    <input type="text" id="department" class="form-control" placeholder="Department" readonly th:value="${department.name}">
+                    <div class="form-control-position">
+                        <i class="material-icons gray margin-b-small">account_balance</i>
+                    </div>
+                </div>
+            </div>
+
+            <input hidden name="department" th:value="${department.code}">
+
+            <hr>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+                <div class="position-relative has-icon-left">
+                    <input type="text" id="category" class="form-control" placeholder="DC" th:field="*{category}">
+                    <div class="form-control-position">
+                        <i class="material-icons gray margin-b-small">group_work</i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Credits</label>
+                <div class="position-relative has-icon-left">
+                    <input type="text" id="credits" class="form-control" placeholder="4" th:field="*{credits}">
+                    <div class="form-control-position">
+                        <i class="material-icons gray margin-b-small">stars</i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="semester">Semester</label>
+                <div class="position-relative has-icon-left">
+                    <input type="text" id="semester" class="form-control" placeholder="7" th:field="*{semester}">
+                    <div class="form-control-position">
+                        <i class="material-icons gray margin-b-small">hourglass_empty</i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="branch">Branch</label>
+                <div class="position-relative has-icon-left">
+                    <input type="text" id="branch" class="form-control" placeholder="PE" th:field="*{branch}">
+                    <div class="form-control-position">
+                        <i class="material-icons gray margin-b-small">call_split</i>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="col-md-6">
+            <h4 class="form-section">Additional Info</h4>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="active">Active</label>
+                        <div>
+                            <input type="checkbox" id="active" data-color="primary" class="switchery" th:field="*{active}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="compulsory">Compulsory</label>
+                        <div>
+                            <input type="checkbox" id="compulsory" data-color="primary" class="switchery" th:field="*{compulsory}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mui-select">
+                <label for="type">Type</label>
+                <select id="type" th:field="*{type}">
+                    <option th:each="type : ${course_types}"
+                            th:value="${type.name()}"
+                            th:text="${type}"
+                            class="my-dropdown">
+                    </option>
+                </select>
+            </div>
 
             <div class="form-group">
-                <label for="course-objectives">Course Objectives</label>
+                <label for="total">Total Marks</label>
                 <div class="position-relative has-icon-left">
-                    <textarea id="course-objectives" rows="5" class="form-control" placeholder="Objectives of this course" th:field="*{courseObjectives}"></textarea>
+                    <input type="text" id="total" class="form-control" placeholder="100" th:field="*{totalMarks}">
                     <div class="form-control-position">
-                        <i class="material-icons gray margin-b-small">subject</i>
+                        <i class="material-icons gray margin-b-small">spellcheck</i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="cw">Internal</label>
+                        <div class="position-relative has-icon-left">
+                            <input type="number" max="100" id="cw" class="form-control" placeholder="15" th:field="*{classWorkMarks}">
+                            <div class="form-control-position">
+                                <i class="material-icons gray margin-b-small">assignment</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="mid-sem">Mid-Sem</label>
+                        <div class="position-relative has-icon-left">
+                            <input type="number" max="100" id="mid-sem" class="form-control" placeholder="25" th:field="*{midSemMarks}">
+                            <div class="form-control-position">
+                                <i class="material-icons gray margin-b-small">linear_scale</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="final">Final</label>
+                        <div class="position-relative has-icon-left">
+                            <input type="number" max="100" id="final" class="form-control" placeholder="60" th:field="*{finalMarks}">
+                            <div class="form-control-position">
+                                <i class="material-icons gray margin-b-small">flag</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="lecture">Lecture</label>
+                        <div class="position-relative has-icon-left">
+                            <input type="number" min="0" max="3" step="1" id="lecture" class="form-control" placeholder="3" th:field="*{lecturePart}">
+                            <div class="form-control-position">
+                                <i class="material-icons gray margin-b-small">face</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="tutorial">Tutorial</label>
+                        <div class="position-relative has-icon-left">
+                            <input type="number" min="0" max="3" step="1" id="tutorial" class="form-control" placeholder="1" th:field="*{tutorialPart}">
+                            <div class="form-control-position">
+                                <i class="material-icons gray margin-b-small">receipt</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="practical">Practical</label>
+                        <div class="position-relative has-icon-left">
+                            <input type="number" min="0" max="3" step="1" id="practical" class="form-control" placeholder="0" th:field="*{practicalPart}">
+                            <div class="form-control-position">
+                                <i class="material-icons gray margin-b-small">opacity</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="start_year">Start Year</label>
+                        <div class="position-relative has-icon-left">
+                            <input type="number" min="1900" max="2099" step="1" id="start_year" class="form-control" placeholder="2000" th:field="*{startYear}">
+                            <div class="form-control-position">
+                                <i class="material-icons gray margin-b-small">timer</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="finish_year">Finish Year</label>
+                        <div class="position-relative has-icon-left">
+                            <input type="number" min="1900" max="2099" step="1" id="finish_year" class="form-control" placeholder="2016" th:field="*{finishYear}">
+                            <div class="form-control-position">
+                                <i class="material-icons gray margin-b-small">timer_off</i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="course-outcomes">Course Outcomes</label>
+                <label for="description">Description</label>
                 <div class="position-relative has-icon-left">
-                    <textarea id="course-outcomes" rows="5" class="form-control" placeholder="Outcomes this course" th:field="*{courseOutcomes}"></textarea>
+                    <textarea id="description" rows="5" class="form-control" placeholder="Description about this course" th:field="*{description}"></textarea>
                     <div class="form-control-position">
-                        <i class="material-icons gray margin-b-small">list</i>
+                        <i class="material-icons gray margin-b-small">description</i>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-12">
+            <h4 class="form-section">Other Information</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="syllabus">Syllabus</label>
+                        <div class="position-relative has-icon-left">
+                            <textarea id="syllabus" rows="5" class="form-control" placeholder="Syllabus of this course" th:field="*{syllabus}"></textarea>
+                            <div class="form-control-position">
+                                <i class="material-icons gray margin-b-small">sort</i>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="form-group">
+                        <label for="books">Books</label>
+                        <div class="position-relative has-icon-left">
+                            <textarea id="books" rows="5" class="form-control" placeholder="Books" th:field="*{books}"></textarea>
+                            <div class="form-control-position">
+                                <i class="material-icons gray margin-b-small">book</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="form-group">
+                        <label for="course-objectives">Course Objectives</label>
+                        <div class="position-relative has-icon-left">
+                            <textarea id="course-objectives" rows="5" class="form-control" placeholder="Objectives of this course" th:field="*{courseObjectives}"></textarea>
+                            <div class="form-control-position">
+                                <i class="material-icons gray margin-b-small">subject</i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="course-outcomes">Course Outcomes</label>
+                        <div class="position-relative has-icon-left">
+                            <textarea id="course-outcomes" rows="5" class="form-control" placeholder="Outcomes this course" th:field="*{courseOutcomes}"></textarea>
+                            <div class="form-control-position">
+                                <i class="material-icons gray margin-b-small">list</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

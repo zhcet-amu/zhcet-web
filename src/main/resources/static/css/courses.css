@@ -11,11 +11,15 @@
     padding-right: 8px;
 }
 
-.floated-title {
+.card-header.course-header {
+    background-color: #eee;
+}
+
+.card-header.course-header.floated-title {
     background-color: #C8E6C9;
 }
 
-.inactive-title {
+.card-header.course-header.inactive-title {
     background-color: #ffcdd2;
 }
 

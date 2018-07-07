@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" data-textdirection="ltr" class="loading">
 <th:block th:fragment="container" th:include="fragments/login :: login(page_title = 'Verify Email', message = 'Verify Email')">
-<div class="card-body collapse in">
-    <div class="card-block">
+<div class="card-content collapse show">
+    <div class="card-body">
         <div th:replace="fragments/flash :: success(condition = ${success}, success_title = 'Verified!', message = ${success})"></div>
         <!--/*@thymesVar id="password" type="amu.zhcet.data.model.dto.PasswordReset"*/-->
         <div th:if="${error}" class="alert alert-dismissible alert-danger">

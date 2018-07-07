@@ -4,10 +4,10 @@
     <!--/*@thymesVar id="course" type="amu.zhcet.data.course.Course"*/-->
 
     <!-- Course Card Body -->
-    <div th:fragment="course_card_body" class="card-body collapse in p-0">
-        <div class="card-block">
+    <div th:fragment="course_card_body" class="card-content collapse show p-0">
+        <div class="card-body">
             <h5 class="card-title">
-                <span class="badge"><i class="material-icons">group_work</i>
+                <span class="z-badge"><i class="material-icons">group_work</i>
                 <span th:text="${course.category}"></span></span>&nbsp;
                 <span class="join">
                     <span class="capsule p-small type" th:if="${course.type != null}"><i class="material-icons md-dark" th:text="${course.type.name() == 'T' ? 'class' : 'opacity'}"></i>&nbsp;<span th:text="${course.type}"></span></span>&nbsp;
@@ -16,30 +16,30 @@
             </h5>
             <p th:if="${course.registrations}" th:text="|${course.registrations} Students Registered|"></p>
             <blockquote class="card-text" th:text="${course.description}"></blockquote>
-            <div class="badges card-text">
-                <div class="badge badge-info"><span><i class="material-icons">hourglass_empty</i> Semester </span><span class="semester badge-content" th:text="${course.semester}"></span></div>
-                <div class="badge badge-info"><span><i class="material-icons">stars</i> Credits </span><span class="credits badge-content" th:text="${course.credits}"></span></div>
-                <div class="badge badge-info"><span><i class="material-icons">call_split</i> Branch </span><span class="branch badge-content" th:text="${course.branch}"></span></div>
-                <div class="badge badge-danger float-xs-right" th:if="${!course.active}"><i class="material-icons">clear</i> Deactivated</div>
-                <div class="badge badge-success float-xs-right" th:hidden="${course.meta == null}"><i class="material-icons">fiber_manual_record</i> <span class="floated" th:text="${course.meta}"></span></div>
-                <div class="badge badge-success float-xs-right" th:if="${section}">Section <span class="section badge-content" th:text="${section}"></span></div>
+            <div class="z-badges card-text">
+                <div class="z-badge z-badge-info"><span><i class="material-icons">hourglass_empty</i> Semester </span><span class="semester z-badge-content" th:text="${course.semester}"></span></div>
+                <div class="z-badge z-badge-info"><span><i class="material-icons">stars</i> Credits </span><span class="credits z-badge-content" th:text="${course.credits}"></span></div>
+                <div class="z-badge z-badge-info"><span><i class="material-icons">call_split</i> Branch </span><span class="branch z-badge-content" th:text="${course.branch}"></span></div>
+                <div class="z-badge z-badge-danger float-right" th:if="${!course.active}"><i class="material-icons">clear</i> Deactivated</div>
+                <div class="z-badge z-badge-success float-right" th:hidden="${course.meta == null}"><i class="material-icons">fiber_manual_record</i> <span class="floated" th:text="${course.meta}"></span></div>
+                <div class="z-badge z-badge-success float-right" th:if="${section}">Section <span class="section z-badge-content" th:text="${section}"></span></div>
             </div>
         </div>
     </div>
 
     <!-- Course Card -->
     <div class="card" th:fragment="course_card">
-        <div th:class="|card-header ${course.meta != null ? 'floated-title' : ''} ${course.active ? '' : 'inactive-title'}|">
+        <div th:class="|card-header course-header ${course.meta != null ? 'floated-title' : ''} ${course.active ? '' : 'inactive-title'}|">
             <h4 class="course-title card-title" id="heading-icon">
-                <strong><span th:class="|code tag tag-pill tag-glow ${@viewService.getClassForCourse(course)}|" th:text="${course.code}"></span></strong> :
+                <strong><span th:class="|code badge badge-pill badge-glow ${@viewService.getClassForCourse(course)}|" th:text="${course.code}"></span></strong> :
                 <span class="title" th:text="${course.title}"></span>
             </h4>
             <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
             <div class="heading-elements">
                 <ul class="list-inline mb-0">
-                    <li th:if="${course.meta}"><a th:href="@{|/admin/department/floated/${course.code}|}" data-toggle="tooltip" data-placement="top" data-original-title="Manage Course"><i class="material-icons md-18">settings</i></a></li>
-                    <li th:unless="${course.meta}"><a th:href="@{|/admin/department/float/${course.code}|}" data-toggle="tooltip" data-placement="top" data-original-title="Float Course"><i class="material-icons md-18">arrow_upward</i></a></li>
-                    <li><a th:href="@{|/admin/department/courses/${course.code}/edit|}" data-toggle="tooltip" data-placement="top" data-original-title="Edit Course"><i class="material-icons">edit</i></a></li>
+                    <li th:if="${course.meta}"><a th:href="@{|/admin/department/floated/${course.code}|}" data-toggle="tooltip" data-placement="top" data-original-title="Manage Course"><i class="material-icons md-18 gray">settings</i></a></li>
+                    <li th:unless="${course.meta}"><a th:href="@{|/admin/department/float/${course.code}|}" data-toggle="tooltip" data-placement="top" data-original-title="Float Course"><i class="material-icons md-18 gray">arrow_upward</i></a></li>
+                    <li><a th:href="@{|/admin/department/courses/${course.code}/edit|}" data-toggle="tooltip" data-placement="top" data-original-title="Edit Course"><i class="material-icons gray">edit</i></a></li>
                 </ul>
             </div>
         </div>

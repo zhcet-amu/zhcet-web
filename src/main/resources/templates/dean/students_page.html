@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en" data-textdirection="ltr" class="loading">
 <head th:replace="fragments/layout :: head"></head>
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage = 'students_page')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
             <div th:replace="fragments/toolbar"></div>
             <div th:replace="fragments/flash :: success(condition = ${section_success}, message = ${section_success})"></div>
             <div th:replace="fragments/flash :: error(condition = ${section_error}, error = ${section_error})"></div>
@@ -20,8 +20,8 @@
                         </ul>
                     </div>
                 </div>
-                <div class="card-body collapse in">
-                    <div class="card-block card-dashboard">
+                <div class="card-content collapse show">
+                    <div class="card-body card-dashboard">
                         <div class="row">
                             <div class="col-xs-6 col-md-4 col-lg-3 col-xl-2">
                                 <div class="mui-form">
@@ -94,10 +94,10 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Student Info</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <div class="modal-body text-xs-center">
+                <div class="modal-body text-center">
                     <img id="avatar" src="https://zhcet-backend.firebaseapp.com/static/img/account.svg" class="rounded-circle height-200" alt="Profile Picture"/>
                     <br><br>
                     <h4 id="name" class="card-subtitle">Areeb Jamal</h4>
@@ -126,14 +126,14 @@
             </div>
         </div>
     </div>
-    <div class="modal fade text-xs-left" id="section-modal">
+    <div class="modal fade text-left" id="section-modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h4 class="modal-title">Change Section/Status</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" aria-hidden="true">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Change Section/Status</h4>
                 </div>
                 <div class="modal-body">
                     <p>This will change the section/status of <span class="capsule p-small count"></span> selected student(s) to the chosen value</p>
@@ -145,7 +145,7 @@
                         </fieldset>
                         <input type="submit" class="btn btn-block btn-outline-primary" value="Save Section">
                     </form>
-                    <h6 class="line-on-side text-muted text-xs-center font-small-3 pt-2">OR</h6>
+                    <h6 class="line-on-side text-muted text-center font-small-3 pt-2">OR</h6>
                     <form th:action="@{/admin/dean/student/status}" method="post">
                         <div class="enrolments" hidden></div>
                         <div class="mui-form">

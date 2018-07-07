@@ -90,20 +90,12 @@
 </th:block>
 
 <th:block th:fragment="scripts">
-    <script th:src="@{/webjars/jquery/dist/jquery.min.js}" type="text/javascript"></script>
-    <script th:src="@{/webjars/tether/js/tether.min.js}" type="text/javascript"></script>
-    <script th:src="@{/webjars/popper.js/umd/popper.min.js}" type="text/javascript"></script>
-    <script th:src="@{/js/vendor/bootstrap.min.js}" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.6.11/js/perfect-scrollbar.jquery.min.js"></script>
-    <script th:src="@{/js/vendor/unison.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/vendor/vendors.min.js}" type="text/javascript"></script>
     <script th:src="@{/js/vendor/app-menu.min.js}" type="text/javascript"></script>
     <script th:src="@{/js/vendor/app.min.js}" type="text/javascript"></script>
     <script th:src="@{/js/app.js}" type="text/javascript"></script>
-    <script th:src="@{/js/vendor/tmpl.min.js}"></script>
+
     <div th:replace="this :: firebase_messaging"></div>
-    <script th:src="@{/webjars/mui/packages/cdn/js/mui.min.js}" defer></script>
-    <link th:href="@{/webjars/toastr/build/toastr.min.css}" rel="stylesheet"/>
-    <script th:src="@{/webjars/toastr/build/toastr.min.js}" defer></script>
 </th:block>
 
 </html>

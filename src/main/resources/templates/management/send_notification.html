@@ -5,11 +5,11 @@
 <head th:replace="fragments/layout :: head"></head>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'notification_manager', subPage='send_notification')" sec:authorize="hasAnyRole('ROLE_FACULTY', 'ROLE_DEPARTMENT_ADMIN', 'ROLE_DEAN_ADMIN')">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
                 <div th:replace="fragments/toolbar"></div>
 
                 <!--/*@thymesVar id="notification" type="amu.zhcet.notification.Notification"*/-->
@@ -55,7 +55,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary float-xs-right">Send</button>
+                    <button type="submit" class="btn btn-primary float-right">Send</button>
                 </form>
             </div>
         </div>

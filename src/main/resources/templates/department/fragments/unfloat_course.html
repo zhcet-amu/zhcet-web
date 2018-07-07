@@ -2,18 +2,18 @@
     <!--/*@thymesVar id="floatedCourse" type="amu.zhcet.data.course.floated.FloatedCourse"*/-->
     <!--/*@thymesVar id="inCharge" type="amu.zhcet.data.course.incharge.CourseInCharge"*/-->
     <!--/*@thymesVar id="registration" type="amu.zhcet.data.course.registration.CourseRegistration"*/-->
-    <div class="text-xs-right">
+    <div class="text-right">
         <input id="course-code" th:value="${floatedCourse.course.code}" type="text" hidden>
         <button class="btn btn-round btn-danger mb-2" data-toggle="modal" data-target="#delete">Unfloat Course</button>
     </div>
-    <div class="modal fade text-xs-left" id="delete" role="dialog" aria-hidden="true">
+    <div class="modal fade text-left" id="delete" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-danger white">
+                    <h4 class="modal-title">Unfloat Course</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Unfloat Course</h4>
                 </div>
                 <div class="modal-body">
                     <h5 th:text="|Unfloat Course ${floatedCourse.course.code} : ${floatedCourse.course.title}|"></h5>

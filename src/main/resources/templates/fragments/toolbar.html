@@ -1,19 +1,19 @@
 <div xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
      class="content-header row" style="margin-bottom: 10px;" th:fragment="toolbar">
-    <div class="content-header-left col-md-6 col-xs-12">
+    <div class="content-header-left col-md-6 col-12">
         <div th:if="${page_title}">
             <h4 class="content-header-title mb-0" th:text="${page_title}"></h4>
             <p class="text-muted mb-0" th:text="${page_subtitle}"></p>
         </div>
     </div>
-    <div class="content-header-right col-md-6 col-xs-12" th:with="sessionCode = ${sessionCode != null ? sessionCode : @configurationService.getDefaultSessionCode()}">
-        <h6 class="float-md-right capsule p-small bg-primary text-white text-xs-center" th:text="|Session : ${@configurationService.getSessionName(sessionCode)}|"></h6>
+    <div class="content-header-right col-md-6 col-12" th:with="sessionCode = ${sessionCode != null ? sessionCode : @configurationService.getDefaultSessionCode()}">
+        <h6 class="float-md-right capsule p-small bg-primary text-white text-center" th:text="|Session : ${@configurationService.getSessionName(sessionCode)}|"></h6>
     </div>
-    <div class="content-header-lead col-xs-12 mt-1" th:if="${page_description}">
+    <div class="content-header-lead col-md-6 col-xs-12 mt-1" th:if="${page_description}">
         <p th:text="${page_description}" style="font-weight: 200; font-size: large"></p>
     </div>
     <!--/*@thymesVar id="page_path" type="amu.zhcet.common.page.PathChain"*/-->
-    <div class="breadcrumb-wrapper col-xs-12" th:if="${page_path}">
+    <div class="breadcrumb-wrapper col-12" th:if="${page_path}">
         <ol class="breadcrumb">
             <li th:each="path: ${page_path.chain}" th:class="|breadcrumb-item ${path.active ? 'active' : ''}|">
                 <a th:if="${path.link != null && !path.active}" th:href="${path.link}" th:text="${path.title}"></a>
@@ -21,7 +21,7 @@
             </li>
         </ol>
     </div>
-    <div th:unless="${hide_warnings}" sec:authorize="isAuthenticated()" class="content-header-lead col-xs-12">
+    <div th:unless="${hide_warnings}" sec:authorize="isAuthenticated()" class="content-header-lead col-12">
         <div sec:authorize="!principal.emailVerified" class="alert alert-icon-left alert-arrow-left alert-danger bg-danger" role="alert">
             <strong>Verify Email!</strong> Your email is not verified, and hence we can't allow allow you to do many things including changing your password
         </div>

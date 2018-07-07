@@ -1,9 +1,9 @@
-<div xmlns:th="http://www.thymeleaf.org" th:fragment="pagination" class="text-xs-center pages">
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="pagination" class="text-center">
     <!--/*@thymesVar id="currentPage" type="java.lang.Integer"*/-->
     <!--/*@thymesVar id="minPage" type="java.lang.Integer"*/-->
     <!--/*@thymesVar id="maxPage" type="java.lang.Integer"*/-->
     <!--/*@thymesVar id="pageUrl" type="java.lang.String"*/-->
-    <nav aria-label="Page navigation">
+    <nav aria-label="Page navigation" style="display: inline-block">
         <ul class="pagination pagination-round">
             <li th:class="|page-item ${currentPage <= minPage ? 'disabled' : ''}|">
                 <a class="page-link" th:href="@{|/${pageUrl}|(page=${currentPage - 1})}" aria-label="Previous">

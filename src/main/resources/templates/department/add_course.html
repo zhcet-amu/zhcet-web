@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="fragments/layout :: head"></head>
 
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'department', subPage = 'add_course')" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
@@ -23,8 +23,8 @@
                         </ul>
                     </div>
                 </div>
-                <div class="card-body collapse in">
-                    <div class="card-block">
+                <div class="card-content collapse show">
+                    <div class="card-body">
                         <form class="form" th:action="@{|/admin/department/${department.code}/course/add|}" method="post" th:object="${course}">
                             <div th:replace="department/fragments/course_form"></div>
                             <div class="form-actions right">

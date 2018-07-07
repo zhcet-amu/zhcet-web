@@ -16,14 +16,14 @@
         return [
             '<div class="course card">',
             '<input type="text" class="chosen-code" name="code" value="' + item.code + '" hidden>',
+            '<div class="card-content">',
             '<div class="card-body">',
-            '<div class="card-block">',
             '<h4 class="card-title"><strong>' + item.code + '</strong> - ' + item.title + '</h4>',
             '<p class="card-text">',
             '<span class="capsule p-small category">' + item._item.category + '</span>  ',
             '<span class="semester">Semester : ' + item._item.semester + '</span> - ',
             '<span class="credits">Credits : ' + item._item.credits + '</span></p>',
-            '<button class="remove btn btn-outline-danger float-xs-right">Remove</button>',
+            '<button class="remove btn btn-outline-danger float-right">Remove</button>',
             '</div></div></div>'
         ].join('');
     }
@@ -61,7 +61,7 @@
                 "</label>" +
                 "</fieldset>" +
                 "</td><td>" +
-                "<span class='tag tag-pill tag-info float-xs-right'>Semester: " + course.semester + "</span>" +
+                "<span class='badge badge-pill badge-info float-right'>Semester: " + course.semester + "</span>" +
                 "</td></tr>"
             );
         });

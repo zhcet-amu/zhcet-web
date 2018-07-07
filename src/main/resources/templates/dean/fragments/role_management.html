@@ -9,8 +9,8 @@
         </div>
     </div>
 
-    <div class="card-body collapse in">
-        <div class="card-block">
+    <div class="card-content collapse show">
+        <div class="card-body">
             <th:block th:each="department : ${departments}">
                 <a th:href="|/admin/dean/roles/department/${department.code}|">
                     <button class="mui-btn mui-btn--flat" th:text="${department.name}"></button>

@@ -4,7 +4,7 @@
       data-textdirection="ltr"
       class="loading">
 <head th:replace="fragments/layout :: head(page_title = 'QR Code')"></head>
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'profile')" sec:authorize="isAuthenticated()">
     <!--/*@thymesVar id="student" type="amu.zhcet.data.user.student.Student"*/-->
@@ -12,7 +12,7 @@
 
     <div class="container">
         <div th:replace="fragments/toolbar"></div>
-        <div class="mui-panel text-xs-center">
+        <div class="mui-panel text-center">
             <h3>Scan QR Code</h3>
             <hr>
             <img th:src="${secret.qrUrl}" alt="QR Code">

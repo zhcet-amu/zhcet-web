@@ -12,8 +12,8 @@
             </ul>
         </div>
     </div>
-    <div class="card-body collapse in collapse in">
-        <div class="card-block">
+    <div class="card-content collapse show">
+        <div class="card-body">
             <form class="form" enctype="multipart/form-data"
                   th:action="@{|./${floatedCourse.course.code}/register|}"
                   method="post">
@@ -41,8 +41,8 @@
             <form th:action="@{|./${floatedCourse.course.code}/register/confirm|}" method="post">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">Confirm Student Registration</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -50,25 +50,25 @@
                                 <table id="confirmRegistrationTable" class="table">
                                     <thead>
                                     <tr>
-                                        <th class="text-xs-center">Enrolment</th>
-                                        <th class="text-xs-center">Faculty</th>
-                                        <th class="text-xs-center">Name</th>
-                                        <th class="text-xs-center">Section</th>
-                                        <th class="text-xs-center">Department</th>
-                                        <th class="text-xs-center">Mode</th>
-                                        <th class="text-xs-center">Error</th>
+                                        <th class="text-center">Enrolment</th>
+                                        <th class="text-center">Faculty</th>
+                                        <th class="text-center">Name</th>
+                                        <th class="text-center">Section</th>
+                                        <th class="text-center">Department</th>
+                                        <th class="text-center">Mode</th>
+                                        <th class="text-center">Error</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <th:block th:each="confirm: ${confirmRegistration.data}">
                                         <tr th:class="(${confirm.meta} ? 'bg-danger white':'')">
-                                            <td class="text-xs-center" th:text="${confirm.student.enrolmentNumber}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.student.facultyNumber}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.student.user?.name}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.student.section}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.student.user?.department?.name}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.mode}"></td>
-                                            <td class="text-xs-center" th:text="${confirm.meta}"></td>
+                                            <td class="text-center" th:text="${confirm.student.enrolmentNumber}"></td>
+                                            <td class="text-center" th:text="${confirm.student.facultyNumber}"></td>
+                                            <td class="text-center" th:text="${confirm.student.user?.name}"></td>
+                                            <td class="text-center" th:text="${confirm.student.section}"></td>
+                                            <td class="text-center" th:text="${confirm.student.user?.department?.name}"></td>
+                                            <td class="text-center" th:text="${confirm.mode}"></td>
+                                            <td class="text-center" th:text="${confirm.meta}"></td>
                                         </tr>
                                     </th:block>
                                     </tbody>

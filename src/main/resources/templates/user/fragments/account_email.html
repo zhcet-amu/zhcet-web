@@ -1,6 +1,6 @@
 <div xmlns:th="http://www.thymeleaf.org" class="row">
     <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
-    <div class="col-xs-12">
+    <div class="col-12">
         <div class="text-bold-700">Email</div>
         <hr>
     </div>
@@ -23,34 +23,34 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-12">
                     <div th:replace="fragments/flash :: success(condition = ${email_success}, message = ${email_success})"></div>
                     <div th:replace="fragments/flash :: error(condition = ${email_error}, error = ${email_error})"></div>
                 </div>
             </div>
         </form>
     </div>
-    <div class="col-xs-12">
+    <div class="col-12">
         <div th:if="${user.email}">
                 <span th:class="|email-status ${user.emailVerified ? 'alert-success' : 'alert-warning'}|">
                     <span th:text="${user.emailVerified ? 'Verified' : 'Pending Verification'}"></span>
                     <i class="material-icons md-18" th:text="${user.emailVerified ? 'verified_user' : 'info'}">done</i>
                 </span>
             <div th:if="${user.emailVerified}" class="row">
-                <div class="col-xs-12">
+                <div class="col-12">
                     <span style="font-size: 16px" th:text="|Email ${user.emailUnsubscribed ? 'Unsubscribed' : 'Subscribed'}|"></span>
                     <button th:class="|ml-1 mui-btn mui-btn--fab mui-btn--small mui-btn--${user.emailUnsubscribed ? 'primary' : 'danger'}|"
                             data-toggle="modal" data-target="#unsubscribe">
                         <i class="material-icons" th:text="${user.emailUnsubscribed ? 'done' : 'close'}" style="margin: -10px"></i>
                     </button>
-                    <div class="modal fade text-xs-left" id="unsubscribe" role="dialog" aria-hidden="true">
+                    <div class="modal fade text-left" id="unsubscribe" role="dialog" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div th:class="|modal-header bg-${user.emailUnsubscribed ? 'success' : 'danger'} white|">
+                                    <h4 class="modal-title" th:text="|${user.emailUnsubscribed ? 'Subscribe' : 'Unsubscribe'} Email|">Unsubscribe Email</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
-                                    <h4 class="modal-title" th:text="|${user.emailUnsubscribed ? 'Subscribe' : 'Unsubscribe'} Email|">Unsubscribe Email</h4>
                                 </div>
                                 <div class="modal-body">
                                     <div th:class="|alert alert-${user.emailUnsubscribed ? 'success' : 'danger'}|" role="alert">

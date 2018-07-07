@@ -11,8 +11,8 @@
             </ul>
         </div>
     </div>
-    <div class="card-body collapse in collapse in">
-        <div class="card-block">
+    <div class="card-content collapse show">
+        <div class="card-body">
             <div class="bs-callout-primary callout-border-left p-1">
                 <strong>Add course in-charge by searching</strong><br>
                 Search for faculty by faculty ID or name and set multiple in-charge in one go!
@@ -36,20 +36,20 @@
             <form method="post" th:action="@{|./${floatedCourse.course.code}/in_charge|}">
                 <div class="in-charge-container">
                     <div class="in-charge" th:each="inCharge : ${floatedCourse.inCharge}">
-                        <div class="row vertical-align text-xs-center">
-                            <div class="col-xs-2">
+                        <div class="row vertical-align text-center">
+                            <div class="col-2">
                                 <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
                                      th:src="${@viewService.getAvatarUrl(inCharge.facultyMember.user.details.avatarUrl)}"
                                      class="rounded-circle height-50 in-charge-avatar" style="margin: 0"/>
                             </div>
-                            <div class="col-xs-2">
+                            <div class="col-2">
                                 <input type="text" name="facultyId" th:value="${inCharge.facultyMember.facultyId}" hidden>
                                 <span class="capsule p-small faculty-id" th:text="${inCharge.facultyMember.facultyId}"></span>
                             </div>
-                            <div class="col-xs-3">
+                            <div class="col-3">
                                 <span th:text="${inCharge.facultyMember.user.name}"></span>
                             </div>
-                            <div class="col-xs-3">
+                            <div class="col-3">
                             <span class="mui-select section-select">
                                 <label for="section">Section</label>
                                 <select id="section"  name="section">
@@ -58,10 +58,10 @@
                                 </select>
                             </span>
                             </div>
-                            <div class="col-xs-2">
-                                <span><button type="button" class="remove mui-btn mui-btn--small mui-btn--danger mui-btn--fab">
+                            <div class="col-2">
+                                <button type="button" class="remove mui-btn mui-btn--small mui-btn--danger mui-btn--fab">
                                     <i class="material-icons md-light inv-margin">clear</i>
-                                </button></span>
+                                </button>
                             </div>
                         </div>
                         <hr>
@@ -69,24 +69,24 @@
                 </div>
                 <br>
                 <div th:replace="fragments/flash :: success(condition = ${incharge_success}, message = ${incharge_success})"></div>
-                <input type="submit" value="Save" class="btn btn-primary float-xs-right">
+                <input type="submit" value="Save" class="btn btn-primary float-right mb-1">
             </form>
         </div>
     </div>
     <script id="in-charge-template" type="text/x-tmpl">
         <div class="in-charge new">
-            <div class="row vertical-align text-xs-center">
-                <div class="col-xs-2">
+            <div class="row vertical-align text-center">
+                <div class="col-2">
                     <img src="{%=o.userDetailsAvatarUrl%}" class="rounded-circle height-50 in-charge-avatar"/>
                 </div>
-                <div class="col-xs-2">
+                <div class="col-2">
                     <input type="text" name="facultyId" value="{%=o.facultyId%}" hidden>
                     <span class="capsule p-small faculty-id">{%=o.facultyId%}</span>
                 </div>
-                <div class="col-xs-3">
+                <div class="col-3">
                     <span>{%=o.userName%}</span>
                 </div>
-                <div class="col-xs-3">
+                <div class="col-3">
                 <span class="mui-select section-select">
                     <label for="section">Section</label>
                     <select id="section" name="section">
@@ -95,7 +95,7 @@
                     </select>
                 </span>
                 </div>
-                <div class="col-xs-2">
+                <div class="col-2">
                     <span><button type="button" class="remove mui-btn mui-btn--small mui-btn--danger mui-btn--fab">
                         <i class="material-icons md-light inv-margin">clear</i>
                     </button></span>

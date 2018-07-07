@@ -5,132 +5,136 @@
       class="loading">
 <head th:replace="fragments/layout :: head"></head>
 
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'profile')" sec:authorize="isAuthenticated()">
     <!--/*@thymesVar id="student" type="amu.zhcet.data.user.student.Student"*/-->
     <!--/*@thymesVar id="user" type="amu.zhcet.data.user.User"*/-->
 
-    <div class="col-xs-12 col-sm-10 offset-sm-1 col-xl-8 offset-xl-2">
-        <div class="mui-panel">
-            <div class="text-xs-right">
-                <a th:href="@{/profile/settings}" class="btn btn-round btn-primary">
-                    <i class="material-icons">settings</i> Settings
-                </a>
-            </div>
-            <div class="text-xs-center">
-                <img width="220px" height="220px" class="border-rounded-15 m-1" th:src="${@viewService.getAvatarUrl(user.details.originalAvatarUrl)}">
-                <p class="lead" th:text="${user.name}"></p>
-                <div th:if="${user.email}">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10">
+                <div class="mui-panel">
+                    <div class="text-right">
+                        <a th:href="@{/profile/settings}" class="btn btn-round btn-primary">
+                            <i class="material-icons">settings</i> Settings
+                        </a>
+                    </div>
+                    <div class="text-center">
+                        <img width="220px" height="220px" class="border-rounded-15 m-1" th:src="${@viewService.getAvatarUrl(user.details.originalAvatarUrl)}">
+                        <p class="lead" th:text="${user.name}"></p>
+                        <div th:if="${user.email}">
                     <span th:class="|email-status ${user.emailVerified ? 'alert-success' : 'alert-warning'}|" data-toggle="tooltip"
                           th:attr="data-original-title=${user.emailVerified ? 'Verified' : 'Pending Verification'}">
                         <span th:text="${user.email}"></span>
                         <i class="material-icons md-18" th:text="${user.emailVerified ? 'verified_user' : 'info'}">done</i>
                     </span>
-                </div>
-                <div th:unless="${user.email}">
+                        </div>
+                        <div th:unless="${user.email}">
                     <span class="email-status alert-danger">
                         <span>Email Not Registered</span>
                         <i class="material-icons md-18">info</i>
                     </span>
-                </div>
-                <div>
-                    <br>
-                    <span class="capsule p-small" th:text="${user.department.name}"></span>
-                </div>
-            </div>
-            <div th:if="${@authService.isFullyAuthenticated(user)}">
-                <div th:if="${student}">
-                    <br>
-                    <div class="row">
-                        <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-                            <p>Student Information</p>
-                            <table class="table">
-                                <tr>
-                                    <td>Enrolment Number</td>
-                                    <td th:text="${student.enrolmentNumber}"></td>
-                                </tr>
-                                <tr>
-                                    <td>Faculty Number</td>
-                                    <td th:text="${student.facultyNumber}"></td>
-                                </tr>
-                                <tr>
-                                    <td>Section</td>
-                                    <td th:text="${student.section}"></td>
-                                </tr>
-                                <tr>
-                                    <td>Hall</td>
-                                    <td th:text="${student.hallCode}"></td>
-                                </tr>
-                                <tr>
-                                    <td>Registered</td>
-                                    <td th:text="${student.registrationYear}"></td>
-                                </tr>
-                                <tr>
-                                    <td>Status</td>
-                                    <td th:text="${@viewService.getStatus(student.status)}"></td>
-                                </tr>
-                            </table>
+                        </div>
+                        <div>
+                            <br>
+                            <span class="capsule p-small" th:text="${user.department.name}"></span>
                         </div>
                     </div>
-                </div>
-                <div th:if="${faculty}">
-                    <br>
-                    <div class="row">
-                        <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-                            <p>Faculty Information</p>
-                            <table class="table">
-                                <tr>
-                                    <td>Faculty ID</td>
-                                    <td th:text="${faculty.facultyId}"></td>
-                                </tr>
-                                <tr>
-                                    <td>Designation</td>
-                                    <td th:text="${faculty.designation}"></td>
-                                </tr>
-                            </table>
+                    <div th:if="${@authService.isFullyAuthenticated(user)}">
+                        <div th:if="${student}">
+                            <br>
+                            <div class="row">
+                                <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+                                    <p>Student Information</p>
+                                    <table class="table">
+                                        <tr>
+                                            <td>Enrolment Number</td>
+                                            <td th:text="${student.enrolmentNumber}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Faculty Number</td>
+                                            <td th:text="${student.facultyNumber}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Section</td>
+                                            <td th:text="${student.section}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Hall</td>
+                                            <td th:text="${student.hallCode}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Registered</td>
+                                            <td th:text="${student.registrationYear}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Status</td>
+                                            <td th:text="${@viewService.getStatus(student.status)}"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${faculty}">
+                            <br>
+                            <div class="row">
+                                <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+                                    <p>Faculty Information</p>
+                                    <table class="table">
+                                        <tr>
+                                            <td>Faculty ID</td>
+                                            <td th:text="${faculty.facultyId}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Designation</td>
+                                            <td th:text="${faculty.designation}"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+                                    <p>Other Information</p>
+                                    <table class="table">
+                                        <tr>
+                                            <td>Gender</td>
+                                            <td><span th:text="${user.details.gender}"  th:class="|capsule p-small ${@viewService.getClassForGender(user.details.gender)}|"></span></td>
+                                        </tr>
+                                        <tr th:if="${user.details.dob}">
+                                            <td>Date of Birth</td>
+                                            <td th:text="${#temporals.format(user.details.dob, 'dd-MM-yyyy')}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Address</td>
+                                            <td th:text="${user.details.address}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>City</td>
+                                            <td th:text="${user.details.city}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>State</td>
+                                            <td th:text="${user.details.state}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Description</td>
+                                            <td th:text="${user.details.description}"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-                            <p>Other Information</p>
-                            <table class="table">
-                                <tr>
-                                    <td>Gender</td>
-                                    <td><span th:text="${user.details.gender}"  th:class="|capsule p-small ${@viewService.getClassForGender(user.details.gender)}|"></span></td>
-                                </tr>
-                                <tr th:if="${user.details.dob}">
-                                    <td>Date of Birth</td>
-                                    <td th:text="${#temporals.format(user.details.dob, 'dd-MM-yyyy')}"></td>
-                                </tr>
-                                <tr>
-                                    <td>Address</td>
-                                    <td th:text="${user.details.address}"></td>
-                                </tr>
-                                <tr>
-                                    <td>City</td>
-                                    <td th:text="${user.details.city}"></td>
-                                </tr>
-                                <tr>
-                                    <td>State</td>
-                                    <td th:text="${user.details.state}"></td>
-                                </tr>
-                                <tr>
-                                    <td>Description</td>
-                                    <td th:text="${user.details.description}"></td>
-                                </tr>
-                            </table>
-                        </div>
+                    <div th:unless="${@authService.isFullyAuthenticated(user)}" class="text-center">
+                        <br>
+                        <p class="lead">Profile cannot be seen until email is verified and default password is changed</p>
+                        Go to <a th:href="@{/profile/settings}">Profile Settings</a> to complete pending tasks
                     </div>
                 </div>
-            </div>
-            <div th:unless="${@authService.isFullyAuthenticated(user)}" class="text-xs-center">
-                <br>
-                <p class="lead">Profile cannot be seen until email is verified and default password is changed</p>
-                Go to <a th:href="@{/profile/settings}">Profile Settings</a> to complete pending tasks
             </div>
         </div>
     </div>

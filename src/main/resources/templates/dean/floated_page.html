@@ -13,11 +13,11 @@
         padding-right: 8px;
     }
 </style>
-<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns fixed-navbar">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage = 'floated_page')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
             <div th:replace="fragments/toolbar"></div>
             <div class="card">
                 <div class="card-header">
@@ -30,8 +30,8 @@
                         </ul>
                     </div>
                 </div>
-                <div class="card-body collapse in">
-                    <div class="card-block card-dashboard">
+                <div class="card-content collapse show">
+                    <div class="card-body card-dashboard">
                         <table id="floatedCourseTable" class="table display table-striped table-bordered">
                             <!-- Header Table -->
                             <thead>
@@ -74,10 +74,10 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Floated Course Info</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <div class="modal-body text-xs-center">
+                <div class="modal-body text-center">
                     <h4 id="title" class="card-subtitle">Theory of Computation</h4>
                     <br>
                     <h5><span id="code">CO313</span></h5>
