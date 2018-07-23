@@ -53,9 +53,9 @@ dependencies {
     implementation 'commons-validator:commons-validator:1.6', {
         exclude group: 'commons-logging', module: 'commons-logging'
     }
-    implementation 'org.modelmapper:modelmapper:2.0.0'
+    implementation 'org.modelmapper:modelmapper:2.1.0'
     implementation 'com.github.darrachequesne:spring-data-jpa-datatables:5.0.0'
-    implementation 'com.google.firebase:firebase-admin:6.2.0'
+    implementation 'com.google.firebase:firebase-admin:6.3.0'
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.imgscalr:imgscalr-lib:4.2'
     implementation 'com.github.ben-manes.caffeine:caffeine:2.6.2'
@@ -86,7 +86,7 @@ dependencies {
     implementation "org.webjars:jquery:3.2.1"
     implementation 'org.webjars:tether:1.4.0'
     implementation 'org.webjars:toastr:2.1.2'
-    implementation 'org.webjars:momentjs:2.22.1'
+    implementation 'org.webjars:momentjs:2.22.2'
     implementation 'org.webjars:jquery-throttle-debounce-plugin:1.1'
     implementation 'org.webjars.bower:mui:0.9.38'
     implementation 'org.webjars:jquery-blockui:2.70'
