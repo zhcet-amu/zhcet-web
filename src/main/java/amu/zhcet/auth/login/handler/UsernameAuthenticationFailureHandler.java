@@ -23,7 +23,10 @@ public class UsernameAuthenticationFailureHandler extends SimpleUrlAuthenticatio
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        request.getSession().setAttribute(USERNAME, request.getParameter(USERNAME));
+        String username = request.getParameter(USERNAME);
+        if (username != null) {
+            request.getSession().setAttribute(USERNAME, username.trim());
+        }
         super.onAuthenticationFailure(request, response, exception);
     }
 }
