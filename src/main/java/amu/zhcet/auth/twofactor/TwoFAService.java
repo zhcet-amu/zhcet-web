@@ -3,6 +3,7 @@ package amu.zhcet.auth.twofactor;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserNotFoundException;
 import amu.zhcet.data.user.UserService;
+import amu.zhcet.security.CryptoUtils;
 import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -73,7 +74,7 @@ public class TwoFAService {
         }
 
         user.setUsing2fa(true);
-        user.setTotpSecret(secret);
+        user.setTotpSecret(CryptoUtils.encrypt(secret, user.getUserId()));
         userService.save(user);
     }
 
