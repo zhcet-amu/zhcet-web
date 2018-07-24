@@ -3,6 +3,7 @@ package amu.zhcet.auth;
 import amu.zhcet.data.department.Department;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserType;
+import amu.zhcet.security.CryptoUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,7 +43,7 @@ public class UserAuth extends org.springframework.security.core.userdetails.User
     }
 
     public String getTotpSecret() {
-        String secret = totpSecret;
+        String secret = CryptoUtils.decrypt(totpSecret, getUsername());
         // We clear the secret after one read
         this.totpSecret = null;
         return secret;
