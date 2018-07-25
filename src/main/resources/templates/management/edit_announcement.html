@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" data-textdirection="ltr" class="loading"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head"></head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'announcement_manager', subPage='manage_announcement')">
+    <div class="container">
+        <div class="row">
+            <!--/*@thymesVar id="announcement" type="amu.zhcet.announcement.Announcement"*/-->
+            <div class="col-12" th:if="${announcement}">
+                <div th:replace="fragments/toolbar"></div>
+
+                <form id="announcement" th:action="@{|/management/announcements/${announcement.id}/edit|}" method="post" th:object="${announcement}">
+                    <div th:each="error : ${#fields.detailedErrors('*')}">
+                        <div th:replace="fragments/flash :: error(condition = true, error = ${error})"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="position-relative has-icon-left">
+                            <input type="text" id="title" class="form-control" placeholder="Announcement Title" th:field="*{title}">
+                            <div class="form-control-position">
+                                <i class="material-icons gray">edit</i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="announcement" class="form-control" id="announcement-editor"
+                                  rows="10" th:field="*{message}" title="Message" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary float-right">Save</button>
+                </form>
+            </div>
+
+            <div class="col-12 col-lg-6 offset-lg-3" th:unless="${announcement}">
+                <div th:replace="management/fragments/announcement_not_found"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

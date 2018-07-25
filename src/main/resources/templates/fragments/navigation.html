@@ -63,6 +63,17 @@
                     <li th:class="${subPage == 'send_notification' ? 'active' : ''}" ><a th:href="@{/management/notification/send}" class="menu-item">Send Notification</a></li>
                 </ul>
             </li>
+            <li th:class="|nav-item ${pageId == 'announcement_management' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
+                <a th:href="@{/management/announcement/send}">
+                    <i class="material-icons md-18">announcement</i>
+                    <span data-i18n="nav.project.main" class="menu-title">Announcement</span>
+                </a>
+                <ul class="menu-content">
+                    <li th:class="${subPage == 'manage_announcement' ? 'active' : ''}" ><a th:href="@{/management/announcements}" class="menu-item">Manage Announcements</a></li>
+                    <li th:class="${subPage == 'send_announcement' ? 'active' : ''}" ><a th:href="@{/management/announcement/send}" class="menu-item">Send Announcement</a></li>
+                </ul>
+            </li>
+
             <li th:class="|nav-item ${pageId == 'profile' ? 'active' : ''} |" sec:authorize="isAuthenticated()">
                 <a th:href="@{/profile}" href="profile.html">
                     <i class="material-icons md-18">account_circle</i>

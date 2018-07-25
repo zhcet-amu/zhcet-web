@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head"></head>
+<style>
+    .title, .title > p {
+        padding: 0;
+        margin: 0;
+    }
+
+    .card-header {
+        min-height: 55px;
+    }
+
+</style>
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
+
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'profile')" sec:authorize="isAuthenticated()">
+    <!--/*@thymesVar id="announcements" type="java.util.List"*/-->
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8">
+                <div th:replace="fragments/toolbar"></div>
+
+                <div th:replace="fragments/flash :: success(condition = ${announcement_success}, message = ${announcement_success})"></div>
+
+                <div class="row">
+                    <div class="col-12" th:unless="${announcements.isEmpty()}">
+                        <div class="float-right">
+                            <a th:href="@{/announcements}">
+                                <button class="btn btn-round text-white bg-primary">All Announcements</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:replace="fragments/pagination(pageUrl = 'announcements')"></div>
+
+                <!--/*@thymesVar id="announcement" type="amu.zhcet.announcement.Announcement"*/-->
+
+                <div th:if="${announcements.isEmpty()}" class="text-center text-muted">
+                    <h3>No Announcements</h3>
+                </div>
+
+                <div th:each="announcement : ${announcements}" class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div th:class="|card-header|">
+                                <h4 class="title" th:text="${announcement.title}"></h4>
+                                <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
+                                        <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="card-body" th:text="${announcement.message}"></div>
+                            </div>
+                            <blockquote class="mb-2">
+                                <span>From : <code th:text="${announcement.sender.name}"></code>
+                                    <span th:if="${announcement.automated}">
+                                        <i data-toggle="tooltip" data-original-title="Automated" class="material-icons">autorenew</i>
+                                    </span>
+                                </span>
+                                <small class="float-right"><em style="vertical-align: bottom" th:text="${#temporals.format(announcement.sentTime)}"></em></small>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div th:replace="fragments/pagination(pageUrl = 'announcements')"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

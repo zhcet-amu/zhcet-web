@@ -34,6 +34,17 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav float-right" sec:authorize="isAuthenticated()" th:with="notifCount = ${@notificationReadingService.getUnreadNotificationCount()}">
+                    <li class="dropdown dropdown-announcement nav-item">
+                        <a href="#" data-toggle="dropdown" class="nav-link nav-link-label">
+                            <i class="announcement-icon material-icons">announcement</i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
+                            <li class="dropdown-menu-header">
+                                <h6 class="dropdown-header m-0"><span class="grey darken-2">Announcements</span></h6>
+                            </li>
+                            <li class="dropdown-menu-footer"><a th:href="@{/announcements}" class="dropdown-item text-muted text-center">Read all announcements</a></li>
+                        </ul>
+                    </li>
                     <li class="dropdown dropdown-notification nav-item">
                         <a href="#" data-toggle="dropdown" class="nav-link nav-link-label">
                             <i class="notification-icon material-icons">notifications_none</i>

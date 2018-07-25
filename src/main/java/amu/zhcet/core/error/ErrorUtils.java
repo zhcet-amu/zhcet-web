@@ -1,8 +1,10 @@
 package amu.zhcet.core.error;
 
+import amu.zhcet.announcement.Announcement;
 import amu.zhcet.auth.UserAuth;
 import amu.zhcet.notification.Notification;
 import amu.zhcet.notification.NotificationNotFoundException;
+import amu.zhcet.announcement.AnnouncementNotFoundException;
 import amu.zhcet.notification.recipient.NotificationRecipient;
 import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.CourseNotFoundException;
@@ -47,5 +49,9 @@ public class ErrorUtils {
 
     public static void requireNonNullFacultyMember(FacultyMember facultyMember) {
         if (facultyMember == null) throw new FacultyMemberNotFoundException();
+    }
+
+    public static void requireNonNullAnnouncement(Announcement announcement) {
+        if (announcement == null) throw new AnnouncementNotFoundException();
     }
 }
