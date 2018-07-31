@@ -25,3 +25,8 @@ application-secrets*
 secret.properties
 
 sentry.properties
+
+.classpath
+.project
+.settings/
+bin/
