@@ -9,13 +9,20 @@
     <meta name="theme-color" content="#f44336">
     <meta name="msapplication-navbutton-color" content="#f44336">
     <meta name="apple-mobile-web-app-status-bar-style" content="#f44336">
-    <link rel="shortcut icon" href="https://zhcet-backend.firebaseapp.com/static/img/bug.png" />
+    <link rel="shortcut icon" th:href="@{/img/bug.svg}" />
     <title>Bad Request</title>
 
     <link th:href="@{/css/vendor/bootstrap.min.css}" rel="stylesheet" />
+    <style type="text/css">
+        .status-icon {
+            display: block;
+            margin: auto;
+            min-height: 30rem;
+        }
+    </style>
 </head>
 <body>
-<img class="img-fluid" style="margin: 0 auto;" src="https://zhcet-backend.firebaseapp.com/static/img/bug.png" />
+<img class="status-icon img-fluid" th:src="@{/img/bug.svg}" />
 <div class="text-center">
     <p class="lead">The request could not be understood by server!</p>
 
