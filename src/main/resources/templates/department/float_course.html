@@ -27,7 +27,7 @@
                     <div th:replace="fragments/toolbar"></div>
                 </div>
                 <div class="col-xl-8">
-                    <div id="action-area">
+                    <div id="action-area" class="mb-1">
                         <div class="bs-callout-primary callout-border-left p-1">
                             <strong>Add courses by searching</strong><br>
                             Search for courses by course code or title and float multiple courses in one go!
@@ -43,7 +43,6 @@
                         </div>
                         <br>
                         <button id="select-courses" class="btn btn-primary float-right" data-toggle="modal" data-target="#selection-modal">Select</button>
-
                     </div>
 
                     <div class="modal fade text-left" id="selection-modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -81,7 +80,7 @@
                                             <span class="semester" th:text="|Semester : ${course.semester}|">Semester : 3</span> -
                                             <span class="credits" th:text="|Credits : ${course.credits}|">Credits : 4</span>
                                         </p>
-                                        <button class="remove btn btn-outline-danger float-right">Remove</button>
+                                        <button class="remove btn btn-outline-danger float-right mb-1">Remove</button>
                                     </div>
                                 </div>
                             </div>
