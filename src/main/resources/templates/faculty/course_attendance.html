@@ -13,10 +13,10 @@
         <div class="col-12">
             <div th:replace="fragments/toolbar"></div>
         </div>
-        <div class="col-xs-12 col-xl-9">
+        <div class="col-12 col-xl-9">
             <div th:replace="faculty/fragments/attendance"></div>
         </div>
-        <div class="col-xs-12 col-xl-3">
+        <div class="col-12 col-xl-3">
             <div th:replace="faculty/fragments/email_list"></div>
             <div th:with="attendance_download_url = @{|/admin/faculty/courses/${incharge.code}/attendance.csv|}"
                  th:insert="faculty/fragments/attendance_download"></div>
