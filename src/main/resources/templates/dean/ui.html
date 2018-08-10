@@ -14,7 +14,7 @@
         <div th:replace="fragments/toolbar"></div>
         <div id="app">
             <div class="row">
-                <div class="col-xs-12 col-lg-3">
+                <div class="col-12 col-lg-3">
                     <div class="list-group">
                         <a v-for="section in sections" :href="'#' + section.title"
                            class="list-group-item list-group-item-action"
@@ -24,7 +24,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-xs-12 col-lg-9">
+                <div class="col-12 col-lg-9">
                     <div class="mui-panel text-center">
                         <span v-for="image in images" :key="image.key" class="mr-1">
                             <img height="150px" width="150px" :src="image['.value']" alt="" class="img-thumbnail hover-cursor" @click="showImage(image)">

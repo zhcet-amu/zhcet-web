@@ -20,13 +20,13 @@
                 <div>We don't know what happened!</div>
             </div>
             <div class="row">
-                <div class="col-xs-12 col-xl-4">
+                <div class="col-12 col-xl-4">
                     <div th:replace="faculty/fragments/email_list"></div>
                     <div th:with="attendance_download_url = @{|./${floatedCourse.course.code}/attendance.csv|}"
                          th:insert="faculty/fragments/attendance_download"></div>
                     <div th:replace="department/fragments/register_students"></div>
                 </div>
-                <div class="col-xs-12 col-xl-8">
+                <div class="col-12 col-xl-8">
                     <div th:replace="department/fragments/registered_students"></div>
                 </div>
             </div>

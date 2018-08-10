@@ -6,10 +6,10 @@
 
 <body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'student_attendance')" sec:authorize="hasRole('ROLE_STUDENT')">
-    <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
+    <div class="col-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
         <div th:replace="fragments/toolbar"></div>
         <div class="row" th:if="${sessions}">
-            <div class="col-xs-12 col-md-4 offset-md-8"
+            <div class="col-12 col-md-4 offset-md-8"
                  th:with="defaultSession = ${sessionCode != null ? sessionCode : @configurationService.getDefaultSessionCode()}">
                 <form class="mui-form">
                     <div class="mui-select">

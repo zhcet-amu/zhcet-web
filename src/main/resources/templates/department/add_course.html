@@ -9,7 +9,7 @@
 <div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'department', subPage = 'add_course')" sec:authorize="hasRole('ROLE_DEPARTMENT_ADMIN')">
     <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
     <div class="row" th:if="${department}">
-        <div class="col-xs-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
+        <div class="col-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
             <div th:replace="fragments/toolbar"></div>
             <!-- Creation of new Course here-->
             <div class="card">

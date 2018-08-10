@@ -9,7 +9,7 @@
     <div class="content-header-right col-md-6 col-12" th:with="sessionCode = ${sessionCode != null ? sessionCode : @configurationService.getDefaultSessionCode()}">
         <h6 class="float-md-right capsule p-small bg-primary text-white text-center" th:text="|Session : ${@configurationService.getSessionName(sessionCode)}|"></h6>
     </div>
-    <div class="content-header-lead col-md-6 col-xs-12 mt-1" th:if="${page_description}">
+    <div class="content-header-lead col-md-6 col-12 mt-1" th:if="${page_description}">
         <p th:text="${page_description}" style="font-weight: 200; font-size: large"></p>
     </div>
     <!--/*@thymesVar id="page_path" type="amu.zhcet.common.page.PathChain"*/-->
@@ -33,7 +33,7 @@
     <div class="container" th:if="${flash_messages}">
         <div class="row">
             <!--/*@thymesVar id="flash" type="amu.zhcet.common.flash.Flash"*/-->
-            <div th:each="flash : ${flash_messages}" th:class="|col-xs-12 alert alert-dismissible alert-${flash.css}|">
+            <div th:each="flash : ${flash_messages}" th:class="|col-12 alert alert-dismissible alert-${flash.css}|">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong th:if="${flash.title}" th:text="${flash.title}"></strong>
                 <span th:utext="${flash.message}">Fix this and try and try again</span>

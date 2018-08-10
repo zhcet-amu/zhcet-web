@@ -4,11 +4,11 @@
         <div class="text-bold-700">Email</div>
         <hr>
     </div>
-    <div class="col-xs-12 col-lg-8">
+    <div class="col-12 col-lg-8">
         <form class="form-horizontal form-simple" action="#"
               th:action="@{/profile/email/register}" method="post">
             <div class="row">
-                <div class="col-xs-12 col-lg-6">
+                <div class="col-12 col-lg-6">
                     <fieldset class="form-group controls position-relative has-icon-left mb-0">
                         <input type="email" class="form-control" name="email"
                                id="email" placeholder="Email" th:value="${user.email}" required/>
@@ -18,7 +18,7 @@
                         <p class="help-block"></p>
                     </fieldset>
                 </div>
-                <div class="col-xs-12 col-lg-4">
+                <div class="col-12 col-lg-4">
                     <button id="submit" type="submit" class="btn btn-primary" th:text="${user.email != null ? 'Change' : 'Register'}"></button>
                 </div>
             </div>
