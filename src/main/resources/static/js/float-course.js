@@ -23,7 +23,7 @@
             '<span class="capsule p-small category">' + item._item.category + '</span>  ',
             '<span class="semester">Semester : ' + item._item.semester + '</span> - ',
             '<span class="credits">Credits : ' + item._item.credits + '</span></p>',
-            '<button class="remove btn btn-outline-danger float-right">Remove</button>',
+            '<button class="remove btn btn-outline-danger float-right mb-1">Remove</button>',
             '</div></div></div>'
         ].join('');
     }
