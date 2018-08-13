@@ -137,14 +137,14 @@ i.gray {
     color: #777;
 }
 
-.margin-b-small {
-    margin-bottom: 4px;
-}
-
 #toast-container {
     margin-top: 60px;
 }
 
 tr.bg-danger {
     color: #eee;
+}
+
+.form-control-position > i.material-icons {
+    margin-bottom: 8px;
 }
