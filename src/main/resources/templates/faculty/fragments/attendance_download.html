@@ -6,7 +6,7 @@
                     <div class="align-self-center">
                         <i class="material-icons font-large-2 md-light">event</i>
                     </div>
-                    <div class="media-body text-white text-right" th:if="${courseRegistrations != null}" style="background-color: #00BCD4">
+                    <div class="media-body text-white text-right" th:if="${courseRegistrations != null}">
                         <h3 class="text-bold-400 text-white" th:text="|${courseRegistrations.size()} Students|"></h3>
                         <h4 class="text-bold-600 text-white" th:if="${incharge != null && incharge.section != null}" th:text="|Section : ${incharge.section}|"></h4>
                         <span>Download Attendance</span>
