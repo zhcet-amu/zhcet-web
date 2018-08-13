@@ -10,7 +10,7 @@
         <div class="col-12">
             <a class="mui-btn mui-btn--raised mui-btn--danger" th:href="@{/profile/password/change}">Change Password</a>
             <div th:if="${@authService.isFullyAuthenticated(user)}">
-                <small><i class="material-icons gray margin-b-small md-18">info_outline</i> Forgot Password? Reset it <a th:href="@{/login/password/forgot}">here</a></small>
+                <small><i class="material-icons gray md-18">info_outline</i> Forgot Password? Reset it <a th:href="@{/login/password/forgot}">here</a></small>
             </div>
         </div>
     </div>
