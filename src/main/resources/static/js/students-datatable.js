@@ -9,7 +9,7 @@
         modal.find('#department').html(data['user_department_name']);
         modal.find('#link').attr('href', '/admin/dean/students/' + data['enrolmentNumber']);
 
-        modal.find('#avatar').attr('src', 'https://zhcet-backend.firebaseapp.com/static/img/account.svg');
+        modal.find('#avatar').attr('src', '/img/account.svg');
         if ((data['avatar-url'] && data['avatar-url'] !== '') || (data['original-avatar-url'] && data['original-avatar-url'] !== '')) {
             var avatar = data['original-avatar-url'];
             if (avatar === '')
@@ -115,11 +115,11 @@
                     data: 'avatar-url',
                     searchable: false,
                     orderable: false,
-                    defaultContent: 'https://zhcet-backend.firebaseapp.com/static/img/account.svg',
+                    defaultContent: '/img/account.svg',
                     render: function (data) {
                         if (data && data !== '')
                             return '<img class="rounded-circle" style="background-color: white" src="' + data + '" height="48px" />';
-                        return '<img class="rounded-circle" style="background-color: white" src="https://zhcet-backend.firebaseapp.com/static/img/account.svg" />';
+                        return '<img class="rounded-circle" style="background-color: white" src="/img/account.svg" />';
                     }
                 }, {
                     data: 'facultyNumber'

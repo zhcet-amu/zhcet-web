@@ -9,7 +9,7 @@
   "gcm_sender_id": "103953800507",
   "icons": [
     {
-      "src": "https://zhcet-backend.firebaseapp.com/static/img/icon.png"
+      "src": "/img/icon.png"
     }
   ]
 }

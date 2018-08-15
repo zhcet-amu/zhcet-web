@@ -43,7 +43,7 @@
                         <tr th:each="member : ${facultyMembers}">
                             <!--/*@thymesVar id="department" type="amu.zhcet.data.department.Department"*/-->
                             <td width="50" style="padding: 0;">
-                                <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
+                                <img src="/img/account.svg"
                                      th:src="${@viewService.getAvatarUrl(member.user.details.avatarUrl)}"
                                      class="rounded-circle" width="70" alt="Card image"/>
                             </td>

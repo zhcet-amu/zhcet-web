@@ -2,7 +2,7 @@
     function getImageUrl(url) {
         if (url && url !== '')
             return url;
-        return 'https://zhcet-backend.firebaseapp.com/static/img/account.svg';
+        return '/img/account.svg';
     }
 
     function itemTemplate(suggestion) {
