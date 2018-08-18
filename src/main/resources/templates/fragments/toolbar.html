@@ -23,9 +23,11 @@
     </div>
     <div th:unless="${hide_warnings}" sec:authorize="isAuthenticated()" class="content-header-lead col-12">
         <div sec:authorize="!principal.emailVerified" class="alert alert-icon-left alert-arrow-left alert-danger bg-danger" role="alert">
+            <span class="alert-icon"><i class="material-icons">error</i></span>
             <strong>Verify Email!</strong> Your email is not verified, and hence we can't allow allow you to do many things including changing your password
         </div>
         <div sec:authorize="!principal.passwordChanged" class="alert alert-icon-left alert-arrow-left alert-warning bg-orange" role="alert">
+            <span class="alert-icon"><i class="material-icons">warning</i></span>
             <strong>Password Unchanged!</strong> You have not changed your password, and it may lead to your account being hacked!
         </div>
     </div>
