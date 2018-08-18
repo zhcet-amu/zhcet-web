@@ -19,5 +19,9 @@ public class FirebaseProperties {
      * Service Account JSON for the Firebase Project
      */
     private String serviceAccount;
+    /**
+     * Show a sad dialog telling that bad people have banned firebaseapp.com
+     */
+    private boolean showUnavailableDialog;
 
 }
