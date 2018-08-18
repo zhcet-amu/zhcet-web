@@ -37,7 +37,7 @@ public class ViewService {
 
     public String getAvatarUrl(String url) {
         if (Strings.isNullOrEmpty(url))
-            return "https://zhcet-web-amu.firebaseapp.com/static/img/account.svg";
+            return "/img/account.svg";
 
         return url;
     }

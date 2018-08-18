@@ -12,7 +12,7 @@
         modal.find('#working').attr('class', 'capsule p-small text-white ' + (data['working'] ? 'bg-success' : 'bg-danger'));
         modal.find('#link').attr('href', '/admin/dean/faculty/' + data['facultyId']);
 
-        modal.find('#avatar').attr('src', 'https://zhcet-backend.firebaseapp.com/static/img/account.svg');
+        modal.find('#avatar').attr('src', '/img/account.svg');
         if ((data['avatar-url'] && data['avatar-url'] !== '') || (data['original-avatar-url'] && data['original-avatar-url'] !== '')) {
             var avatar = data['original-avatar-url'];
             if (avatar === '')
@@ -83,11 +83,11 @@
                 data: 'avatar-url',
                 searchable: false,
                 orderable: false,
-                defaultContent: 'https://zhcet-backend.firebaseapp.com/static/img/account.svg',
+                defaultContent: '/img/account.svg',
                 render: function (data) {
                     if (data && data !== '')
                         return '<img class="rounded-circle" src="' + data + '" height="48px" />';
-                    return '<img class="rounded-circle" src="https://zhcet-backend.firebaseapp.com/static/img/account.svg" />';
+                    return '<img class="rounded-circle" src="/img/account.svg" />';
                 }
             }, {
                 data: 'facultyId'

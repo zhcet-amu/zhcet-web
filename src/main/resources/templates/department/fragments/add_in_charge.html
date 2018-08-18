@@ -38,7 +38,7 @@
                     <div class="in-charge" th:each="inCharge : ${floatedCourse.inCharge}">
                         <div class="row vertical-align text-center">
                             <div class="col-2">
-                                <img src="https://zhcet-backend.firebaseapp.com/static/img/account.svg"
+                                <img src="/img/account.svg"
                                      th:src="${@viewService.getAvatarUrl(inCharge.facultyMember.user.details.avatarUrl)}"
                                      class="rounded-circle height-50 in-charge-avatar" style="margin: 0"/>
                             </div>

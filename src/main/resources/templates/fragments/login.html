@@ -16,7 +16,7 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-    <link rel="shortcut icon" href="https://zhcet-backend.firebaseapp.com/static/img/icon.png" />
+    <link rel="shortcut icon" href="/img/icon.png" />
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Muli:300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -28,7 +28,7 @@
         .transparent {  background-color: transparent;  }
         .translucent {  background-color: rgba(255, 255, 255, 0.9);  }
         .pattern-bg {
-            background: #f1f2f3 url("https://zhcet-backend.firebaseapp.com/static/img/zhcet-pattern.png");
+            background: #f1f2f3 url("/img/zhcet-pattern.png");
             background-size: 340px;  position: fixed;  top: 0;  left: 0;  right: 0;  bottom: 0;  z-index: -2;  opacity: .6;
         }
     </style>
@@ -44,7 +44,7 @@
                         <div class="translucent card border-grey border-lighten-3 m-0">
                             <div class="transparent card-header border-0">
                                 <div class="card-title text-center">
-                                    <div class="p-1"><img src="https://zhcet-backend.firebaseapp.com/static/img/logo-big-dark.png" class="brand-logo" alt="branding logo" /></div>
+                                    <div class="p-1"><img src="/img/logo-big-dark.png" class="brand-logo" alt="branding logo" /></div>
                                 </div>
                                 <h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2"><span th:text="${message}"></span></h6>
                             </div>
