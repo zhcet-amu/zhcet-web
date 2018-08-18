@@ -23,6 +23,10 @@ var Login = (function ($) {
         var loaderMessage = $('#loader-message');
 
         loginPanel.find('#google-login').click(function () {
+            if (showFirebaseUnavailableDialog) {
+                $('#firebase-unavailable-modal').modal();
+            }
+
             checking.show();
             loginPanel.hide();
             loaderMessage.html('Redirecting to Google...');

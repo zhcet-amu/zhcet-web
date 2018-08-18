@@ -25,6 +25,7 @@ public class FirebaseService {
     private final FirebaseLocator firebaseLocator;
 
     private final boolean disabled;
+    private final boolean showUnavailableDialog;
     private final String firebaseConfig;
     private boolean uninitialized;
 
@@ -36,6 +37,7 @@ public class FirebaseService {
         this.firebaseLocator = firebaseLocator;
         log.info(ConsoleHelper.blue("Initializing Firebase"));
         disabled = firebase.isDisabled();
+        showUnavailableDialog = firebase.isShowUnavailableDialog();
         firebaseConfig = firebase.getConfig();
 
         if (disabled) {
@@ -98,6 +100,10 @@ public class FirebaseService {
 
     public boolean isInitialized() {
         return !uninitialized;
+    }
+
+    public boolean shouldShowUnavailableDialog() {
+        return showUnavailableDialog;
     }
 
     private void initializeFirebase() throws IOException {
