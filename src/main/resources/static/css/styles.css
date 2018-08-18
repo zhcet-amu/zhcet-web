@@ -148,3 +148,8 @@ i.gray {
 .form-control-position > i.material-icons {
     margin-bottom: 8px;
 }
+
+.alert-icon > i.material-icons {
+    margin-top: -3px;
+    color: rgba(255, 255, 255, 0.9);
+}
