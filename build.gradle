@@ -94,7 +94,7 @@ dependencies {
 
     // DataTables
     implementation 'org.webjars:datatables:1.10.19'
-    implementation 'org.webjars:datatables-buttons:1.5.1'
+    implementation 'org.webjars:datatables-buttons:1.5.2'
     implementation 'org.webjars.bower:datatables.net-select:1.2.3'
     implementation 'org.webjars.bower:datatables.net-select-bs:1.2.3'
     implementation 'org.webjars:jszip:3.1.0'
