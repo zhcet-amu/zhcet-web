@@ -33,9 +33,13 @@ public class EmailVerificationController {
         } catch (DuplicateEmailException de) {
             log.warn("Duplicate Email", de);
             redirectAttributes.addFlashAttribute("email_error", de.getMessage());
+        } catch (RecentVerificationException re) {
+            log.warn("Recently Sent Email", re);
+            redirectAttributes.addFlashAttribute("email_error", RecentVerificationException.MESSAGE);
         } catch (RuntimeException re) {
             log.warn("Error sending verification link", re);
-            redirectAttributes.addFlashAttribute("email_error", re.getMessage());
+            redirectAttributes.addFlashAttribute("email_error",
+                    "There was some error sending the email");
         }
     }
 
@@ -77,9 +81,9 @@ public class EmailVerificationController {
         try {
             emailVerificationService.verifyEmail(token);
             model.addAttribute("success", "Your email was successfully verified!");
-        } catch (IllegalStateException | DuplicateEmailException ie) {
-            log.warn("Email Verification Error {}", ie.getMessage());
-            model.addAttribute("error", ie.getMessage());
+        } catch (DuplicateEmailException | TokenVerificationException de) {
+            log.warn("Email Verification Error {}", de.getMessage());
+            model.addAttribute("error", de.getMessage());
         }
 
         return "user/verify_email";
