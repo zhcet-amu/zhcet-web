@@ -28,9 +28,9 @@
 
                     <form th:action="@{/profile/2fa/confirm}" method="post">
                         <input type="text" name="secret" th:value="${secret.secret}" hidden>
-                        <fieldset class="input-group">
+                        <div class="input-group">
                             <input placeholder="Code" class="form-control" type="number" name="code" required>
-                        </fieldset>
+                        </div>
                         <br>
                         <a th:href="@{/profile/settings#security}" class="btn btn-secondary">Cancel</a>
                         <button class="btn btn-primary" type="submit">Save</button>
