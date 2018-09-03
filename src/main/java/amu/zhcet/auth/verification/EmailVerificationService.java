@@ -9,6 +9,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -45,8 +46,9 @@ class EmailVerificationService {
     private VerificationToken createVerificationToken(String email) {
         User user = userService.getLoggedInUser().orElseThrow(() -> new IllegalStateException("No user logged in"));
         // Check if link was already sent
-        if (emailCache.getIfPresent(user.getUserId()) != null)
-            throw new RuntimeException("Verification link was recently sent. Please wait for some time");
+        LocalDateTime sentTime = emailCache.getIfPresent(user.getUserId());
+        if (sentTime != null)
+            throw new RecentVerificationException(sentTime);
 
         emailCache.put(user.getUserId(), LocalDateTime.now());
 
@@ -101,7 +103,7 @@ class EmailVerificationService {
     /**
      * Retrieves the verification token from database and validates it by performing checks
      * that it exists, is not already used and not expired. If any of the validation fails,
-     * throws an {@link IllegalStateException} with the corresponding message
+     * throws an {@link TokenVerificationException} with the corresponding message
      * @param token String token ID
      * @return {@link VerificationToken}
      */
@@ -109,14 +111,14 @@ class EmailVerificationService {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
 
         if (verificationToken == null)
-            throw new IllegalStateException("Token: " + token + " is invalid");
+            throw new TokenVerificationException("Token: " + token + " is invalid");
 
         if (verificationToken.isUsed())
-            throw new IllegalStateException("Token: " + token + " is already used! Please request another link!");
+            throw new TokenVerificationException("Token: " + token + " is already used! Please request another link!");
 
         Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiry().getTime() - cal.getTime().getTime()) <= 0)
-            throw new IllegalStateException("Token: " + token + " has expired");
+            throw new TokenVerificationException("Token: " + token + " has expired");
 
         return verificationToken;
     }
@@ -186,17 +188,25 @@ class EmailVerificationService {
         String relativeUrl = "/login/email/verify?auth=" + token.getToken();
         log.debug("Verification link generated : {}", relativeUrl);
 
-        linkMailService.sendEmail(getPayLoad(token.getEmail(), token.getUser(), relativeUrl), false);
+        try {
+            linkMailService.sendEmail(getPayLoad(token.getEmail(), token.getUser(), relativeUrl), false);
+            // Now we set the email to the user and disable email verified
+            User user = token.getUser();
+            log.debug("Saving user email {} -> {}", user.getUserId(), token.getEmail());
+            user.setEmail(token.getEmail());
+            user.setEmailVerified(false);
 
-        // Now we set the email to the user and disable email verified
-        User user = token.getUser();
-        log.debug("Saving user email {} -> {}", user.getUserId(), token.getEmail());
-        user.setEmail(token.getEmail());
-        user.setEmailVerified(false);
-
-        userService.save(user);
-        log.debug("Saved user email");
-        eventPublisher.publishEvent(new EmailVerifiedEvent(user));
+            userService.save(user);
+            log.debug("Saved user email");
+            eventPublisher.publishEvent(new EmailVerifiedEvent(user));
+        } catch (MailException mailException) {
+            // There was an error sending the mail, so remove the token and sent time
+            verificationTokenRepository.delete(token);
+            emailCache.invalidate(token.getUser().getUserId());
+            log.warn("Email sending for {} '{}' failed, so we removed the verification token",
+                    token.getUser(), token.getEmail(), mailException);
+            throw mailException;
+        }
     }
 
 }
