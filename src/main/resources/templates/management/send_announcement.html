@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" data-textdirection="ltr" class="loading"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/layout :: head"></head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'announcement_manager', subPage='send_announcement')" sec:authorize="hasAnyRole('ROLE_DEAN_ADMIN')">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="fragments/toolbar"></div>
+
+                <!--/*@thymesVar id="announcement" type="amu.zhcet.announcement.Announcement"*/-->
+                <form id="announcement" th:action="@{/management/announcement/send}" method="post" th:object="${announcement}">
+                    <div th:each="error : ${#fields.detailedErrors('*')}">
+                        <div th:replace="fragments/flash :: error(condition = true, error = ${error})"></div>
+                    </div>
+                    <div th:replace="fragments/flash :: success(condition = ${announcement_success}, message = ${announcement_success})"></div>
+                    <div class="form-group">
+                        <div class="position-relative has-icon-left">
+                            <input type="text" id="title" class="form-control" placeholder="Announcement Title" th:field="*{title}">
+                            <div class="form-control-position">
+                                <i class="material-icons gray">edit</i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="announcement" class="form-control" id="announcement-editor"
+                                  rows="10" th:field="*{message}" title="Message" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary float-right">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

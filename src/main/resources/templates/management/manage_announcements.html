@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head"></head>
+<link rel="stylesheet" th:href="@{/css/notification.css}">
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
+
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'announcement', subPage='manage_announcement')" sec:authorize="hasAnyRole('ROLE_DEAN_ADMIN')">
+    <!--/*@thymesVar id="currentPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="minPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="maxPage" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="announcements" type="java.util.List"*/-->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+                <div th:replace="fragments/toolbar"></div>
+                <div th:replace="fragments/flash :: success(condition = ${announcement_success}, message = ${announcement_success})"></div>
+                <div th:replace="fragments/pagination(pageUrl = 'management/announcements')"></div>
+
+                <!--/*@thymesVar id="announcement" type="amu.zhcet.announcement.Announcement"*/-->
+
+                <div th:if="${announcements.isEmpty()}" class="text-center text-muted">
+                    <h3>No announcements</h3>
+                </div>
+
+                <div class="modal fade text-left" id="delete" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <h4 class="modal-title">Delete Announcement</h4>
+                            <div class="modal-header bg-danger white">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger" role="alert">
+                                    <span class="text-bold-600">Beware!</span> Deleting the announcement will also delete it for all users
+                                </div>
+                                <p>If you wish to continue, please click the delete button</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+                                <a id="delete-link" th:href="@{/management/announcements/}">
+                                    <button type="button" id="delete-button" class="btn btn-outline-danger">Delete</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:each="announcement : ${announcements}">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="title" th:text="${announcement.title}"></h4>
+                            <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
+                            <div class="heading-elements">
+                                <ul class="list-inline mb-0">
+                                    <li>
+                                        <form method="get" th:action="@{|/management/announcements/${announcement.id}/edit|}">
+                                            <input type="text" name="page" th:value="${currentPage}" hidden>
+                                            <button type="submit" data-toggle="tooltip" data-original-title="Edit Announcement"
+                                                    class="head-icon btn btn-icon btn-pure">
+                                                <i class="material-icons md-18 gray">edit</i>
+                                            </button>
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <button class="head-icon btn btn-icon btn-pure" data-toggle="tooltip" data-original-title="Delete Announcement"
+                                                th:onclick="|AnnouncementManager.deleteAnnouncement(${announcement.id})|">
+                                            <i class="material-icons md-18 gray">delete</i>
+                                        </button>
+                                    </li>
+                                    <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
+                                    <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-content collapse show">
+                            <div class="card-body" th:text="${announcement.message}"></div>
+                        </div>
+                        <blockquote class="mb-2">
+                                <span>From : <code th:text="${announcement.sender.name}"></code>
+                                    <span th:if="${announcement.automated}">
+                                        <i data-toggle="tooltip" data-original-title="Automated" class="material-icons">autorenew</i>
+                                    </span>
+                                </span>
+                            <small class="float-right"><em style="vertical-align: bottom" th:text="${#temporals.format(announcement.sentTime)}"></em></small>
+                        </blockquote>
+                    </div>
+                </div>
+                <div th:replace="fragments/pagination(pageUrl = 'management/announcements')"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    var AnnouncementManager = (function () {
+        var page = 1;
+        const deleteLink = $('#delete-link');
+        const baseUrl = deleteLink.attr('href');
+
+        function deleteAnnouncement(id) {
+            const url = baseUrl +  id + '/delete';
+            deleteLink.attr('href', url);
+            $('#delete').modal();
+        }
+
+        return {
+            deleteAnnouncement: deleteAnnouncement,
+            init: function (pageId) {
+                page = pageId;
+            }
+        }
+    }());
+
+    /*<![CDATA[*/
+    AnnouncementManager.init(/*[[${currentPage}]]*/ 1);
+    /*]]>*/
+</script>
+</body>
+</html>
