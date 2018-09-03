@@ -13,53 +13,64 @@
     <div class="container">
         <div th:replace="fragments/toolbar"></div>
         <div id="app">
-            <div class="row">
-                <div class="col-12 col-lg-3">
-                    <div class="list-group">
-                        <a v-for="section in sections" :href="'#' + section.title"
-                           class="list-group-item list-group-item-action"
-                           :class="[ { active: section.active } ]">
-                            <div>{{ section.title }}</div>
-                            <small>{{ section.description }}</small>
-                        </a>
-                    </div>
+            <div class="loading" v-if="mounting">
+                <div class="md-progress">
+                    <div class="indeterminate"></div>
                 </div>
-                <div class="col-12 col-lg-9">
-                    <div class="mui-panel text-center">
-                        <span v-for="image in images" :key="image.key" class="mr-1">
-                            <img height="150px" width="150px" :src="image['.value']" alt="" class="img-thumbnail hover-cursor" @click="showImage(image)">
-                        </span>
-                        <div class="file-container">
-                            <label class="mui-btn mui-btn--raised mui-btn--primary">
-                                <input :disabled="imageUpload.uploading" @change="filesChange($event.target.files)"
-                                       class="upload-input" type="file" name="file" style="display: none" accept="image/*">
-                                <span>Upload Image</span>
-                            </label>
+            </div>
+            <div class="loaded" style="display: none" v-show="!mounting">
+                <div class="row">
+                    <div class="col-12 col-lg-3">
+                        <div class="list-group">
+                            <a v-for="section in sections" :href="'#' + section.title"
+                               class="list-group-item list-group-item-action"
+                               :class="[ { active: section.active } ]">
+                                <div>{{ section.title }}</div>
+                                <small>{{ section.description }}</small>
+                            </a>
                         </div>
-                        <div v-if="uploadedFile">
-                            <div class="alert alert-dismissible alert-success">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong>Success!</strong>
-                                <span>Image uploaded successfully</span>
+                    </div>
+                    <div class="col-12 col-lg-9">
+                        <div class="mui-panel text-center">
+                            <div v-if="imagesLoading">
+                                <div class="md-progress">
+                                    <div class="indeterminate"></div>
+                                </div>
                             </div>
-                            <img height="200px" :src="uploadedFile" /><br>
-                            <button @click="save"
-                                    class="mui-btn mui-btn--fab mui-btn--primary">
-                                <i class="material-icons md-24 md-light">save</i>
-                            </button>
-                        </div>
-                        <div v-if="file">
-                            <div v-if="!imageUri">
-                                Loading...
+                            <span v-for="image in images" :key="image.key" class="mr-1">
+                                <img height="150px" width="150px" :src="image['.value']" alt="" class="img-thumbnail hover-cursor" @click="showImage(image)">
+                            </span>
+                            <div class="file-container">
+                                <label class="mui-btn mui-btn--raised mui-btn--primary">
+                                    <input :disabled="imageUpload.uploading" @change="filesChange($event.target.files)"
+                                           class="upload-input" type="file" name="file" style="display: none" accept="image/*">
+                                    <span>Upload Image</span>
+                                </label>
                             </div>
-                            <div v-else>
-                                <img height="200px" :src="imageUri" /><br>
-                                <button v-if="!imageUpload.uploading" @click="upload"
+                            <div v-if="uploadedFile">
+                                <div class="alert alert-dismissible alert-success">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Success!</strong>
+                                    <span>Image uploaded successfully</span>
+                                </div>
+                                <img height="200px" :src="uploadedFile" /><br>
+                                <button @click="save"
                                         class="mui-btn mui-btn--fab mui-btn--primary">
-                                    <i class="material-icons md-24 md-light">file_upload</i>
+                                    <i class="material-icons md-24 md-light">save</i>
                                 </button>
                             </div>
-                            <div v-if="imageUpload.uploading">
+                            <div v-if="file">
+                                <div v-if="!imageUri">
+                                    Loading...
+                                </div>
+                                <div v-else>
+                                    <img height="200px" :src="imageUri" /><br>
+                                    <button v-if="!imageUpload.uploading" @click="upload"
+                                            class="mui-btn mui-btn--fab mui-btn--primary">
+                                        <i class="material-icons md-24 md-light">file_upload</i>
+                                    </button>
+                                </div>
+                                <div v-if="imageUpload.uploading">
                                 <span v-if="imageUpload.uploadTask">
                                     <button v-if="!imageUpload.paused" @click="pause"
                                             class="mui-btn mui-btn--small mui-btn--primary mui-btn--fab">
@@ -74,24 +85,25 @@
                                         <i class="material-icons md-18 md-light center-fix">stop</i>
                                     </button>
                                 </span>
-                                <span>{{ progress }} %</span>
-                                <span :hidden="imageUpload.paused" class="md-progress">
+                                    <span>{{ progress }} %</span>
+                                    <span :hidden="imageUpload.paused" class="md-progress">
                                     <span class="indeterminate"></span>
                                 </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <img :src="imageToShow" alt="Image" style="width: 100%;">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-outline-danger" @click="deleteImage">Delete</button>
+                <div class="modal" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <img :src="imageToShow" alt="Image" style="width: 100%;">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-outline-danger" @click="deleteImage">Delete</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -105,129 +117,6 @@
 <script th:src="@{/js/authentication.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.min.js"></script>
 <script src="https://unpkg.com/vuefire@1.4.5/dist/vuefire.min.js"></script>
-<script>
-    Authentication.auth.init();
-
-    var storageRef = firebase.storage().ref();
-    var slidesRef = storageRef.child('login/slides/');
-
-    function cloneImageUpload() {
-        return {
-            paused: false,
-            uploading: false,
-            uploadTask: null,
-            uploadedBytes: 0,
-            totalBytes: 0
-        }
-    }
-
-    new Vue({
-        el: '#app',
-        firebase: {
-            images: firebase.database().ref('login/slides')
-        },
-        data: {
-            uploadedFile: null,
-            imageUpload: cloneImageUpload(),
-            imageToShow: null,
-            file: null,
-            imageUri: null,
-            sections: [{
-                title: 'Slides',
-                description: 'Change the images in slides on login page',
-                active: true
-            }]
-        },
-        computed: {
-            progress: function () {
-                return this.imageUpload.totalBytes === 0 ? 0 : this.imageUpload.uploadedBytes / this.imageUpload.totalBytes * 100;
-            }
-        },
-        methods: {
-            reset: function () {
-                // reset form to initial state
-                this.imageUpload = cloneImageUpload();
-                this.file = null;
-                this.imageUri = null;
-            },
-            save: function () {
-                var newImages = [];
-                for (var i = 0; i < this.images.length; i++)
-                    newImages.push(this.images[i]['.value']);
-                newImages.push(this.uploadedFile);
-                this.$firebaseRefs.images.set(newImages)
-                    .then(function () {
-                        toastr.success('Saved Images');
-                        this.reset();
-                        this.uploadedFile = null;
-                    }.bind(this)).catch(function (error) {
-                        console.log(error);
-                        toastr.error('Error saving images');
-                        this.reset();
-                        this.uploadedFile = null;
-                    }.bind(this))
-            },
-            filesChange: function (fileList) {
-                if (!fileList.length) return;
-
-                this.file = fileList[0];
-                this.imageUri = URL.createObjectURL(this.file);
-            },
-            upload: function () {
-                this.imageUpload.uploading = true;
-
-                var fileRef = slidesRef.child(new Date().toISOString() + this.file.name);
-                this.imageUpload.uploadTask = fileRef.put(this.file);
-
-                this.imageUpload.uploadTask.on('state_changed', function (snapshot) {
-                    this.imageUpload.totalBytes = snapshot.totalBytes;
-                    this.imageUpload.uploadedBytes = snapshot.bytesTransferred;
-                    this.imageUpload.paused = snapshot.state === firebase.storage.TaskState.PAUSED;
-                }.bind(this), function (error) {
-                    this.reset();
-                    console.log('Failed' + error)
-                }.bind(this), function () {
-                    this.uploadedFile = this.imageUpload.uploadTask.snapshot.downloadURL;
-                    this.reset();
-                }.bind(this))
-            },
-            pause: function () {
-                this.imageUpload.uploadTask.pause()
-            },
-            cancel: function () {
-                this.imageUpload.uploadTask.cancel()
-            },
-            resume: function () {
-                this.imageUpload.uploadTask.resume()
-            },
-
-            showImage: function (imageObj) {
-                this.imageToShow = imageObj['.value'];
-                $('.modal').modal();
-            },
-
-            deleteImage: function () {
-                var newImages = [];
-                for (var i = 0; i < this.images.length; i++) {
-                    var image = this.images[i]['.value'];
-                    if (image !== this.imageToShow)
-                        newImages.push(image);
-                }
-                newImages.push(this.uploadedFile);
-                this.$firebaseRefs.images.set(newImages)
-                    .then(function () {
-                        toastr.success('Image Deleted');
-                    }.bind(this)).catch(function (error) {
-                    console.log(error);
-                    toastr.error('Error deleting image');
-                }.bind(this))
-
-            }
-        },
-        mounted: function() {
-            this.reset();
-        }
-    });
-</script>
+<script th:src="@{/js/ui.js}"></script>
 </body>
 </html>
