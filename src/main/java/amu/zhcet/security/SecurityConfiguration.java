@@ -81,14 +81,12 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .requestMatchers(EndpointRequest.toAnyEndpoint())
                 .hasRole(Role.DEVELOPMENT_ADMIN.name())
 
-                .antMatchers("/").permitAll()
-
                 .antMatchers("/profile/**").authenticated()
-
-                .antMatchers("/dashboard/**").authenticated()
 
                 .antMatchers("/dashboard/student/**")
                 .hasAuthority(Role.STUDENT.toString())
+
+                .antMatchers("/dashboard/**").authenticated()
 
                 .antMatchers("/notifications/{id}/**")
                 .access("@permissionManager.checkNotificationRecipient(authentication, #id)")
@@ -115,6 +113,8 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/admin/faculty/**")
                 .hasAuthority(Role.FACULTY.toString())
+
+                .antMatchers("/").permitAll()
 
                 .and()
                 .formLogin()
