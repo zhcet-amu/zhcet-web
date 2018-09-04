@@ -91,7 +91,7 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/notifications/{id}/**")
                 .access("@permissionManager.checkNotificationRecipient(authentication, #id)")
                 .antMatchers("/notifications/**")
-                .authenticated()
+                .hasAnyAuthority(Role.VERIFIED_USER.toString())
 
                 .antMatchers("/management/notifications/{id}/**")
                 .access("@permissionManager.checkNotificationCreator(authentication, #id)")
