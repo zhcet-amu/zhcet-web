@@ -63,6 +63,12 @@
                     <li th:class="${subPage == 'send_notification' ? 'active' : ''}" ><a th:href="@{/management/notification/send}" class="menu-item">Send Notification</a></li>
                 </ul>
             </li>
+            <li th:class="|nav-item ${pageId == 'dev' ? 'active' : ''} |" sec:authorize="hasRole('ROLE_DEVELOPMENT_ADMIN')">
+                <a th:href="@{/dashboard/dev}">
+                    <i class="material-icons md-18">settings</i>
+                    <span data-i18n="nav.project.main" class="menu-title">Development</span>
+                </a>
+            </li>
             <li th:class="|nav-item ${pageId == 'profile' ? 'active' : ''} |" sec:authorize="isAuthenticated()">
                 <a th:href="@{/profile}" href="profile.html">
                     <i class="material-icons md-18">account_circle</i>
