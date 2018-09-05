@@ -45,7 +45,12 @@
                                 <span id="new-count" class="notification-tag badge badge-default badge-danger float-right m-0" th:text="|${notifCount} NEW|"></span>
                             </li>
                             <li id="notification-panel" class="scrollable-container media-list w-100">
-                                <div th:each="notification : ${@notificationReadingService.getUnreadNotifications()}" class="media">
+                                <div class="row" sec:authorize="!hasRole('VERIFIED_USER')">
+                                    <div class="col m-2">
+                                        Verify your account to see notifications ...
+                                    </div>
+                                </div>
+                                <div sec:authorize="hasRole('VERIFIED_USER')" th:each="notification : ${@notificationReadingService.getUnreadNotifications()}" class="media">
                                     <div class="media-left valign-middle"><i class="material-icons icon-bg-circle bg-gray">notifications_none</i></div>
                                     <div class="media-body">
                                         <h6 class="media-heading" th:text="${notification.notification.title}">99% Server load</h6>

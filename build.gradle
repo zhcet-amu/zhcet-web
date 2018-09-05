@@ -55,15 +55,15 @@ dependencies {
     }
     implementation 'org.modelmapper:modelmapper:2.2.0'
     implementation 'com.github.darrachequesne:spring-data-jpa-datatables:5.0.0'
-    implementation 'com.google.firebase:firebase-admin:6.3.0'
+    implementation 'com.google.firebase:firebase-admin:6.4.0'
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.imgscalr:imgscalr-lib:4.2'
     implementation 'com.github.ben-manes.caffeine:caffeine:2.6.2'
     implementation 'org.jboss.aerogear:aerogear-otp-java:1.0.0'
 
     // Sentry
-    implementation 'io.sentry:sentry-spring:1.7.5'
-    implementation 'io.sentry:sentry-logback:1.7.5'
+    implementation 'io.sentry:sentry-spring:1.7.7'
+    implementation 'io.sentry:sentry-logback:1.7.7'
 
     // Open Feign
     // implementation 'io.github.openfeign:feign-core:9.5.1'
@@ -94,7 +94,7 @@ dependencies {
 
     // DataTables
     implementation 'org.webjars:datatables:1.10.19'
-    implementation 'org.webjars:datatables-buttons:1.5.1'
+    implementation 'org.webjars:datatables-buttons:1.5.2'
     implementation 'org.webjars.bower:datatables.net-select:1.2.3'
     implementation 'org.webjars.bower:datatables.net-select-bs:1.2.3'
     implementation 'org.webjars:jszip:3.1.0'

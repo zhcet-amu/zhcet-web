@@ -94,9 +94,10 @@ public class PermissionManager {
 
     public boolean checkNotificationRecipient(Authentication user, String notificationId) {
         try {
+            boolean hasNotificationPermission = hasPermission(user.getAuthorities(), Role.VERIFIED_USER);
             Optional<NotificationRecipient> notificationOptional = notificationRecipientRepository.findById(Long.parseLong(notificationId));
             // If notification is not found, leave it to Controller
-            return notificationOptional.map(notification -> notification.getRecipient().getUserId().equals(user.getName())).orElse(true);
+            return notificationOptional.map(notification -> notification.getRecipient().getUserId().equals(user.getName())).orElse(hasNotificationPermission);
         } catch (NumberFormatException nfe) {
             return true;
         }

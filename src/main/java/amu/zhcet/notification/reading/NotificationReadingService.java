@@ -1,9 +1,12 @@
 package amu.zhcet.notification.reading;
 
 import amu.zhcet.auth.Auditor;
+import amu.zhcet.auth.UserAuth;
+import amu.zhcet.data.user.Role;
 import amu.zhcet.notification.recipient.CachedNotificationService;
 import amu.zhcet.notification.recipient.NotificationRecipient;
 import amu.zhcet.notification.recipient.NotificationRecipientRepository;
+import amu.zhcet.security.permission.PermissionManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -34,8 +38,14 @@ public class NotificationReadingService {
     }
 
     public List<NotificationRecipient> getUnreadNotifications() {
-        String userId = Auditor.getLoggedInUsername();
-        return cachedNotificationService.getUnreadNotifications(userId).getContent();
+        UserAuth userAuth = Auditor.getLoggedInUser().orElse(null);
+
+        if (userAuth != null && PermissionManager.hasPermission(userAuth.getAuthorities(), Role.VERIFIED_USER)) {
+            return cachedNotificationService.getUnreadNotifications(userAuth.getUsername()).getContent();
+        }
+
+        // Return empty list for unverified user
+        return Collections.emptyList();
     }
 
     public long getUnreadNotificationCount() {
