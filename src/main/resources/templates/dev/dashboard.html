@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" data-textdirection="ltr" class="loading"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="fragments/layout :: head"></head>
+
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dev')">
+    <div class="col-12 col-md-10 offset-md-1 col-lg-12 offset-lg-0 col-xl-8 offset-xl-2">
+        <div th:replace="fragments/toolbar"></div>
+
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Status</h4>
+                        <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
+                        <div class="heading-elements">
+                            <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
+                                <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body">
+                            <div id="status-app">
+                                <div v-if="!loaded">
+                                    <div class="md-progress">
+                                        <div class="indeterminate"></div>
+                                    </div>
+                                </div>
+                                <div v-show="loaded" style="display: none">
+                                    <div v-if="status">
+                                        <button @click="reload" class="btn btn-outline-success float-right">Reload</button>
+                                        <div v-for="(serviceStatus, service) in status">
+                                            <div v-if="typeof(serviceStatus) === 'boolean'">
+                                                <span><strong>{{service | normalize}}</strong></span>
+                                                <span v-if="serviceStatus" class="material-icons">check_circle</span>
+                                                <span v-else class="material-icons text-danger">clear</span>
+                                            </div>
+                                            <div v-else>
+                                                <span><strong>{{service | normalize}}</strong></span>
+                                                <div v-for="(serviceStatus, service) in serviceStatus">
+                                                    <div v-if="typeof(serviceStatus) === 'boolean'" class="pl-2">
+                                                        <span>{{service | normalize}}</span>&nbsp;&nbsp;
+                                                        <span v-if="serviceStatus" class="material-icons text-success">check_circle</span>
+                                                        <span v-else class="material-icons text-danger">clear</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div v-else>
+                                        <div class="md-progress">
+                                            <div class="indeterminate"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js"></script>
+<script th:src="@{/js/dev/index.js}" type="module"></script>
+</body>
+</html>
