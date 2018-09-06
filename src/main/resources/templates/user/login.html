@@ -29,7 +29,7 @@
                 <div id="totp-panel" th:style="|display: ${otp_required != null ? 'block' : 'none'}|">
                     <fieldset class="form-group position-relative has-icon-left">
                         <input type="text" class="transparent form-control form-control-lg input-lg" id="totp"
-                               name="totp" placeholder="Enter OTP" />
+                               name="totp" placeholder="Enter OTP" autocomplete="off"/>
                         <div class="form-control-position">
                             <i class="material-icons md-24 md-dark">security</i>
                         </div>
