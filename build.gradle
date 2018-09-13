@@ -67,7 +67,7 @@ dependencies {
 
     // Open Feign
     // implementation 'io.github.openfeign:feign-core:10.0.1'
-    // implementation 'io.github.openfeign:feign-okhttp:9.5.1'
+    // implementation 'io.github.openfeign:feign-okhttp:10.0.1'
     // implementation 'io.github.openfeign:feign-jackson:9.5.1'
 
     // Markdown Processor
