@@ -63,7 +63,7 @@ dependencies {
 
     // Sentry
     implementation 'io.sentry:sentry-spring:1.7.9'
-    implementation 'io.sentry:sentry-logback:1.7.7'
+    implementation 'io.sentry:sentry-logback:1.7.9'
 
     // Open Feign
     // implementation 'io.github.openfeign:feign-core:9.5.1'
