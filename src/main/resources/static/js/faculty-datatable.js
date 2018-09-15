@@ -1,6 +1,5 @@
 (function ($) {
     function showFaculty(data) {
-        console.log("POOP")
         var modal = $('#facultyModal');
         modal.modal();
 
