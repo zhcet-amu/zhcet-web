@@ -28,7 +28,7 @@ public abstract class BaseEntity implements Meta, Serializable {
 
     @LastModifiedDate
     @JsonIgnore
-    private LocalDateTime updatedAt;
+    private LocalDateTime modifiedAt;
 
     @CreatedBy
     private String createdBy;

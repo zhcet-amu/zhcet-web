@@ -1,0 +1,101 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet author="iamareebjamal" id="notification-schema">
+        <createTable tableName="notification">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="sender_user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(150)"/>
+            <column name="message" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="recipient_channel" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="channel_type" type="VARCHAR(255)"/>
+            <column name="scheduled" type="BOOLEAN" defaultValueBoolean="false" />
+            <column name="sent_time" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP" />
+            <column name="automated" type="BOOLEAN" defaultValueBoolean="false" />
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0" />
+        </createTable>
+
+        <createIndex tableName="notification" indexName="notification__sender_fk">
+            <column name="sender_user_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="notification__sender_fk"
+            baseColumnNames="sender_user_id"
+            baseTableName="notification"
+            referencedColumnNames="user_id"
+            referencedTableName="user"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="notification--recipientschema">
+        <createTable tableName="notification_recipient">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="notification_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="recipient_user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="favorite" type="BOOLEAN" defaultValueBoolean="false" />
+            <column name="seen" type="BOOLEAN" defaultValueBoolean="false" />
+            <column name="read_time" type="DATETIME"/>
+            
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0" />
+        </createTable>
+
+        <addUniqueConstraint
+            columnNames="notification_id, recipient_user_id"
+            constraintName="notification_recipient_unique_index"
+            tableName="notification_recipient"/>
+        
+        <createIndex tableName="notification_recipient" indexName="notification_recipient__recipient_fk">
+            <column name="recipient_user_id"/>
+        </createIndex>
+
+        <createIndex tableName="notification_recipient" indexName="notification_recipient__notification_fk">
+            <column name="notification_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="notification_recipient__notification_fk"
+            baseColumnNames="notification_id"
+            baseTableName="notification_recipient"
+            referencedColumnNames="id"
+            referencedTableName="notification"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+        
+        <addForeignKeyConstraint
+            constraintName="notification_recipient__recipient_fk"
+            baseColumnNames="recipient_user_id"
+            baseTableName="notification_recipient"
+            referencedColumnNames="user_id"
+            referencedTableName="user"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>
