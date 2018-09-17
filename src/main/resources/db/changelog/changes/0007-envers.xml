@@ -1,0 +1,425 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet author="iamareebjamal" id="user-revision-entity-schema">
+        <createTable tableName="user_revision_entity">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="timestamp" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="department-aud-schema">
+        <createTable tableName="department_aud">
+            <column name="code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="code, rev" tableName="department_aud"/>
+
+        <createIndex indexName="FK_department_aud_schema" tableName="department_aud">
+            <column name="rev"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_department_aud_schema"
+            baseColumnNames="rev"
+            baseTableName="department_aud"
+            referencedColumnNames="id"
+            referencedTableName="user_revision_entity"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="user-aud-schema">
+        <createTable tableName="user_aud">
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column defaultValueBoolean="true" name="enabled" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="email_verified" type="BOOLEAN"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="email_unsubscribed" type="BOOLEAN"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="password_changed" type="BOOLEAN"/>
+            <column name="roles" type="VARCHAR(255)"/>
+            <column name="pending_roles" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="department_code" type="VARCHAR(255)"/>
+            <column defaultValueBoolean="false" name="using2fa" type="BOOLEAN"/>
+            <column name="totp_secret" type="VARCHAR(255)"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="user_id, rev" tableName="user_aud"/>
+
+        <createIndex indexName="FKbycdexcb8mw7rud8065sxdqn" tableName="user_aud">
+            <column name="rev"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_user_aud_rev" 
+            baseColumnNames="rev"
+            baseTableName="user_aud"
+            referencedColumnNames="id"
+            referencedTableName="user_revision_entity"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal (generated)" id="user-detail-aud-schema">
+        <createTable tableName="user_detail_aud">
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="avatar_updated" type="DATETIME"/>
+            <column name="avatar_url" type="VARCHAR(255)"/>
+            <column name="city" type="VARCHAR(255)"/>
+            <column name="description" type="LONGTEXT"/>
+            <column name="original_avatar_url" type="VARCHAR(255)"/>
+            <column name="phone_numbers" type="VARCHAR(255)"/>
+            <column name="state" type="VARCHAR(255)"/>
+            <column name="gender" type="VARCHAR(1)"/>
+            <column name="dob" type="date"/>
+            <column name="firebase_claims" type="VARCHAR(2048)"/>
+            <column name="fcm_token" type="VARCHAR(255)"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="user_id, rev" tableName="user_detail_aud"/>
+
+        <createIndex indexName="FK_user_detail_aud_rev" tableName="user_detail_aud">
+            <column name="rev"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_user_detail_aud_rev"
+            baseColumnNames="rev"
+            baseTableName="user_detail_aud"
+            referencedColumnNames="id"
+            referencedTableName="user_revision_entity"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="student-aud-schema">
+        <createTable tableName="student_aud">
+            <column name="enrolment_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column name="faculty_number" type="VARCHAR(255)"/>
+            <column name="hall_code" type="VARCHAR(255)"/>
+            <column name="registration_year" type="INT"/>
+            <column name="section" type="VARCHAR(255)"/>
+            <column name="status" type="CHAR(1)"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="enrolment_number, rev" tableName="student_aud"/>
+
+        <createIndex indexName="FK_student_aud_rev" tableName="student_aud">
+            <column name="rev"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_student_aud_rev"
+            baseColumnNames="rev"
+            baseTableName="student_aud"
+            referencedColumnNames="id"
+            referencedTableName="user_revision_entity"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="faculty-member-aud-schema">
+        <createTable tableName="faculty_member_aud">
+            <column name="faculty_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column name="designation" type="VARCHAR(255)"/>
+            <column name="working" type="BOOLEAN"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="faculty_id, rev" tableName="faculty_member_aud"/>
+
+        <createIndex indexName="FK_faculty_member_aud_rev" tableName="faculty_member_aud">
+            <column name="rev"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_faculty_member_aud_rev"
+            baseColumnNames="rev"
+            baseTableName="faculty_member_aud"
+            referencedColumnNames="id"
+            referencedTableName="user_revision_entity"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="course-aud-schema">
+        <createTable tableName="course_aud">
+            <column name="code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="branch" type="VARCHAR(255)"/>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="class_work_marks" type="INT"/>
+            <column name="compulsory" type="BOOLEAN"/>
+            <column name="credits" type="FLOAT(12)"/>
+            <column name="description" type="LONGTEXT"/>
+            <column name="final_marks" type="INT"/>
+            <column name="finish_year" type="INT"/>
+            <column name="lecture_part" type="INT"/>
+            <column name="mid_sem_marks" type="INT"/>
+            <column name="practical_part" type="INT"/>
+            <column name="semester" type="INT"/>
+            <column name="start_year" type="INT"/>
+            <column name="tutorial_part" type="INT"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="total_marks" type="INT"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="department_code" type="VARCHAR(255)"/>
+            <column name="course_objectives" type="TEXT"/>
+            <column name="syllabus" type="TEXT"/>
+            <column name="books" type="VARCHAR(255)"/>
+            <column name="course_outcomes" type="TEXT"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="code, rev" tableName="course_aud"/>
+
+        <createIndex indexName="FK_course_aud_rev" tableName="course_aud">
+            <column name="rev"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_course_aud_rev"
+            baseColumnNames="rev"
+            baseTableName="course_aud"
+            referencedColumnNames="id"
+            referencedTableName="user_revision_entity"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="floated-course-aud-schema">
+        <createTable tableName="floated_course_aud">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column name="session" type="VARCHAR(255)"/>
+            <column name="course_code" type="VARCHAR(255)"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="id, rev" tableName="floated_course_aud"/>
+
+        <createIndex indexName="FK_floated_course_aud_rev" tableName="floated_course_aud">
+            <column name="rev"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_floated_course_aud_rev"
+            baseColumnNames="rev"
+            baseTableName="floated_course_aud"
+            referencedColumnNames="id"
+            referencedTableName="user_revision_entity"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="course-registration-aud-schema">
+        <createTable tableName="course_registration_aud">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column name="mode" type="CHAR(1)"/>
+            <column name="floated_course_id" type="VARCHAR(255)"/>
+            <column name="student_enrolment_number" type="VARCHAR(255)"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="id, rev" tableName="course_registration_aud"/>
+
+        <createIndex indexName="FK_course_registration_aud_rev" tableName="course_registration_aud">
+            <column name="rev"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_course_registration_aud_rev"
+            baseColumnNames="rev"
+            baseTableName="course_registration_aud"
+            referencedColumnNames="id"
+            referencedTableName="user_revision_entity"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="course-in-charge-aud-schema">
+        <createTable tableName="course_in_charge_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column name="section" type="VARCHAR(255)"/>
+            <column name="in_charge_faculty_id" type="VARCHAR(255)"/>
+            <column name="floated_course_id" type="VARCHAR(255)"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="id, rev" tableName="course_in_charge_aud"/>
+
+        <createIndex indexName="FK_course_in_charge_aud_rev" tableName="course_in_charge_aud">
+            <column name="rev"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_course_in_charge_aud_rev"
+            baseColumnNames="rev"
+            baseTableName="course_in_charge_aud"
+            referencedColumnNames="id"
+            referencedTableName="user_revision_entity"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="attendance-aud-schema">
+        <createTable tableName="attendance_aud">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column name="attended" type="INT"/>
+            <column name="delivered" type="INT"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="id, rev" tableName="attendance_aud"/>
+
+        <createIndex indexName="FK_attendance_aud_rev" tableName="attendance_aud">
+            <column name="rev"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_attendance_aud_rev"
+            baseColumnNames="rev"
+            baseTableName="attendance_aud"
+            referencedColumnNames="id"
+            referencedTableName="user_revision_entity"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="configuration-aud-schema">
+        <createTable tableName="configuration_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column name="attendance_threshold" type="INT"/>
+            <column name="automatic" type="BOOLEAN"/>
+            <column name="session" type="VARCHAR(255)"/>
+            <column name="url" type="VARCHAR(255)"/>
+            <column name="max_retries" type="INT" defaultValueNumeric="5"/>
+            <column name="block_duration" type="INT" defaultValueNumeric="6"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="id, rev" tableName="configuration_aud"/>
+
+        <createIndex indexName="FK_configuration_aud_rev" tableName="configuration_aud">
+            <column name="rev"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_configuration_aud_rev"
+            baseColumnNames="rev"
+            baseTableName="configuration_aud"
+            referencedColumnNames="id"
+            referencedTableName="user_revision_entity"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="notification-aud-schema">
+        <createTable tableName="notification_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column name="sender_user_id" type="VARCHAR(255)"/>
+            <column name="title" type="VARCHAR(150)"/>
+            <column name="message" type="VARCHAR(500)"/>
+            <column name="recipient_channel" type="VARCHAR(255)"/>
+            <column name="channel_type" type="VARCHAR(255)"/>
+            <column name="scheduled" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="sent_time" type="DATETIME"/>
+            <column name="automated" type="BOOLEAN" defaultValueBoolean="false"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="id, rev" tableName="notification_aud"/>
+
+        <createIndex indexName="FK_notification_aud_rev" tableName="notification_aud">
+            <column name="rev"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_notification_aud_rev"
+            baseColumnNames="rev"
+            baseTableName="notification_aud"
+            referencedColumnNames="id"
+            referencedTableName="user_revision_entity"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

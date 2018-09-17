@@ -1,0 +1,161 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet author="iamareebjamal" id="user-schema">
+        <createTable tableName="user">
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="enabled" type="BOOLEAN" defaultValueBoolean="true" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="email_verified" type="BOOLEAN" defaultValueBoolean="false" />
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true" uniqueConstraintName="UK_email" />
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="roles" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pending_roles" type="VARCHAR(255)"/>
+            <column name="department_code" type="VARCHAR(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_changed" type="BOOLEAN" defaultValueBoolean="false" />
+            <column name="email_unsubscribed" type="BOOLEAN" defaultValueBoolean="false" />
+            <column name="using2fa" type="BOOLEAN" defaultValueBoolean="false" />
+            <column name="totp_secret" type="VARCHAR(255)"/>
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0" />
+        </createTable>
+
+        <createIndex tableName="user" indexName="FK_user_dept_code">
+            <column name="department_code"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_user_dept_code"
+            baseTableName="user"
+            baseColumnNames="department_code"
+            referencedTableName="department"
+            referencedColumnNames="code"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="user-detail-schema">
+        <createTable tableName="user_detail">
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="avatar_url" type="VARCHAR(255)"/>
+            <column name="original_avatar_url" type="VARCHAR(255)"/>
+            <column name="description" type="TEXT"/>
+            <column name="address" type="VARCHAR(500)"/>
+            <column name="city" type="VARCHAR(255)"/>
+            <column name="state" type="VARCHAR(255)"/>
+            <column name="phone_numbers" type="VARCHAR(255)"/>
+            <column name="avatar_updated" type="DATETIME"/>
+            <column name="gender" type="VARCHAR(1)"/>
+            <column name="dob" type="date"/>
+            <column name="firebase_claims" type="VARCHAR(2048)"/>
+            <column name="fcm_token" type="VARCHAR(255)"/>
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+            constraintName="FK_user_id"
+            baseTableName="user_detail"
+            baseColumnNames="user_id"
+            referencedTableName="user"
+            referencedColumnNames="user_id"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="student-schema">
+        <createTable tableName="student">
+            <column name="enrolment_number" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="faculty_number" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="UK_student_fac"/>
+            </column>
+            <column name="hall_code" type="VARCHAR(2)"/>
+            <column name="section" type="VARCHAR(255)"/>
+            <column name="registration_year" type="INT"/>
+            <column name="status" type="CHAR(1)" defaultValue="A" />
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0" />
+        </createTable>
+
+        <createIndex tableName="student" indexName="student_section_index">
+            <column name="section"/>
+        </createIndex>
+        <createIndex tableName="student" indexName="student_status_index">
+            <column name="status"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_enrolment_number"
+            baseTableName="student"
+            baseColumnNames="enrolment_number"
+            referencedTableName="user"
+            referencedColumnNames="user_id"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="faculty-member-schema">
+        <createTable tableName="faculty_member">
+            <column name="faculty_id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="working" type="BOOLEAN" defaultValueBoolean="true"/>
+            <column name="designation" type="VARCHAR(255)" defaultValue="Faculty Member"/>
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0"/>
+        </createTable>
+
+        <createIndex tableName="faculty_member" indexName="faculty_member_working_index">
+            <column name="working"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_faculty_id"
+            baseTableName="faculty_member"
+            baseColumnNames="faculty_id"
+            referencedTableName="user"
+            referencedColumnNames="user_id"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

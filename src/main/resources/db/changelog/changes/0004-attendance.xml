@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet author="iamareebjamal" id="attendance-schema">
+        <createTable tableName="attendance">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="attended" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="delivered" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0" />
+        </createTable>
+
+        <addForeignKeyConstraint
+            constraintName="FK_attendance_course"
+            baseColumnNames="id"
+            baseTableName="attendance"
+            referencedColumnNames="id"
+            referencedTableName="course_registration"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

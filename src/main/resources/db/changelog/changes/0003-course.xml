@@ -1,0 +1,208 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet author="iamareebjamal" id="course-schema">
+        <createTable tableName="course">
+            <column name="code" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="department_code" type="VARCHAR(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="compulsory" type="BOOLEAN"/>
+            <column name="semester" type="INT"/>
+            <column name="start_year" type="INT"/>
+            <column name="finish_year" type="INT"/>
+            <column name="credits" type="FLOAT(12)"/>
+            <column name="branch" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(1)"/>
+            <column name="class_work_marks" type="INT"/>
+            <column name="mid_sem_marks" type="INT"/>
+            <column name="final_marks" type="INT"/>
+            <column name="total_marks" type="INT"/>
+            <column name="lecture_part" type="INT"/>
+            <column name="tutorial_part" type="INT"/>
+            <column name="practical_part" type="INT"/>
+            <column name="description" type="TEXT"/>
+            <column name="course_objectives" type="TEXT"/>
+            <column name="syllabus" type="TEXT"/>
+            <column name="books" type="VARCHAR(255)"/>
+            <column name="course_outcomes" type="TEXT"/>
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0" />
+        </createTable>
+
+        <createIndex tableName="course" indexName="FK_course_dept_code">
+            <column name="department_code"/>
+        </createIndex>
+
+        <createIndex tableName="course" indexName="course_active_index">
+            <column name="active"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_course_dept_code"
+            baseTableName="course"
+            baseColumnNames="department_code"
+            referencedTableName="department"
+            referencedColumnNames="code"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="floated-course-schema">
+        <createTable tableName="floated_course">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="session" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="course_code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0" />
+        </createTable>
+
+        <addUniqueConstraint
+            tableName="floated_course"
+            constraintName="UK_floated_course_session"
+            columnNames="course_code, session"/>
+        
+        <createIndex tableName="floated_course" indexName="floated_course_session_index">
+            <column name="session"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_floated_course_code"
+            baseTableName="floated_course"
+            baseColumnNames="course_code"
+            referencedTableName="course"
+            referencedColumnNames="code"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="course-registration-schema">
+        <createTable tableName="course_registration">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="floated_course_id" type="VARCHAR(255)"/>
+            <column name="student_enrolment_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mode" type="CHAR(1)" defaultValue="a">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0"/>
+        </createTable>
+
+        <addUniqueConstraint
+            tableName="course_registration"
+            constraintName="UK_floated_student"
+            columnNames="floated_course_id, student_enrolment_number"/>
+        
+        <createIndex tableName="course_registration" indexName="FK_course_reg_student">
+            <column name="student_enrolment_number"/>
+        </createIndex>
+
+        <createIndex tableName="course_registration" indexName="FK_course_reg_floated">
+            <column name="floated_course_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_course_reg_floated"
+            baseTableName="course_registration"
+            baseColumnNames="floated_course_id"
+            referencedTableName="floated_course"
+            referencedColumnNames="id"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+        
+        <addForeignKeyConstraint
+            constraintName="FK_course_reg_student"
+            baseTableName="course_registration"
+            baseColumnNames="student_enrolment_number"
+            referencedTableName="student"
+            referencedColumnNames="enrolment_number"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="course-in-charge-schema">
+        <createTable tableName="course_in_charge">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="floated_course_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_charge_faculty_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="section" type="VARCHAR(255)"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0" />
+        </createTable>
+
+        <addUniqueConstraint
+            columnNames="floated_course_id, in_charge_faculty_id, section"
+            constraintName="unique_course_in_charge_section"
+            tableName="course_in_charge"/>
+        
+        <createIndex tableName="course_in_charge" indexName="FK_floated_in_charge">
+            <column name="in_charge_faculty_id"/>
+        </createIndex>
+        
+        <createIndex tableName="course_in_charge" indexName="FK_floated_course">
+            <column name="section"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_floated_in_charge"
+            baseColumnNames="in_charge_faculty_id"
+            baseTableName="course_in_charge"
+            referencedColumnNames="faculty_id"
+            referencedTableName="faculty_member"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint
+            constraintName="FK_floated_course"
+            baseColumnNames="floated_course_id"
+            baseTableName="course_in_charge"
+            referencedColumnNames="id"
+            referencedTableName="floated_course"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -12,6 +12,8 @@ spring:
         jdbc:
           batch_size: 50
           batch_versioned_data: true
+          lob:
+            non_contextual_creation: true
 
   servlet:
     multipart:
@@ -19,8 +21,8 @@ spring:
       max-request-size: 10MB
 
   datasource:
-    url: jdbc:mysql://localhost:3306/zhcet?useSSL=false
-    username: zhcetuser
+    url: jdbc:postgresql://localhost:5432/zhcet
+    username: zhcet
     password: zhcetpass
 
   mail:

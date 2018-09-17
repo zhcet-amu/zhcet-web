@@ -118,8 +118,8 @@ public class AttendanceDownloadController {
 
         return courseRegistrations.stream()
                 .map(CourseRegistration::getAttendance)
-                .max(Comparator.comparing(Attendance::getUpdatedAt))
-                .map(Attendance::getUpdatedAt);
+                .max(Comparator.comparing(Attendance::getModifiedAt))
+                .map(Attendance::getModifiedAt);
     }
 
 }

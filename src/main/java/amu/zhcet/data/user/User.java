@@ -22,10 +22,11 @@ import java.util.stream.Collectors;
 @Entity
 @Audited
 @Builder
+@Table(name = "`user`")
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude="details")
-@ToString(of = {"userId", "name", "email"})
+@EqualsAndHashCode(callSuper = true, exclude = "details")
+@ToString(of = { "userId", "name", "email" })
 public class User extends BaseEntity {
 
     @Id
@@ -90,9 +91,7 @@ public class User extends BaseEntity {
         if (commaSeparated == null)
             return null;
 
-        return Arrays.stream(commaSeparated.split(","))
-                .map(String::trim)
-                .collect(Collectors.toList());
+        return Arrays.stream(commaSeparated.split(",")).map(String::trim).collect(Collectors.toList());
     }
 
     public void setPendingRoles(Set<String> roles) {

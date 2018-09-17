@@ -1,0 +1,135 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet author="iamareebjamal" id="persistent-login-schema">
+        <createTable tableName="persistent_login">
+            <column name="series" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="last_used" type="DATETIME"/>
+            <column name="token" type="VARCHAR(255)"/>
+            <column name="username" type="VARCHAR(255)"/>
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0" />
+        </createTable>
+
+        <createIndex tableName="persistent_login" indexName="FK_username_user_id">
+            <column name="username"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_username_user_id"
+            baseTableName="persistent_login"
+            baseColumnNames="username"
+            referencedTableName="user"
+            referencedColumnNames="user_id"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="verification-token-schema">
+        <createTable tableName="verification_token">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="used" type="BOOLEAN" defaultValueBoolean="false" />
+            <column name="expiry" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="version" type="INT" defaultValueNumeric="0" />
+        </createTable>
+
+        <createIndex tableName="verification_token" indexName="verification_token_user__fk">
+            <column name="user_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="verification_token_user__fk"
+            baseTableName="verification_token"
+            baseColumnNames="user_id"
+            referencedTableName="user"
+            referencedColumnNames="user_id"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="password-reset-token-schema">
+        <createTable tableName="password_reset_token">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="used" type="BOOLEAN" defaultValueBoolean="false" />
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="version" type="INT" defaultValueNumeric="0" />
+        </createTable>
+
+        <createIndex tableName="password_reset_token" indexName="FK_password_reset_token_user">
+            <column name="user_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            constraintName="FK_password_reset_token_user"
+            baseTableName="password_reset_token"
+            baseColumnNames="user_id"
+            referencedTableName="user"
+            referencedColumnNames="user_id"
+            onDelete="CASCADE"
+            onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="password-file-schema">
+        <createTable tableName="password_file">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="link" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="DATETIME" defaultValueDate="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

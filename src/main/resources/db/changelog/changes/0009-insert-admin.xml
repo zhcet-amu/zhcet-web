@@ -1,0 +1,26 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet author="iamareebjamal" id="insert-admin">
+        <insert tableName="user">
+            <column name="user_id" value="admin"/>
+            <column name="name" value="Admin"/>
+            <column name="password" value="{bcrypt}$2a$10$YUVj9powKqpmcwnAdjCH..3C2qXEoy8elI0XIpxtzRmHz0iobbUbC"/>
+            <column name="roles" value="ROLE_DEAN_ADMIN"/>
+            <column name="type" value="FACULTY"/>
+            <column name="department_code" value="CO"/>
+        </insert>
+
+        <insert tableName="user_detail">
+            <column name="user_id" value="admin"/>
+            <column name="gender" value="M"/>
+        </insert>
+
+        <insert tableName="faculty_member">
+            <column name="faculty_id" value="admin"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
