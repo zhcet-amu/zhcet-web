@@ -63,6 +63,7 @@ server:
     session:
       cookie:
         http-only: true
+        name: ZHCET_SESSION_ID
 
 logging:
   file: "${zhcet.storage.root-dir}/logs/spring.log"
