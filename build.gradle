@@ -47,7 +47,7 @@ dependencies {
     implementation 'javax.interceptor:javax.interceptor-api:1.2.2' // TODO: Remove when workaround fix is found
     implementation 'mysql:mysql-connector-java'
     implementation "org.hibernate:hibernate-envers"
-    implementation "org.flywaydb:flyway-core:5.1.4"
+    implementation "org.flywaydb:flyway-core:5.2.0"
     implementation "com.j256.simplecsv:simplecsv:2.3"
     implementation "org.apache.commons:commons-text:1.4"
     implementation 'commons-validator:commons-validator:1.6', {
