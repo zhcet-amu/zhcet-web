@@ -28,13 +28,12 @@
             <column name="department_code" type="VARCHAR(2)">
                 <constraints nullable="false"/>
             </column>
+            <column name="gender" type="VARCHAR(1)"/>
             <column name="type" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="password_changed" type="BOOLEAN" defaultValueBoolean="false" />
             <column name="email_unsubscribed" type="BOOLEAN" defaultValueBoolean="false" />
-            <column name="using2fa" type="BOOLEAN" defaultValueBoolean="false" />
-            <column name="totp_secret" type="VARCHAR(255)"/>
 
             <column name="created_at" type="DATETIME"/>
             <column name="modified_at" type="DATETIME"/>
@@ -70,10 +69,8 @@
             <column name="state" type="VARCHAR(255)"/>
             <column name="phone_numbers" type="VARCHAR(255)"/>
             <column name="avatar_updated" type="DATETIME"/>
-            <column name="gender" type="VARCHAR(1)"/>
             <column name="dob" type="date"/>
             <column name="firebase_claims" type="VARCHAR(2048)"/>
-            <column name="fcm_token" type="VARCHAR(255)"/>
 
             <column name="created_at" type="DATETIME"/>
             <column name="modified_at" type="DATETIME"/>
@@ -90,6 +87,66 @@
             referencedColumnNames="user_id"
             onDelete="CASCADE"
             onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="user-fcm-schema">
+        <createTable tableName="user_fcm_token">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fcm_token" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="disabled" type="BOOLEAN" defaultValueBoolean="false"/>
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0"/>
+        </createTable>
+
+        <addUniqueConstraint
+                columnNames="user_id, fcm_token"
+                constraintName="unique_fcm_user_token"
+                tableName="user_fcm_token"/>
+
+        <addForeignKeyConstraint
+                constraintName="FK_user_fcm_id"
+                baseTableName="user_fcm_token"
+                baseColumnNames="user_id"
+                referencedTableName="user"
+                referencedColumnNames="user_id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet author="iamareebjamal" id="user-totp-schema">
+        <createTable tableName="user_totp">
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="using2fa" type="BOOLEAN" defaultValueBoolean="false" />
+            <column name="totp_secret" type="VARCHAR(255)"/>
+
+            <column name="created_at" type="DATETIME"/>
+            <column name="modified_at" type="DATETIME"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="version" type="INT" defaultValueNumeric="0"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                constraintName="FK_user_totp_id"
+                baseTableName="user_totp"
+                baseColumnNames="user_id"
+                referencedTableName="user"
+                referencedColumnNames="user_id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"/>
     </changeSet>
 
     <changeSet author="iamareebjamal" id="student-schema">

@@ -48,36 +48,39 @@
                     <a href="https://support.google.com/accounts/answer/1066447?hl=en" target="_blank">Google Authenticator</a>
                 </div>
             </div>
-            <div th:if="${user.using2fa}" class="mt-1">
-                <form th:action="@{/profile/2fa/disable}" method="post">
-                    <button type="submit" class="mui-btn mui-btn--raised mui-btn--danger">Disable 2FA</button>
-                </form>
-                <small class="flex-center info-box">
-                    <i class="material-icons md-18">lightbulb_outline</i> Lost the old secret? Just disable 2FA and re-enable
-                </small>
-            </div>
-            <div th:unless="${user.using2fa}">
-                <div th:if="${user.totpSecret != null}">
+            <th:block th:with="using2fa = ${user.totpDetails != null && user.totpDetails.using2fa}, secretNotNull = ${user.totpDetails != null && user.totpDetails.totpSecret != null}">
+                <div th:if="${using2fa}" class="mt-1">
+                    <form th:action="@{/profile/2fa/disable}" method="post">
+                        <button type="submit" class="mui-btn mui-btn--raised mui-btn--danger">Disable 2FA</button>
+                    </form>
                     <small class="flex-center info-box">
-                        <i class="material-icons md-18">info_outline</i> Your last scanned secret is still stored with us.
-                        Would you like to just retain the previous secret or create a new one?
-                    </small>
-                    <small class="flex-center info-box">
-                        <i class="material-icons md-18">lightbulb_outline</i> If you choose to just enable the authentication,
-                        you will need to have the previous secret with you. We recommend creating a new one
-                    </small>
-                    <small class="flex-center info-box">
-                        <i class="material-icons md-18">warning</i> Once you create a new secret, old secret will stop working, so please use caution
+                        <i class="material-icons md-18">lightbulb_outline</i> Lost the old secret? Just disable 2FA and re-enable
                     </small>
                 </div>
-                <form th:action="@{/profile/2fa/enable}" method="post" class="mt-1">
-                    <div class="form-group" th:if="${user.totpSecret != null}">
-                        <label for="retain">Retain Previous Secret</label>&nbsp;
-                        <input type="checkbox" id="retain" data-color="primary" name="retain" class="switchery">
+                <div th:unless="${using2fa}">
+                    <div th:if="${secretNotNull}">
+                        <small class="flex-center info-box">
+                            <i class="material-icons md-18">info_outline</i> Your last scanned secret is still stored with us.
+                            Would you like to just retain the previous secret or create a new one?
+                        </small>
+                        <small class="flex-center info-box">
+                            <i class="material-icons md-18">lightbulb_outline</i> If you choose to just enable the authentication,
+                            you will need to have the previous secret with you. We recommend creating a new one
+                        </small>
+                        <small class="flex-center info-box">
+                            <i class="material-icons md-18">warning</i> Once you create a new secret, old secret will stop working, so please use caution
+                        </small>
                     </div>
-                    <button class="mui-btn mui-btn--raised mui-btn--primary">Enable 2FA</button>
-                </form>
-            </div>
+                    <form th:action="@{/profile/2fa/enable}" method="post" class="mt-1">
+                        <div class="form-group" th:if="${secretNotNull}">
+                            <label for="retain">Retain Previous Secret</label>&nbsp;
+                            <input type="checkbox" id="retain" data-color="primar
+                            y" name="retain" class="switchery">
+                        </div>
+                        <button class="mui-btn mui-btn--raised mui-btn--primary">Enable 2FA</button>
+                    </form>
+                </div>
+            </th:block>
         </div>
     </div>
     <script th:fragment="script">

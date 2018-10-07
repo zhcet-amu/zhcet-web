@@ -102,7 +102,7 @@
                                     <table class="table">
                                         <tr>
                                             <td>Gender</td>
-                                            <td><span th:text="${user.details.gender}"  th:class="|capsule p-small ${@viewService.getClassForGender(user.details.gender)}|"></span></td>
+                                            <td><span th:text="${user.gender}"  th:class="|capsule p-small ${@viewService.getClassForGender(user.gender)}|"></span></td>
                                         </tr>
                                         <tr th:if="${user.details.dob}">
                                             <td>Date of Birth</td>

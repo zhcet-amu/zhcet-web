@@ -1,8 +1,7 @@
 package amu.zhcet.auth.twofactor;
 
-import amu.zhcet.data.user.User;
-import amu.zhcet.data.user.UserNotFoundException;
-import amu.zhcet.data.user.UserService;
+import amu.zhcet.data.user.totp.UserTotp;
+import amu.zhcet.data.user.totp.UserTotpService;
 import amu.zhcet.security.CryptoUtils;
 import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
@@ -19,10 +18,10 @@ import java.net.URLEncoder;
 @Service
 public class TwoFAService {
 
-    private final UserService userService;
+    private final UserTotpService userTotpService;
 
-    TwoFAService(UserService userService) {
-        this.userService = userService;
+    TwoFAService(UserTotpService userTotpService) {
+        this.userTotpService = userTotpService;
     }
 
     @Data
@@ -48,15 +47,15 @@ public class TwoFAService {
      * @return {@link TwoFASecret} enclosing the user ID and secret
      */
     TwoFASecret generate2FASecret() {
-        User user = userService.getLoggedInUser().orElseThrow(UserNotFoundException::new);
+        UserTotp userTotp = userTotpService.getLoggedInTotpDetails();
 
-        if (user.getTotpSecret() != null) {
-            log.warn("User {} is overwriting TOTP with new one", user.getUserId());
+        if (userTotp.getTotpSecret() != null) {
+            log.warn("User {} is overwriting TOTP with new one", userTotp.getUserId());
         }
 
         String secret = Base32.random();
-        log.debug("Adding secret {} to user {}", secret, user.getUserId());
-        TwoFASecret twoFASecret = new TwoFASecret(user.getUserId(), secret);
+        log.debug("Adding secret {} to user {}", secret, userTotp.getUserId());
+        TwoFASecret twoFASecret = new TwoFASecret(userTotp.getUserId(), secret);
         log.debug("QR code URL: {}", twoFASecret.getQrUrl());
         return twoFASecret;
     }
@@ -67,33 +66,33 @@ public class TwoFAService {
      * @param code String OTP code
      */
     void enable2FA(String secret, String code) {
-        User user = userService.getLoggedInUser().orElseThrow(UserNotFoundException::new);
+        UserTotp userTotp = userTotpService.getLoggedInTotpDetails();
 
-        if (!isValidOtp(secret, code)) {
+        if (isInvalidOtp(secret, code)) {
             throw new RuntimeException("Could not verify code, please try again");
         }
 
-        user.setUsing2fa(true);
-        user.setTotpSecret(CryptoUtils.encrypt(secret, user.getUserId()));
-        userService.save(user);
+        userTotp.setUsing2fa(true);
+        userTotp.setTotpSecret(CryptoUtils.encrypt(secret, userTotp.getUserId()));
+        userTotpService.save(userTotp);
     }
 
     /**
      * Unconditionally enables 2 Factor Authentication for the user if OTP secret is already present
      */
     void enable2FA() {
-        User user = userService.getLoggedInUser().orElseThrow(UserNotFoundException::new);
-        if (user.getTotpSecret() == null)
-            return;
-        user.setUsing2fa(true);
-        userService.save(user);
+        UserTotp userTotp = userTotpService.getLoggedInTotpDetails();
+
+        if (userTotp.getTotpSecret() != null) {
+            userTotp.setUsing2fa(true);
+            userTotpService.save(userTotp);
+        }
     }
 
     void disable2FA() {
-        User user = userService.getLoggedInUser().orElseThrow(UserNotFoundException::new);
-        user.setUsing2fa(false);
-        user.setTotpSecret(null);
-        userService.save(user);
+        UserTotp userTotp = userTotpService.getLoggedInTotpDetails();
+        userTotp.setUsing2fa(false);
+        userTotpService.save(userTotp);
     }
 
     /**
@@ -103,7 +102,7 @@ public class TwoFAService {
      * @param code TOTP
      * @return boolean denoting if the passed in values are authentic
      */
-    public static boolean isValidOtp(String totpSecret, String code) {
+    public static boolean isInvalidOtp(String totpSecret, String code) {
         if (Strings.isNullOrEmpty(totpSecret))
             throw new RuntimeException("Cannot get TOTP secret from user");
         if (totpSecret.length() != 16)
@@ -111,9 +110,9 @@ public class TwoFAService {
         String refinedOtp = code.replace(" ", "");
         Totp totp = new Totp(totpSecret);
         try {
-            return totp.verify(refinedOtp);
+            return !totp.verify(refinedOtp);
         } catch (NumberFormatException nfe) {
-            return false;
+            return true;
         }
     }
 }

@@ -14,6 +14,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @PreAuthorize("@authService.isFullyAuthenticated(principal)")
 public class TwoFAController {
 
+    private static final String TWO_FACTOR_ENABLED_MESSAGE = "Enabled 2 Factor Authentication";
+
     private final TwoFAService twoFAService;
 
     public TwoFAController(TwoFAService twoFAService) {
@@ -24,7 +26,7 @@ public class TwoFAController {
     public String enableGet(Model model, RedirectAttributes redirectAttributes, @RequestParam(required = false) Boolean retain) {
         if (retain != null && retain) {
             twoFAService.enable2FA();
-            redirectAttributes.addAttribute("flash_messages", Flash.success("2 Factor Authentication Enabled"));
+            redirectAttributes.addFlashAttribute("flash_messages", Flash.success(TWO_FACTOR_ENABLED_MESSAGE));
             return "redirect:/profile/settings#security";
         }
 
@@ -38,7 +40,7 @@ public class TwoFAController {
     public String enablePost(RedirectAttributes redirectAttributes, @RequestParam String secret, @RequestParam String code) {
         try {
             twoFAService.enable2FA(secret, code);
-            redirectAttributes.addFlashAttribute("flash_messages", Flash.success("Enabled 2 Factor Authentication"));
+            redirectAttributes.addFlashAttribute("flash_messages", Flash.success(TWO_FACTOR_ENABLED_MESSAGE));
         } catch (RuntimeException re) {
             redirectAttributes.addFlashAttribute("flash_messages", Flash.error(re.getMessage()));
             return "redirect:/profile/2fa/enable";

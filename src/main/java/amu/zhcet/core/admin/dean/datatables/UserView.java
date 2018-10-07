@@ -11,8 +11,8 @@ class UserView {
     @JsonProperty("user_name")
     private String userName;
     @JsonView(DataTablesOutput.View.class)
-    @JsonProperty("user_details_gender")
-    private String userDetailsGender;
+    @JsonProperty("user_gender")
+    private String userGender;
     @JsonView(DataTablesOutput.View.class)
     @JsonProperty("user_email")
     private String userEmail;

@@ -3,6 +3,7 @@ package amu.zhcet.auth;
 import amu.zhcet.data.department.Department;
 import amu.zhcet.data.user.User;
 import amu.zhcet.data.user.UserType;
+import amu.zhcet.data.user.totp.UserTotp;
 import amu.zhcet.security.CryptoUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -36,10 +37,18 @@ public class UserAuth extends org.springframework.security.core.userdetails.User
         this.department = user.getDepartment();
         this.emailVerified = user.isEmailVerified();
         this.passwordChanged = user.isPasswordChanged();
-        this.using2fa = user.isUsing2fa();
-        this.avatar = user.getDetails().getAvatarUrl();
 
-        this.totpSecret = user.getTotpSecret();
+        UserTotp userTotp = user.getTotpDetails();
+
+        if (userTotp != null) {
+            this.using2fa = userTotp.isUsing2fa();
+            this.totpSecret = userTotp.getTotpSecret();
+        } else {
+            this.using2fa = false;
+        }
+
+
+        this.avatar = user.getDetails().getAvatarUrl();
     }
 
     public String getTotpSecret() {

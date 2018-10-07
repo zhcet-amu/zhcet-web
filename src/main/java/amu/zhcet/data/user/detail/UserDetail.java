@@ -5,6 +5,7 @@ import amu.zhcet.data.user.Gender;
 import amu.zhcet.data.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -33,7 +34,7 @@ public class UserDetail extends BaseEntity {
 
     private String avatarUrl;
     private String originalAvatarUrl;
-    @org.hibernate.annotations.Type(type = "text")
+    @Type(type = "text")
     private String description;
     @Size(max = 500)
     private String address;
@@ -41,8 +42,6 @@ public class UserDetail extends BaseEntity {
     private String city;
     @Size(max = 255)
     private String state;
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
     @Past
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dob;
@@ -52,7 +51,6 @@ public class UserDetail extends BaseEntity {
     @Size(max = 255)
     private String phoneNumbers;
     private String firebaseClaims;
-    private String fcmToken;
 
     public void setPhoneNumberList(String[] phoneNumbers) {
         this.phoneNumbers = String.join(",", phoneNumbers);
