@@ -1,5 +1,7 @@
 package amu.zhcet.notification.sending;
 
+import amu.zhcet.data.user.fcm.UserFcmToken;
+import amu.zhcet.data.user.fcm.UserFcmTokenRepository;
 import amu.zhcet.firebase.messaging.FirebaseMessagingService;
 import amu.zhcet.notification.Notification;
 import amu.zhcet.notification.recipient.NotificationRecipient;
@@ -10,22 +12,35 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 class FirebaseNotificationSender {
 
     private final FirebaseMessagingService firebaseMessagingService;
+    private final UserFcmTokenRepository userFcmTokenRepository;
 
-    FirebaseNotificationSender(FirebaseMessagingService firebaseMessagingService) {
+    FirebaseNotificationSender(FirebaseMessagingService firebaseMessagingService, UserFcmTokenRepository userFcmTokenRepository) {
         this.firebaseMessagingService = firebaseMessagingService;
+        this.userFcmTokenRepository = userFcmTokenRepository;
     }
 
     public void sendFirebaseNotification(NotificationRecipient notificationRecipient) {
-        String fcmToken = notificationRecipient.getRecipient().getDetails().getFcmToken();
-        if (fcmToken == null)
+        Set<UserFcmToken> fcmTokens = userFcmTokenRepository.findAllByUser_UserIdAndDisabledFalse(
+                notificationRecipient.getRecipient().getUserId()
+        );
+
+        if (fcmTokens == null || fcmTokens.isEmpty())
             return;
 
-        firebaseMessagingService.sendMessage(createMessage(notificationRecipient.getNotification(), fcmToken), fcmToken);
+        fcmTokens.stream()
+                .map(UserFcmToken::getFcmToken)
+                .forEach(fcmToken ->
+                        firebaseMessagingService.sendMessage(
+                                createMessage(notificationRecipient.getNotification(), fcmToken),
+                                fcmToken
+                        )
+                );
     }
 
     private static Message createMessage(Notification notification, String fcmToken) {

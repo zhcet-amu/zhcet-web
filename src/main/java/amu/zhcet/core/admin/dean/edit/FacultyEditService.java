@@ -29,7 +29,7 @@ class FacultyEditService {
 
     public FacultyEditModel fromFaculty(FacultyMember facultyMember) {
         FacultyEditModel facultyEditModel = modelMapper.map(facultyMember, FacultyEditModel.class);
-        facultyEditModel.setHasTotpSecret(facultyMember.getUser().getTotpSecret() != null);
+        facultyEditModel.setHasTotpSecret(facultyMember.getUser().hasTotpSecret());
         return facultyEditModel;
     }
 

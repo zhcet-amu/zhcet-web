@@ -58,7 +58,7 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
         String secret = userAuth.getTotpSecret();
         if (secret == null || code == null) {
             throw new BadCredentialsException("OTP was not provided");
-        } else if (!TwoFAService.isValidOtp(secret, code)) {
+        } else if (TwoFAService.isInvalidOtp(secret, code)) {
             throw new BadCredentialsException("OTP was incorrect. Please try again");
         }
 

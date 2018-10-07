@@ -9,13 +9,13 @@
             <column name="name" value="Admin"/>
             <column name="password" value="{bcrypt}$2a$10$YUVj9powKqpmcwnAdjCH..3C2qXEoy8elI0XIpxtzRmHz0iobbUbC"/>
             <column name="roles" value="ROLE_DEAN_ADMIN"/>
+            <column name="gender" value="M"/>
             <column name="type" value="FACULTY"/>
             <column name="department_code" value="CO"/>
         </insert>
 
         <insert tableName="user_detail">
             <column name="user_id" value="admin"/>
-            <column name="gender" value="M"/>
         </insert>
 
         <insert tableName="faculty_member">

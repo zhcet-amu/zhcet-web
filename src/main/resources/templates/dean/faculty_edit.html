@@ -42,7 +42,7 @@
                                     <h5 th:text="${faculty.user.department.name}" class="capsule p-small"></h5>
                                 </div>
                             </div>
-                            <div id="gender-container" class="mt-1" th:with="gender = ${faculty.user.details.gender}" th:if="${faculty.user.details.gender}">
+                            <div id="gender-container" class="mt-1" th:with="gender = ${faculty.user.gender}" th:if="${faculty.user.gender}">
                                 <span id="gender" th:text="${gender}"  th:class="|capsule p-small ${@viewService.getClassForGender(gender)}|">Male</span>
                                 <br><br>
                             </div>
@@ -84,7 +84,7 @@
 
                                         <div class="mui-select">
                                             <label for="type">Gender</label>
-                                            <select id="type" th:field="*{userDetailsGender}">
+                                            <select id="type" th:field="*{userGender}">
                                                 <option value="">Unspecified</option>
                                                 <option th:each="type : ${genders}"
                                                         th:value="${type.name()}"
@@ -126,7 +126,7 @@
                                             <div class="form-group col-12 mb-2" th:if="${facultyModel.hasTotpSecret}">
                                                 <label for="2fa-enabled">2 Factor Authentication</label>&nbsp;
                                                 <input type="checkbox" id="2fa-enabled" data-color="info"
-                                                       class="switchery" th:field="*{userUsing2fa}">
+                                                       class="switchery" th:field="*{userTotpDetailsUsing2fa}">
                                             </div>
 
                                             <div class="form-group col-12 mb-2">

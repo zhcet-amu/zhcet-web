@@ -1,20 +1,22 @@
 package amu.zhcet.firebase.messaging.token;
 
-import amu.zhcet.data.user.UserService;
+import amu.zhcet.data.user.fcm.UserFcmToken;
+import amu.zhcet.data.user.fcm.UserFcmTokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
 class MessagingTokenAttachService {
 
-    private final UserService userService;
+    private final UserFcmTokenRepository userFcmTokenRepository;
 
     @Autowired
-    public MessagingTokenAttachService(UserService userService) {
-        this.userService = userService;
+    public MessagingTokenAttachService(UserFcmTokenRepository userFcmTokenRepository) {
+        this.userFcmTokenRepository = userFcmTokenRepository;
     }
 
     /**
@@ -22,21 +24,26 @@ class MessagingTokenAttachService {
      * @param userId User ID to attach token info to
      * @param token FCM Registration Token to be attached
      */
-    @Async
     public void attachToken(String userId, String token) {
         if (userId == null || token == null)
             return;
 
-        userService.findById(userId).ifPresent(user -> {
-            if (token.equals(user.getDetails().getFcmToken())) {
-                log.debug("FCM token {} unchanged for user {}", token, user.getUserId());
-                return;
-            }
+        Optional<UserFcmToken> fcmTokenOptional = userFcmTokenRepository.findByUser_UserIdAndFcmToken(userId, token);
 
-            user.getDetails().setFcmToken(token);
-            log.info("Added FCM token {} to user : {}", token, user.getUserId());
-            userService.save(user);
-        });
+        if (fcmTokenOptional.isPresent()) {
+            UserFcmToken fcmToken = fcmTokenOptional.get();
+
+            if (!fcmToken.isDisabled()) {
+                log.debug("FCM token {} unchanged for user {}", token, userId);
+            } else {
+                fcmToken.setDisabled(false);
+                userFcmTokenRepository.save(fcmToken);
+                log.info("ENABLED FCM token {} to user : {}", token, userId);
+            }
+        } else {
+            userFcmTokenRepository.save(new UserFcmToken(userId, token));
+            log.info("Added FCM token {} to user : {}", token, userId);
+        }
     }
 
 }

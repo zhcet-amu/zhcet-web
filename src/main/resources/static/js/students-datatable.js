@@ -21,9 +21,9 @@
                 });
         }
 
-        if (data['user_details_gender'] && data['user_details_gender'] !== '') {
+        if (data['user_gender'] && data['user_gender'] !== '') {
             var genderSpan = modal.find('#gender');
-            var gender = data['user_details_gender'];
+            var gender = data['user_gender'];
             genderSpan.html(gender);
             genderSpan.attr('class', 'capsule p-small ' + (gender === 'Male' ? 'blue' : 'pink') + '-dark');
         } else {
@@ -128,7 +128,7 @@
                 }, {
                     data: 'user_name'
                 }, {
-                    data: 'user_details_gender',
+                    data: 'user_gender',
                     name: 'gender'
                 }, {
                     data: 'user_department_name'

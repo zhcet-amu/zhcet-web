@@ -63,10 +63,9 @@
             <column name="password_changed" type="BOOLEAN"/>
             <column name="roles" type="VARCHAR(255)"/>
             <column name="pending_roles" type="VARCHAR(255)"/>
-            <column name="type" type="VARCHAR(255)"/>
             <column name="department_code" type="VARCHAR(255)"/>
-            <column defaultValueBoolean="false" name="using2fa" type="BOOLEAN"/>
-            <column name="totp_secret" type="VARCHAR(255)"/>
+            <column name="gender" type="VARCHAR(1)"/>
+            <column name="type" type="VARCHAR(255)"/>
         </createTable>
 
         <addPrimaryKey columnNames="user_id, rev" tableName="user_aud"/>
@@ -102,10 +101,8 @@
             <column name="original_avatar_url" type="VARCHAR(255)"/>
             <column name="phone_numbers" type="VARCHAR(255)"/>
             <column name="state" type="VARCHAR(255)"/>
-            <column name="gender" type="VARCHAR(1)"/>
             <column name="dob" type="date"/>
             <column name="firebase_claims" type="VARCHAR(2048)"/>
-            <column name="fcm_token" type="VARCHAR(255)"/>
         </createTable>
 
         <addPrimaryKey columnNames="user_id, rev" tableName="user_detail_aud"/>

@@ -3,9 +3,12 @@ package amu.zhcet.data.user;
 import amu.zhcet.common.model.BaseEntity;
 import amu.zhcet.data.department.Department;
 import amu.zhcet.data.user.detail.UserDetail;
+import amu.zhcet.data.user.fcm.UserFcmToken;
+import amu.zhcet.data.user.totp.UserTotp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -48,8 +51,6 @@ public class User extends BaseEntity {
     private boolean passwordChanged;
     private boolean emailVerified;
     private boolean emailUnsubscribed;
-    private boolean using2fa;
-    private String totpSecret;
 
     @NotNull
     @JsonIgnore
@@ -61,11 +62,23 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @Valid
     @NotNull
     @PrimaryKeyJoinColumn
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserDetail details = new UserDetail();
+
+    @NotAudited
+    @PrimaryKeyJoinColumn
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private UserTotp totpDetails;
+
+    @NotAudited
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<UserFcmToken> fcmDetails;
 
     public void setUserId(String id) {
         this.userId = id;
@@ -74,6 +87,16 @@ public class User extends BaseEntity {
 
     public boolean isEmailVerified() {
         return emailVerified && email != null;
+    }
+
+    @Transient
+    public boolean hasTotpSecret() {
+        return totpDetails != null && totpDetails.getTotpSecret() != null;
+    }
+
+    @Transient
+    public boolean isUsing2fa() {
+        return totpDetails != null && totpDetails.isUsing2fa();
     }
 
     public void setRoles(Set<String> roles) {

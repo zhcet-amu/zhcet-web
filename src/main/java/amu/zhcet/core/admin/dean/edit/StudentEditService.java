@@ -39,7 +39,7 @@ class StudentEditService {
 
     public StudentEditModel fromStudent(Student student) {
         StudentEditModel studentEditModel = modelMapper.map(student, StudentEditModel.class);
-        studentEditModel.setHasTotpSecret(student.getUser().getTotpSecret() != null);
+        studentEditModel.setHasTotpSecret(student.getUser().hasTotpSecret());
         return studentEditModel;
     }
 

@@ -84,7 +84,7 @@ class FacultyRegistrationAdapter {
         facultyMember.getUser().setName(StringUtils.capitalizeFirst(facultyUpload.getName()));
         facultyMember.getUser().setPassword(password);
         facultyMember.getUser().setDepartment(Department.builder().name(StringUtils.capitalizeFirst(facultyUpload.getDepartment())).build());
-        facultyMember.getUser().getDetails().setGender(facultyUpload.getGender());
+        facultyMember.getUser().setGender(facultyUpload.getGender());
 
         return facultyMember;
     }

@@ -99,7 +99,7 @@ class StudentRegistrationAdapter {
         student.setHallCode(studentUpload.getHall());
         student.setRegistrationYear(studentUpload.getRegistrationYear());
         student.setStatus(studentUpload.getStatus());
-        student.getUser().getDetails().setGender(studentUpload.getGender());
+        student.getUser().setGender(studentUpload.getGender());
 
         return student;
     }

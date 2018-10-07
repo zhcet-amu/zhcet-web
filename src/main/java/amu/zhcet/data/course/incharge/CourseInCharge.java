@@ -10,10 +10,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -22,6 +19,7 @@ import javax.validation.constraints.NotNull;
 @Audited
 @EqualsAndHashCode(of = {"floatedCourse", "facultyMember", "section"}, callSuper = false)
 @ToString(of = {"facultyMember", "floatedCourse", "section"}, callSuper = true)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"floated_course_id", "in_charge_faculty_id", "section"}))
 public class CourseInCharge extends BaseIdEntity {
 
     @NotNull

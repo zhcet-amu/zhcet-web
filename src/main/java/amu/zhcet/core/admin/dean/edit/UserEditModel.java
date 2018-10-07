@@ -22,9 +22,9 @@ class UserEditModel {
     @Size(max = 255)
     private String userDetailsPhoneNumbers;
     @Enumerated(EnumType.STRING)
-    private Gender userDetailsGender;
+    private Gender userGender;
     private boolean userEnabled;
-    private boolean userUsing2fa;
+    private boolean userTotpDetailsUsing2fa;
 
     private transient boolean hasTotpSecret;
 }

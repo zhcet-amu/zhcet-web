@@ -48,18 +48,6 @@
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                         <strong>Updated!</strong> Your profile was updated successfully!
                     </div>
-                    <div class="mui-form">
-                        <div class="mui-select">
-                            <label for="type">Gender</label>
-                            <select id="type" th:field="*{gender}" disabled>
-                                <option value="">Unspecified</option>
-                                <option th:each="type : ${genders}"
-                                        th:value="${type.name()}"
-                                        th:text="${type}">
-                                </option>
-                            </select>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="form-group col-12 mb-2">
                             <label for="email">
