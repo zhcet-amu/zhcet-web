@@ -1,4 +1,31 @@
 databaseChangeLog:
-  - includeAll:
-      path: changes/
+  - include:
+      file: changes/0000-department.xml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0001-users.xml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0002-auth.xml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0003-course.xml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0004-attendance.xml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0005-notifications.xml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0006-others.xml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0007-envers.xml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0008-insert-departments.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0009-insert-admin.xml
       relativeToChangelogFile: true
