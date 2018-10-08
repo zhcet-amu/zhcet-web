@@ -16,14 +16,11 @@
   - [Project Requirements](#project-requirements) - What are the requirements of Project and how to install them
     - [Requirements](#requirements) - Mandatory requirements of the Project
       - [![Java 8](https://img.shields.io/badge/java-8-green.svg?colorB=9575CD)](#java)
-      - [![MySQL 5.6](https://img.shields.io/badge/MySQL-5.6-orange.svg)](#mysql)
+      - [![PostgreSQL 10](https://img.shields.io/badge/PostgreSQL-10-blue.svg)](#postgresql)
     - [Feature Requirements](#feature-requirements) - Additional Optional requirements for certain features
       - [Email](#email)
       - [Firebase](#firebase)
   - [Configuration](#configuration) - How to configure project before running **(If you know your stuff, skip to here)**
-      - [Database](#database-config)
-      - [Email](#email-config)
-      - [Firebase](#firebase-config)
       - [Additional](#additional-config)
       - [Sentry *(Optional)*](#sentry-config)
   - [Running](#running) - How to run and build the project
@@ -38,7 +35,7 @@
 
 ### Requirements
 
-Long story short, you need to have `JDK8` and `MySQL` installed for the project. If you are well versed in both technologies and know the steps to satisfy general requirements (MySQL user, database, privileges) for a web project, then you may skip this section entirely to [Feature Requirements](#feature-requirements)
+Long story short, you need to have `JDK8` and `PostgreSQL` installed for the project. If you are well versed in both technologies and know the steps to satisfy general requirements (PostgreSQL user, database, privileges) for a web project, then you may skip this section entirely to [Feature Requirements](#feature-requirements)
 
 #### Java
 
@@ -61,28 +58,34 @@ Once you have verified the install by running `javac -version` and `java -versio
 
 > For windows users, you may find Windows specific download instructions [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 
-#### MySQL
+#### PostgreSQL
 
-[![MySQL 5.6](https://img.shields.io/badge/MySQL-5.6-orange.svg)]()  
-Last version of MySQL known to work on the project was `5.7` but any recent version or 5.6 should work as the project only relies on very basic and stable feature set of MySQL. It doesn't matter how you install MySQL and there are countless of tutorials out there for specific Operating Systems, and if you have any MAMP, LAMP or XAMP installation, there is great chance you have it configured already. Verify it by running `mysql --version`
+[![PostgreSQL 10](https://img.shields.io/badge/PostgreSQL-10-blue.svg)]()  
+Last version of PostgreSQL known to work on the project was `10` but any recent version should work as the project only relies on very basic and stable feature set of PostgreSQL. It doesn't matter how you install PostgreSQL and there are countless of tutorials out there for specific Operating Systems, and there is great chance you have it configured already. Verify it by running `psql --version`
 
 If you don't have it installed, you can follow any of these great guides:
-- [MySQL Installation tutorial by DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-16-04)
-- [MySQL Installation tutorial by Linode](https://www.linode.com/docs/databases/mysql/install-mysql-on-ubuntu-14-04)
+- [PostgreSQL Installation tutorial by DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04)
+- [PostgreSQL Installation tutorial by Linode](https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-on-ubuntu-16-04/)
 
 I have provided 2 guides so you can educate yourself by studying the common bits and patterns and some extra stuff that may be available in any one of them. Once you have thoroughly read the above guides, see the steps you have to perform below
 
-The steps to complete the MySQL setup for the project(refer to above guides for specific instructions) are:
+The steps to complete the PostgreSQL setup for the project(refer to above guides for specific instructions) are:
 
-- **Install MySQL Server** - `sudo apt-get upgrade` is **NOT** required but recommended if you have huge amount of data to spare
-- **Secure Installation** - This step is optional
-- **Create Database** - Create database for the project, for instance, named `zhcet`
-- **Create User** - Create a MySQL user for the project, for instance, named `zhcetuser` protected by a password. It is **NOT**  recommended to use root user for the project
-- **Grant Privileges** - Grant privileges to this user on database you had created in one of the previous step. For this example, the command would look like - 
 
+- **Create User** - Create a PostgreSQL user for the project, for instance, named `zhcet` protected by a password. It is **NOT**  recommended to use root user for the project
+
+```SQL
+create user zhcet with password 'zhcetpass';
 ```
-grant all privileges on zhcet.* to 'zhcetuser'@'localhost';
-``` 
+
+**Note**: It is recommended that you change the password to something else, but if you do change the password, username or database name, you have to override these in `application-secrets.yaml`
+
+- **Create Database** - Create database for the project, for instance, named `zhcet`
+
+```SQL
+create database zhcet with owner zhcet;
+```
+
 
 ***IMPORTANT:*** **DO NOT FORGET** to customize at least the username and password of the user you create from this tutorial's example for security purposes. Even if you only deploy the project locally, it is recommended to use different parameters from what is used here.
 
@@ -90,9 +93,11 @@ Once you have performed these steps, verify your user permissions by logging in 
 
 From here, you need to remember the name of database you created, the username and password of the user who has privilege on the database.
 
-> For Windows users, please refer to [this](https://dev.mysql.com/doc/refman/5.7/en/windows-installation.html) for installation instructions. All MySQL instructions are same for both operating systems
+> For Windows users, please refer to [this](http://www.postgresqltutorial.com/install-postgresql/) for installation instructions. All PostgreSQL instructions are same for both operating systems
 
 ### Feature Requirements
+
+*These configurations are optional*
 
 There are some additional requirements of the project to enable some features which are optional and not required to run the project, but will throw Runtime Error if they are used:
 
@@ -115,8 +120,7 @@ Firebase is used for:
 - Storage of login slideshow image information
 
 For Firebase configuration, you need to have:
-- Firebase Database URL
-- Firebase Storage Bucket Name
+- Firebase Web Config JSON
 - Service Account JSON file  
 
 Their documentation is pretty extensive and there are various resources how to obtain these.
@@ -125,84 +129,69 @@ Their documentation is pretty extensive and there are various resources how to o
 
 There are various configuration options for Spring Boot Applications, but here I'll demonstrate 2 most popular ones. You can make the same configuration using any of the methods listed [here](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
 
-Simplest way to configure all options for the app would be create a file named `application-secrets.properties` in `src/main/resources` directory with this content:
+Simplest way to configure all options for the app would be create a file named `application-secrets.yaml` in `src/main/resources` directory with this content:
 
-```
-spring.datasource.url=<database_url>
-spring.datasource.username=<db_username>
-spring.datasource.password=<db_password>
+**Note** This file is for demonstration purposes, only override values you need to and replace values with real ones. **DO NOT COPY PASTE THE ENTIRE FILE**. For instance, maybe you don't need to enable email and firebase, but it is shown here how to override all settings for demosnstration.
 
-zhcet.email.address=<your_email>
-zhcet.email.password=<your_email_password>
+```YAML
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/zhcet
+    username: zhcet
+    password: zhcetpass
+  mail:
+    username: test@gmail.com
+    password: emailpassword
 
-zhcet.firebase.database-url=<firebase_database_url>
-zhcet.firebase.storage-bucket=<firebase_storage_bucket>
-
-zhcet.url=<optional_url_of_site>
-zhcet.salt=<anyrandomstring>
+zhcet:
+  url: http://localhost:8080
+  security:
+    pepper: somerandomstring
+  email:
+    disabled: false
+    address: '${spring.mail.username}'
+  firebase:
+    disabled: false
+    config: |
+      {
+        "apiKey": "AIza...U",
+        "authDomain": "some.firebaseapp.com",
+        "databaseURL": "https://some.firebaseio.com",
+        "projectId": "some",
+        "storageBucket": "some.appspot.com",
+        "messagingSenderId": "1234"
+      }
+    service-account: |
+      {
+        "type": "service_account",
+        "project_id": "some",
+        "private_key_id": "42456",
+        "private_key": "-----BEGIN PRIVATE KEY-----\nrt\n-----END PRIVATE KEY-----\n",
+        "client_email": "firebase-adminsdk@some.iam.gserviceaccount.com",
+        "client_id": "12345",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://accounts.google.com/o/oauth2/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-some.iam.gserviceaccount.com"
+      }
 ```
 
 It goes without saying that this file must **NEVER** be shared or checked into version control. This applies for all the files and environment variables that will be discussed in this section.
 
 > To not configure any of the feature, just remove that particular line. but as mentioned above, some requirements are mandatory and some optional
 
-**Bonus** - You can also configure these properties by setting the environment variables mentioned in each section below. But the general rule is to capitalize each letter and replace `.` and `-` by `_` For example, to set `zhcet.firebase.database-url` by environment variables, you need to set its value in `ZHCET_FIREBASE_DATABASE_URL`. This feature is provided by Spring Boot and is mentioned [here](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
+**Bonus** - You can also configure these properties by setting the environment variables mentioned in each section below. But the general rule is to capitalize each letter and replace `.` and `-` by `_`. This feature is provided by Spring Boot and is mentioned [here](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
 
 All fields required in configuration should be available to you as discussed in previous sections, and if you know how, you can skip to next section but let's go through some examples of them:
 
 > **Note** - Values given below are only for demonstrative puposes and won't work when used
 
-### Database Config
-
-Assuming the previous example mentioned in Requirements Section, and that you are working on localhost, the configuration will look like this:
-
-- `spring.datasource.url`=**`jdbc:mysql://localhost:3306/zhcet?useSSL=false`**
-- `spring.datasource.username`=**`zhcetuser`**
-- `spring.datasource.password`=**`YourPassword`**
-
-> **Environment Variables** : `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`
-
-**BONUS** - You can also use these short hand environment variables to set the properties as they are inline in [application.properties](https://github.com/zhcet-amu/zhcet-web/blob/master/src/main/resources/application.properties):
-- `DB_URL`
-- `DB_USERNAME`
-- `DB_PASSWORD`
-
-But the values in `application-secret.properties` and above mentioned environment variables will override these. So either use them or these
-
-> For more information on configuring databases in Spring Boot, please refer to [this](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-sql.html)
-
-### Email Config
-
-Assuming a hypothetical email and password:
-
-- `zhcet.email.address`=**`spring@zhcet.io`**
-- `zhcet.email.password`=**`securepassword`**
-
-**Note** - If you **DO NOT** configure email, then application will continue to work, but may throw exceptions while using any of the feature mentioned [here](#email).
-
-> **Environment Variables** : `ZHCET_EMAIL_ADDRESS`, `ZHCET_EMAIL_PASSWORD`
-
-### Firebase Config
-
-- `zhcet.firebase.database-url`=**`https://zhcet-backend.firebaseio.com/`**
-- `zhcet.firebase.storage-bucket`=**`zhcet-backend.appspot.com`**
-
-**Note** - Only the first option mentioned [here](#firebase) requires special permission and we can't share our firebase account key for allowing any person to upload images to it, uploading avatar throw an error if firebase is not configured. The application will continue to work without this feature as normal
-
-> **Environment Variables** : `ZHCET_FIREBASE_DATABASE_URL`, `ZHCET_FIREBASE_STORAGE_BUCKET`
-
-**IMPORTANT** Along with these, you need to save the `service-account.json` file in `src/main/resources` directory. Do note that the name of file must be **exactly** same as mentioned
-
-**BONUS** - You can set the contents of Service Account JSON in the environment variable `FIREBASE_JSON` and it will work!
-
 ### Additional Config
 
 - `zhcet.url`=**`http://localhost:8080/`**
-- `zhcet.salt`=**`saltymemem8`**
+- `zhcet.pepper`=**`saltymemem8`**
 
-**Note** - Both these properties have internal default values and don't need to be set but it is **HIGHLY RECOMMENDED** to set the *salt* value as it is used to hash and verify email unsubscribing link for users and other future internal hashing system. If the default one is used instead of any random secret, anyone can unsubscribe any user's email or much worse depending on where it is used internally. While this is non-crucial while local development, but is extremely unsecure behaviour when used in production
-
-> **Environment Variables** : `ZHCET_URL`, `ZHCET_SALT`
+**Note** - Both these properties have internal default values and don't need to be set but it is **HIGHLY RECOMMENDED** to set the *pepper* value as it is used to hash and verify email unsubscribing link for users and other future internal hashing system. If the default one is used instead of any random secret, anyone can unsubscribe any user's email or much worse depending on where it is used internally. While this is non-crucial while local development, but is extremely unsecure behaviour when used in production
 
 ### Sentry Config
 
@@ -236,5 +225,4 @@ I recommend using IntelliJ Idea for the development as it provides incredible Sp
 **NOTE** - Install Lombok plugin to see auto generated code by lombok
 
 # Developers
-[@divs4debu](https://github.com/divsdebu)  
 [@iamareebjamal](https://github.com/iamareebjamal)
