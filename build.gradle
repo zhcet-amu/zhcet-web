@@ -62,7 +62,7 @@ dependencies {
     implementation 'org.jboss.aerogear:aerogear-otp-java:1.0.0'
 
     // Sentry
-    implementation 'io.sentry:sentry-spring:1.7.10'
+    implementation 'io.sentry:sentry-spring:1.7.12'
     implementation 'io.sentry:sentry-logback:1.7.10'
 
     // Open Feign
