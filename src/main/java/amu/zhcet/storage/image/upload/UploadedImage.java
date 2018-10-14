@@ -22,5 +22,5 @@ class UploadedImage extends BaseEntity {
     private String originalFilename;
     private String contentType;
     private boolean isThumbnail;
-    private String user;
+    private String userId;
 }
