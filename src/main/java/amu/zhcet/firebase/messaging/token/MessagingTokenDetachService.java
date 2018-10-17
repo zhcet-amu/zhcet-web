@@ -1,6 +1,7 @@
 package amu.zhcet.firebase.messaging.token;
 
 import amu.zhcet.data.user.fcm.UserFcmTokenRepository;
+import amu.zhcet.firebase.messaging.FirebaseErrorParsingUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,15 @@ public class MessagingTokenDetachService {
         this.userFcmTokenRepository = userFcmTokenRepository;
     }
 
-    public void detachToken(@NonNull String token) {
+    public void detachToken(@NonNull String token, @NonNull FirebaseErrorParsingUtils.Reason reason) {
+        final String reasonString = reason.getJson();
+
         userFcmTokenRepository
                 .findByFcmToken(token)
                 .map(userFcmToken -> {
-                    log.warn("Deleting FCM token {} for user {}", token, userFcmToken.getUserId());
+                    log.warn("Deleting FCM token {} for user {} because {}", token, userFcmToken.getUserId(), reasonString);
                     userFcmToken.setDisabled(true);
+                    userFcmToken.setReason(reasonString);
                     return userFcmToken;
                 }).ifPresent(userFcmTokenRepository::save);
     }

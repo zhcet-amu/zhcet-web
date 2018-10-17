@@ -32,3 +32,7 @@ databaseChangeLog:
   - include:
       file: changes/0010-rename-uploaded-image-user-id.xml
       relativeToChangelogFile: true
+  - include:
+      file: changes/0011-user-fcm-add-reason.xml
+      relativeToChangelogFile: true
+

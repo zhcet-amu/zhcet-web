@@ -4,8 +4,10 @@ import amu.zhcet.common.model.BaseIdEntity;
 import amu.zhcet.data.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -30,6 +32,8 @@ public class UserFcmToken extends BaseIdEntity {
     @NotNull
     private String fcmToken;
     private boolean disabled = false;
+    @Length(max = 1000)
+    private String reason;
 
     public UserFcmToken(@NotNull String userId, @NotNull String fcmToken) {
         this.userId = userId;
