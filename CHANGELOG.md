@@ -2,7 +2,7 @@
 
 #### v2.0.2 (unreleased):
 
-- No changes
+- Add workaround for issue https://github.com/spring-projects/spring-boot/issues/14897 re-enabling resource versioning
 
 #### v2.0.1 (18-10-2018):
 
