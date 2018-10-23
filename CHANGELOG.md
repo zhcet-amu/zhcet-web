@@ -1,8 +1,9 @@
 ## Changelog
 
-#### v2.0.2 (unreleased):
+#### v2.0.2 (22-10-2018):
 
 - Add workaround for issue https://github.com/spring-projects/spring-boot/issues/14897 re-enabling resource versioning
+- Update Gradle to 4.10
 
 #### v2.0.1 (18-10-2018):
 
