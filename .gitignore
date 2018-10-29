@@ -30,3 +30,4 @@ sentry.properties
 .project
 .settings/
 bin/
+node_modules/

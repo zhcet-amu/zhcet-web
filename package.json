@@ -1,0 +1,22 @@
+{
+  "name": "zhcet-web",
+  "version": "1.0.0",
+  "description": "[![CircleCI](https://img.shields.io/circleci/project/github/zhcet-amu/zhcet-web.svg)](https://circleci.com/gh/iamareebjamal/zhcet-web/tree/master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/80f74f30d47b4e1eb0550912f12ef1ab)](https://www.codacy.com/app/zhcet/zhcet-web) [![Server](https://img.shields.io/website-up-down-green-red/https/zhcet.herokuapp.com.svg?label=debug-server)](https://zhcet.herokuapp.com) [![License](https://img.shields.io/github/license/iamareebjamal/zhcet-web.svg)]() > A spring boot web MVC project for ZHCET college management",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamareebjamal/zhcet-web.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/iamareebjamal/zhcet-web/issues"
+  },
+  "homepage": "https://github.com/iamareebjamal/zhcet-web#readme",
+  "devDependencies": {
+    "globby": "^8.0.1",
+    "rollup": "^0.66.6",
+    "rollup-plugin-terser": "^3.0.0"
+  }
+}

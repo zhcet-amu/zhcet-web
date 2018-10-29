@@ -1,7 +1,9 @@
-Authentication.auth.init();
+import { init } from "./authentication/authentication";
 
-var storageRef = firebase.storage().ref();
-var slidesRef = storageRef.child('login/slides/');
+init();
+
+const storageRef = firebase.storage().ref();
+const slidesRef = storageRef.child('login/slides/');
 
 function cloneImageUpload() {
     return {
@@ -53,8 +55,8 @@ new Vue({
             this.imageUri = null;
         },
         save: function () {
-            var newImages = [];
-            for (var i = 0; i < this.images.length; i++)
+            const newImages = [];
+            for (let i = 0; i < this.images.length; i++)
                 newImages.push(this.images[i]['.value']);
             newImages.push(this.uploadedFile);
             this.$firebaseRefs.images.set(newImages)
@@ -78,7 +80,7 @@ new Vue({
         upload: function () {
             this.imageUpload.uploading = true;
 
-            var fileRef = slidesRef.child(new Date().toISOString() + this.file.name);
+            const fileRef = slidesRef.child(new Date().toISOString() + this.file.name);
             this.imageUpload.uploadTask = fileRef.put(this.file);
 
             this.imageUpload.uploadTask.on('state_changed', function (snapshot) {
@@ -109,9 +111,9 @@ new Vue({
         },
 
         deleteImage: function () {
-            var newImages = [];
-            for (var i = 0; i < this.images.length; i++) {
-                var image = this.images[i]['.value'];
+            const newImages = [];
+            for (let i = 0; i < this.images.length; i++) {
+                const image = this.images[i]['.value'];
                 if (image !== this.imageToShow)
                     newImages.push(image);
             }

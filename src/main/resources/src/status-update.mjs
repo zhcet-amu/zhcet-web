@@ -1,5 +1,5 @@
 (function ($) {
-    var interval;
+    let interval;
 
     function callIfFunction(func, arg) {
         if ($.isFunction(func))
@@ -13,9 +13,9 @@
             settings.hid = true;
             settings.waitingComponent.hide();
         }
-        var completed = result.completed;
-        var total = result.total;
-        var percentage = (completed/total*100).toFixed(2) + '%';
+        const completed = result.completed;
+        const total = result.total;
+        const percentage = (completed / total * 100).toFixed(2) + '%';
         settings.completedText.text(completed);
         settings.totalText.text(total);
         settings.percentageText.text(percentage);
@@ -33,7 +33,7 @@
     }
 
     function poll(settings) {
-        var ajaxCall = $.ajax({
+        const ajaxCall = $.ajax({
             url: settings.baseUrl + settings.taskId,
             dataType: 'json',
             type: 'get'
@@ -57,7 +57,7 @@
     }
 
     function startListening(settings) {
-        var eventSource = new EventSource('/management/task/sse/' + settings.taskId);
+        const eventSource = new EventSource('/management/task/sse/' + settings.taskId);
 
         eventSource.onmessage = function(result) {
             handleData(settings, JSON.parse(result.data), function () {
@@ -73,7 +73,7 @@
     }
 
     $.fn.initStatusProgress = function (options) {
-        var settings = $.extend({
+        const settings = $.extend({
             taskId: '',
             baseUrl: '/management/task/status/',
             delay: 2000,
@@ -85,7 +85,7 @@
         }, options);
 
         return this.each(function () {
-            var container = $(this);
+            const container = $(this);
 
             settings.waitingComponent = container.find('.waiting');
             settings.completedText = container.find('.completed');

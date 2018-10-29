@@ -1,4 +1,5 @@
 (function () {
+    const deleteModal = $('#remove-student-modal');
     $('#registration-modal').modal('show');
     $('#registrationTable').dataTable({
         scrollY:        true,
@@ -15,15 +16,14 @@
     });
 
     $('.remove-student').on('click', function (element) {
-        var student = $(element.target);
-        var enrolment = student.attr('data-enrolment');
+        const student = $(element.target);
+        const enrolment = student.attr('data-enrolment');
 
         deleteModal.find('#remove-student-id').text(enrolment);
-        var deleteInput = deleteModal.find('#student-to-delete');
+        const deleteInput = deleteModal.find('#student-to-delete');
         deleteInput.val(enrolment);
 
         deleteModal.modal();
     });
 
-    var deleteModal = $('#remove-student-modal');
 }());
