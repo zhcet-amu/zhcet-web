@@ -109,17 +109,17 @@
     }
 </style>
 <div th:replace="fragments/scripts :: backstretch"></div>
-<script th:src="@{/js/app.js}"></script>
 <div th:replace="fragments/scripts :: firebase_login"></div>
 <script th:inline="javascript">
     /*<![CDATA[*/
     var showFirebaseUnavailableDialog = /*[[${@firebaseService.shouldShowUnavailableDialog()}]]*/ false;
     /*]]>*/
 </script>
-<script th:src="@{/js/login.js}"></script>
+<script th:src="@{/js/build/authentication/login.min.js}"></script>
 <script>
     (function () {
-        Login.startLoginFlow();
+        login.startLoginFlow();
+        login.setupSlideShow();
 
         var totpPanel = $('#totp-panel');
         $('#2fa-enabled').on('change', function () {

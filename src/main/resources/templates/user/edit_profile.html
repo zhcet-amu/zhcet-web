@@ -61,44 +61,8 @@
 </div>
 <script th:src="@{/js/file-uploader.js}"></script>
 <div th:replace="fragments/scripts :: firebase_auth"></div>
-<script th:src="@{/js/authentication.js}"></script>
 <script th:src="@{/js/vendor/jqBootstrapValidation.min.js}"></script>
-<script>
-    (function () {
-        $('.file-uploader').initUpload({
-            fileTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'],
-            error: function (message) {
-                toastr.error(message);
-            }
-        });
-
-        Authentication.auth.init();
-
-        // Tab Selection
-
-        const groupItem = $('.list-group-item');
-        groupItem.on('click', function () {
-            groupItem.removeClass('active');
-            $(this).tab('show');
-        });
-
-        function hashChange() {
-            var hash = window.location.hash;
-            if (!hash) {
-                hash = '#profile';
-            }
-
-            $(hash + '-tab').tab('show');
-        }
-
-        window.onhashchange = hashChange;
-        hashChange();
-
-        // Validation
-        $("input,select,textarea").not("[type=submit]").jqBootstrapValidation();
-    }());
-</script>
+<script th:src="@{/js/build/edit-profile.min.js}"></script>
 <th:block th:replace="user/fragments/security::script" />
-<script th:src="@{/js/link-account.js}"></script>
 </body>
 </html>

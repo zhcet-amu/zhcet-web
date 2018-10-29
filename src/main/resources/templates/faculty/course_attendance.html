@@ -36,10 +36,10 @@
     var threshold = /*[[${@configurationService.getThreshold()}]]*/ 75;
     /*]]>*/
 </script>
-<script th:src="@{/js/file-uploader.js}"></script>
+<script th:src="@{/js/build/file-uploader.min.js}"></script>
 <div th:replace="fragments/scripts :: datatables"></div>
 <div th:replace="fragments/scripts :: datatables_export"></div>
-<script th:src="@{/js/attendance-upload.js}"></script>
+<script th:src="@{/js/build/attendance/attendance-upload.min.js}"></script>
 <link rel="stylesheet" th:href="@{/css/attendance-upload.css}">
 </body>
 </html>
