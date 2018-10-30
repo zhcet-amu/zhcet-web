@@ -18,8 +18,17 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}
 
       - run:
-          name: Download NPM Dependencies
-          command: npm install
+          name: Install Yarn
+          command: npm i -g yarn
+
+      - run:
+          name: Install JS Dependencies
+          command: yarn
+
+      - save_cache:
+          paths:
+          - node_modules/
+          key: npm-{{ checksum "package.json" }}
 
       - run:
           name: Download Gradle Dependencies
@@ -30,14 +39,9 @@ jobs:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}
 
-      - save_cache:
-          paths:
-          - node_modules/
-          key: npm-{{ checksum "package.json" }}
-
       - run:
           name: Build JS
-          command: npm run build
+          command: yarn build
 
       - run:
           name: Build and Run Tests
