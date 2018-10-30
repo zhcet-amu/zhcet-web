@@ -16,7 +16,7 @@ spring:
     chain:
       enabled: true
       cache: true
-      gzipped: true
+      compressed: true
       html-application-cache: true
       strategy:
         content:

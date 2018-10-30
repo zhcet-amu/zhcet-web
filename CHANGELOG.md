@@ -4,6 +4,7 @@
 
 - Add JS transpiling workflow
 - Add workbox service worker
+- Update to Spring Boot v2.1.0
 
 ##### v2.0.2 (22-10-2018):
 

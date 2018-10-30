@@ -14,7 +14,7 @@ const app = new Vue({
     methods: {
         reload() {
             this.status = null
-            fetch('/actuator/services-status')
+            fetch('/actuator/servicestatus')
                 .then(result => result.json())
                 .then(json => {
                     this.status = {

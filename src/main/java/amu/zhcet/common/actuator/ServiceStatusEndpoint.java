@@ -9,7 +9,7 @@ import lombok.ToString;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 
-@Endpoint(id = "services-status")
+@Endpoint(id = "servicestatus")
 public class ServiceStatusEndpoint {
 
     @Getter

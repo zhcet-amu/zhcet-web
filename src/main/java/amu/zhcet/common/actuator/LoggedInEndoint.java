@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Endpoint(id = "logged-in")
+@Endpoint(id = "loggedin")
 public class LoggedInEndoint {
 
     private final ModelMapper modelMapper;

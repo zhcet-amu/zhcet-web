@@ -27,13 +27,4 @@ public class CoreApplication {
         SpringApplication.run(CoreApplication.class, args);
     }
 
-    // Workaround of issue https://github.com/spring-projects/spring-boot/issues/14897
-    // Remove when fix is released
-    @Bean
-    public FilterRegistrationBean<ResourceUrlEncodingFilter> resourceUrlEncodingFilter() {
-        FilterRegistrationBean<ResourceUrlEncodingFilter> registration = new FilterRegistrationBean<>(new ResourceUrlEncodingFilter());
-        registration.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.ERROR);
-        return registration;
-    }
-
 }
