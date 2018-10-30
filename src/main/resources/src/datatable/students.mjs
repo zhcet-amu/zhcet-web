@@ -1,4 +1,5 @@
 import { loadImage } from '../app/utils'
+import { formatDate } from "../app/date-utils";
 import { attachSelectors, fixDate, searchDelay } from './utils'
 
 function showStudent(data) {
@@ -43,7 +44,7 @@ function showStudent(data) {
         modal.find('#verified i').text('');
 
     if (data['createdAt'] && data['createdAt'] !== '')
-        modal.find('#registered-at').html(moment(fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));
+        modal.find('#registered-at').html(formatDate(new Date(fixDate(data['createdAt']))));
     else
         modal.find('#registered-at').html('No Record');
 
@@ -160,7 +161,7 @@ const table = studentTable.DataTable({
                 changeStudent(table)
             }
         },
-        'copy', 'csv', 'excel', 'pdf', 'print'
+        'copy', 'csv', 'print'
     ],
     "lengthMenu": [[10, 25, 50, 100, 200, 500], [10, 25, 50, 100, 200, 500]],
     "initComplete": function () {

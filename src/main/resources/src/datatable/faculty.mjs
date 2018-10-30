@@ -1,4 +1,5 @@
 import { loadImage } from '../app/utils'
+import { formatDate } from "../app/date-utils";
 import { attachSelectors, fixDate, searchDelay } from './utils'
 
 function showFaculty(data) {
@@ -45,7 +46,7 @@ function showFaculty(data) {
         modal.find('#verified i').text('');
 
     if (data['createdAt'] && data['createdAt'] !== '')
-        modal.find('#registered-at').html(moment(fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));
+        modal.find('#registered-at').html(formatDate(new Date(fixDate(data['createdAt']))));
     else
         modal.find('#registered-at').html('No Record');
 
@@ -117,7 +118,7 @@ const table = facultyTable.DataTable({
         data: 'user_email'
     }],
     dom: 'lBfrtip',
-    buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+    buttons: ['copy', 'csv', 'print'],
     "initComplete": function () {
         searchDelay(table);
         attachSelectors(table, 'DataTables_facultyTable_/admin/dean/faculty', [{

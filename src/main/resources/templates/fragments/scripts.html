@@ -14,33 +14,20 @@
 </th:block>
 
 <th:block th:fragment="data_details">
-    <script th:src="@{/webjars/momentjs/min/moment.min.js}"></script>
     <script th:src="@{/webjars/jquery-throttle-debounce-plugin/jquery.ba-throttle-debounce.min.js}"></script>
 </th:block>
 
 <!-- DataTables -->
 <th:block th:fragment="datatables">
-    <link th:href="@{/webjars/datatables/css/dataTables.bootstrap4.min.css}" type="text/css" rel="stylesheet"/>
-    <script th:src="@{/webjars/datatables/js/jquery.dataTables.min.js}"></script>
-    <script th:src="@{/webjars/datatables/js/dataTables.bootstrap4.min.js}"></script>
+    <script th:src="@{/js/build/datatable/index.min.js}"></script>
 </th:block>
 
 <th:block th:fragment="datatables_export">
-    <link th:href="@{/webjars/datatables-buttons/css/buttons.dataTables.min.css}" rel="stylesheet" \>
-    <link th:href="@{/webjars/datatables-buttons/css/buttons.bootstrap4.min.css}" rel="stylesheet">
-    <script th:src="@{/webjars/datatables-buttons/js/dataTables.buttons.min.js}"></script>
-    <script th:src="@{/webjars/datatables-buttons/js/buttons.bootstrap4.min.js}"></script>
-    <script th:src="@{/webjars/datatables-buttons/js/buttons.flash.min.js}"></script>
-    <script th:src="@{/webjars/jszip/jszip.min.js}"></script>
-    <script th:src="@{/webjars/pdfmake/build/pdfmake.min.js}"></script>
-    <script th:src="@{/webjars/pdfmake/build/vfs_fonts.js}"></script>
-    <script th:src="@{/webjars/datatables-buttons/js/buttons.html5.min.js}"></script>
-    <script th:src="@{/webjars/datatables-buttons/js/buttons.print.min.js}"></script>
+    <script th:src="@{/js/build/datatable/buttons.min.js}"></script>
 </th:block>
 
 <th:block th:fragment="datatables_select">
-    <link th:href="@{/webjars/datatables.net-select-bs/css/select.bootstrap.min.css}" rel="stylesheet">
-    <script th:src="@{/webjars/datatables.net-select/js/dataTables.select.min.js}"></script>
+    <script th:src="@{/js/build/datatable/select.min.js}"></script>
 </th:block>
 
 <th:block th:fragment="list">

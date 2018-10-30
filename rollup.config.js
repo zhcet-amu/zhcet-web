@@ -2,7 +2,10 @@ import path from 'path';
 import globby from 'globby';
 import buble from 'rollup-plugin-buble';
 import { terser } from 'rollup-plugin-terser';
+import resolve from 'rollup-plugin-node-resolve';
+import postcss from 'rollup-plugin-postcss'
 
+const isProdBuild = process.env.NODE_ENV === 'production';
 const resourcePath = path.resolve(__dirname, 'src', 'main', 'resources');
 const sourcePath = path.resolve(resourcePath, 'src', '**/*.mjs');
 const destinationPath = path.resolve(resourcePath, 'static', 'js', 'build');
@@ -20,11 +23,21 @@ function getModuleName(file) {
 
 async function getConfig() {
     const paths = await globby(sourcePath);
-    const plugins = process.env.NODE_ENV === 'production' ?
-        [buble({
-            objectAssign: 'Object.assign'
-        }), terser()] :
-        [];
+    const commonPlugins = [
+        postcss({
+            minimize: isProdBuild,
+            plugins: []
+        }),
+        resolve()
+    ];
+    const plugins = isProdBuild ?
+        [
+            ...commonPlugins,
+            buble({
+                objectAssign: 'Object.assign'
+            }),
+            terser()] :
+        commonPlugins;
 
     return paths.map(file => ({
         input: file,

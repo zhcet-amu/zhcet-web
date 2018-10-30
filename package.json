@@ -21,6 +21,16 @@
     "globby": "^8.0.1",
     "rollup": "^0.66.6",
     "rollup-plugin-buble": "^0.19.4",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-postcss": "^1.6.2",
     "rollup-plugin-terser": "^3.0.0"
+  },
+  "dependencies": {
+    "datatables.net": "^1.10.19",
+    "datatables.net-bs4": "^1.10.19",
+    "datatables.net-buttons": "^1.5.4",
+    "datatables.net-buttons-bs4": "^1.5.4",
+    "datatables.net-select": "^1.2.7",
+    "datatables.net-select-bs4": "^1.2.7"
   }
 }

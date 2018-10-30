@@ -1,4 +1,5 @@
-import { searchDelay } from "./utils";
+import { formatDate } from "../app/date-utils";
+import { fixDate, searchDelay } from "./utils";
 
 function showCourse(data) {
     const modal = $('#floatedCourseModal');
@@ -20,7 +21,7 @@ function showCourse(data) {
     modal.find('#register').attr('href', '/admin/dean/floated/' + data['course_code']);
 
     if (data['createdAt'] && data['createdAt'] !== '')
-        modal.find('#floated-at').html(moment(DataUtils.fixDate(data['createdAt'])).format('dddd, MMMM Do YYYY, h:mm:ss a'));
+        modal.find('#floated-at').html(formatDate(new Date(fixDate(data['createdAt']))));
     else
         modal.find('#floated-at').html('No Record');
 
@@ -76,7 +77,7 @@ const table = floatedCourseTable.DataTable({
     }],
     dom: 'lBfrtip',
     buttons: [
-        'copy', 'csv', 'excel', 'pdf', 'print'
+        'copy', 'csv', 'print'
     ],
     "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
     "initComplete": function () {

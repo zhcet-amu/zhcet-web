@@ -1,0 +1,6 @@
+import 'datatables.net-buttons/js/dataTables.buttons'
+import 'datatables.net-buttons-bs4/js/buttons.bootstrap4'
+import 'datatables.net-buttons/js/buttons.html5'
+import 'datatables.net-buttons/js/buttons.print'
+import 'datatables.net-buttons-bs4/css/buttons.bootstrap4.css'
+import './buttons.css'
