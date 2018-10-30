@@ -1,6 +1,7 @@
-const path = require('path');
-const globby = require('globby');
-const terser = require("rollup-plugin-terser");
+import path from 'path';
+import globby from 'globby';
+import buble from 'rollup-plugin-buble';
+import { terser } from 'rollup-plugin-terser';
 
 const resourcePath = path.resolve(__dirname, 'src', 'main', 'resources');
 const sourcePath = path.resolve(resourcePath, 'src', '**/*.mjs');
@@ -19,7 +20,11 @@ function getModuleName(file) {
 
 async function getConfig() {
     const paths = await globby(sourcePath);
-    const plugins = [terser.terser()];
+    const plugins = process.env.NODE_ENV === 'production' ?
+        [buble({
+            objectAssign: 'Object.assign'
+        }), terser()] :
+        [];
 
     return paths.map(file => ({
         input: file,
