@@ -27,7 +27,7 @@ springBoot  {
     buildInfo()
 }
 
-def flexmark_version = "0.34.52"
+def flexmark_version = "0.34.56"
 
 configurations {
     compile.exclude module: "spring-boot-starter-tomcat"
@@ -62,7 +62,7 @@ dependencies {
     implementation 'org.jboss.aerogear:aerogear-otp-java:1.0.0'
 
     // Sentry
-    implementation 'io.sentry:sentry-spring:1.7.12'
+    implementation 'io.sentry:sentry-spring:1.7.13'
     implementation 'io.sentry:sentry-logback:1.7.13'
 
     // Open Feign
