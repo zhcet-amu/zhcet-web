@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/zhcet
     docker:
-      - image: circleci/openjdk:10-jdk-browsers
+      - image: webpackcontrib/circleci-jdk9-node8
         environment:
           TZ: "/usr/share/zoneinfo/Asia/Kolkata"
 
