@@ -16,6 +16,7 @@
   - [Project Requirements](#project-requirements) - What are the requirements of Project and how to install them
     - [Requirements](#requirements) - Mandatory requirements of the Project
       - [![Java 8](https://img.shields.io/badge/java-8-green.svg?colorB=9575CD)](#java)
+      - [![Node 8](https://img.shields.io/badge/node-8-green.svg?colorB=7bc55a)](#node)
       - [![PostgreSQL 10](https://img.shields.io/badge/PostgreSQL-10-blue.svg)](#postgresql)
     - [Feature Requirements](#feature-requirements) - Additional Optional requirements for certain features
       - [Email](#email)
@@ -57,6 +58,19 @@ Once you have verified the install by running `javac -version` and `java -versio
 **Note:** If you already have existing JDK8 installation or want to install it through any other means, feel free to do so. Just confirm that `java` and `javac` commands are on path and correspond to version 8. 
 
 > For windows users, you may find Windows specific download instructions [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+
+
+[![Node 8](https://img.shields.io/badge/node-8-green.svg?colorB=7bc55a)](https://nodejs.org/en/blog/release/v8.12.0/)  
+Node, and yarn are needed in the project to transpile javascript files.
+
+It is recommended that you install node via [nvm](https://github.com/creationix/nvm)
+
+After you have installed node, you can install yarn via npm
+
+```bash
+npm install --global yarn
+```
+
 
 #### PostgreSQL
 
@@ -207,9 +221,36 @@ factory=amu.zhcet.configuration.sentry.SentryFactory
 
 ## Running
 
-The project uses Gradle as dependency management system which provides a wrapper, executing which it automatically installs gradle and all required dependencies for the project. Simply running the following command will spawn the embedded Tomcat Server with the application on `localhost:8080`
+First, you need to transpile the javascript files used in the project, but before doing to, you need to install the dependencies by running
+
+```
+yarn
+```
+
+This will install the required dependencies. To transpile the JS files, run
+
+```
+yarn build
+```
+
+This will transpile the JS files and minify them as well. If you plan to work on the JS files, run this command instead:
+
+```
+yarn watch
+```
+
+This will detect any changes you make to the JS files and re-transpile them saving manual work.
+
+The project uses Gradle as dependency management system which provides a wrapper, executing which it automatically installs gradle and all required dependencies for the project. Simply running the following command will spawn the embedded Undertow Server with the application on `localhost:8080`
 ```
 ./gradlew bootRun
+```
+
+To create a JAR file to deploy to the production server, run
+
+```
+yarn build
+./gradlew bootJar
 ```
 
 ## Additional Support
