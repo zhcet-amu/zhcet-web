@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "[![CircleCI](https://img.shields.io/circleci/project/github/zhcet-amu/zhcet-web.svg)](https://circleci.com/gh/iamareebjamal/zhcet-web/tree/master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/80f74f30d47b4e1eb0550912f12ef1ab)](https://www.codacy.com/app/zhcet/zhcet-web) [![Server](https://img.shields.io/website-up-down-green-red/https/zhcet.herokuapp.com.svg?label=debug-server)](https://zhcet.herokuapp.com) [![License](https://img.shields.io/github/license/iamareebjamal/zhcet-web.svg)]() > A spring boot web MVC project for ZHCET college management",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "rollup -c --watch",
+    "build": "cross-env NODE_ENV=production rollup -c"
   },
   "repository": {
     "type": "git",
@@ -15,8 +16,10 @@
   },
   "homepage": "https://github.com/iamareebjamal/zhcet-web#readme",
   "devDependencies": {
+    "cross-env": "^5.2.0",
     "globby": "^8.0.1",
     "rollup": "^0.66.6",
+    "rollup-plugin-buble": "^0.19.4",
     "rollup-plugin-terser": "^3.0.0"
   }
 }

@@ -13,10 +13,16 @@ jobs:
     steps:
       - checkout
       - restore_cache:
+          key: npm-{{ checksum "package.json" }}
+      - restore_cache:
           key: jars-{{ checksum "build.gradle" }}
 
       - run:
-          name: Download Dependencies
+          name: Download NPM Dependencies
+          command: npm install
+
+      - run:
+          name: Download Gradle Dependencies
           command: ./gradlew dependencies
 
       - save_cache:
@@ -24,12 +30,21 @@ jobs:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}
 
+      - save_cache:
+          paths:
+          - node_modules/
+          key: npm-{{ checksum "package.json" }}
+
       - run:
-          name: Run Tests
+          name: Build JS
+          command: npm run build
+
+      - run:
+          name: Build and Run Tests
           command: ./gradlew build
 
       - run:
-          name: Run Tests
+          name: Bundle JAR
           command: ./gradlew bootJar
 
       - store_artifacts:
