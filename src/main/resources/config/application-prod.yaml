@@ -10,8 +10,8 @@ spring:
   resources:
     cache:
       cachecontrol:
-        max-age: 31536000
-        s-max-age: 31536000
+        max-age: 31536000s
+        s-max-age: 31536000s
         cache-public: true
     chain:
       enabled: true

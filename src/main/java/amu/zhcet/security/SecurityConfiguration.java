@@ -1,5 +1,6 @@
 package amu.zhcet.security;
 
+import amu.zhcet.auth.UserDetailService;
 import amu.zhcet.auth.login.persistent.PersistentTokenService;
 import amu.zhcet.data.user.Role;
 import amu.zhcet.firebase.auth.FirebaseAuthenticationProvider;
@@ -35,6 +36,7 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final SessionRegistry sessionRegistry;
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final FirebaseAutheticationFilter firebaseAutheticationFilter;
+    private final UserDetailService userDetailService;
 
     @Autowired
     public SecurityConfiguration(
@@ -42,12 +44,13 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource,
             SessionRegistry sessionRegistry,
             AuthenticationFailureHandler authenticationFailureHandler,
-            FirebaseAutheticationFilter firebaseAutheticationFilter) {
+            FirebaseAutheticationFilter firebaseAutheticationFilter, UserDetailService userDetailService) {
         this.persistentTokenService = persistentTokenService;
         this.authenticationDetailsSource = authenticationDetailsSource;
         this.sessionRegistry = sessionRegistry;
         this.authenticationFailureHandler = authenticationFailureHandler;
         this.firebaseAutheticationFilter = firebaseAutheticationFilter;
+        this.userDetailService = userDetailService;
     }
 
     @Autowired
@@ -128,9 +131,10 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .rememberMe()
-                .rememberMeCookieName("zhcet-remember-me")
-                .tokenValiditySeconds(24 * 60 * 60)
+                .rememberMeCookieName("ZHCET_REMEMBER_ME")
+                .tokenValiditySeconds(24 * 60 * 60 * 7) // 1 week
                 .tokenRepository(persistentTokenService)
+                .userDetailsService(userDetailService)
 
                 .and()
                 .sessionManagement()
