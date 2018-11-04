@@ -12,6 +12,7 @@
   Change remember me cookie name for consistency
 - Break security config into smaller modules  
   Add disabled API security config
+- Order inserts and updates in batch queries
 - Update dependencies like sentry and modelmapper
 
 ##### v2.0.2 (22-10-2018):
