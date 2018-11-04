@@ -2,9 +2,17 @@
 
 #### v2.1.0 (Unreleased):
 
-- Add JS transpiling workflow
+- Add JS transpiling workflow  
+  Merge datatable components  
+  Remove PDF and Excel buttons (were too heavy)
 - Add workbox service worker
-- Update to Spring Boot v2.1.0
+- Update to Spring Boot v2.1.0  
+  Remove custom task scheduler
+- Fix remember me config resolving error of expired session  
+  Change remember me cookie name for consistency
+- Break security config into smaller modules  
+  Add disabled API security config
+- Update dependencies like sentry and modelmapper
 
 ##### v2.0.2 (22-10-2018):
 
