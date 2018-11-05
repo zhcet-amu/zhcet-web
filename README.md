@@ -60,18 +60,6 @@ Once you have verified the install by running `javac -version` and `java -versio
 > For windows users, you may find Windows specific download instructions [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 
 
-[![Node 8](https://img.shields.io/badge/node-8-green.svg?colorB=7bc55a)](https://nodejs.org/en/blog/release/v8.12.0/)  
-Node, and yarn are needed in the project to transpile javascript files.
-
-It is recommended that you install node via [nvm](https://github.com/creationix/nvm)
-
-After you have installed node, you can install yarn via npm
-
-```bash
-npm install --global yarn
-```
-
-
 #### PostgreSQL
 
 [![PostgreSQL 10](https://img.shields.io/badge/PostgreSQL-10-blue.svg)]()  
@@ -221,23 +209,15 @@ factory=amu.zhcet.configuration.sentry.SentryFactory
 
 ## Running
 
-First, you need to transpile the javascript files used in the project, but before doing to, you need to install the dependencies by running
+First, you need to transpile the javascript files used in the project.
+
+If you plan to work on the JS files, run this command instead:
 
 ```
-yarn
+./gradlew yarn_watch
 ```
 
-This will install the required dependencies. To transpile the JS files, run
-
-```
-yarn build
-```
-
-This will transpile the JS files and minify them as well. If you plan to work on the JS files, run this command instead:
-
-```
-yarn watch
-```
+in a separate terminal
 
 This will detect any changes you make to the JS files and re-transpile them saving manual work.
 
@@ -249,7 +229,6 @@ The project uses Gradle as dependency management system which provides a wrapper
 To create a JAR file to deploy to the production server, run
 
 ```
-yarn build
 ./gradlew bootJar
 ```
 

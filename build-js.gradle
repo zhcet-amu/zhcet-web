@@ -1,0 +1,43 @@
+
+
+
+node {
+    version = '8.12.0'
+    download = true
+}
+
+task yarn_build(type: YarnTask, dependsOn: 'yarn_install') {
+    inputs.dir "${ project.projectDir }/src/main/resources/src"
+    outputs.dir "${ project.projectDir }/src/main/resources/static/js/build"
+    args = ['build']
+}
+
+task yarn_build_dev(type: YarnTask, dependsOn: 'yarn_install') {
+    inputs.dir "${ project.projectDir }/src/main/resources/src"
+    outputs.dir "${ project.projectDir }/src/main/resources/static/js/build"
+    args = ['build-dev']
+}
+
+task yarn_watch(type: YarnTask, dependsOn: 'yarn_install') {
+    inputs.dir "${ project.projectDir }/src/main/resources/src"
+    outputs.dir "${ project.projectDir }/src/main/resources/static/js/build"
+    args = ['watch']
+}
+
+task copyResources(type: Copy) {
+    def sourceFolder = "${ project.projectDir }/src/main/resources/static/js/build"
+    def destinationFolder = "${ project.buildDir }/resources/main/static/js/build"
+    inputs.dir sourceFolder
+    outputs.dir destinationFolder
+    from sourceFolder
+    into destinationFolder
+}
+
+task cleanResources(type: Delete) {
+    delete "${ project.projectDir }/src/main/resources/static/js/build"
+}
+
+processResources.dependsOn yarn_build_dev
+copyResources.dependsOn yarn_build
+bootJar.dependsOn copyResources
+clean.dependsOn cleanResources
