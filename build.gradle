@@ -10,9 +10,14 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.moowork.node" version "1.2.0"
+}
+
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply from: 'build-js.gradle'
 
 group 'amu'
 version '2.1.0-SNAPSHOT'

@@ -17,14 +17,6 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}
 
-      - run:
-          name: Install Yarn
-          command: npm i -g yarn
-
-      - run:
-          name: Install JS Dependencies
-          command: yarn
-
       - save_cache:
           paths:
           - node_modules/
@@ -40,16 +32,8 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}
 
       - run:
-          name: Build JS
-          command: yarn build
-
-      - run:
-          name: Build and Run Tests
+          name: Build, Run Tests and Bundle JAR
           command: ./gradlew build
-
-      - run:
-          name: Bundle JAR
-          command: ./gradlew bootJar
 
       - store_artifacts:
           path: build/libs
