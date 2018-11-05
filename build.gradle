@@ -99,7 +99,7 @@ dependencies {
 
     implementation 'org.webjars:webjars-locator-core'
 
-    compileOnly "org.projectlombok:lombok:1.18.2"
+    compileOnly "org.projectlombok:lombok:1.18.4"
 
     // Workaround for Java 9+ modules missing problem
     implementation 'javax.xml.bind:jaxb-api'
