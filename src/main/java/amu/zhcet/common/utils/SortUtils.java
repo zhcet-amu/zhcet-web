@@ -1,6 +1,7 @@
 package amu.zhcet.common.utils;
 
 import amu.zhcet.core.admin.faculty.attendance.upload.AttendanceUpload;
+import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.registration.CourseRegistration;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
@@ -28,6 +29,15 @@ public class SortUtils {
                         .compare(att1.getStudent().getFacultyNumber().substring(5), att2.getStudent().getFacultyNumber().substring(5))
                         .result()
         );
+    }
+
+    public static void sortCourses(List<Course> courses) {
+        courses.sort((course1, course2) ->
+                ComparisonChain.start()
+                    .compare(course1.getSemester(), course2.getSemester(), Ordering.natural().nullsFirst())
+                    .compare(course1.getCode(), course2.getCode())
+                    .result()
+            );
     }
 
 }

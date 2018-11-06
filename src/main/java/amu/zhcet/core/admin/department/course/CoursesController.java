@@ -2,6 +2,7 @@ package amu.zhcet.core.admin.department.course;
 
 import amu.zhcet.common.page.Path;
 import amu.zhcet.common.page.PathChain;
+import amu.zhcet.common.utils.SortUtils;
 import amu.zhcet.core.admin.department.DepartmentController;
 import amu.zhcet.core.error.ErrorUtils;
 import amu.zhcet.data.course.Course;
@@ -75,7 +76,7 @@ public class CoursesController {
                     });
         }
 
-        courses.sort(Comparator.comparing(Course::getCode));
+        SortUtils.sortCourses(courses);
 
         model.addAttribute("courses", courses);
 
