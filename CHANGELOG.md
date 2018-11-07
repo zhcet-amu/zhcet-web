@@ -1,6 +1,6 @@
 ## Changelog
 
-#### v2.1.0 (Unreleased):
+#### v2.1.0 (07-11-2018):
 
 - Add JS transpiling workflow  
   Merge datatable components  
