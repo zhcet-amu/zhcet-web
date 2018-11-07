@@ -2,7 +2,7 @@
 
 ##### v2.1.1 (Unreleased):
 
-- No Change
+- Fix old JS paths to new bundled ones
 
 #### v2.1.0 (07-11-2018):
 
