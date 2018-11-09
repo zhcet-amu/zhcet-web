@@ -1,5 +1,9 @@
 ## Changelog
 
+##### v2.1.1 (Unreleased):
+
+- Add sourcemap URL to bundled JS
+
 ##### v2.1.1 (2018-11-09):
 
 - Fix old JS paths to new bundled ones

@@ -36,7 +36,8 @@ async function getConfig() {
             buble({
                 objectAssign: 'Object.assign'
             }),
-            terser()] :
+            terser()
+        ] :
         commonPlugins;
 
     return paths.map(file => ({
@@ -45,7 +46,7 @@ async function getConfig() {
             file: getOutputFileName(file),
             name: getModuleName(file),
             format: 'iife',
-            sourceMap: 'inline'
+            sourcemap: true
         },
         plugins: plugins
     }));
