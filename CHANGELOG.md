@@ -1,10 +1,13 @@
 ## Changelog
 
-##### v2.1.1 (Unreleased):
+##### v2.1.1 (2018-11-09):
 
 - Fix old JS paths to new bundled ones
+- Fix Default Values for DataTables
+- Fix saving user with 2FA disabled
+- Minor UI fixes
 
-#### v2.1.0 (07-11-2018):
+#### v2.1.0 (2018-11-07):
 
 - Add JS transpiling workflow  
   Merge datatable components  
@@ -19,12 +22,12 @@
 - Order inserts and updates in batch queries
 - Update dependencies like sentry and modelmapper
 
-##### v2.0.2 (22-10-2018):
+##### v2.0.2 (2018-10-22):
 
 - Add workaround for issue https://github.com/spring-projects/spring-boot/issues/14897 re-enabling resource versioning
 - Update Gradle to 4.10
 
-##### v2.0.1 (18-10-2018):
+##### v2.0.1 (2018-10-18):
 
 - Fix bug related to PSQL revered keyword `user` as column name in UploadedImage preventing users to upload avatars
 - Add option to disable FCM token with 403 return code. This code is generated if an FCM token is not generated from the registered app

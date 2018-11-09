@@ -20,7 +20,7 @@ apply plugin: 'io.spring.dependency-management'
 apply from: 'build-js.gradle'
 
 group 'amu'
-version '2.1.1-SNAPSHOT'
+version '2.1.1-RELEASE'
 
 sourceCompatibility = 1.8
 
