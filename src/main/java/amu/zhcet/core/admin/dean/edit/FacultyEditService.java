@@ -46,6 +46,12 @@ class FacultyEditService {
 
         facultyMember.getUser().setDepartment(department);
         modelMapper.map(facultyEditModel, facultyMember);
+
+        if (facultyMember.getUser().getTotpDetails() != null && facultyMember.getUser().getTotpDetails().getUserId() == null) {
+            // The TOTP details are detached, hence we should not save the TOTP model
+            facultyMember.getUser().setTotpDetails(null);
+        }
+
         facultyService.save(facultyMember);
     }
 

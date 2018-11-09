@@ -33,7 +33,7 @@ public class FacultyEditController {
     }
 
     @GetMapping
-    public String students(Model model) {
+    public String facultyMembers(Model model) {
         model.addAttribute("page_title", "Faculty Manager");
         model.addAttribute("page_subtitle", "Registered Faculty Management");
         model.addAttribute("page_description", "Search and manage registered faculty and edit details");
@@ -41,7 +41,7 @@ public class FacultyEditController {
     }
 
     @GetMapping("{faculty}")
-    public String student(Model model, @PathVariable FacultyMember faculty) {
+    public String faculty(Model model, @PathVariable FacultyMember faculty) {
         ErrorUtils.requireNonNullFacultyMember(faculty);
 
         model.addAttribute("page_title", "Faculty Editor");
@@ -58,7 +58,7 @@ public class FacultyEditController {
     }
 
     @PostMapping("{faculty}")
-    public String studentPost(RedirectAttributes redirectAttributes, @PathVariable FacultyMember faculty, @Valid FacultyEditModel facultyEditModel, BindingResult result) {
+    public String facultyPost(RedirectAttributes redirectAttributes, @PathVariable FacultyMember faculty, @Valid FacultyEditModel facultyEditModel, BindingResult result) {
         ErrorUtils.requireNonNullFacultyMember(faculty);
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.facultyModel", result);

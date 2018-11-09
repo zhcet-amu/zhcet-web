@@ -59,6 +59,12 @@ class StudentEditService {
 
         student.getUser().setDepartment(department);
         modelMapper.map(studentEditModel, student);
+
+        if (student.getUser().getTotpDetails() != null && student.getUser().getTotpDetails().getUserId() == null) {
+            // The TOTP details are detached, hence we should not save the TOTP model
+            student.getUser().setTotpDetails(null);
+        }
+
         studentService.save(student);
     }
 
