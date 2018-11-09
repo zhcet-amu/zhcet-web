@@ -1,6 +1,6 @@
 import { loadImage } from '../app/utils'
 import { formatDate } from "../app/date-utils";
-import { attachSelectors, fixDate, searchDelay } from './utils'
+import { attachSelectors, getSearchConfig, searchDelay } from './utils'
 
 function showStudent(data) {
     const modal = $('#studentModal');
@@ -25,8 +25,8 @@ function showStudent(data) {
     }
 
     if (data['user_gender'] && data['user_gender'] !== '') {
-        var genderSpan = modal.find('#gender');
-        var gender = data['user_gender'];
+        const genderSpan = modal.find('#gender');
+        const gender = data['user_gender'];
         genderSpan.html(gender);
         genderSpan.attr('class', 'capsule p-small ' + (gender === 'Male' ? 'blue' : 'pink') + '-dark');
     } else {
@@ -44,7 +44,7 @@ function showStudent(data) {
         modal.find('#verified i').text('');
 
     if (data['createdAt'] && data['createdAt'] !== '')
-        modal.find('#registered-at').html(formatDate(new Date(fixDate(data['createdAt']))));
+        modal.find('#registered-at').html(formatDate(new Date(data['createdAt'])));
     else
         modal.find('#registered-at').html('No Record');
 
@@ -62,7 +62,7 @@ function enableButton(table) {
 }
 
 function changeStudent(table) {
-    var data = table.rows( { selected: true } ).data();
+    const data = table.rows({selected: true}).data();
 
     if (data.count() <= 0) {
         toastr.error('No student(s) selected');
@@ -85,10 +85,60 @@ const token = $("meta[name='_csrf']").attr("content");
 
 const studentTable = $('#studentTable');
 
+const columns = [
+    {
+        defaultContent: '',
+        searchable: false,
+        orderable: false
+    },
+    {
+        data: 'avatar-url',
+        searchable: false,
+        orderable: false,
+        defaultContent: '/img/account.svg',
+        render: function (data) {
+            if (data && data !== '')
+                return '<img class="rounded-circle" style="background-color: white" src="' + data + '" height="48px" />';
+            return '<img class="rounded-circle" style="background-color: white" src="/img/account.svg" />';
+        }
+    }, {
+        data: 'facultyNumber'
+    }, {
+        data: 'enrolmentNumber'
+    }, {
+        data: 'user_name'
+    }, {
+        data: 'user_gender',
+        name: 'gender'
+    }, {
+        data: 'user_department_name'
+    }, {
+        data: 'hallCode'
+    }, {
+        data: 'section'
+    }, {
+        data: 'status',
+        name: 'status'
+    }, {
+        data: 'user_email'
+    }
+];
+
+const menuLength = [10, 25, 50, 100, 200, 500];
+
+const searchOptions = [{
+    id: '#gend',
+    name: 'gender'
+}, {
+    id: '#stat',
+    defaultVal: 'A',
+    name: 'status'
+}];
+
 const table = studentTable.DataTable({
     scrollY: true,
     scrollCollapse: true,
-    'ajax': {
+    ajax: {
         'contentType': 'application/json',
         'url': '/admin/dean/api/students',
         'type': 'POST',
@@ -99,51 +149,17 @@ const table = studentTable.DataTable({
             xhr.setRequestHeader(header, token);
         }
     },
-    "deferRender": true,
-    "processing": true,
-    "serverSide": true,
+    deferRender: true,
+    processing: true,
+    serverSide: true,
     searchDelay: 750,
     columnDefs: [{
         orderable: false,
         className: "select-checkbox",
         targets: 0
     }],
-    columns: [{
-        defaultContent: '',
-        searchable: false,
-        orderable: false
-    },
-        {
-            data: 'avatar-url',
-            searchable: false,
-            orderable: false,
-            defaultContent: '/img/account.svg',
-            render: function (data) {
-                if (data && data !== '')
-                    return '<img class="rounded-circle" style="background-color: white" src="' + data + '" height="48px" />';
-                return '<img class="rounded-circle" style="background-color: white" src="/img/account.svg" />';
-            }
-        }, {
-            data: 'facultyNumber'
-        }, {
-            data: 'enrolmentNumber'
-        }, {
-            data: 'user_name'
-        }, {
-            data: 'user_gender',
-            name: 'gender'
-        }, {
-            data: 'user_department_name'
-        }, {
-            data: 'hallCode'
-        }, {
-            data: 'section'
-        }, {
-            data: 'status',
-            name: 'status'
-        }, {
-            data: 'user_email'
-        }],
+    columns,
+    aoSearchCols: getSearchConfig(columns, searchOptions),
     dom: 'lBfrtip',
     rowId: 'enrolmentNumber',
     stateSave: true,
@@ -156,24 +172,17 @@ const table = studentTable.DataTable({
         'selectNone',
         {
             enabled: false,
-            text: 'Change Section/Status',
+            text: 'Edit',
             action: function () {
                 changeStudent(table)
             }
         },
         'copy', 'csv', 'print'
     ],
-    "lengthMenu": [[10, 25, 50, 100, 200, 500], [10, 25, 50, 100, 200, 500]],
-    "initComplete": function () {
+    lengthMenu: [menuLength, menuLength],
+    initComplete() {
         searchDelay(table);
-        attachSelectors(table, 'DataTables_studentTable_/admin/dean/students', [{
-            id: '#stat',
-            defaultVal: 'A',
-            columnName: 'status'
-        }, {
-            id: '#gend',
-            columnName: 'gender'
-        }]);
+        attachSelectors(table, 'DataTables_studentTable_/admin/dean/students', searchOptions);
     }
 });
 

@@ -15,12 +15,11 @@ function setSelectInput(id, table, index, selected) {
 }
 
 function getFromLocalStorage(localStorageKey, defaultVal, index) {
-    let selected = defaultVal;
     if (localStorageKey in localStorage) {
         const data = JSON.parse(localStorage.getItem(localStorageKey));
-        selected = data['columns'][index]['search'].search;
+        return data.columns[index].search.search;
     }
-    return selected;
+    return defaultVal;
 }
 
 export function searchDelay(table) {
@@ -36,18 +35,24 @@ export function searchDelay(table) {
 export function attachSelectors(table, localStorageKey, options) {
     for (let i = 0; i < options.length; i++) {
         const option = options[i];
-        const statusIndex = table.column(option['columnName'] + ':name').index();
-        const selectedStatus = getFromLocalStorage(localStorageKey, option['defaultVal'], statusIndex);
-        setSelectInput(option['id'], table, statusIndex, selectedStatus);
+        const statusIndex = table.column(option.name + ':name').index();
+        const selectedStatus = getFromLocalStorage(localStorageKey, option.defaultVal, statusIndex);
+        setSelectInput(option.id, table, statusIndex, selectedStatus);
     }
+}
+
+export function getSearchConfig(columns, options) {
+    return columns.map(column => {
+        const option = options.filter(option => column.name === option.name)[0];
+        if (option && option.defaultVal) {
+            return {
+                sSearch: option.defaultVal || null
+            }
+        }
+        return null
+    });
 }
 
 export function fixDate(date) {
     return date.split('[')[0];
-}
-
-export default {
-    searchDelay,
-    fixDate,
-    attachSelectors
 }

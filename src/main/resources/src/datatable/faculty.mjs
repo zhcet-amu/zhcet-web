@@ -1,6 +1,6 @@
 import { loadImage } from '../app/utils'
 import { formatDate } from "../app/date-utils";
-import { attachSelectors, fixDate, searchDelay } from './utils'
+import { attachSelectors, getSearchConfig, searchDelay } from './utils'
 
 function showFaculty(data) {
     const modal = $('#facultyModal');
@@ -46,7 +46,7 @@ function showFaculty(data) {
         modal.find('#verified i').text('');
 
     if (data['createdAt'] && data['createdAt'] !== '')
-        modal.find('#registered-at').html(formatDate(new Date(fixDate(data['createdAt']))));
+        modal.find('#registered-at').html(formatDate(new Date(data['createdAt'])));
     else
         modal.find('#registered-at').html('No Record');
 
@@ -61,10 +61,57 @@ const token = $("meta[name='_csrf']").attr("content");
 
 const facultyTable = $('#facultyTable');
 
+const columns = [{
+    data: 'avatar-url',
+    searchable: false,
+    orderable: false,
+    defaultContent: '/img/account.svg',
+    render: function (data) {
+        if (data && data !== '')
+            return '<img class="rounded-circle" src="' + data + '" height="48px" />';
+        return '<img class="rounded-circle" src="/img/account.svg" />';
+    }
+}, {
+    data: 'facultyId'
+}, {
+    data: 'user_name'
+}, {
+    data: 'user_gender',
+    name: 'gender'
+}, {
+    data: 'designation'
+}, {
+    data: 'user_department_name'
+}, {
+    data: 'working',
+    name: 'working',
+    render: function (data) {
+        let text = 'Working';
+        let css = 'bg-success';
+        if (!data) {
+            text = 'Inactive';
+            css = 'bg-danger';
+        }
+
+        return '<span class="capsule p-small text-white ' + css + '">' + text + '</span>';
+    }
+}, {
+    data: 'user_email'
+}];
+
+const searchOptions = [{
+    id: '#working-status',
+    name: 'working',
+    defaultVal: true
+}, {
+    id: '#gend',
+    name: 'gender'
+}];
+
 const table = facultyTable.DataTable({
     scrollY: true,
     scrollCollapse: true,
-    'ajax': {
+    ajax: {
         'contentType': 'application/json',
         'url': '/admin/dean/api/faculty',
         'type': 'POST',
@@ -75,59 +122,18 @@ const table = facultyTable.DataTable({
             xhr.setRequestHeader(header, token);
         }
     },
-    "deferRender": true,
-    "processing": true,
-    "serverSide": true,
+    deferRender: true,
+    processing: true,
+    serverSide: true,
     stateSave: true,
     searchDelay: 750,
-    columns: [{
-        data: 'avatar-url',
-        searchable: false,
-        orderable: false,
-        defaultContent: '/img/account.svg',
-        render: function (data) {
-            if (data && data !== '')
-                return '<img class="rounded-circle" src="' + data + '" height="48px" />';
-            return '<img class="rounded-circle" src="/img/account.svg" />';
-        }
-    }, {
-        data: 'facultyId'
-    }, {
-        data: 'user_name'
-    }, {
-        data: 'user_gender',
-        name: 'gender'
-    }, {
-        data: 'designation'
-    }, {
-        data: 'user_department_name'
-    }, {
-        data: 'working',
-        name: 'working',
-        render: function (data) {
-            let text = 'Working';
-            let css = 'bg-success';
-            if (!data) {
-                text = 'Inactive';
-                css = 'bg-danger';
-            }
-
-            return '<span class="capsule p-small text-white ' + css + '">' + text + '</span>';
-        }
-    }, {
-        data: 'user_email'
-    }],
+    columns,
+    aoSearchCols: getSearchConfig(columns, searchOptions),
     dom: 'lBfrtip',
     buttons: ['copy', 'csv', 'print'],
-    "initComplete": function () {
+    initComplete() {
         searchDelay(table);
-        attachSelectors(table, 'DataTables_facultyTable_/admin/dean/faculty', [{
-            id: '#working-status',
-            columnName: 'working'
-        }, {
-            id: '#gend',
-            columnName: 'gender'
-        }]);
+        attachSelectors(table, 'DataTables_facultyTable_/admin/dean/faculty', searchOptions);
     }
 });
 

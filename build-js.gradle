@@ -1,6 +1,3 @@
-
-
-
 node {
     version = '8.12.0'
     download = true
@@ -33,11 +30,21 @@ task copyResources(type: Copy) {
     into destinationFolder
 }
 
+task copyResourcesDev(type: Copy) {
+    def sourceFolder = "${ project.projectDir }/src/main/resources/static/js/build"
+    def destinationFolder = "out/production/resources/static/js/build"
+    inputs.dir sourceFolder
+    outputs.dir destinationFolder
+    from sourceFolder
+    into destinationFolder
+}
+
 task cleanResources(type: Delete) {
     delete "${ project.projectDir }/src/main/resources/static/js/build"
 }
 
 processResources.dependsOn yarn_build_dev
 copyResources.dependsOn yarn_build
+copyResourcesDev.dependsOn yarn_build_dev
 bootJar.dependsOn copyResources
 clean.dependsOn cleanResources
