@@ -74,7 +74,7 @@ searchBox.typeahead({
 const toggle = $('#toggle-more');
 toggle.click(function () {
     all = !all;
-    App.blockUI(actionArea);
+    blockUI(actionArea);
     fuzzyhound.setSource(baseUrl + '?all=' + all, index, function () {
         actionArea.unblock();
     });
