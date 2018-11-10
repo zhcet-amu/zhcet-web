@@ -4,6 +4,7 @@
 
 - Add sourcemap URL to bundled JS
 - Fix load more faculty members in Department Panel
+- Honor valid password specified in Faculty Registration CSV
 
 ##### v2.1.1 (2018-11-09):
 

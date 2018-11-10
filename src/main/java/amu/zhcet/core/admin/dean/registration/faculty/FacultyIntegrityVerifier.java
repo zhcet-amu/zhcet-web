@@ -50,6 +50,8 @@ class FacultyIntegrityVerifier {
             return "No such department: " + facultyMember.getUser().getDepartment().getName();
         } else if (doesFacultyIdAlreadyExists(facultyMember)) {
             return "Faculty Member with ID already exists";
+        } else if (isPasswordInvalid(facultyMember)) {
+            return "Password should be of at least 8 characters. Leave blank to auto-generate";
         } else {
             return null;
         }
@@ -95,5 +97,16 @@ class FacultyIntegrityVerifier {
         boolean exists = UserRegistrationUtils.userIdExists(facultyMember.getFacultyId(), userIds);
         if (exists) conditions.setDuplicateFacultyId(true);
         return exists;
+    }
+
+    /**
+     * Checks for password validity
+     * @param facultyMember Faculty Member with password assigned
+     * @return boolean true if password is invalid, else false
+     */
+    private boolean isPasswordInvalid(FacultyMember facultyMember) {
+        String password = facultyMember.getUser().getPassword();
+
+        return password.length() < 8;
     }
 }

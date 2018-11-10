@@ -10,6 +10,7 @@ import amu.zhcet.security.CryptoUtils;
 import amu.zhcet.storage.csv.CsvParserService;
 import amu.zhcet.storage.csv.Confirmation;
 import amu.zhcet.storage.csv.UploadResult;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,15 +77,22 @@ class FacultyRegistrationAdapter {
     }
 
     private static FacultyMember fromFacultyUpload(FacultyUpload facultyUpload) {
-        String password = CryptoUtils.generatePassword(PASS_LENGTH);
-        facultyUpload.setPassword(password);
         FacultyMember facultyMember = new FacultyMember();
         facultyMember.setFacultyId(StringUtils.capitalizeAll(facultyUpload.getFacultyId()));
         facultyMember.setDesignation(StringUtils.capitalizeFirst(facultyUpload.getDesignation()));
         facultyMember.getUser().setName(StringUtils.capitalizeFirst(facultyUpload.getName()));
-        facultyMember.getUser().setPassword(password);
         facultyMember.getUser().setDepartment(Department.builder().name(StringUtils.capitalizeFirst(facultyUpload.getDepartment())).build());
         facultyMember.getUser().setGender(facultyUpload.getGender());
+
+        String password = Strings.nullToEmpty(facultyUpload.getPassword());
+        // If we are supplied password already, use that
+        if (password.trim().isEmpty()) {
+            // Password not supplied or empty
+            password = CryptoUtils.generatePassword(PASS_LENGTH);
+        }
+
+        facultyUpload.setPassword(password);
+        facultyMember.getUser().setPassword(password);
 
         return facultyMember;
     }
