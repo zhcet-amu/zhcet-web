@@ -1,6 +1,6 @@
 ## Changelog
 
-##### v2.1.1 (Unreleased):
+##### v2.1.2 (2018-11-10):
 
 - Add sourcemap URL to bundled JS
 - Fix load more faculty members in Department Panel
