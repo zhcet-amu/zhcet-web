@@ -12,7 +12,7 @@ public class JsTranspilationTest {
 
     @Test
     public void testFileExists() throws IOException {
-        String transpiled = "!function(){\"use strict\";console.log(\"test\")}();\n";
+        String transpiled = "!function(){\"use strict\";console.log(\"test\")}();\n//# sourceMappingURL=test.min.js.map\n";
         String nonMinified = "(function () {\n" +
                 "\t'use strict';\n" +
                 "\n" +
@@ -21,7 +21,8 @@ public class JsTranspilationTest {
                 "\n" +
                 "\tconsole.log(\"test\");\n" +
                 "\n" +
-                "}());\n";
+                "}());" +
+                "\n//# sourceMappingURL=test.min.js.map\n";
         String content = IOUtils.toString(new ClassPathResource("static/js/build/test.min.js").getInputStream(), "UTF-8");
         if (!content.equals(transpiled)) {
             System.out.println("WARNING: JS Not Minified");
