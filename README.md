@@ -2,7 +2,8 @@
 
 [![CircleCI](https://img.shields.io/circleci/project/github/zhcet-amu/zhcet-web.svg)](https://circleci.com/gh/iamareebjamal/zhcet-web/tree/master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/80f74f30d47b4e1eb0550912f12ef1ab)](https://www.codacy.com/app/zhcet/zhcet-web)
-[![Server](https://img.shields.io/website-up-down-green-red/https/zhcet.herokuapp.com.svg?label=debug-server)](https://zhcet.herokuapp.com)
+[![Server](https://img.shields.io/website-up-down-green-red/https/zhcet.tk.svg?label=server)](https://zhcet.tk)
+[![Debug Server](https://img.shields.io/website-up-down-green-red/https/zhcet.herokuapp.com.svg?label=debug-server)](https://zhcet.herokuapp.com)
 [![License](https://img.shields.io/github/license/iamareebjamal/zhcet-web.svg)]()
 > A spring boot web MVC project for ZHCET college management
 
