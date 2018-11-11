@@ -127,12 +127,33 @@ const columns = [
 const menuLength = [10, 25, 50, 100, 200, 500];
 
 const searchOptions = [{
-    id: '#gend',
-    name: 'gender'
+    name: 'gender',
+    options: [{
+        name: 'All',
+        value: ''
+    }, {
+        name: 'Male',
+        value: 'M'
+    }, {
+        name: 'Female',
+        value: 'F'
+    }]
 }, {
-    id: '#stat',
     defaultVal: 'A',
-    name: 'status'
+    name: 'status',
+    options: [{
+        name: 'All',
+        value: ''
+    }, {
+        name: 'Active',
+        value: 'A'
+    }, {
+        name: 'Graduated',
+        value: 'G'
+    }, {
+        name: 'Name Removed',
+        value: 'N'
+    }]
 }];
 
 const table = studentTable.DataTable({
@@ -182,8 +203,7 @@ const table = studentTable.DataTable({
     lengthMenu: [menuLength, menuLength],
     initComplete() {
         searchDelay(table);
-        attachSelectors(table, 'DataTables_studentTable_/admin/dean/students', searchOptions);
-        addSearchColumns(table);
+        addSearchColumns(table, searchOptions);
     }
 });
 

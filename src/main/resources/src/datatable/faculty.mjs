@@ -100,12 +100,30 @@ const columns = [{
 }];
 
 const searchOptions = [{
-    id: '#working-status',
     name: 'working',
-    defaultVal: true
+    defaultVal: 'true',
+    options: [{
+        name: 'All',
+        value: ''
+    }, {
+        name: 'Working',
+        value: 'true'
+    }, {
+        name: 'Inactive',
+        value: 'false'
+    }]
 }, {
-    id: '#gend',
-    name: 'gender'
+    name: 'gender',
+    options: [{
+        name: 'All',
+        value: ''
+    }, {
+        name: 'Male',
+        value: 'M'
+    }, {
+        name: 'Female',
+        value: 'F'
+    }]
 }];
 
 const table = facultyTable.DataTable({
@@ -133,8 +151,7 @@ const table = facultyTable.DataTable({
     buttons: ['copy', 'csv', 'print'],
     initComplete() {
         searchDelay(table);
-        attachSelectors(table, 'DataTables_facultyTable_/admin/dean/faculty', searchOptions);
-        addSearchColumns(table)
+        addSearchColumns(table, searchOptions)
     }
 });
 

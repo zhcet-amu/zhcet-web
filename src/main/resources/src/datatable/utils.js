@@ -53,7 +53,7 @@ export function getSearchConfig(columns, options) {
     });
 }
 
-export function addSearchColumns(table) {
+export function addSearchColumns(table, searchOptions) {
     const settings = table.settings()[0];
     const stateKey = `DataTables_${ settings.sInstance }_${ window.location.pathname }`;
 
@@ -68,14 +68,31 @@ export function addSearchColumns(table) {
 
         const footer = this.footer();
         const title = footer.innerText;
-        footer.innerHTML = `<input type="text" placeholder="${ title }" value="${ value }" />`;
+        let select = `<input type="text" placeholder="${ title }" value="${ value }" />`;
+
+        if (searchOptions) {
+            const option = searchOptions.filter(option => option.name === setting.name)[0];
+
+            if (option) {
+                select = `<select>${option.options.map(option => 
+                           `<option value="${option.value}" ${ option.value == defaultValue ? 'selected' : '' }>
+                              ${ option.name }
+                            </option>`).join('')}
+                          </select>`
+            }
+        }
+
+        footer.innerHTML = select;
 
         const that = this;
 
-        $('input', this.footer()).on('keyup change', $.debounce(500, function () {
+        const changeHandler = function () {
             if (that.search() !== this.value) {
                 that.search(this.value).draw();
             }
-        }));
+        };
+
+        $('input', this.footer()).on('keyup change', $.debounce(500, changeHandler));
+        $('select', this.footer()).on('change', changeHandler);
     });
 }
