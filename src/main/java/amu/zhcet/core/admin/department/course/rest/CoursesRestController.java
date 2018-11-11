@@ -1,5 +1,7 @@
 package amu.zhcet.core.admin.department.course.rest;
 
+import amu.zhcet.common.utils.SortUtils;
+import amu.zhcet.data.course.Course;
 import amu.zhcet.data.course.CourseService;
 import amu.zhcet.data.course.floated.FloatedCourse;
 import amu.zhcet.data.course.floated.FloatedCourseService;
@@ -38,8 +40,11 @@ public class CoursesRestController {
             return null;
 
         List<FloatedCourse> floatedCourses = floatedCourseService.getCurrentFloatedCourses(department);
-        return courseService.getAllActiveCourse(department, true)
-                .stream()
+        List<Course> courseList = courseService.getAllActiveCourse(department, true);
+
+        SortUtils.sortCourses(courseList);
+
+        return courseList.stream()
                 .map(course -> modelMapper.map(course, CourseDto.class))
                 .map(courseDto -> attachStatus(courseDto, floatedCourses))
                 .collect(Collectors.toList());

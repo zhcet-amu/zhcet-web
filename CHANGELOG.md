@@ -3,6 +3,7 @@
 ##### v2.1.3 (Unreleased):
 
 - Add option to individually search columns in DataTables
+- Send Courses from REST endpoint in correct order
 
 ##### v2.1.2 (2018-11-10):
 
