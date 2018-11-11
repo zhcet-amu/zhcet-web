@@ -27,7 +27,7 @@ export function searchDelay(table) {
 
     $searchInput.unbind();
 
-    $searchInput.bind('keyup', $.debounce(1000, function(e) {
+    $searchInput.bind('keyup change', $.debounce(500, function() {
         table.search(this.value).draw();
     }));
 }
@@ -53,6 +53,29 @@ export function getSearchConfig(columns, options) {
     });
 }
 
-export function fixDate(date) {
-    return date.split('[')[0];
+export function addSearchColumns(table) {
+    const settings = table.settings()[0];
+    const stateKey = `DataTables_${ settings.sInstance }_${ window.location.pathname }`;
+
+    table.columns().every(function () {
+        const setting = settings.aoColumns[this.index()];
+
+        if (setting.searchable === false)
+            return;
+
+        const defaultValue = settings.aoPreSearchCols[this.index()].sSearch;
+        const value = getFromLocalStorage(stateKey, defaultValue, this.index());
+
+        const footer = this.footer();
+        const title = footer.innerText;
+        footer.innerHTML = `<input type="text" placeholder="${ title }" value="${ value }" />`;
+
+        const that = this;
+
+        $('input', this.footer()).on('keyup change', $.debounce(500, function () {
+            if (that.search() !== this.value) {
+                that.search(this.value).draw();
+            }
+        }));
+    });
 }

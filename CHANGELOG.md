@@ -2,7 +2,7 @@
 
 ##### v2.1.3 (Unreleased):
 
-- No changes
+- Add option to individually search columns in DataTables
 
 ##### v2.1.2 (2018-11-10):
 

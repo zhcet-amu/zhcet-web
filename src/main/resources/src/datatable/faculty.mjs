@@ -1,6 +1,6 @@
 import { loadImage } from '../app/utils'
 import { formatDate } from "../app/date-utils";
-import { attachSelectors, getSearchConfig, searchDelay } from './utils'
+import {addSearchColumns, attachSelectors, getSearchConfig, searchDelay} from './utils'
 
 function showFaculty(data) {
     const modal = $('#facultyModal');
@@ -134,6 +134,7 @@ const table = facultyTable.DataTable({
     initComplete() {
         searchDelay(table);
         attachSelectors(table, 'DataTables_facultyTable_/admin/dean/faculty', searchOptions);
+        addSearchColumns(table)
     }
 });
 

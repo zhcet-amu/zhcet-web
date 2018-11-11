@@ -1,5 +1,5 @@
 import { formatDate } from "../app/date-utils";
-import { fixDate, searchDelay } from "./utils";
+import {addSearchColumns, searchDelay} from "./utils";
 
 function showCourse(data) {
     const modal = $('#floatedCourseModal');
@@ -21,7 +21,7 @@ function showCourse(data) {
     modal.find('#register').attr('href', '/admin/dean/floated/' + data['course_code']);
 
     if (data['createdAt'] && data['createdAt'] !== '')
-        modal.find('#floated-at').html(formatDate(new Date(fixDate(data['createdAt']))));
+        modal.find('#floated-at').html(formatDate(new Date(data['createdAt'])));
     else
         modal.find('#floated-at').html('No Record');
 
@@ -82,6 +82,7 @@ const table = floatedCourseTable.DataTable({
     "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
     "initComplete": function () {
         searchDelay(table);
+        addSearchColumns(table);
     }
 });
 
