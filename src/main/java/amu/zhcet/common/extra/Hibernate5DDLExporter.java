@@ -94,7 +94,7 @@ public class Hibernate5DDLExporter {
         return new Hibernate5DDLExporter();
     }
 
-    public static void main(String[] args) throws Exception {
+    public void main(String[] args) throws Exception {
         Hibernate5DDLExporter.instance()
                 .entities("data.model")
                 .schemaExport("create.sql", "build");

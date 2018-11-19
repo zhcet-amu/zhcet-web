@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/zhcet
     docker:
-      - image: webpackcontrib/circleci-jdk9-node8
+      - image: circleci/openjdk:8-jdk-browsers
         environment:
           TZ: "/usr/share/zoneinfo/Asia/Kolkata"
 
@@ -34,6 +34,13 @@ jobs:
       - run:
           name: Build, Run Tests and Bundle JAR
           command: ./gradlew build
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      - run:
+          name: Deploy to DockerHub
+          command: bash .ci/scripts/docker-push.sh
 
       - store_artifacts:
           path: build/libs
