@@ -78,7 +78,7 @@ public class CsvParserService<T, U extends Meta> {
         CsvParser.Result<T> result = CsvParser.of(uploadClass).parse(file);
 
         uploadResult.getUploads().addAll(result.getItems());
-        if (!result.isParsedSuccessfully()) {
+        if (!result.isSuccessful()) {
             result.getParseErrors()
                     .stream()
                     .map(CsvParserService::getErrorMessage)

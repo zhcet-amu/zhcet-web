@@ -127,6 +127,14 @@
     color: white;
 }
 
+.bg-warning.lighten {
+    background-color: #ffffa8 !important;
+}
+
+.bg-success.lighten {
+    background-color: #DDF6F0 !important;
+}
+
 .form-group.issue .help-block,.form-group.issue .help-inline, .form-group.issue .form-control-position{color:#FF8F00}
 .form-group.issue input,.form-group.issue select,.form-group.issue textarea{color:#FF8F00;border-color:#FF9800}
 .form-group.issue input:focus,.form-group.issue select:focus,.form-group.issue textarea:focus{border-color:#FF9800;-webkit-box-shadow:0 0 6px #FFC107;box-shadow:0 0 6px #FFC107}

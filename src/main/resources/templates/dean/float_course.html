@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en"
+      data-textdirection="ltr"
+      class="loading">
+<head th:replace="fragments/layout :: head">
+</head>
+<body data-open="click" data-menu="vertical-menu" data-col="2-columns" class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar">
+<div th:fragment="content" th:replace="fragments/layout :: wrapper(pageId = 'dean', subPage='float_page')" sec:authorize="hasRole('ROLE_DEAN_ADMIN')">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="fragments/toolbar"></div>
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 col-xl-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Upload Floated Course CSV</h4>
+                                <a class="heading-elements-toggle"><i class="material-icons font-medium-3">more_vert</i></a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li><a data-action="collapse"><i class="material-icons">remove</i></a></li>
+                                        <li><a data-action="expand"><i class="material-icons">fullscreen</i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="card-body">
+                                    <form class="form" enctype="multipart/form-data" th:action="|/admin/dean/api/float|" method="post">
+                                        <div>
+                                            Download the <a th:href="@{/csv/float_courses.csv}">courses format</a>
+                                        </div>
+                                        <br/>
+                                        <div th:replace="fragments/uploader(id = 'float_course_uploader')"></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="app"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/build/file-uploader.min.js}"></script>
+<div th:replace="fragments/scripts :: datatables"></div>
+<div th:replace="fragments/scripts :: datatables_export"></div>
+<script th:src="@{/js/build/vendor/Vue.min.js}"></script>
+<script th:src="@{/js/build/courses/admin/float-course.min.js}"></script>
+</body>
+</html>

@@ -24,6 +24,7 @@
                     <li th:class="${subPage == 'dean_admin' ? 'active' : ''}" ><a th:href="@{/admin/dean}" class="menu-item">Administration</a></li>
                     <li th:class="${subPage == 'students_page' ? 'active' : ''}"><a th:href="@{/admin/dean/students}" class="menu-item">Students</a></li>
                     <li th:class="${subPage == 'faculty_page' ? 'active' : ''}"><a th:href="@{/admin/dean/faculty}" class="menu-item">Faculty</a></li>
+                    <li th:class="${subPage == 'float_page' ? 'active' : ''}"><a th:href="@{/admin/dean/float}" class="menu-item">Float Course</a></li>
                     <li th:class="${subPage == 'floated_page' ? 'active' : ''}"><a th:href="@{/admin/dean/floated}" class="menu-item">Floated Course</a></li>
                     <li th:class="${subPage == 'config' ? 'active' : ''}"><a th:href="@{/admin/dean/configuration}" class="menu-item">Configuration</a></li>
                     <li th:class="${subPage == 'ui_page' ? 'active' : ''}"><a th:href="@{/admin/dean/ui}" class="menu-item">UI</a></li>
