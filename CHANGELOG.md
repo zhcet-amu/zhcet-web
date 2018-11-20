@@ -2,7 +2,8 @@
 
 ##### v2.1.4 (Unreleased):
 
-- No changes
+- Add Dockerfile and docker-compose.yml
+- Update dependencies
 
 ##### v2.1.3 (2018-11-11):
 

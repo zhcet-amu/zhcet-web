@@ -1,0 +1,32 @@
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres:11-alpine
+    container_name: zhcet-postgres
+    restart: unless-stopped
+    volumes:
+      - data_postgres:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=zhcetpass
+      - POSTGRES_USER=zhcet
+
+  server:
+    image: zhcet/zhcet-server
+    container_name: zhcet-server
+    volumes:
+      - data_server:/app-root
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    restart:
+      unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/zhcet
+
+volumes:
+  data_postgres:
+  data_server:
