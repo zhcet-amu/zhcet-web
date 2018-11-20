@@ -12,6 +12,8 @@ buildscript {
 
 plugins {
     id "com.moowork.node" version "1.2.0"
+    id 'com.palantir.docker' version '0.20.1'
+    id 'com.google.cloud.tools.jib' version '0.10.0'
 }
 
 apply plugin: 'java'
@@ -37,6 +39,21 @@ def flexmark_version = "0.34.56"
 configurations {
     compile.exclude module: "spring-boot-starter-tomcat"
 }
+
+task unpack(type: Copy) {
+    dependsOn bootJar
+    from(zipTree(tasks.bootJar.outputs.files.singleFile))
+    into("build/dependency")
+}
+
+docker {
+    name "zhcet/zhcet-server"
+    tags "${project.version}"
+    copySpec.from(tasks.unpack.outputs).into("dependency")
+    buildArgs(['DEPENDENCY': "dependency"])
+}
+
+dockerPush.dependsOn(dockerTag)
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")

@@ -1,0 +1,9 @@
+.git/
+.gradle/
+gradle/
+node_modules/
+out/
+app-root/
+src/
+bin/
+out/
