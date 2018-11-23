@@ -34,7 +34,7 @@ springBoot  {
     buildInfo()
 }
 
-def flexmark_version = "0.34.56"
+def flexmark_version = "0.34.58"
 
 configurations {
     compile.exclude module: "spring-boot-starter-tomcat"
