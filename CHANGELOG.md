@@ -2,7 +2,7 @@
 
 ##### v2.1.5 (Unreleased):
 
-- No changes
+- Reduce dependencies
 
 ##### v2.1.4 (2018-11-23):
 
