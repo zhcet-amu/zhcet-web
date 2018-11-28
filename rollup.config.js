@@ -1,5 +1,8 @@
 import path from 'path';
+
 import globby from 'globby';
+import fs from 'fs-extra';
+
 import buble from 'rollup-plugin-buble';
 import { terser } from 'rollup-plugin-terser';
 import resolve from 'rollup-plugin-node-resolve';
@@ -7,6 +10,7 @@ import postcss from 'rollup-plugin-postcss'
 
 const isProdBuild = process.env.NODE_ENV === 'production';
 const resourcePath = path.resolve(__dirname, 'src', 'main', 'resources');
+const ideaResourcePath = path.resolve(__dirname, 'out', 'production', 'resources');
 const sourcePath = path.resolve(resourcePath, 'src', '**/*.mjs');
 const destinationPath = path.resolve(resourcePath, 'static', 'js', 'build');
 
@@ -21,6 +25,19 @@ function getModuleName(file) {
     return fileName.replace(/-/g, '_');
 }
 
+function copy() {
+    return {
+        name: 'copy',
+        generateBundle(outputOptions, bundle, isWrite) {
+            if (isWrite) {
+                const relativePath = path.relative(resourcePath, outputOptions.file);
+                const ideaOutputPath = path.resolve(ideaResourcePath, relativePath);
+                return fs.copy(outputOptions.file, ideaOutputPath);
+            }
+        }
+    }
+}
+
 async function getConfig() {
     const paths = await globby(sourcePath);
     const commonPlugins = [
@@ -28,7 +45,8 @@ async function getConfig() {
             minimize: isProdBuild,
             plugins: []
         }),
-        resolve()
+        resolve(),
+        copy()
     ];
     const plugins = isProdBuild ?
         [
@@ -37,8 +55,7 @@ async function getConfig() {
                 objectAssign: 'Object.assign'
             }),
             terser()
-        ] :
-        commonPlugins;
+        ] : commonPlugins;
 
     return paths.map(file => ({
         input: file,
