@@ -7,6 +7,8 @@ if (!!window.toastr) {
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js');
+        if (process.env.NODE_ENV === "production") {
+            navigator.serviceWorker.register('/sw.js');
+        }
     });
 }
