@@ -32,3 +32,4 @@ sentry.properties
 .settings/
 bin/
 node_modules/
+.env
