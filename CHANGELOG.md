@@ -1,8 +1,10 @@
 ## Changelog
 
-##### v2.1.5 (Unreleased):
+##### v2.1.5 (2018-12-24):
 
 - Reduce dependencies
+- Update dependencies
+- Add quicklink
 
 ##### v2.1.4 (2018-11-23):
 
