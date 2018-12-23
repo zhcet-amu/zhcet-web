@@ -34,6 +34,7 @@
     "datatables.net-buttons": "^1.5.4",
     "datatables.net-buttons-bs4": "^1.5.4",
     "datatables.net-select": "^1.2.7",
-    "datatables.net-select-bs4": "^1.2.7"
+    "datatables.net-select-bs4": "^1.2.7",
+    "quicklink": "^1.0.0"
   }
 }
