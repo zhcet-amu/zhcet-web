@@ -8,6 +8,8 @@ import { terser } from 'rollup-plugin-terser';
 import resolve from 'rollup-plugin-node-resolve';
 import postcss from 'rollup-plugin-postcss';
 import replace from 'rollup-plugin-replace';
+import alias from 'rollup-plugin-alias';
+import VuePlugin from 'rollup-plugin-vue';
 
 require('dotenv').config();
 
@@ -85,13 +87,20 @@ async function getConfig() {
             minimize: isProdBuild,
             plugins: []
         }),
-        buble({
-            objectAssign: 'Object.assign',
-            jsx: 'h'
-        }),
         resolve(),
+        alias({
+            'vue-compiler': 'node_modules/vue/dist/vue.esm.js'
+        }),
+        VuePlugin(),
         replace({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        }),
+        buble({
+            exclude: ['**/vue/dist/vue*.esm.js'],
+            transforms: {
+                dangerousForOf: true
+            },
+            objectAssign: 'Object.assign'
         }),
         copy()
     ];
@@ -108,6 +117,7 @@ async function getConfig() {
             format: 'iife',
             sourcemap: true
         },
+        context: 'window',
         plugins: plugins
     }));
 }

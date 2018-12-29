@@ -1,34 +1,9 @@
+import StatusApp from './StatusApp.vue'
+
 const app = new Vue({
     el: '#status-app',
-    data: {
-        loaded: true,
-        status: null,
-        error: null
+    components: {
+      StatusApp
     },
-    filters: {
-        normalize(value) {
-            const split = value.replace(/([a-z](?=[A-Z]))/g, '$1 ')
-            return split[0].toUpperCase() + split.slice(1)
-        }
-    },
-    methods: {
-        reload() {
-            this.status = null
-            fetch('/actuator/servicestatus')
-                .then(result => result.json())
-                .then(json => {
-                    this.status = {
-                        ...json,
-                        error: false
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    this.error = error
-                })
-        }
-    },
-    created() {
-        this.reload()
-    }
+    template: '<StatusApp />'
 });
