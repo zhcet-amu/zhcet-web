@@ -1,7 +1,4 @@
 import './app/polyfill.js'
-import quicklink from 'quicklink/dist/quicklink.mjs'
-
-quicklink();
 
 if (!!window.toastr) {
     toastr.options.progressBar = true;
