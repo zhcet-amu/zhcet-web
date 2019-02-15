@@ -15,7 +15,7 @@ public class CustomEnumConverter extends EnumConverter {
 
         if (parseError.isError()) {
             String possibleValues = Arrays.stream(columnInfo.getType().getEnumConstants())
-                    .map(Enum::toString)
+                    .map(Enum::name)
                     .collect(Collectors.joining(", "));
             parseError.setMessage(value + " can't be converted to column " + columnInfo.getColumnName() +
                     "(" + columnInfo.getType().getSimpleName() + "). Possible Values : " + possibleValues);

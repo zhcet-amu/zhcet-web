@@ -6,8 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
-//@Order(1)
-//@Configuration
+@Order(1)
+@Configuration
 public class ApiSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -15,6 +15,7 @@ public class ApiSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.antMatcher("/api/**")
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/api/auth").permitAll()
                 .antMatchers("/api/v1/admin/**").hasRole("DEAN_ADMIN")
                 .antMatchers("/api/v1/dev/**").hasRole("DEVELOPMENT_ADMIN")

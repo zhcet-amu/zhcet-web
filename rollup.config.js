@@ -115,7 +115,7 @@ async function getConfig() {
             file: getOutputFileName(file),
             name: getModuleName(file),
             format: 'iife',
-            sourcemap: true
+            sourcemap: isProdBuild
         },
         context: 'window',
         plugins: plugins
