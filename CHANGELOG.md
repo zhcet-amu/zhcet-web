@@ -1,8 +1,10 @@
 ## Changelog
 
-##### v2.1.6 (Unchanged):
+##### v2.2.0 (2019-02-17):
 
-- No changes
+- Update dependencies
+- Add feature to batch float courses in admin panel
+- Fix issue which prevented updated roles to be reflected in UI
 
 ##### v2.1.5 (2018-12-24):
 
