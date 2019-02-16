@@ -94,7 +94,7 @@ public class UserDetailService implements UserDetailsService {
         Collection<GrantedAuthority> authorities = getAuthorities(user);
 
         Authentication clone = new UsernamePasswordAuthenticationToken(
-                authentication.getPrincipal(),
+                new UserAuth(user, false, authorities),
                 authentication.getCredentials(),
                 authorities);
 
