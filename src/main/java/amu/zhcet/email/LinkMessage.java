@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Data
-@Builder
+@Builder(buildMethodName = "ignore")
 @NoArgsConstructor
 @AllArgsConstructor
 public class LinkMessage {
