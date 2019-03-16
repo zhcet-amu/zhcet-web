@@ -88,7 +88,7 @@ dependencies {
     implementation 'org.jboss.aerogear:aerogear-otp-java:1.0.0'
 
     // Sentry
-    implementation 'io.sentry:sentry-spring:1.7.21'
+    implementation 'io.sentry:sentry-spring:1.7.22'
     implementation 'io.sentry:sentry-logback:1.7.21'
 
     // WebJars
