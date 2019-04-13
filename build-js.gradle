@@ -1,6 +1,14 @@
 node {
     version = '8.12.0'
     download = true
+    // Set the work directory for unpacking node
+    workDir = file("${project.buildDir}/nodejs")
+
+    // Set the work directory for NPM
+    npmWorkDir = file("${project.buildDir}/npm")
+
+    // Set the work directory for Yarn
+    yarnWorkDir = file("${project.buildDir}/yarn")
 }
 
 task yarn_build(type: YarnTask, dependsOn: 'yarn_install') {
