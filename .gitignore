@@ -33,3 +33,4 @@ sentry.properties
 bin/
 node_modules/
 .env
+jetresources/
