@@ -4,7 +4,8 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/80f74f30d47b4e1eb0550912f12ef1ab)](https://www.codacy.com/app/zhcet/zhcet-web)
 [![Server](https://img.shields.io/website-up-down-green-red/https/zhcet.tk.svg?label=server)](https://zhcet.tk)
 [![Debug Server](https://img.shields.io/website-up-down-green-red/https/zhcet.herokuapp.com.svg?label=debug-server)](https://zhcet.herokuapp.com)
-[![License](https://img.shields.io/github/license/iamareebjamal/zhcet-web.svg)]()
+[![License](https://img.shields.io/github/license/iamareebjamal/zhcet-web.svg)][![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fzhcet-amu%2Fzhcet-web.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fzhcet-amu%2Fzhcet-web?ref=badge_shield)
+()
 > A spring boot web MVC project for ZHCET college management
 
 # Index
@@ -247,3 +248,7 @@ I recommend using IntelliJ Idea for the development as it provides incredible Sp
 
 # Developers
 [@iamareebjamal](https://github.com/iamareebjamal)
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fzhcet-amu%2Fzhcet-web.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fzhcet-amu%2Fzhcet-web?ref=badge_large)
