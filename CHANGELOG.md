@@ -1,8 +1,13 @@
 ## Changelog
 
-##### v2.2.1 (Unreleased):
+##### v2.2.3 (Unreleased):
 
 - No Changes
+
+##### v2.2.2 (2019-08-17):
+
+- Update dependencies
+
 
 ##### v2.2.1 (2019-06-13):
 
