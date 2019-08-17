@@ -30,7 +30,7 @@ apply plugin: 'excelsiorJet'
 apply from: 'build-js.gradle'
 
 group 'amu'
-version '2.2.2-SNAPSHOT'
+version '2.2.2-RELEASE'
 
 sourceCompatibility = 1.8
 
