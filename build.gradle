@@ -96,7 +96,7 @@ dependencies {
 
     // Sentry
     implementation 'io.sentry:sentry-spring:1.7.26'
-    implementation 'io.sentry:sentry-logback:1.7.26'
+    implementation 'io.sentry:sentry-logback:1.7.27'
 
     // WebJars
     implementation 'org.webjars:toastr:2.1.2'
