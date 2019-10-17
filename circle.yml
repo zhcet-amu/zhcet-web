@@ -59,8 +59,7 @@ jobs:
           paths:
           - node_modules/
           key: npm-{{ checksum "package.json" }}
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - setup_remote_docker
       - run:
           name: Deploy to DockerHub
           command: bash .ci/scripts/docker-push.sh
