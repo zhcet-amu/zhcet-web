@@ -2127,10 +2127,10 @@ querystring@^0.2.0:
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
   integrity sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=
 
-quicklink@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/quicklink/-/quicklink-1.0.0.tgz#71cb32be603d0ded93a7a48cf3c7e101ea4b1f6d"
-  integrity sha512-Zk0+RLevrrrrPzcPO9IKBAbmtFrinDP0ifSxeft5AG9eI+lBsvQ2XFjH7kceuS+LNehtZatQX+3LyEDYAPpmrg==
+quicklink@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/quicklink/-/quicklink-1.0.1.tgz#7a3251a8ae71aa8a02c27d8c740b53a850e7721d"
+  integrity sha512-XeHOnjh9WZKVvVdkDraArYPAbDg4VWnlzscXNUcPMiJCk1aGFwE/JOFKqdnKaChWGnmYcnKCFCbep0t8U4KbOw==
 
 randomatic@^3.0.0:
   version "3.1.1"
