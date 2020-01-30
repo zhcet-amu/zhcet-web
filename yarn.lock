@@ -18,13 +18,6 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@babel/runtime@^7.0.0-beta.46":
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.2.0.tgz#b03e42eeddf5898e00646e4c840fa07ba8dcad7f"
-  integrity sha512-oouEibCbHMVdZSDlJBO6bZmID/zA/G/Qx3H1d3rSNPTD+L8UNKvCat7aKWSJ74zYbm5zWGh0GQN0hKj8zYFTCg==
-  dependencies:
-    regenerator-runtime "^0.12.0"
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -63,7 +56,7 @@
     source-map "^0.5.6"
     vue-template-es2015-compiler "^1.6.0"
 
-"@vue/component-compiler@^3.4.4":
+"@vue/component-compiler@^3.6":
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/@vue/component-compiler/-/component-compiler-3.6.0.tgz#8db313e50eaa2903cef5aac68c37a09364dba79d"
   integrity sha512-NIA0vmOI4zbtJAn69iZls8IJ8VxmguswAuiUdu8TcR+YYTYzntfw290HUCSFjzAdRg+FUWZv8r+wc3TzJ/IjwA==
@@ -658,12 +651,19 @@ de-indent@^1.0.2:
   resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
   integrity sha1-sgOOhG3DO6pXlhKNCAS0VbjB4h0=
 
-debug@^2.2.0, debug@^2.3.3, debug@^2.6.0:
+debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
   integrity sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
   dependencies:
     ms "2.0.0"
+
+debug@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
+  integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
+  dependencies:
+    ms "^2.1.1"
 
 decamelize@^1.1.2:
   version "1.2.0"
@@ -1550,6 +1550,11 @@ ms@2.0.0:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
   integrity sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=
 
+ms@^2.1.1:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
+  integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.yarnpkg.com/nanomatch/-/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -2174,11 +2179,6 @@ regenerate@^1.2.1, regenerate@^1.4.0:
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.0.tgz#4a856ec4b56e4077c557589cae85e7a4c8869a11"
   integrity sha512-1G6jJVDWrt0rK99kBjvEtziZNCICAuvIPkSiUFIQxVP06RCVpq3dmDo2oi6ABpYaDYaTRr67BEhL8r1wgEZZKg==
 
-regenerator-runtime@^0.12.0:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
-  integrity sha512-odxIc1/vDlo4iZcfXqRYFj0vpXFNoGdKMAUieAlFYO6m/nl5e9KR/beGf41z4a1FI+aQgtjhuaSlDxQ0hmkrHg==
-
 regex-cache@^0.4.2:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/regex-cache/-/regex-cache-0.4.4.tgz#75bdc58a2a1496cec48a12835bc54c8d562336dd"
@@ -2349,18 +2349,20 @@ rollup-plugin-terser@3.0.0:
     serialize-javascript "^1.5.0"
     terser "^3.8.2"
 
-rollup-plugin-vue@4.3.2:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-vue/-/rollup-plugin-vue-4.3.2.tgz#0bdf0cf677565b0ac2358d590f177b6b4ded8cce"
-  integrity sha512-XPd7bE8O8W1c2fkRwUmlKioXEjE3Zvn/ksbwPkPsyoT+Wik0XVtzyDjoHg/qYcqNm+gzc8idBo3/fgNkTCiSTA==
+rollup-plugin-vue@4.7.2:
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-vue/-/rollup-plugin-vue-4.7.2.tgz#463a49815def829d4d731e2227f9ffaebb9bb517"
+  integrity sha512-RuAK+YTL81/iccOWoadqQz2TXqOogivjbvtCuU6EfVP9/E5XIjuMNVsVWHkSelZQblI1z2b5tshWL7XoiOfABQ==
   dependencies:
-    "@babel/runtime" "^7.0.0-beta.46"
-    "@vue/component-compiler" "^3.4.4"
+    "@vue/component-compiler" "^3.6"
     "@vue/component-compiler-utils" "^2.1.0"
-    debug "^2.6.0"
+    debug "^4.1.1"
     hash-sum "^1.0.2"
+    magic-string "^0.25.2"
     querystring "^0.2.0"
     rollup-pluginutils "^2.0.1"
+    source-map "0.7.3"
+    vue-runtime-helpers "1.0.0"
 
 rollup-pluginutils@^2.0.1, rollup-pluginutils@^2.3.3:
   version "2.3.3"
@@ -2519,6 +2521,11 @@ source-map@0.6.*, source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.0, sourc
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
+
+source-map@0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.3.tgz#5302f8169031735226544092e64981f751750383"
+  integrity sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==
 
 source-map@^0.5.3, source-map@^0.5.6:
   version "0.5.7"
@@ -2720,6 +2727,11 @@ vendors@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/vendors/-/vendors-1.0.2.tgz#7fcb5eef9f5623b156bcea89ec37d63676f21801"
   integrity sha512-w/hry/368nO21AN9QljsaIhb9ZiZtZARoVH5f3CsFbawdLdayCgKRPup7CggujvySMxx0I91NOyxdVENohprLQ==
+
+vue-runtime-helpers@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/vue-runtime-helpers/-/vue-runtime-helpers-1.0.0.tgz#af5fe1c8d727beb680b2eb9d791c8e022342e54d"
+  integrity sha512-DgwCNgIXkq1GJsWwtFOjA/K2nxpjyon/QqAut0EiwrMHBatAPbfdqksDdRoK15b5YrSJRa59rx3pc0L6V4udUA==
 
 vue-template-compiler@2.6.11:
   version "2.6.11"
