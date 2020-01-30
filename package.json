@@ -22,7 +22,7 @@
     "fs-extra": "7.0.1",
     "globby": "8.0.2",
     "rollup": "0.66.6",
-    "rollup-plugin-alias": "1.5.1",
+    "rollup-plugin-alias": "1.5.2",
     "rollup-plugin-buble": "0.19.6",
     "rollup-plugin-node-resolve": "3.4.0",
     "rollup-plugin-postcss": "1.6.3",
