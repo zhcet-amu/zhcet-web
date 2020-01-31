@@ -19,7 +19,7 @@
   "devDependencies": {
     "cross-env": "5.2.1",
     "dotenv": "8.2.0",
-    "fs-extra": "7.0.1",
+    "fs-extra": "8.1.0",
     "globby": "8.0.2",
     "rollup": "0.68.2",
     "rollup-plugin-alias": "2.2.0",
