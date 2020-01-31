@@ -76,7 +76,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
-    implementation 'javax.interceptor:javax.interceptor-api:3.1' // TODO: Remove when workaround fix is found
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation 'org.postgresql:postgresql'
     implementation "org.hibernate:hibernate-envers"
