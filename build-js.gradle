@@ -1,5 +1,5 @@
 node {
-    version = '8.12.0'
+    version = '12.14.1'
     download = true
     // Set the work directory for unpacking node
     workDir = file("${project.buildDir}/nodejs")
