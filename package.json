@@ -28,7 +28,7 @@
     "rollup-plugin-postcss": "2.9.0",
     "rollup-plugin-replace": "2.2.0",
     "rollup-plugin-terser": "5.2.0",
-    "rollup-plugin-vue": "5.1.6",
+    "rollup-plugin-vue": "5.1.7",
     "vue-template-compiler": "2.6.11"
   },
   "dependencies": {
