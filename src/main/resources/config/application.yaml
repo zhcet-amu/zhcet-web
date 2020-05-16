@@ -57,7 +57,7 @@ management:
 server:
   http2:
     enabled: true
-  use-forward-headers: true
+  forward-headers-strategy: framework
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,application/javascript
@@ -73,8 +73,10 @@ server:
         name: ZHCET_SESSION_ID
 
 logging:
-  file: "${zhcet.storage.root-dir}/logs/spring.log"
-  path: "${zhcet.storage.root-dir}/logs"
+  file:
+    name: "${zhcet.storage.root-dir}/logs/spring.log"
+  path:
+    name: "${zhcet.storage.root-dir}/logs"
   level:
     root: INFO
     amu.zhcet: TRACE

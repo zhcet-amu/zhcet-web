@@ -5,7 +5,7 @@ import amu.zhcet.auth.login.LoginAttemptService;
 import amu.zhcet.email.EmailProperties;
 import amu.zhcet.firebase.FirebaseService;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
+import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -15,21 +15,21 @@ public class ActuatorBeans {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnEnabledEndpoint
+    @ConditionalOnAvailableEndpoint
     public LoggedInEndoint loggedInEndpoint(ModelMapper modelMapper, AuthService authService) {
         return new LoggedInEndoint(modelMapper, authService);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnEnabledEndpoint
+    @ConditionalOnAvailableEndpoint
     public BlockedEndpoint blockedIpsEndpoint(LoginAttemptService loginAttemptService) {
         return new BlockedEndpoint(loginAttemptService);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnEnabledEndpoint
+    @ConditionalOnAvailableEndpoint
     public ServiceStatusEndpoint serviceStatusEndpoint(EmailProperties emailProperties, FirebaseService firebaseService) {
         return new ServiceStatusEndpoint(emailProperties, firebaseService);
     }

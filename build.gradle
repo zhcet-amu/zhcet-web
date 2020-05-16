@@ -1,7 +1,7 @@
 buildscript {
     ext {
         kotlinVersion = '1.3.70'
-        springBootVersion = '2.2.5.RELEASE'
+        springBootVersion = '2.3.0.RELEASE'
         jetPluginVersion = '1.3.3'
     }
     repositories {
@@ -16,9 +16,9 @@ buildscript {
 }
 
 plugins {
-    id "com.moowork.node" version "1.3.1"
+    id "com.github.node-gradle.node" version "2.2.3"
     id 'com.palantir.docker' version '0.25.0'
-    id 'com.google.cloud.tools.jib' version '1.8.0'
+    id "io.freefair.lombok" version "5.1.0"
 }
 
 apply plugin: 'java'
@@ -66,6 +66,7 @@ docker {
 dockerPush.dependsOn(dockerTag)
 
 dependencies {
+    runtime("org.springframework.boot:spring-boot-properties-migrator")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -76,7 +77,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
-    implementation 'javax.interceptor:javax.interceptor-api:1.2.2' // TODO: Remove when workaround fix is found
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation 'org.postgresql:postgresql'
     implementation "org.hibernate:hibernate-envers"
@@ -104,13 +104,6 @@ dependencies {
     implementation 'org.webjars.npm:corejs-typeahead:1.2.1'
 
     implementation 'org.webjars:webjars-locator-core'
-
-    compileOnly "org.projectlombok:lombok:1.18.12"
-
-    // Workaround for Java 9+ modules missing problem
-    implementation 'javax.xml.bind:jaxb-api'
-    implementation 'com.sun.xml.bind:jaxb-impl:2.3.2'
-    implementation 'com.sun.xml.bind:jaxb-core:2.3.0.1'
 
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation("org.springframework.boot:spring-boot-starter-test")
