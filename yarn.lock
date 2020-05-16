@@ -874,6 +874,14 @@ datatables.net-buttons@1.6.1:
     datatables.net "^1.10.15"
     jquery ">=1.7"
 
+datatables.net-buttons@1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/datatables.net-buttons/-/datatables.net-buttons-1.6.2.tgz#491bf5a808898c468d0b3a6547e3be6883aaebcc"
+  integrity sha512-0sKWBBwtCCECRc4T+fUDhFCJv9miLPrB90QsVYq4ep0hIMuWiW76+eCdykZq5yd/3m7K1O+ryt9c7PahBDf91g==
+  dependencies:
+    datatables.net "^1.10.15"
+    jquery ">=1.7"
+
 datatables.net-select-bs4@1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/datatables.net-select-bs4/-/datatables.net-select-bs4-1.3.1.tgz#1c39c7fd5bfb66b5c8402611c2c64fc47e3cfca4"
