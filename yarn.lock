@@ -857,19 +857,27 @@ datatables.net-bs4@^1.10.15:
     datatables.net "1.10.19"
     jquery ">=1.7"
 
-datatables.net-buttons-bs4@1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/datatables.net-buttons-bs4/-/datatables.net-buttons-bs4-1.6.1.tgz#4abd9c83fbd753ffa4913adca1fae094df64b3ba"
-  integrity sha512-PdE1vrnRIeX+p++wnbpdnr97kgTCs+DDomtTccsQvMrFm29lxVa7uTz1awasfGRrCrJzpb5HjPrPJBzbGHrUyg==
+datatables.net-buttons-bs4@1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/datatables.net-buttons-bs4/-/datatables.net-buttons-bs4-1.6.2.tgz#234882e3ad345f358bce100768c2351a6dcee097"
+  integrity sha512-v3K2rK4FZAKTUL/M0B3Mm+FlDPszR4sZGqoOdwP3/dinFUQ63oQE/e4O5Mpxf9yuV0gxKUlTHmUBk/QB8k43FQ==
   dependencies:
     datatables.net-bs4 "^1.10.15"
-    datatables.net-buttons "1.6.1"
+    datatables.net-buttons "1.6.2"
     jquery ">=1.7"
 
 datatables.net-buttons@1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/datatables.net-buttons/-/datatables.net-buttons-1.6.1.tgz#f62847e7c6f905fcf7339e7541a40741bbb3b8fb"
   integrity sha512-Lcgvi/xGB2X0jr1n/uQMmg43Z1JQO6aaGjPHO+sAQAMfBGBi9cK1hhfM4Vg8gzC5fz3sW4QrtjAdKvOPnQ1A3w==
+  dependencies:
+    datatables.net "^1.10.15"
+    jquery ">=1.7"
+
+datatables.net-buttons@1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/datatables.net-buttons/-/datatables.net-buttons-1.6.2.tgz#491bf5a808898c468d0b3a6547e3be6883aaebcc"
+  integrity sha512-0sKWBBwtCCECRc4T+fUDhFCJv9miLPrB90QsVYq4ep0hIMuWiW76+eCdykZq5yd/3m7K1O+ryt9c7PahBDf91g==
   dependencies:
     datatables.net "^1.10.15"
     jquery ">=1.7"
@@ -895,13 +903,6 @@ datatables.net@1.10.19, datatables.net@^1.10.15:
   version "1.10.19"
   resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.10.19.tgz#97a1ed41c85e62d61040603481b59790a172dd1f"
   integrity sha512-+ljXcI6Pj3PTGy5pesp3E5Dr3x3AV45EZe0o1r0gKENN2gafBKXodVnk2ypKwl2tTmivjxbkiqoWnipTefyBTA==
-  dependencies:
-    jquery ">=1.7"
-
-datatables.net@1.10.20:
-  version "1.10.20"
-  resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.10.20.tgz#9d65ecc3c83cbe7baa4fa5a053405c8fe42c1350"
-  integrity sha512-4E4S7tTU607N3h0fZPkGmAtr9mwy462u+VJ6gxYZ8MxcRIjZqHy3Dv1GNry7i3zQCktTdWbULVKBbkAJkuHEnQ==
   dependencies:
     jquery ">=1.7"
 
