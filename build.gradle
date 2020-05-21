@@ -90,7 +90,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-admin:6.13.0'
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.imgscalr:imgscalr-lib:4.2'
-    implementation 'com.github.ben-manes.caffeine:caffeine:2.8.3'
+    implementation 'com.github.ben-manes.caffeine:caffeine:2.8.4'
     implementation 'org.jboss.aerogear:aerogear-otp-java:1.0.0'
 
     // Sentry
